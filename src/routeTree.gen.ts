@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
+import { Route as AppAdminSettingsRouteImport } from './routes/app/admin/settings'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
 
 const IndexRoute = IndexRouteImport.update({
@@ -17,36 +19,57 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
-  id: '/app/admin/exercises',
-  path: '/app/admin/exercises',
+const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
+  id: '/app/admin',
+  path: '/app/admin',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppAdminSettingsRoute = AppAdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppAdminRouteRoute,
+} as any)
+const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
+  id: '/exercises',
+  path: '/exercises',
+  getParentRoute: () => AppAdminRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
+  '/app/admin/settings': typeof AppAdminSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
+  '/app/admin/settings': typeof AppAdminSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
+  '/app/admin/settings': typeof AppAdminSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app/admin/exercises'
+  fullPaths: '/' | '/app/admin' | '/app/admin/exercises' | '/app/admin/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/admin/exercises'
-  id: '__root__' | '/' | '/app/admin/exercises'
+  to: '/' | '/app/admin' | '/app/admin/exercises' | '/app/admin/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/app/admin'
+    | '/app/admin/exercises'
+    | '/app/admin/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppAdminExercisesRoute: typeof AppAdminExercisesRoute
+  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -58,19 +81,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/app/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/admin/settings': {
+      id: '/app/admin/settings'
+      path: '/settings'
+      fullPath: '/app/admin/settings'
+      preLoaderRoute: typeof AppAdminSettingsRouteImport
+      parentRoute: typeof AppAdminRouteRoute
+    }
     '/app/admin/exercises': {
       id: '/app/admin/exercises'
-      path: '/app/admin/exercises'
+      path: '/exercises'
       fullPath: '/app/admin/exercises'
       preLoaderRoute: typeof AppAdminExercisesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppAdminRouteRoute
     }
   }
 }
 
+interface AppAdminRouteRouteChildren {
+  AppAdminExercisesRoute: typeof AppAdminExercisesRoute
+  AppAdminSettingsRoute: typeof AppAdminSettingsRoute
+}
+
+const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
+  AppAdminExercisesRoute: AppAdminExercisesRoute,
+  AppAdminSettingsRoute: AppAdminSettingsRoute,
+}
+
+const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
+  AppAdminRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppAdminExercisesRoute: AppAdminExercisesRoute,
+  AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
