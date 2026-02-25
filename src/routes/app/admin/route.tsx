@@ -22,7 +22,7 @@ function RouteComponent() {
 
   return (
     <div>
-      <span className="text-sm text-slate-400">
+      <span className="text-sm text-muted-foreground dark:text-slate-400">
         Admin section: {sectionHeading}
       </span>
       <Outlet />

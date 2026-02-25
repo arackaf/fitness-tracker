@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-router";
 
 import TanStackQueryProvider from "../integrations/tanstack-query/root-provider";
+import { ThemeProvider } from "../components/theme-provider";
 
 import appCss from "../styles.css?url";
 
@@ -40,12 +41,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
       <body>
-        <TanStackQueryProvider>{children}</TanStackQueryProvider>
+        <ThemeProvider>
+          <TanStackQueryProvider>{children}</TanStackQueryProvider>
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>
