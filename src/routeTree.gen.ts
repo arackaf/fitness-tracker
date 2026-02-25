@@ -9,20 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppAdminSettingsRouteImport } from './routes/app/admin/settings'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
 
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
-  id: '/app/admin',
-  path: '/app/admin',
-  getParentRoute: () => rootRouteImport,
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppAdminSettingsRoute = AppAdminSettingsRouteImport.update({
   id: '/settings',
@@ -37,12 +43,14 @@ const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/settings': typeof AppAdminSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/settings': typeof AppAdminSettingsRoute
@@ -50,18 +58,30 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/settings': typeof AppAdminSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app/admin' | '/app/admin/exercises' | '/app/admin/settings'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/admin'
+    | '/app/admin/exercises'
+    | '/app/admin/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/admin' | '/app/admin/exercises' | '/app/admin/settings'
+  to:
+    | '/'
+    | '/app'
+    | '/app/admin'
+    | '/app/admin/exercises'
+    | '/app/admin/settings'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/app/admin'
     | '/app/admin/exercises'
     | '/app/admin/settings'
@@ -69,11 +89,18 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -83,10 +110,10 @@ declare module '@tanstack/react-router' {
     }
     '/app/admin': {
       id: '/app/admin'
-      path: '/app/admin'
+      path: '/admin'
       fullPath: '/app/admin'
       preLoaderRoute: typeof AppAdminRouteRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/app/admin/settings': {
       id: '/app/admin/settings'
@@ -119,9 +146,21 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
   AppAdminRouteRouteChildren,
 )
 
+interface AppRouteRouteChildren {
+  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
