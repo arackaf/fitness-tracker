@@ -57,7 +57,9 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise (
   workout_segment_id INT NOT NULL REFERENCES workout_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  reps INT NOT NULL CHECK (reps > 0)
+  reps INT CHECK (reps > 0),
+  reps_to_failure BOOL NOT NULL,
+  CHECK (reps_to_failure = true OR reps IS NOT NULL)
 );
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
   ON workout_segment_exercise (workout_segment_id, exercise_order);
@@ -170,16 +172,16 @@ JOIN (
 ) AS seed(segment_order, sets) ON true
 WHERE w.name = 'Chest Day';
 
-INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps)
-SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps
+INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
 FROM workout w
 JOIN workout_segment ws ON ws.workout_id = w.id
 JOIN (
   VALUES
-    (1, 1, 1, 8),
-    (1, 2, 5, 12),
-    (2, 1, 7, 8),
-    (3, 1, 2, 12)
-) AS seed(segment_order, exercise_order, exercise_id, reps)
+    (1, 1, 1, 8, false),
+    (1, 2, 5, 12, false),
+    (2, 1, 7, 8, false),
+    (3, 1, 2, 12, false)
+) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = ws.segment_order
 WHERE w.name = 'Chest Day';
