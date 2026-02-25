@@ -1,6 +1,8 @@
-import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-
-import Header from "../components/Header";
+import {
+  HeadContent,
+  Scripts,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 
 import TanStackQueryProvider from "../integrations/tanstack-query/root-provider";
 
@@ -43,10 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <TanStackQueryProvider>
-          <Header />
-          {children}
-        </TanStackQueryProvider>
+        <TanStackQueryProvider>{children}</TanStackQueryProvider>
         <Scripts />
       </body>
     </html>
