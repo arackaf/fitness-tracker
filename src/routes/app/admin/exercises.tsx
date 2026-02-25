@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { asc, sql } from "drizzle-orm";
 
 import { ExerciseFilters } from "@/components/ExerciseFilters";
+import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 
 import { db } from "../../../drizzle/db";
 import { exercises } from "../../../drizzle/schema";
@@ -88,40 +89,7 @@ function RouteComponent() {
           onToggleMuscleGroup={toggleMuscleGroup}
         />
 
-        <ul className="space-y-3">
-          {filteredExercises.map(exercise => (
-            <li
-              key={exercise.id}
-              className="rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 shadow-sm transition hover:border-slate-600"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-base font-semibold text-slate-50">
-                    {exercise.name}
-                  </p>
-                  <p className="mt-1 text-sm text-slate-300/80">
-                    {exercise.description ?? "No description yet."}
-                  </p>
-                </div>
-                <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                    exercise.isCompound
-                      ? "bg-emerald-400/20 text-emerald-200"
-                      : "bg-slate-700/70 text-slate-100/90"
-                  }`}
-                >
-                  {exercise.isCompound ? "Compound" : "Isolation"}
-                </span>
-              </div>
-
-              {exercise.muscleGroups?.length ? (
-                <p className="mt-3 text-xs uppercase tracking-wide text-sky-200/80">
-                  {exercise.muscleGroups.join(" • ")}
-                </p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        <ExerciseListDisplay exercises={filteredExercises} />
       </div>
     </main>
   );
