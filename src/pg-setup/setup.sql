@@ -37,10 +37,14 @@ CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
   ON exercises
   USING GIN (muscle_groups);
 
+-- ================================================================================
+-- Workout Templates
+-- ================================================================================
+
 CREATE TABLE IF NOT EXISTS workout_template (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name VARCHAR(50),
-  description TEXT
+  name VARCHAR(50) NOT NULL,
+  description TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS workout_template_segment (
@@ -193,7 +197,8 @@ WHERE NOT EXISTS (
   WHERE e.name = seed.name
 );
 
--- WORKOUTS
+-- ================================================================================
+-- Workout Template Data
 -- ================================================================================
 
 INSERT INTO workout_template (name, description)
