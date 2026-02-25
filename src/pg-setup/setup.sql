@@ -64,6 +64,43 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
 CREATE INDEX IF NOT EXISTS idx_workout_template_segment_exercise_segment_id_exercise_order
   ON workout_template_segment_exercise (workout_template_segment_id, exercise_order);
 
+
+-- ================================================================================
+-- Workouts
+-- ================================================================================
+
+CREATE TABLE IF NOT EXISTS workout (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  workout_date DATE NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_workout_workout_date
+  ON workout (workout_date);
+
+CREATE TABLE IF NOT EXISTS workout_segment (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  workout_id INT NOT NULL REFERENCES workout(id) ON DELETE CASCADE,
+  segment_order INT NOT NULL CHECK (segment_order > 0),
+  sets INT NOT NULL CHECK (sets > 0)
+);
+CREATE INDEX IF NOT EXISTS idx_workout_segment_workout_id_segment_order
+  ON workout_segment (workout_id, segment_order);
+
+CREATE TABLE IF NOT EXISTS workout_segment_exercise (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  workout_segment_id INT NOT NULL REFERENCES workout_segment(id) ON DELETE CASCADE,
+  exercise_order INT NOT NULL CHECK (exercise_order > 0),
+  exercise_id INT NOT NULL REFERENCES exercises(id),
+  reps INT CHECK (reps > 0),
+  reps_to_failure BOOL NOT NULL,
+  CHECK (reps_to_failure = true OR reps IS NOT NULL)
+);
+CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
+  ON workout_segment_exercise (workout_segment_id, exercise_order);
+
+-- ================================================================================
+-- Data
 -- ================================================================================
 
 INSERT INTO exercises (id, name, description, muscle_groups, is_compound)
