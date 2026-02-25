@@ -156,6 +156,7 @@ WHERE NOT EXISTS (
   WHERE e.name = seed.name
 );
 
+-- WORKOUTS
 -- ================================================================================
 
 INSERT INTO workout (name, description)
@@ -185,3 +186,35 @@ JOIN (
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = ws.segment_order
 WHERE w.name = 'Chest Day';
+
+-- ================================================================================
+
+INSERT INTO workout (name, description)
+VALUES ('Back Day', 'Back-focused workout with pull-up/row superset and rowing + pulldown volume.');
+
+INSERT INTO workout_segment (workout_id, segment_order, sets)
+SELECT w.id, seed.segment_order, seed.sets
+FROM workout w
+JOIN (
+  VALUES
+    (1, 4),
+    (2, 4),
+    (3, 4),
+    (4, 4)
+) AS seed(segment_order, sets) ON true
+WHERE w.name = 'Back Day';
+
+INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
+FROM workout w
+JOIN workout_segment ws ON ws.workout_id = w.id
+JOIN (
+  VALUES
+    (1, 1, 46, NULL, true),
+    (1, 2, 49, 8, false),
+    (2, 1, 50, 8, false),
+    (3, 1, 51, 12, false),
+    (4, 1, 48, 12, false)
+) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
+  ON seed.segment_order = ws.segment_order
+WHERE w.name = 'Back Day';
