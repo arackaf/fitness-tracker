@@ -37,32 +37,32 @@ CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
   ON exercises
   USING GIN (muscle_groups);
 
-CREATE TABLE IF NOT EXISTS workout (
+CREATE TABLE IF NOT EXISTS workout_template (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   name VARCHAR(50),
   description TEXT
 );
 
-CREATE TABLE IF NOT EXISTS workout_segment (
+CREATE TABLE IF NOT EXISTS workout_template_segment (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  workout_id INT NOT NULL REFERENCES workout(id) ON DELETE CASCADE,
+  workout_template_id INT NOT NULL REFERENCES workout_template(id) ON DELETE CASCADE,
   segment_order INT NOT NULL CHECK (segment_order > 0),
   sets INT NOT NULL CHECK (sets > 0)
 );
-CREATE INDEX IF NOT EXISTS idx_workout_segment_workout_id_segment_order
-  ON workout_segment (workout_id, segment_order);
+CREATE INDEX IF NOT EXISTS idx_workout_template_segment_template_id_segment_order
+  ON workout_template_segment (workout_template_id, segment_order);
 
-CREATE TABLE IF NOT EXISTS workout_segment_exercise (
+CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  workout_segment_id INT NOT NULL REFERENCES workout_segment(id) ON DELETE CASCADE,
+  workout_template_segment_id INT NOT NULL REFERENCES workout_template_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
   reps INT CHECK (reps > 0),
   reps_to_failure BOOL NOT NULL,
   CHECK (reps_to_failure = true OR reps IS NOT NULL)
 );
-CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
-  ON workout_segment_exercise (workout_segment_id, exercise_order);
+CREATE INDEX IF NOT EXISTS idx_workout_template_segment_exercise_segment_id_exercise_order
+  ON workout_template_segment_exercise (workout_template_segment_id, exercise_order);
 
 -- ================================================================================
 
@@ -159,24 +159,24 @@ WHERE NOT EXISTS (
 -- WORKOUTS
 -- ================================================================================
 
-INSERT INTO workout (name, description)
+INSERT INTO workout_template (name, description)
 VALUES ('Chest Day', 'Chest-focused workout with pressing, fly, and dip volume.');
 
-INSERT INTO workout_segment (workout_id, segment_order, sets)
-SELECT w.id, seed.segment_order, seed.sets
-FROM workout w
+INSERT INTO workout_template_segment (workout_template_id, segment_order, sets)
+SELECT wt.id, seed.segment_order, seed.sets
+FROM workout_template wt
 JOIN (
   VALUES
     (1, 4),
     (2, 4),
     (3, 4)
 ) AS seed(segment_order, sets) ON true
-WHERE w.name = 'Chest Day';
+WHERE wt.name = 'Chest Day';
 
-INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
-FROM workout w
-JOIN workout_segment ws ON ws.workout_id = w.id
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+SELECT wts.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
     (1, 1, 1, 8, false),
@@ -184,17 +184,17 @@ JOIN (
     (2, 1, 7, 8, false),
     (3, 1, 4, NULL, true)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
-  ON seed.segment_order = ws.segment_order
-WHERE w.name = 'Chest Day';
+  ON seed.segment_order = wts.segment_order
+WHERE wt.name = 'Chest Day';
 
 -- ================================================================================
 
-INSERT INTO workout (name, description)
+INSERT INTO workout_template (name, description)
 VALUES ('Back Day', 'Back-focused workout with pull-up/row superset and rowing + pulldown volume.');
 
-INSERT INTO workout_segment (workout_id, segment_order, sets)
-SELECT w.id, seed.segment_order, seed.sets
-FROM workout w
+INSERT INTO workout_template_segment (workout_template_id, segment_order, sets)
+SELECT wt.id, seed.segment_order, seed.sets
+FROM workout_template wt
 JOIN (
   VALUES
     (1, 4),
@@ -202,12 +202,12 @@ JOIN (
     (3, 4),
     (4, 4)
 ) AS seed(segment_order, sets) ON true
-WHERE w.name = 'Back Day';
+WHERE wt.name = 'Back Day';
 
-INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
-FROM workout w
-JOIN workout_segment ws ON ws.workout_id = w.id
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+SELECT wts.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
     (1, 1, 46, NULL, true),
@@ -216,5 +216,5 @@ JOIN (
     (3, 1, 51, 12, false),
     (4, 1, 48, 12, false)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
-  ON seed.segment_order = ws.segment_order
-WHERE w.name = 'Back Day';
+  ON seed.segment_order = wts.segment_order
+WHERE wt.name = 'Back Day';
