@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { asc, sql } from "drizzle-orm";
 
 import { ExerciseFilters } from "@/components/ExerciseFilters";
+import { Header } from "@/components/Header";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 
 import { db } from "../../../drizzle/db";
@@ -76,11 +77,7 @@ function RouteComponent() {
 
   return (
     <div>
-      <header className="mb-8">
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-50 md:text-4xl">
-          Exercises
-        </h1>
-      </header>
+      <Header title="Exercises" />
 
       <ExerciseFilters
         muscleGroups={muscleGroups}
