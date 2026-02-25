@@ -157,12 +157,7 @@ WHERE NOT EXISTS (
 -- ================================================================================
 
 INSERT INTO workout (name, description)
-SELECT 'Chest Day', 'Chest-focused workout with pressing, fly, and dip volume.'
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM workout w
-  WHERE w.name = 'Chest Day'
-);
+VALUES ('Chest Day', 'Chest-focused workout with pressing, fly, and dip volume.');
 
 INSERT INTO workout_segment (workout_id, segment_order, sets)
 SELECT w.id, seed.segment_order, seed.sets
@@ -173,31 +168,18 @@ JOIN (
     (2, 4),
     (3, 4)
 ) AS seed(segment_order, sets) ON true
-WHERE w.name = 'Chest Day'
-AND NOT EXISTS (
-  SELECT 1
-  FROM workout_segment ws
-  WHERE ws.workout_id = w.id
-    AND ws.segment_order = seed.segment_order
-);
+WHERE w.name = 'Chest Day';
 
 INSERT INTO workout_segment_exercise (workout_segment_id, exercise_order, exercise_id, reps)
-SELECT ws.id, seed.exercise_order, e.id, seed.reps
+SELECT ws.id, seed.exercise_order, seed.exercise_id, seed.reps
 FROM workout w
 JOIN workout_segment ws ON ws.workout_id = w.id
 JOIN (
   VALUES
-    (1, 1, 'Barbell Bench Press', 8),
-    (1, 2, 'Dumbbell Fly', 12),
-    (2, 1, 'Chest Dips', 8),
-    (3, 1, 'Incline Dumbbell Press', 12)
-) AS seed(segment_order, exercise_order, exercise_name, reps)
+    (1, 1, 1, 8),
+    (1, 2, 5, 12),
+    (2, 1, 7, 8),
+    (3, 1, 2, 12)
+) AS seed(segment_order, exercise_order, exercise_id, reps)
   ON seed.segment_order = ws.segment_order
-JOIN exercises e ON e.name = seed.exercise_name
-WHERE w.name = 'Chest Day'
-AND NOT EXISTS (
-  SELECT 1
-  FROM workout_segment_exercise wse
-  WHERE wse.workout_segment_id = ws.id
-    AND wse.exercise_order = seed.exercise_order
-);
+WHERE w.name = 'Chest Day';
