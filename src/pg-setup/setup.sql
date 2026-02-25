@@ -181,7 +181,7 @@ JOIN (
     (1, 1, 1, 8, false),
     (1, 2, 5, 12, false),
     (2, 1, 7, 8, false),
-    (3, 1, 2, 12, false)
+    (3, 1, 4, NULL, true)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = ws.segment_order
 WHERE w.name = 'Chest Day';
