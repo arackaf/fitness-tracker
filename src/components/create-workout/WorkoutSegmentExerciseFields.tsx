@@ -12,8 +12,9 @@ type ExerciseOption = {
 
 type WorkoutSegmentExerciseFieldsProps = {
   useWorkoutState: UseBoundStore<StoreApi<WorkoutState>>;
-  segmentIndex: number;
-  exerciseIndex: number;
+  updateExercise: (
+    callback: (exercise: WorkoutSegmentExercise) => void,
+  ) => void;
   segmentExercise: WorkoutSegmentExercise;
   exerciseCountInSegment: number;
   exerciseOptions: ExerciseOption[];
@@ -22,8 +23,7 @@ type WorkoutSegmentExerciseFieldsProps = {
 
 export function WorkoutSegmentExerciseFields({
   useWorkoutState,
-  exerciseIndex,
-  segmentIndex,
+  updateExercise,
   segmentExercise,
   exerciseCountInSegment,
   exerciseOptions,
@@ -34,15 +34,14 @@ export function WorkoutSegmentExerciseFields({
   return (
     <div className="grid gap-3 rounded-lg border border-border/80 bg-background/70 p-3 md:grid-cols-[1.2fr_0.7fr_auto]">
       <label className="flex flex-col gap-2 text-sm">
-        <span className="font-medium">Exercise {exerciseIndex + 1}</span>
+        <span className="font-medium">&nbsp;</span>
         <select
           required
           value={segmentExercise.exerciseId}
           onChange={event => {
-            workoutState.update(state => {
-              state.segments[segmentIndex].exercises[exerciseIndex].exerciseId =
-                parseInt(event.target.value);
-            });
+            updateExercise(
+              exercise => (exercise.exerciseId = parseInt(event.target.value)),
+            );
           }}
           className="rounded-md border border-input bg-background px-3 py-2"
         >
@@ -64,10 +63,9 @@ export function WorkoutSegmentExerciseFields({
           type="number"
           value={segmentExercise.reps?.toString() ?? ""}
           onChange={event => {
-            workoutState.update(state => {
-              state.segments[segmentIndex].exercises[exerciseIndex].reps =
-                parseInt(event.target.value);
-            });
+            updateExercise(
+              exercise => (exercise.reps = parseInt(event.target.value)),
+            );
           }}
           className="rounded-md border border-input bg-background px-3 py-2 disabled:opacity-60"
         />
@@ -77,11 +75,9 @@ export function WorkoutSegmentExerciseFields({
             type="checkbox"
             checked={segmentExercise.repsToFailure}
             onChange={event => {
-              workoutState.update(state => {
-                state.segments[segmentIndex].exercises[
-                  exerciseIndex
-                ].repsToFailure = event.target.checked;
-              });
+              updateExercise(
+                exercise => (exercise.repsToFailure = event.target.checked),
+              );
             }}
           />
           Reps to failure

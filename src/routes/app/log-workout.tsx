@@ -222,9 +222,14 @@ function RouteComponent() {
                 (segmentExercise, exerciseIndex) => (
                   <WorkoutSegmentExerciseFields
                     useWorkoutState={useWorkoutState}
+                    updateExercise={updater => {
+                      workoutState.update(state => {
+                        const exercise =
+                          state.segments[segmentIndex].exercises[exerciseIndex];
+                        updater(exercise);
+                      });
+                    }}
                     key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
-                    segmentIndex={segmentIndex}
-                    exerciseIndex={exerciseIndex}
                     segmentExercise={segmentExercise}
                     exerciseCountInSegment={segmentPayload.exercises.length}
                     exerciseOptions={exerciseOptions}
