@@ -80,38 +80,6 @@ function RouteComponent() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const removeSegment = (segmentIndex: number) => {
-    setSegments(current =>
-      current.length === 1
-        ? current
-        : current.filter((_, index) => index !== segmentIndex),
-    );
-  };
-
-  const removeExerciseFromSegment = (
-    segmentIndex: number,
-    exerciseIndex: number,
-  ) => {
-    setSegments(current =>
-      current.map((segment, index) => {
-        if (index !== segmentIndex) {
-          return segment;
-        }
-
-        if (segment.exercises.length === 1) {
-          return segment;
-        }
-
-        return {
-          ...segment,
-          exercises: segment.exercises.filter(
-            (_, idx) => idx !== exerciseIndex,
-          ),
-        };
-      }),
-    );
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrorMessage(null);
@@ -190,7 +158,11 @@ function RouteComponent() {
               </h2>
               <button
                 type="button"
-                onClick={() => removeSegment(segmentIndex)}
+                onClick={() => {
+                  workoutState.update(state => {
+                    state.segments.splice(segmentIndex, 1);
+                  });
+                }}
                 disabled={segments.length === 1}
                 className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-1.5 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
               >
@@ -221,7 +193,6 @@ function RouteComponent() {
               {segmentPayload.exercises.map(
                 (segmentExercise, exerciseIndex) => (
                   <WorkoutSegmentExerciseFields
-                    useWorkoutState={useWorkoutState}
                     updateExercise={updater => {
                       workoutState.update(state => {
                         const exercise =
@@ -231,10 +202,17 @@ function RouteComponent() {
                     }}
                     key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
                     segmentExercise={segmentExercise}
-                    exerciseCountInSegment={segmentPayload.exercises.length}
                     exerciseOptions={exerciseOptions}
-                    onRemove={() =>
-                      removeExerciseFromSegment(segmentIndex, exerciseIndex)
+                    onRemove={
+                      workoutState.segments[segmentIndex].exercises.length === 1
+                        ? undefined
+                        : () =>
+                            workoutState.update(state => {
+                              state.segments[segmentIndex].exercises.splice(
+                                exerciseIndex,
+                                1,
+                              );
+                            })
                     }
                   />
                 ),

@@ -1,9 +1,5 @@
-import type {
-  WorkoutSegmentExercise,
-  WorkoutState,
-} from "@/data/zustand-state/workout-state";
+import type { WorkoutSegmentExercise } from "@/data/zustand-state/workout-state";
 import { Trash2 } from "lucide-react";
-import type { StoreApi, UseBoundStore } from "zustand";
 
 type ExerciseOption = {
   id: number;
@@ -11,26 +7,20 @@ type ExerciseOption = {
 };
 
 type WorkoutSegmentExerciseFieldsProps = {
-  useWorkoutState: UseBoundStore<StoreApi<WorkoutState>>;
   updateExercise: (
     callback: (exercise: WorkoutSegmentExercise) => void,
   ) => void;
   segmentExercise: WorkoutSegmentExercise;
-  exerciseCountInSegment: number;
   exerciseOptions: ExerciseOption[];
-  onRemove: () => void;
+  onRemove?: () => void;
 };
 
 export function WorkoutSegmentExerciseFields({
-  useWorkoutState,
   updateExercise,
   segmentExercise,
-  exerciseCountInSegment,
   exerciseOptions,
   onRemove,
 }: WorkoutSegmentExerciseFieldsProps) {
-  const workoutState = useWorkoutState();
-
   return (
     <div className="grid gap-3 rounded-lg border border-border/80 bg-background/70 p-3 md:grid-cols-[1.2fr_0.7fr_auto]">
       <label className="flex flex-col gap-2 text-sm">
@@ -88,7 +78,7 @@ export function WorkoutSegmentExerciseFields({
         <button
           type="button"
           onClick={onRemove}
-          disabled={exerciseCountInSegment === 1}
+          disabled={!onRemove}
           className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />
