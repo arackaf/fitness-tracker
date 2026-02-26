@@ -1,38 +1,36 @@
+import type {
+  WorkoutSegmentExercise,
+  WorkoutState,
+} from "@/data/zustand-state/workout-state";
 import { Trash2 } from "lucide-react";
+import type { StoreApi, UseBoundStore } from "zustand";
 
 type ExerciseOption = {
   id: number;
   name: string | null;
 };
 
-type DraftSegmentExercise = {
-  exerciseId: string;
-  reps: string;
-  repsToFailure: boolean;
-};
-
 type WorkoutSegmentExerciseFieldsProps = {
-  segmentIndex?: number;
+  useWorkoutState: UseBoundStore<StoreApi<WorkoutState>>;
+  segmentIndex: number;
   exerciseIndex: number;
-  segmentExercise: DraftSegmentExercise;
+  segmentExercise: WorkoutSegmentExercise;
   exerciseCountInSegment: number;
   exerciseOptions: ExerciseOption[];
-  onExerciseChange: (value: string) => void;
-  onRepsChange: (value: string) => void;
-  onRepsToFailureChange: (checked: boolean) => void;
   onRemove: () => void;
 };
 
 export function WorkoutSegmentExerciseFields({
+  useWorkoutState,
   exerciseIndex,
+  segmentIndex,
   segmentExercise,
   exerciseCountInSegment,
   exerciseOptions,
-  onExerciseChange,
-  onRepsChange,
-  onRepsToFailureChange,
   onRemove,
 }: WorkoutSegmentExerciseFieldsProps) {
+  const workoutState = useWorkoutState();
+
   return (
     <div className="grid gap-3 rounded-lg border border-border/80 bg-background/70 p-3 md:grid-cols-[1.2fr_0.7fr_auto]">
       <label className="flex flex-col gap-2 text-sm">
@@ -40,7 +38,12 @@ export function WorkoutSegmentExerciseFields({
         <select
           required
           value={segmentExercise.exerciseId}
-          onChange={event => onExerciseChange(event.target.value)}
+          onChange={event => {
+            workoutState.update(state => {
+              state.segments[segmentIndex].exercises[exerciseIndex].exerciseId =
+                parseInt(event.target.value);
+            });
+          }}
           className="rounded-md border border-input bg-background px-3 py-2"
         >
           <option value="">Select an exercise</option>
@@ -59,8 +62,13 @@ export function WorkoutSegmentExerciseFields({
           disabled={segmentExercise.repsToFailure}
           min={1}
           type="number"
-          value={segmentExercise.reps}
-          onChange={event => onRepsChange(event.target.value)}
+          value={segmentExercise.reps?.toString() ?? ""}
+          onChange={event => {
+            workoutState.update(state => {
+              state.segments[segmentIndex].exercises[exerciseIndex].reps =
+                parseInt(event.target.value);
+            });
+          }}
           className="rounded-md border border-input bg-background px-3 py-2 disabled:opacity-60"
         />
 
@@ -68,7 +76,13 @@ export function WorkoutSegmentExerciseFields({
           <input
             type="checkbox"
             checked={segmentExercise.repsToFailure}
-            onChange={event => onRepsToFailureChange(event.target.checked)}
+            onChange={event => {
+              workoutState.update(state => {
+                state.segments[segmentIndex].exercises[
+                  exerciseIndex
+                ].repsToFailure = event.target.checked;
+              });
+            }}
           />
           Reps to failure
         </label>

@@ -9,7 +9,15 @@ import { Header } from "@/components/Header";
 import { WorkoutSegmentExerciseFields } from "@/components/create-workout/WorkoutSegmentExerciseFields";
 
 import { db } from "../../drizzle/db";
-import { exercises } from "../../drizzle/schema";
+import {
+  exercises,
+  workoutSegment,
+  workoutSegmentExercise,
+} from "../../drizzle/schema";
+import {
+  createWorkoutState,
+  defaultExercise,
+} from "@/data/zustand-state/workout-state";
 
 type DraftSegmentExercise = {
   exerciseId: string;
@@ -72,36 +80,11 @@ function RouteComponent() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  const updateSegment = (segmentIndex: number, nextSegment: DraftSegment) => {
-    setSegments(current =>
-      current.map((segment, index) =>
-        index === segmentIndex ? nextSegment : segment,
-      ),
-    );
-  };
-
-  const addSegment = () => {
-    setSegments(current => [...current, createDraftSegment()]);
-  };
-
   const removeSegment = (segmentIndex: number) => {
     setSegments(current =>
       current.length === 1
         ? current
         : current.filter((_, index) => index !== segmentIndex),
-    );
-  };
-
-  const addExerciseToSegment = (segmentIndex: number) => {
-    setSegments(current =>
-      current.map((segment, index) =>
-        index === segmentIndex
-          ? {
-              ...segment,
-              exercises: [...segment.exercises, createDraftExercise()],
-            }
-          : segment,
-      ),
     );
   };
 
@@ -151,6 +134,9 @@ function RouteComponent() {
     }
   };
 
+  const [useWorkoutState] = useState(() => createWorkoutState());
+  const workoutState = useWorkoutState();
+
   return (
     <section>
       <Header title="Log Workout" />
@@ -193,7 +179,7 @@ function RouteComponent() {
           </label>
         </div>
 
-        {segments.map((segment, segmentIndex) => (
+        {workoutState.segments.map((segmentPayload, segmentIndex) => (
           <div
             key={`segment-${segmentIndex + 1}`}
             className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
@@ -219,101 +205,45 @@ function RouteComponent() {
                 required
                 min={1}
                 type="number"
-                value={segment.sets}
-                onChange={event =>
-                  updateSegment(segmentIndex, {
-                    ...segment,
-                    sets: event.target.value,
-                  })
-                }
+                value={String(segmentPayload.segment.sets)}
+                onChange={event => {
+                  workoutState.update(state => {
+                    state.segments[segmentIndex].segment.sets = Number(
+                      event.target.value,
+                    );
+                  });
+                }}
                 className="rounded-md border border-input bg-background px-3 py-2"
               />
             </label>
 
             <div className="space-y-3">
-              {segment.exercises.map((segmentExercise, exerciseIndex) => (
-                <WorkoutSegmentExerciseFields
-                  key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
-                  segmentIndex={segmentIndex}
-                  exerciseIndex={exerciseIndex}
-                  segmentExercise={segmentExercise}
-                  exerciseCountInSegment={segment.exercises.length}
-                  exerciseOptions={exerciseOptions}
-                  onExerciseChange={value =>
-                    setSegments(current =>
-                      current.map((currentSegment, idx) => {
-                        if (idx !== segmentIndex) {
-                          return currentSegment;
-                        }
-
-                        return {
-                          ...currentSegment,
-                          exercises: currentSegment.exercises.map(
-                            (exercise, exerciseIdx) =>
-                              exerciseIdx === exerciseIndex
-                                ? {
-                                    ...exercise,
-                                    exerciseId: value,
-                                  }
-                                : exercise,
-                          ),
-                        };
-                      }),
-                    )
-                  }
-                  onRepsChange={value =>
-                    setSegments(current =>
-                      current.map((currentSegment, idx) => {
-                        if (idx !== segmentIndex) {
-                          return currentSegment;
-                        }
-
-                        return {
-                          ...currentSegment,
-                          exercises: currentSegment.exercises.map(
-                            (exercise, exerciseIdx) =>
-                              exerciseIdx === exerciseIndex
-                                ? {
-                                    ...exercise,
-                                    reps: value,
-                                  }
-                                : exercise,
-                          ),
-                        };
-                      }),
-                    )
-                  }
-                  onRepsToFailureChange={checked =>
-                    setSegments(current =>
-                      current.map((currentSegment, idx) => {
-                        if (idx !== segmentIndex) {
-                          return currentSegment;
-                        }
-
-                        return {
-                          ...currentSegment,
-                          exercises: currentSegment.exercises.map(
-                            (exercise, exerciseIdx) =>
-                              exerciseIdx === exerciseIndex
-                                ? {
-                                    ...exercise,
-                                    repsToFailure: checked,
-                                  }
-                                : exercise,
-                          ),
-                        };
-                      }),
-                    )
-                  }
-                  onRemove={() =>
-                    removeExerciseFromSegment(segmentIndex, exerciseIndex)
-                  }
-                />
-              ))}
+              {segmentPayload.exercises.map(
+                (segmentExercise, exerciseIndex) => (
+                  <WorkoutSegmentExerciseFields
+                    useWorkoutState={useWorkoutState}
+                    key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
+                    segmentIndex={segmentIndex}
+                    exerciseIndex={exerciseIndex}
+                    segmentExercise={segmentExercise}
+                    exerciseCountInSegment={segmentPayload.exercises.length}
+                    exerciseOptions={exerciseOptions}
+                    onRemove={() =>
+                      removeExerciseFromSegment(segmentIndex, exerciseIndex)
+                    }
+                  />
+                ),
+              )}
 
               <button
                 type="button"
-                onClick={() => addExerciseToSegment(segmentIndex)}
+                onClick={() => {
+                  workoutState.update(state => {
+                    state.segments[segmentIndex].exercises.push(
+                      defaultExercise,
+                    );
+                  });
+                }}
                 className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-semibold"
               >
                 <Plus className="size-4" aria-hidden="true" />
@@ -326,7 +256,14 @@ function RouteComponent() {
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
-            onClick={addSegment}
+            onClick={() => {
+              workoutState.update(state => {
+                state.segments.push({
+                  segment: workoutSegment.$inferInsert,
+                  exercises: [workoutSegmentExercise.$inferInsert],
+                });
+              });
+            }}
             className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm font-semibold"
           >
             <Plus className="size-4" aria-hidden="true" />
