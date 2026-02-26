@@ -12,11 +12,13 @@ type UpdatableObject<T> = T & {
   performUpdate: (payload: Partial<T>) => void;
 };
 
-type DrizzleZustandStore<T> = UseBoundStore<StoreApi<UpdatableObject<T>>>;
+export type DrizzleZustandStore<T extends AnyPgTable> = UseBoundStore<
+  StoreApi<UpdatableObject<DrizzleTableType<T>>>
+>;
 
 export const createDrizzleObjectStore = <T extends AnyPgTable>(
   table: T,
-): DrizzleZustandStore<DrizzleTableType<T>> => {
+): DrizzleZustandStore<T> => {
   return create<UpdatableObject<DrizzleTableType<T>>>(set => {
     return {
       ...(table.$inferInsert as DrizzleTableType<T>),
