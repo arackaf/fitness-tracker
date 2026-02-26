@@ -202,6 +202,7 @@ function RouteComponent() {
                     }}
                     key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
                     segmentExercise={segmentExercise}
+                    sets={segmentPayload.segment.sets}
                     exerciseOptions={exerciseOptions}
                     onRemove={
                       workoutState.segments[segmentIndex].exercises.length === 1
