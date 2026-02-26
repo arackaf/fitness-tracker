@@ -79,7 +79,7 @@ export function WorkoutSegmentExerciseFields({
           type="button"
           onClick={onRemove}
           disabled={!onRemove}
-          className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />
           Remove
