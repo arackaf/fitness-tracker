@@ -68,7 +68,7 @@ export const Route = createFileRoute("/app/log-workout")({
 });
 
 function RouteComponent() {
-  const { data: exerciseOptions } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [workoutDate, setWorkoutDate] = useState(
@@ -212,7 +212,7 @@ function RouteComponent() {
                     }}
                     key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
                     segmentExercise={segmentExercise}
-                    exerciseOptions={exerciseOptions}
+                    exercises={exercises}
                     onRemove={
                       workoutState.segments[segmentIndex].exercises.length === 1
                         ? undefined

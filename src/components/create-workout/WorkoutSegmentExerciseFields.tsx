@@ -11,14 +11,14 @@ type WorkoutSegmentExerciseFieldsProps = {
     callback: (exercise: WorkoutSegmentExercise) => void,
   ) => void;
   segmentExercise: WorkoutSegmentExercise;
-  exerciseOptions: ExerciseSelectorOption[];
+  exercises: ExerciseSelectorOption[];
   onRemove?: () => void;
 };
 
 export function WorkoutSegmentExerciseFields({
   updateExercise,
   segmentExercise,
-  exerciseOptions,
+  exercises,
   onRemove,
 }: WorkoutSegmentExerciseFieldsProps) {
   return (
@@ -28,7 +28,7 @@ export function WorkoutSegmentExerciseFields({
           <ExerciseSelector
             required
             value={segmentExercise.exerciseId ?? null}
-            options={exerciseOptions}
+            exercises={exercises}
             onSelect={exerciseId => {
               updateExercise(exercise => {
                 exercise.exerciseId = exerciseId;

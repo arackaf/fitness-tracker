@@ -25,31 +25,30 @@ export type ExerciseSelectorOption = {
 
 type ExerciseSelectorProps = {
   value: number | null;
-  options: ExerciseSelectorOption[];
+  exercises: ExerciseSelectorOption[];
   onSelect: (exerciseId: number) => void;
   required?: boolean;
 };
 
+type MuscleGroupOption = {
+  id: number;
+  name: string;
+  muscleGroupListLabel: string;
+  searchableText: string;
+};
+
 export function ExerciseSelector({
   value,
-  options,
+  exercises,
   onSelect,
   required = false,
 }: ExerciseSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const groupedOptions = useMemo(() => {
-    const groups = new Map<
-      string,
-      Array<{
-        id: number;
-        name: string;
-        muscleGroupListLabel: string;
-        searchableText: string;
-      }>
-    >();
+    const groups = new Map<string, MuscleGroupOption[]>();
 
-    for (const option of options) {
+    for (const option of exercises) {
       const optionName = option.name ?? `Exercise #${option.id}`;
       const normalizedMuscleGroups = Array.from(
         new Set(
@@ -60,8 +59,7 @@ export function ExerciseSelector({
       )
         .map(
           muscleGroup =>
-            muscleGroup.charAt(0).toLocaleUpperCase() +
-            muscleGroup.slice(1),
+            muscleGroup.charAt(0).toLocaleUpperCase() + muscleGroup.slice(1),
         )
         .sort((a, b) => a.localeCompare(b));
       const muscleGroupListLabel =
