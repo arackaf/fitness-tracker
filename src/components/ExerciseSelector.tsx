@@ -48,11 +48,11 @@ export function ExerciseSelector({
   const groupedOptions = useMemo(() => {
     const groups = new Map<string, MuscleGroupOption[]>();
 
-    for (const option of exercises) {
-      const optionName = option.name ?? `Exercise #${option.id}`;
+    for (const exercise of exercises) {
+      const optionName = exercise.name ?? `Exercise #${exercise.id}`;
       const normalizedMuscleGroups = Array.from(
         new Set(
-          (option.muscleGroups ?? [])
+          (exercise.muscleGroups ?? [])
             .map(muscleGroup => muscleGroup.trim())
             .filter(Boolean),
         ),
@@ -70,10 +70,10 @@ export function ExerciseSelector({
 
       const existingEntries = groups.get(groupName) ?? [];
       existingEntries.push({
-        id: option.id,
+        id: exercise.id,
         name: optionName,
         muscleGroupListLabel,
-        searchableText: `${optionName} ${muscleGroupListLabel} ${groupName} ${option.id}`,
+        searchableText: `${optionName} ${muscleGroupListLabel} ${groupName} ${exercise.id}`,
       });
       groups.set(groupName, existingEntries);
     }
@@ -88,9 +88,9 @@ export function ExerciseSelector({
           optionA.name.localeCompare(optionB.name),
         ),
       }));
-  }, [options]);
+  }, [exercises]);
 
-  const selectedOption = options.find(option => option.id === value);
+  const selectedOption = exercises.find(exercise => exercise.id === value);
   const selectedLabel = selectedOption
     ? (selectedOption.name ?? `Exercise #${selectedOption.id}`)
     : "Select an exercise";
