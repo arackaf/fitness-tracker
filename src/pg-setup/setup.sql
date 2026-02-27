@@ -96,9 +96,8 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise (
   workout_segment_id INT NOT NULL REFERENCES workout_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  reps INT CHECK (reps > 0),
-  reps_to_failure BOOL NOT NULL,
-  CHECK (reps_to_failure = true OR reps IS NOT NULL)
+  reps INT[],
+  reps_to_failure BOOL NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
   ON workout_segment_exercise (workout_segment_id, exercise_order);
