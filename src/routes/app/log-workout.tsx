@@ -47,6 +47,7 @@ const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
       .select({
         id: exercises.id,
         name: exercises.name,
+        muscleGroups: exercises.muscleGroups,
       })
       .from(exercises)
       .orderBy(asc(exercises.name));
