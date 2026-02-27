@@ -49,19 +49,6 @@ export function WorkoutSegmentExerciseFields({
           </select>
         </label>
 
-        <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-          <input
-            type="checkbox"
-            checked={segmentExercise.repsToFailure}
-            onChange={event => {
-              updateExercise(exercise => {
-                exercise.repsToFailure = event.target.checked;
-              });
-            }}
-          />
-          Reps to failure
-        </label>
-
         <div className="flex items-end ml-auto">
           <button
             type="button"
@@ -75,38 +62,57 @@ export function WorkoutSegmentExerciseFields({
         </div>
       </div>
 
-      {!segmentExercise.repsToFailure ? (
-        <div className="flex items-start gap-3 text-sm md:col-span-2 ml-2">
-          <span className="pt-1 font-medium">Reps</span>
-          <div className="flex flex-wrap gap-2">
-            {Array.from({ length: safeSets }, (_, index) => {
-              const setNumber = index + 1;
-              return (
-                <label
-                  key={`reps-${setNumber}`}
-                  className="inline-flex items-center gap-1 text-xs text-muted-foreground"
-                >
-                  <span>{setNumber}:</span>
-                  <input
-                    required={index === 0}
-                    min={1}
-                    type="number"
-                    value={segmentExercise.reps?.toString() ?? ""}
-                    onChange={event => {
-                      updateExercise(exercise => {
-                        exercise.reps = event.target.value
-                          ? parseInt(event.target.value)
-                          : null;
-                      });
-                    }}
-                    className="w-16 rounded-md border border-input bg-background px-2 py-1"
-                  />
-                </label>
-              );
-            })}
-          </div>
+      <div className="flex gap-2  min-h-7">
+        <div className="h-7 flex items-center">
+          <label className="inline-flex items-center gap-2 text-xs text-muted-foreground text-nowrap">
+            <input
+              type="checkbox"
+              checked={segmentExercise.repsToFailure}
+              onChange={event => {
+                updateExercise(exercise => {
+                  exercise.repsToFailure = event.target.checked;
+                });
+              }}
+            />
+            Reps to failure
+          </label>
         </div>
-      ) : null}
+
+        {!segmentExercise.repsToFailure ? (
+          <div className="flex items-center gap-3 text-sm md:col-span-2 ml-2">
+            <div className="h-7 flex self-start items-center">
+              <span className="font-medium">Reps</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Array.from({ length: safeSets }, (_, index) => {
+                const setNumber = index + 1;
+                return (
+                  <label
+                    key={`reps-${setNumber}`}
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground"
+                  >
+                    <span>{setNumber}:</span>
+                    <input
+                      required={index === 0}
+                      min={1}
+                      type="number"
+                      value={segmentExercise.reps?.toString() ?? ""}
+                      onChange={event => {
+                        updateExercise(exercise => {
+                          exercise.reps = event.target.value
+                            ? parseInt(event.target.value)
+                            : null;
+                        });
+                      }}
+                      className="w-16 rounded-md border border-input bg-background px-2 py-1"
+                    />
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
