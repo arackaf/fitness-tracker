@@ -1,17 +1,14 @@
 import type { WorkoutSegmentExercise } from "@/data/zustand-state/workout-state";
 import { Trash2 } from "lucide-react";
 
-import {
-  ExerciseSelector,
-  type ExerciseSelectorOption,
-} from "@/components/ExerciseSelector";
+import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 
 type WorkoutSegmentExerciseFieldsProps = {
   updateExercise: (
     callback: (exercise: WorkoutSegmentExercise) => void,
   ) => void;
   segmentExercise: WorkoutSegmentExercise;
-  exercises: ExerciseSelectorOption[];
+  exercises: Exercise[];
   onRemove?: () => void;
 };
 

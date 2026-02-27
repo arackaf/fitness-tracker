@@ -10,10 +10,10 @@ import { WorkoutSegmentExerciseFields } from "@/components/create-workout/Workou
 
 import { db } from "../../drizzle/db";
 import {
-  exercises,
+  exercises as exercisesTable,
   workoutSegment,
   workoutSegmentExercise,
-} from "../../drizzle/schema";
+} from "@/drizzle/schema";
 import {
   createWorkoutState,
   defaultExercise,
@@ -45,12 +45,12 @@ const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
     return db
       .select({
-        id: exercises.id,
-        name: exercises.name,
-        muscleGroups: exercises.muscleGroups,
+        id: exercisesTable.id,
+        name: exercisesTable.name,
+        muscleGroups: exercisesTable.muscleGroups,
       })
-      .from(exercises)
-      .orderBy(asc(exercises.name));
+      .from(exercisesTable)
+      .orderBy(asc(exercisesTable.name));
   },
 );
 

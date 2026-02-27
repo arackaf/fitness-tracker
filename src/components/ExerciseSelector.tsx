@@ -17,15 +17,16 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-export type ExerciseSelectorOption = {
-  id: number;
-  name: string | null;
-  muscleGroups: string[] | null;
-};
+import { exercises as exerciseTable } from "@/drizzle/schema";
+
+export type Exercise = Pick<
+  typeof exerciseTable.$inferSelect,
+  "id" | "name" | "muscleGroups"
+>;
 
 type ExerciseSelectorProps = {
   value: number | null;
-  exercises: ExerciseSelectorOption[];
+  exercises: Exercise[];
   onSelect: (exerciseId: number) => void;
   required?: boolean;
 };
@@ -49,31 +50,22 @@ export function ExerciseSelector({
     const groups = new Map<string, MuscleGroupOption[]>();
 
     for (const exercise of exercises) {
-      const optionName = exercise.name ?? `Exercise #${exercise.id}`;
-      const normalizedMuscleGroups = Array.from(
-        new Set(
-          (exercise.muscleGroups ?? [])
-            .map(muscleGroup => muscleGroup.trim())
-            .filter(Boolean),
-        ),
-      )
-        .map(
-          muscleGroup =>
-            muscleGroup.charAt(0).toLocaleUpperCase() + muscleGroup.slice(1),
-        )
+      const optionName = exercise.name;
+      const normalizedMuscleGroups = exercise.muscleGroups
+        .map(group => group.charAt(0).toLocaleUpperCase() + group.slice(1))
         .sort((a, b) => a.localeCompare(b));
-      const muscleGroupListLabel =
+
+      const groupName =
         normalizedMuscleGroups.length > 0
           ? normalizedMuscleGroups.join(", ")
           : "Ungrouped";
-      const groupName = muscleGroupListLabel;
 
       const existingEntries = groups.get(groupName) ?? [];
       existingEntries.push({
         id: exercise.id,
         name: optionName,
-        muscleGroupListLabel,
-        searchableText: `${optionName} ${muscleGroupListLabel} ${groupName} ${exercise.id}`,
+        muscleGroupListLabel: groupName,
+        searchableText: `${optionName} ${groupName} ${groupName} ${exercise.id}`,
       });
       groups.set(groupName, existingEntries);
     }
