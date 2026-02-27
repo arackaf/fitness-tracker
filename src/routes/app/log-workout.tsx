@@ -2,11 +2,11 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { asc } from "drizzle-orm";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import { Header } from "@/components/Header";
-import { WorkoutSegmentExerciseFields } from "@/components/create-workout/WorkoutSegmentExerciseFields";
+import { WorkoutSegment } from "@/components/create-workout/WorkoutSegment";
 
 import { db } from "../../drizzle/db";
 import {
@@ -16,7 +16,6 @@ import {
 } from "@/drizzle/schema";
 import {
   createWorkoutState,
-  defaultExercise,
 } from "@/data/zustand-state/workout-state";
 
 type DraftSegmentExercise = {
@@ -149,101 +148,14 @@ function RouteComponent() {
         </div>
 
         {workoutState.segments.map((segmentPayload, segmentIndex) => (
-          <div
+          <WorkoutSegment
             key={`segment-${segmentIndex + 1}`}
-            className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-base font-semibold">
-                Segment {segmentIndex + 1}
-              </h2>
-              <button
-                type="button"
-                onClick={() => {
-                  workoutState.update(state => {
-                    state.segments.splice(segmentIndex, 1);
-                  });
-                }}
-                disabled={segments.length === 1}
-                className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-1.5 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <Trash2 className="size-3.5" aria-hidden="true" />
-                Remove segment
-              </button>
-            </div>
-
-            <label className="flex max-w-36 flex-col gap-2 text-sm">
-              <span className="font-medium">Sets</span>
-              <input
-                required
-                min={1}
-                type="number"
-                value={String(segmentPayload.segment.sets)}
-                onChange={event => {
-                  const setCount = Number(event.target.value);
-
-                  workoutState.update(state => {
-                    state.segments[segmentIndex].segment.sets = setCount;
-                    state.segments[segmentIndex].exercises.forEach(exercise => {
-                      if (!exercise.reps) {
-                        exercise.reps = [];
-                      }
-
-                      exercise.reps.length = setCount;
-                      exercise.reps[setCount - 1] =
-                        exercise.reps[setCount - 2] || 0;
-                    });
-                  });
-                }}
-                className="rounded-md border border-input bg-background px-3 py-2"
-              />
-            </label>
-
-            <div className="space-y-3">
-              {segmentPayload.exercises.map(
-                (segmentExercise, exerciseIndex) => (
-                  <WorkoutSegmentExerciseFields
-                    updateExercise={updater => {
-                      workoutState.update(state => {
-                        const exercise =
-                          state.segments[segmentIndex].exercises[exerciseIndex];
-                        updater(exercise);
-                      });
-                    }}
-                    key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
-                    segmentExercise={segmentExercise}
-                    exercises={exercises}
-                    onRemove={
-                      workoutState.segments[segmentIndex].exercises.length === 1
-                        ? undefined
-                        : () =>
-                            workoutState.update(state => {
-                              state.segments[segmentIndex].exercises.splice(
-                                exerciseIndex,
-                                1,
-                              );
-                            })
-                    }
-                  />
-                ),
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  workoutState.update(state => {
-                    state.segments[segmentIndex].exercises.push(
-                      defaultExercise,
-                    );
-                  });
-                }}
-                className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-semibold"
-              >
-                <Plus className="size-4" aria-hidden="true" />
-                Add exercise
-              </button>
-            </div>
-          </div>
+            segmentIndex={segmentIndex}
+            segmentPayload={segmentPayload}
+            exercises={exercises}
+            segmentsLength={segments.length}
+            updateWorkout={workoutState.update}
+          />
         ))}
 
         <div className="flex flex-wrap items-center gap-3">
