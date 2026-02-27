@@ -28,9 +28,9 @@ $$;
 
 CREATE TABLE IF NOT EXISTS exercises (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  name VARCHAR(150),
+  name VARCHAR(150) NOT NULL,
   description TEXT,
-  muscle_groups muscle_group[],
+  muscle_groups muscle_group[] NOT NULL,
   is_compound BOOL
 );
 CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
