@@ -8,6 +8,8 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { WorkoutSegment } from "@/components/create-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
@@ -90,32 +92,30 @@ function RouteComponent() {
         <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm">
             <span className="font-medium">Workout name</span>
-            <input
+            <Input
               required
               value={name}
               onChange={event => setName(event.target.value)}
-              className="rounded-md border border-input bg-background px-3 py-2"
               placeholder="Push Day - Week 6"
             />
           </label>
 
           <label className="flex flex-col gap-2 text-sm">
             <span className="font-medium">Workout date</span>
-            <input
+            <Input
               required
               type="date"
               value={workoutDate}
               onChange={event => setWorkoutDate(event.target.value)}
-              className="rounded-md border border-input bg-background px-3 py-2"
             />
           </label>
 
           <label className="flex flex-col gap-2 text-sm md:col-span-2">
             <span className="font-medium">Description</span>
-            <textarea
+            <Textarea
               value={description}
               onChange={event => setDescription(event.target.value)}
-              className="min-h-20 rounded-md border border-input bg-background px-3 py-2"
+              className="min-h-20"
               placeholder="Optional notes about this workout."
             />
           </label>

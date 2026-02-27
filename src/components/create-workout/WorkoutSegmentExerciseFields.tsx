@@ -3,6 +3,8 @@ import { Trash2 } from "lucide-react";
 
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 
 type WorkoutSegmentExerciseFieldsProps = {
   updateExercise: (
@@ -52,12 +54,11 @@ export function WorkoutSegmentExerciseFields({
       <div className="flex gap-2  min-h-7">
         <div className="h-7 flex items-center">
           <label className="inline-flex items-center gap-2 text-xs text-muted-foreground text-nowrap">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={segmentExercise.repsToFailure}
-              onChange={event => {
+              onCheckedChange={checked => {
                 updateExercise(exercise => {
-                  exercise.repsToFailure = event.target.checked;
+                  exercise.repsToFailure = checked === true;
                 });
               }}
             />
@@ -79,7 +80,7 @@ export function WorkoutSegmentExerciseFields({
                     className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
                   >
                     <span>{setNumber}:</span>
-                    <input
+                    <Input
                       required={index === 0}
                       min={1}
                       type="number"
@@ -89,7 +90,7 @@ export function WorkoutSegmentExerciseFields({
                           exercise.reps![index] = parseInt(event.target.value);
                         });
                       }}
-                      className="w-16 rounded-md border border-input bg-background px-2 py-1"
+                      className="h-7 w-16 px-2 py-1"
                     />
                   </label>
                 );

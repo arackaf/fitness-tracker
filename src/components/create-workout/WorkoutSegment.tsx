@@ -3,6 +3,7 @@ import { Plus, Trash2 } from "lucide-react";
 import type { Exercise } from "@/components/ExerciseSelector";
 import { WorkoutSegmentExerciseFields } from "@/components/create-workout/WorkoutSegmentExerciseFields";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   defaultExercise,
   type SegmentWithExercises,
@@ -46,7 +47,7 @@ export function WorkoutSegment({
 
       <label className="flex max-w-36 flex-col gap-2 text-sm">
         <span className="font-medium">Sets</span>
-        <input
+        <Input
           required
           min={1}
           type="number"
@@ -66,7 +67,6 @@ export function WorkoutSegment({
               });
             });
           }}
-          className="rounded-md border border-input bg-background px-3 py-2"
         />
       </label>
 
