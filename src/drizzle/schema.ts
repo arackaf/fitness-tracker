@@ -155,9 +155,9 @@ export const exercises = pgTable(
       maxValue: 2147483647,
       cache: 1,
     }),
-    name: varchar({ length: 150 }),
+    name: varchar({ length: 150 }).notNull(),
     description: text(),
-    muscleGroups: muscleGroup("muscle_groups").array(),
+    muscleGroups: muscleGroup("muscle_groups").array().notNull(),
     isCompound: boolean("is_compound"),
   },
   table => [
@@ -246,15 +246,15 @@ export const workoutSegmentExercise = pgTable(
       table.exerciseOrder.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
-      columns: [table.exerciseId],
-      foreignColumns: [exercises.id],
-      name: "workout_segment_exercise_exercise_id_fkey",
-    }),
-    foreignKey({
       columns: [table.workoutSegmentId],
       foreignColumns: [workoutSegment.id],
       name: "workout_segment_exercise_workout_segment_id_fkey",
     }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.exerciseId],
+      foreignColumns: [exercises.id],
+      name: "workout_segment_exercise_exercise_id_fkey",
+    }),
     check(
       "workout_segment_exercise_exercise_order_check",
       sql`exercise_order > 0`,
