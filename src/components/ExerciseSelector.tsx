@@ -52,27 +52,32 @@ export function ExerciseSelector({
     for (const option of options) {
       const optionName = option.name ?? `Exercise #${option.id}`;
       const normalizedMuscleGroups = Array.from(
-        new Set((option.muscleGroups ?? []).filter(Boolean)),
-      ).sort((a, b) => a.localeCompare(b));
-      const optionGroups =
-        normalizedMuscleGroups.length > 0
-          ? normalizedMuscleGroups
-          : ["Ungrouped"];
+        new Set(
+          (option.muscleGroups ?? [])
+            .map(muscleGroup => muscleGroup.trim())
+            .filter(Boolean),
+        ),
+      )
+        .map(
+          muscleGroup =>
+            muscleGroup.charAt(0).toLocaleUpperCase() +
+            muscleGroup.slice(1),
+        )
+        .sort((a, b) => a.localeCompare(b));
       const muscleGroupListLabel =
         normalizedMuscleGroups.length > 0
           ? normalizedMuscleGroups.join(", ")
           : "Ungrouped";
+      const groupName = muscleGroupListLabel;
 
-      for (const groupName of optionGroups) {
-        const existingEntries = groups.get(groupName) ?? [];
-        existingEntries.push({
-          id: option.id,
-          name: optionName,
-          muscleGroupListLabel,
-          searchableText: `${optionName} ${muscleGroupListLabel} ${groupName} ${option.id}`,
-        });
-        groups.set(groupName, existingEntries);
-      }
+      const existingEntries = groups.get(groupName) ?? [];
+      existingEntries.push({
+        id: option.id,
+        name: optionName,
+        muscleGroupListLabel,
+        searchableText: `${optionName} ${muscleGroupListLabel} ${groupName} ${option.id}`,
+      });
+      groups.set(groupName, existingEntries);
     }
 
     return Array.from(groups.entries())
