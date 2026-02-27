@@ -236,7 +236,7 @@ export const workoutSegmentExercise = pgTable(
     workoutSegmentId: integer("workout_segment_id").notNull(),
     exerciseOrder: integer("exercise_order").notNull(),
     exerciseId: integer("exercise_id").notNull(),
-    reps: integer(),
+    reps: integer().array(),
     repsToFailure: boolean("reps_to_failure").notNull(),
   },
   table => [
@@ -246,23 +246,18 @@ export const workoutSegmentExercise = pgTable(
       table.exerciseOrder.asc().nullsLast().op("int4_ops"),
     ),
     foreignKey({
-      columns: [table.workoutSegmentId],
-      foreignColumns: [workoutSegment.id],
-      name: "workout_segment_exercise_workout_segment_id_fkey",
-    }).onDelete("cascade"),
-    foreignKey({
       columns: [table.exerciseId],
       foreignColumns: [exercises.id],
       name: "workout_segment_exercise_exercise_id_fkey",
     }),
+    foreignKey({
+      columns: [table.workoutSegmentId],
+      foreignColumns: [workoutSegment.id],
+      name: "workout_segment_exercise_workout_segment_id_fkey",
+    }).onDelete("cascade"),
     check(
       "workout_segment_exercise_exercise_order_check",
       sql`exercise_order > 0`,
-    ),
-    check("workout_segment_exercise_reps_check", sql`reps > 0`),
-    check(
-      "workout_segment_exercise_check",
-      sql`(reps_to_failure = true) OR (reps IS NOT NULL)`,
     ),
   ],
 );

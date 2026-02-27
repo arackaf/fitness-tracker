@@ -64,13 +64,13 @@ export const workoutRelations = relations(workout, ({ many }) => ({
 export const workoutSegmentExerciseRelations = relations(
   workoutSegmentExercise,
   ({ one }) => ({
-    workoutSegment: one(workoutSegment, {
-      fields: [workoutSegmentExercise.workoutSegmentId],
-      references: [workoutSegment.id],
-    }),
     exercise: one(exercises, {
       fields: [workoutSegmentExercise.exerciseId],
       references: [exercises.id],
+    }),
+    workoutSegment: one(workoutSegment, {
+      fields: [workoutSegmentExercise.workoutSegmentId],
+      references: [workoutSegment.id],
     }),
   }),
 );
