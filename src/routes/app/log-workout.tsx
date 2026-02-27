@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { Header } from "@/components/Header";
 import { WorkoutSegment } from "@/components/create-workout/WorkoutSegment";
+import { Button } from "@/components/ui/button";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
@@ -132,7 +133,7 @@ function RouteComponent() {
         ))}
 
         <div className="flex flex-wrap items-center gap-3">
-          <button
+          <Button
             type="button"
             onClick={() => {
               workoutState.update(state => {
@@ -142,19 +143,20 @@ function RouteComponent() {
                 });
               });
             }}
-            className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-sm font-semibold"
+            variant="outline"
+            className="font-semibold"
           >
             <Plus className="size-4" aria-hidden="true" />
             Add segment
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="submit"
             disabled={isSaving}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+            className="font-semibold"
           >
             {isSaving ? "Saving..." : "Create workout"}
-          </button>
+          </Button>
         </div>
 
         {errorMessage ? (
