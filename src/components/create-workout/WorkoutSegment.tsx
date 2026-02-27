@@ -2,6 +2,7 @@ import { Plus, Trash2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { WorkoutSegmentExerciseFields } from "@/components/create-workout/WorkoutSegmentExerciseFields";
+import { Button } from "@/components/ui/button";
 import {
   defaultExercise,
   type SegmentWithExercises,
@@ -27,7 +28,7 @@ export function WorkoutSegment({
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-base font-semibold">Segment {segmentIndex + 1}</h2>
-        <button
+        <Button
           type="button"
           onClick={() => {
             updateWorkout(state => {
@@ -35,11 +36,12 @@ export function WorkoutSegment({
             });
           }}
           disabled={!canDelete}
-          className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-1.5 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
+          variant="outline"
+          size="sm"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />
           Remove segment
-        </button>
+        </Button>
       </div>
 
       <label className="flex max-w-36 flex-col gap-2 text-sm">
@@ -95,18 +97,20 @@ export function WorkoutSegment({
           />
         ))}
 
-        <button
+        <Button
           type="button"
           onClick={() => {
             updateWorkout(state => {
               state.segments[segmentIndex].exercises.push(defaultExercise);
             });
           }}
-          className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-semibold"
+          variant="outline"
+          size="sm"
+          className="font-semibold"
         >
           <Plus className="size-4" aria-hidden="true" />
           Add exercise
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import type { WorkoutSegmentExercise } from "@/data/zustand-state/workout-state"
 import { Trash2 } from "lucide-react";
 
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
+import { Button } from "@/components/ui/button";
 
 type WorkoutSegmentExerciseFieldsProps = {
   updateExercise: (
@@ -35,15 +36,16 @@ export function WorkoutSegmentExerciseFields({
         </label>
 
         <div className="flex items-end ml-auto">
-          <button
+          <Button
             type="button"
             onClick={onRemove}
             disabled={!onRemove}
-            className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-2 text-xs font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+            variant="outline"
+            size="sm"
           >
             <Trash2 className="size-3.5" aria-hidden="true" />
             Remove
-          </button>
+          </Button>
         </div>
       </div>
 
