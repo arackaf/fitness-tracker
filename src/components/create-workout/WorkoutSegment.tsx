@@ -12,7 +12,7 @@ type WorkoutSegmentProps = {
   segmentIndex: number;
   segmentPayload: SegmentWithExercises;
   exercises: Exercise[];
-  segmentsLength: number;
+  canDelete: boolean;
   updateWorkout: (callback: (state: WorkoutState) => void) => void;
 };
 
@@ -20,7 +20,7 @@ export function WorkoutSegment({
   segmentIndex,
   segmentPayload,
   exercises,
-  segmentsLength,
+  canDelete,
   updateWorkout,
 }: WorkoutSegmentProps) {
   return (
@@ -34,7 +34,7 @@ export function WorkoutSegment({
               state.segments.splice(segmentIndex, 1);
             });
           }}
-          disabled={segmentsLength === 1}
+          disabled={!canDelete}
           className="inline-flex items-center gap-2 rounded-md border border-input px-3 py-1.5 text-xs font-medium disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />

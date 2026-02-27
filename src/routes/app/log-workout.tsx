@@ -153,7 +153,7 @@ function RouteComponent() {
             segmentIndex={segmentIndex}
             segmentPayload={segmentPayload}
             exercises={exercises}
-            segmentsLength={segments.length}
+            canDelete={segments.length > 1}
             updateWorkout={workoutState.update}
           />
         ))}
