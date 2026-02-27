@@ -10,7 +10,7 @@ import {
 
 type WorkoutSegmentProps = {
   segmentIndex: number;
-  segmentPayload: SegmentWithExercises;
+  segment: SegmentWithExercises;
   exercises: Exercise[];
   canDelete: boolean;
   updateWorkout: (callback: (state: WorkoutState) => void) => void;
@@ -18,7 +18,7 @@ type WorkoutSegmentProps = {
 
 export function WorkoutSegment({
   segmentIndex,
-  segmentPayload,
+  segment,
   exercises,
   canDelete,
   updateWorkout,
@@ -48,7 +48,7 @@ export function WorkoutSegment({
           required
           min={1}
           type="number"
-          value={String(segmentPayload.segment.sets)}
+          value={String(segment.segment.sets)}
           onChange={event => {
             const setCount = Number(event.target.value);
 
@@ -69,7 +69,7 @@ export function WorkoutSegment({
       </label>
 
       <div className="space-y-3">
-        {segmentPayload.exercises.map((segmentExercise, exerciseIndex) => (
+        {segment.exercises.map((segmentExercise, exerciseIndex) => (
           <WorkoutSegmentExerciseFields
             updateExercise={updater => {
               updateWorkout(state => {
@@ -82,7 +82,7 @@ export function WorkoutSegment({
             segmentExercise={segmentExercise}
             exercises={exercises}
             onRemove={
-              segmentPayload.exercises.length === 1
+              segment.exercises.length === 1
                 ? undefined
                 : () =>
                     updateWorkout(state => {

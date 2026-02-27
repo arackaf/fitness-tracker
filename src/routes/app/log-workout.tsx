@@ -9,13 +9,11 @@ import { Header } from "@/components/Header";
 import { WorkoutSegment } from "@/components/create-workout/WorkoutSegment";
 
 import { db } from "../../drizzle/db";
-import {
-  exercises as exercisesTable,
-  workoutSegment,
-  workoutSegmentExercise,
-} from "@/drizzle/schema";
+import { exercises as exercisesTable } from "@/drizzle/schema";
 import {
   createWorkoutState,
+  defaultExercise,
+  defaultSegment,
 } from "@/data/zustand-state/workout-state";
 
 type DraftSegmentExercise = {
@@ -147,11 +145,11 @@ function RouteComponent() {
           </label>
         </div>
 
-        {workoutState.segments.map((segmentPayload, segmentIndex) => (
+        {workoutState.segments.map((segment, segmentIndex) => (
           <WorkoutSegment
             key={`segment-${segmentIndex + 1}`}
             segmentIndex={segmentIndex}
-            segmentPayload={segmentPayload}
+            segment={segment}
             exercises={exercises}
             canDelete={segments.length > 1}
             updateWorkout={workoutState.update}
@@ -164,8 +162,8 @@ function RouteComponent() {
             onClick={() => {
               workoutState.update(state => {
                 state.segments.push({
-                  segment: workoutSegment.$inferInsert,
-                  exercises: [workoutSegmentExercise.$inferInsert],
+                  segment: defaultSegment,
+                  exercises: [defaultExercise],
                 });
               });
             }}

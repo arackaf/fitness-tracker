@@ -30,6 +30,12 @@ export const defaultExercise: WorkoutSegmentExercise = {
   workoutSegmentId: 0,
 };
 
+export const defaultSegment: WorkoutSegment = {
+  segmentOrder: 1,
+  sets: 4,
+  workoutId: 0,
+};
+
 export const createWorkoutState = () => {
   return create<WorkoutState>()(
     immer(set => {
