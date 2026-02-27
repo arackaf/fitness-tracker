@@ -16,28 +16,6 @@ import {
   defaultSegment,
 } from "@/data/zustand-state/workout-state";
 
-type DraftSegmentExercise = {
-  exerciseId: string;
-  reps: string;
-  repsToFailure: boolean;
-};
-
-type DraftSegment = {
-  sets: string;
-  exercises: DraftSegmentExercise[];
-};
-
-const createDraftExercise = (): DraftSegmentExercise => ({
-  exerciseId: "",
-  reps: "8",
-  repsToFailure: false,
-});
-
-const createDraftSegment = (): DraftSegment => ({
-  sets: "3",
-  exercises: [createDraftExercise()],
-});
-
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
     return db
@@ -71,9 +49,7 @@ function RouteComponent() {
   const [workoutDate, setWorkoutDate] = useState(
     new Date().toISOString().split("T")[0] ?? "",
   );
-  const [segments, setSegments] = useState<DraftSegment[]>([
-    createDraftSegment(),
-  ]);
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -90,7 +66,6 @@ function RouteComponent() {
       setName("");
       setDescription("");
       setWorkoutDate(new Date().toISOString().split("T")[0] ?? "");
-      setSegments([createDraftSegment()]);
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Unable to create workout.",
@@ -151,7 +126,7 @@ function RouteComponent() {
             segmentIndex={segmentIndex}
             segment={segment}
             exercises={exercises}
-            canDelete={segments.length > 1}
+            canDelete={workoutState.segments.length > 1}
             updateWorkout={workoutState.update}
           />
         ))}
