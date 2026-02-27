@@ -89,7 +89,7 @@ export function WorkoutSegmentExerciseFields({
                 return (
                   <label
                     key={`reps-${setNumber}`}
-                    className="inline-flex items-center gap-1 text-xs text-muted-foreground"
+                    className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
                   >
                     <span>{setNumber}:</span>
                     <input
