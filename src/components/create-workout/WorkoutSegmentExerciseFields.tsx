@@ -11,7 +11,6 @@ type WorkoutSegmentExerciseFieldsProps = {
     callback: (exercise: WorkoutSegmentExercise) => void,
   ) => void;
   segmentExercise: WorkoutSegmentExercise;
-  sets: number;
   exerciseOptions: ExerciseOption[];
   onRemove?: () => void;
 };
@@ -19,12 +18,9 @@ type WorkoutSegmentExerciseFieldsProps = {
 export function WorkoutSegmentExerciseFields({
   updateExercise,
   segmentExercise,
-  sets,
   exerciseOptions,
   onRemove,
 }: WorkoutSegmentExerciseFieldsProps) {
-  const safeSets = Number.isFinite(sets) && sets > 0 ? Math.floor(sets) : 1;
-
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5">
       <div className="flex gap-3 items-center">
@@ -84,7 +80,7 @@ export function WorkoutSegmentExerciseFields({
               <span className="font-medium">Reps</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {Array.from({ length: safeSets }, (_, index) => {
+              {segmentExercise.reps?.map((reps, index) => {
                 const setNumber = index + 1;
                 return (
                   <label
@@ -96,12 +92,10 @@ export function WorkoutSegmentExerciseFields({
                       required={index === 0}
                       min={1}
                       type="number"
-                      value={segmentExercise.reps?.toString() ?? ""}
+                      value={reps}
                       onChange={event => {
                         updateExercise(exercise => {
-                          exercise.reps = event.target.value
-                            ? parseInt(event.target.value)
-                            : null;
+                          exercise.reps![index] = parseInt(event.target.value);
                         });
                       }}
                       className="w-16 rounded-md border border-input bg-background px-2 py-1"

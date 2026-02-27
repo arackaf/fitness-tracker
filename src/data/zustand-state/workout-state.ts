@@ -26,7 +26,7 @@ export const defaultExercise: WorkoutSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
   repsToFailure: false,
-  reps: 8,
+  reps: [8],
   workoutSegmentId: 0,
 };
 

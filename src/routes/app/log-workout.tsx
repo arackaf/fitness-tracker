@@ -179,10 +179,19 @@ function RouteComponent() {
                 type="number"
                 value={String(segmentPayload.segment.sets)}
                 onChange={event => {
+                  const setCount = Number(event.target.value);
+
                   workoutState.update(state => {
-                    state.segments[segmentIndex].segment.sets = Number(
-                      event.target.value,
-                    );
+                    state.segments[segmentIndex].segment.sets = setCount;
+                    state.segments[segmentIndex].exercises.forEach(exercise => {
+                      if (!exercise.reps) {
+                        exercise.reps = [];
+                      }
+
+                      exercise.reps.length = setCount;
+                      exercise.reps[setCount - 1] =
+                        exercise.reps[setCount - 2] || 0;
+                    });
                   });
                 }}
                 className="rounded-md border border-input bg-background px-3 py-2"
@@ -202,7 +211,6 @@ function RouteComponent() {
                     }}
                     key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
                     segmentExercise={segmentExercise}
-                    sets={segmentPayload.segment.sets}
                     exerciseOptions={exerciseOptions}
                     onRemove={
                       workoutState.segments[segmentIndex].exercises.length === 1
