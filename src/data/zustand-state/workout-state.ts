@@ -16,8 +16,7 @@ export type SegmentWithExercises = {
   exercises: WorkoutSegmentExercise[];
 };
 
-export type WorkoutState = {
-  workout: Workout;
+export type WorkoutState = Workout & {
   segments: SegmentWithExercises[];
   update: (doUpdate: (state: WorkoutState) => void) => void;
 };
@@ -40,11 +39,9 @@ export const createWorkoutState = () => {
   return create<WorkoutState>()(
     immer(set => {
       return {
-        workout: {
-          name: "",
-          workoutDate: new Date().toISOString().split("T")[0] ?? "",
-          description: "",
-        },
+        name: "",
+        workoutDate: new Date().toISOString().split("T")[0] ?? "",
+        description: "",
         segments: [
           {
             segment: {

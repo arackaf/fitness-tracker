@@ -55,9 +55,9 @@ function RouteComponent() {
     try {
       // TODO
       workoutState.update(state => {
-        state.workout.name = "";
-        state.workout.description = "";
-        state.workout.workoutDate = new Date().toISOString().split("T")[0] ?? "";
+        state.name = "";
+        state.description = "";
+        state.workoutDate = new Date().toISOString().split("T")[0] ?? "";
       });
     } catch (error) {
       setErrorMessage(

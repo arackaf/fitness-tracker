@@ -40,10 +40,10 @@ export function Workout({
             <span className="font-medium">Workout name</span>
             <Input
               required
-              value={workout.workout.name}
+              value={workout.name}
               onChange={event => {
                 workout.update(state => {
-                  state.workout.name = event.target.value;
+                  state.name = event.target.value;
                 });
               }}
               placeholder="Push Day"
@@ -55,10 +55,10 @@ export function Workout({
             <Input
               required
               type="date"
-              value={workout.workout.workoutDate}
+              value={workout.workoutDate}
               onChange={event => {
                 workout.update(state => {
-                  state.workout.workoutDate = event.target.value;
+                  state.workoutDate = event.target.value;
                 });
               }}
             />
@@ -67,10 +67,10 @@ export function Workout({
           <label className="flex flex-col gap-2 text-sm md:col-span-2">
             <span className="font-medium">Description</span>
             <Textarea
-              value={workout.workout.description ?? ""}
+              value={workout.description ?? ""}
               onChange={event => {
                 workout.update(state => {
-                  state.workout.description = event.target.value;
+                  state.description = event.target.value;
                 });
               }}
               className="min-h-20"
@@ -128,3 +128,6 @@ export function Workout({
     </div>
   );
 }
+
+
+
