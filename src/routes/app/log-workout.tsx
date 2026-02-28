@@ -102,6 +102,11 @@ function RouteComponent() {
           });
         });
       }}
+      onRemoveSegment={segmentIndex => {
+        workoutState.update(state => {
+          state.segments.splice(segmentIndex, 1);
+        });
+      }}
       onSegmentChange={(segmentIndex, edits) => {
         workoutState.update(state => {
           const { sets } = edits;
@@ -122,11 +127,6 @@ function RouteComponent() {
       onAddSegmentExercise={segmentIndex => {
         workoutState.update(state => {
           state.segments[segmentIndex].exercises.push(defaultExercise);
-        });
-      }}
-      onRemoveSegment={segmentIndex => {
-        workoutState.update(state => {
-          state.segments.splice(segmentIndex, 1);
         });
       }}
       onRemoveSegmentExercise={(segmentIndex, exerciseIndex) => {
