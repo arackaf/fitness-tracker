@@ -128,22 +128,29 @@ function RouteComponent() {
           state.segments[segmentIndex].exercises.splice(exerciseIndex, 1);
         });
       }}
-      onSegmentExerciseIdChange={(segmentIndex, exerciseIndex, exerciseId) => {
+      onSegmentExerciseChange={(
+        segmentIndex,
+        exerciseIndex,
+        exerciseId = null,
+        repsToFailure = null,
+        repIndex = null,
+        reps = null,
+      ) => {
         workoutState.update(state => {
-          state.segments[segmentIndex].exercises[exerciseIndex].exerciseId =
-            exerciseId;
-        });
-      }}
-      onSegmentExerciseRepsToFailureChange={(segmentIndex, exerciseIndex, checked) => {
-        workoutState.update(state => {
-          state.segments[segmentIndex].exercises[exerciseIndex].repsToFailure =
-            checked;
-        });
-      }}
-      onSegmentExerciseRepChange={(segmentIndex, exerciseIndex, repIndex, reps) => {
-        workoutState.update(state => {
-          state.segments[segmentIndex].exercises[exerciseIndex].reps![repIndex] =
-            reps;
+          const segmentExercise =
+            state.segments[segmentIndex].exercises[exerciseIndex];
+
+          if (exerciseId !== null) {
+            segmentExercise.exerciseId = exerciseId;
+          }
+
+          if (repsToFailure !== null) {
+            segmentExercise.repsToFailure = repsToFailure;
+          }
+
+          if (reps !== null && repIndex !== null) {
+            segmentExercise.reps![repIndex] = reps;
+          }
         });
       }}
       isSaving={isSaving}

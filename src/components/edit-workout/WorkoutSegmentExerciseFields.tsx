@@ -10,22 +10,18 @@ import { Input } from "@/components/ui/input";
 type WorkoutSegmentExerciseFieldsProps = {
   segmentExercise: WorkoutSegmentExercise;
   exercises: Exercise[];
-  onExerciseSelect: (exerciseId: number) => void;
-  onRepsToFailureChange: (checked: boolean) => void;
-  onRepChange: (index: number, reps: number) => void;
+  onExerciseChange: (
+    exerciseId?: number | null,
+    repsToFailure?: boolean | null,
+    repIndex?: number | null,
+    reps?: number | null,
+  ) => void;
   onRemove?: () => void;
 };
 
 export const WorkoutSegmentExerciseFields: FC<
   WorkoutSegmentExerciseFieldsProps
-> = ({
-  segmentExercise,
-  exercises,
-  onExerciseSelect,
-  onRepsToFailureChange,
-  onRepChange,
-  onRemove,
-}) => {
+> = ({ segmentExercise, exercises, onExerciseChange, onRemove }) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5">
       <div className="flex gap-3 items-center">
@@ -35,7 +31,7 @@ export const WorkoutSegmentExerciseFields: FC<
             value={segmentExercise.exerciseId ?? null}
             exercises={exercises}
             onSelect={exerciseId => {
-              onExerciseSelect(exerciseId);
+              onExerciseChange(exerciseId, null, null, null);
             }}
           />
         </label>
@@ -60,7 +56,7 @@ export const WorkoutSegmentExerciseFields: FC<
             <Checkbox
               checked={segmentExercise.repsToFailure}
               onCheckedChange={checked => {
-                onRepsToFailureChange(checked === true);
+                onExerciseChange(null, checked === true, null, null);
               }}
             />
             Reps to failure
@@ -86,7 +82,12 @@ export const WorkoutSegmentExerciseFields: FC<
                     type="number"
                     value={reps}
                     onChange={event => {
-                      onRepChange(index, parseInt(event.target.value));
+                      onExerciseChange(
+                        null,
+                        null,
+                        index,
+                        parseInt(event.target.value),
+                      );
                     }}
                     className="h-7 w-16 px-2 py-1"
                   />

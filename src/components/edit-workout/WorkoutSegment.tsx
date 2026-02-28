@@ -5,9 +5,7 @@ import type { Exercise } from "@/components/ExerciseSelector";
 import { WorkoutSegmentExerciseFields } from "@/components/edit-workout/WorkoutSegmentExerciseFields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  type SegmentWithExercises,
-} from "@/data/zustand-state/workout-state";
+import { type SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 type WorkoutSegmentProps = {
   segment: SegmentWithExercises;
@@ -17,15 +15,12 @@ type WorkoutSegmentProps = {
   onAddExercise: () => void;
   onRemoveSegment: () => void;
   onRemoveExercise: (exerciseIndex: number) => void;
-  onExerciseIdChange: (exerciseIndex: number, exerciseId: number) => void;
-  onExerciseRepsToFailureChange: (
+  onExerciseChange: (
     exerciseIndex: number,
-    checked: boolean,
-  ) => void;
-  onExerciseRepChange: (
-    exerciseIndex: number,
-    repIndex: number,
-    reps: number,
+    exerciseId?: number | null,
+    repsToFailure?: boolean | null,
+    repIndex?: number | null,
+    reps?: number | null,
   ) => void;
 };
 
@@ -37,9 +32,7 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
   onAddExercise,
   onRemoveSegment,
   onRemoveExercise,
-  onExerciseIdChange,
-  onExerciseRepsToFailureChange,
-  onExerciseRepChange,
+  onExerciseChange,
 }) => {
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
@@ -63,14 +56,14 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
             key={`exercise-${exerciseIndex + 1}`}
             segmentExercise={segmentExercise}
             exercises={exercises}
-            onExerciseSelect={exerciseId => {
-              onExerciseIdChange(exerciseIndex, exerciseId);
-            }}
-            onRepsToFailureChange={checked => {
-              onExerciseRepsToFailureChange(exerciseIndex, checked);
-            }}
-            onRepChange={(repIndex, reps) => {
-              onExerciseRepChange(exerciseIndex, repIndex, reps);
+            onExerciseChange={(exerciseId, repsToFailure, repIndex, reps) => {
+              onExerciseChange(
+                exerciseIndex,
+                exerciseId,
+                repsToFailure,
+                repIndex,
+                reps,
+              );
             }}
             onRemove={
               segment.exercises.length === 1

@@ -20,22 +20,17 @@ type WorkoutProps = {
   onSegmentSetCountChange: (segmentIndex: number, setCount: number) => void;
   onAddSegmentExercise: (segmentIndex: number) => void;
   onRemoveSegment: (segmentIndex: number) => void;
-  onRemoveSegmentExercise: (segmentIndex: number, exerciseIndex: number) => void;
-  onSegmentExerciseIdChange: (
+  onRemoveSegmentExercise: (
     segmentIndex: number,
     exerciseIndex: number,
-    exerciseId: number,
   ) => void;
-  onSegmentExerciseRepsToFailureChange: (
+  onSegmentExerciseChange: (
     segmentIndex: number,
     exerciseIndex: number,
-    checked: boolean,
-  ) => void;
-  onSegmentExerciseRepChange: (
-    segmentIndex: number,
-    exerciseIndex: number,
-    repIndex: number,
-    reps: number,
+    exerciseId?: number | null,
+    repsToFailure?: boolean | null,
+    repIndex?: number | null,
+    reps?: number | null,
   ) => void;
   isSaving: boolean;
   errorMessage: string | null;
@@ -54,9 +49,7 @@ export const Workout: FC<WorkoutProps> = ({
   onAddSegmentExercise,
   onRemoveSegment,
   onRemoveSegmentExercise,
-  onSegmentExerciseIdChange,
-  onSegmentExerciseRepsToFailureChange,
-  onSegmentExerciseRepChange,
+  onSegmentExerciseChange,
   isSaving,
   errorMessage,
   successMessage,
@@ -122,20 +115,18 @@ export const Workout: FC<WorkoutProps> = ({
             onRemoveExercise={exerciseIndex => {
               onRemoveSegmentExercise(segmentIndex, exerciseIndex);
             }}
-            onExerciseIdChange={(exerciseIndex, exerciseId) => {
-              onSegmentExerciseIdChange(segmentIndex, exerciseIndex, exerciseId);
-            }}
-            onExerciseRepsToFailureChange={(exerciseIndex, checked) => {
-              onSegmentExerciseRepsToFailureChange(
+            onExerciseChange={(
+              exerciseIndex,
+              exerciseId,
+              repsToFailure,
+              repIndex,
+              reps,
+            ) => {
+              onSegmentExerciseChange(
                 segmentIndex,
                 exerciseIndex,
-                checked,
-              );
-            }}
-            onExerciseRepChange={(exerciseIndex, repIndex, reps) => {
-              onSegmentExerciseRepChange(
-                segmentIndex,
-                exerciseIndex,
+                exerciseId,
+                repsToFailure,
                 repIndex,
                 reps,
               );
