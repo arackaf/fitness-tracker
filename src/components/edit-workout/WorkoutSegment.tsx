@@ -27,8 +27,8 @@ export function WorkoutSegment({
 }: WorkoutSegmentProps) {
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
-      <label className="flex flex-col max-w-36 gap-2 text-sm">
-        <span className="font-medium">Sets</span>
+      <label className="flex items-center max-w-36 gap-2 text-sm">
+        <span className="font-medium">Sets:</span>
         <Input
           required
           min={1}

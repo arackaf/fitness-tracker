@@ -96,7 +96,7 @@ function RouteComponent() {
               required
               value={name}
               onChange={event => setName(event.target.value)}
-              placeholder="Push Day - Week 6"
+              placeholder="Push Day"
             />
           </label>
 
