@@ -1,7 +1,7 @@
 import { Plus, Trash2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
-import { WorkoutSegmentExerciseFields } from "@/components/create-workout/WorkoutSegmentExerciseFields";
+import { WorkoutSegmentExerciseFields } from "@/components/edit-workout/WorkoutSegmentExerciseFields";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

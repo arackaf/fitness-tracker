@@ -6,7 +6,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 
 import { Header } from "@/components/Header";
-import { WorkoutSegment } from "@/components/create-workout/WorkoutSegment";
+import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -150,11 +150,7 @@ function RouteComponent() {
             Add segment
           </Button>
 
-          <Button
-            type="submit"
-            disabled={isSaving}
-            className="font-semibold"
-          >
+          <Button type="submit" disabled={isSaving} className="font-semibold">
             {isSaving ? "Saving..." : "Create workout"}
           </Button>
         </div>
