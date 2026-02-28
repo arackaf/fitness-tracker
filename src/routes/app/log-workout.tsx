@@ -82,7 +82,7 @@ function RouteComponent() {
       setDescription={setDescription}
       workoutDate={workoutDate}
       setWorkoutDate={setWorkoutDate}
-      workoutState={workoutState}
+      workout={workoutState}
       isSaving={isSaving}
       errorMessage={errorMessage}
       successMessage={successMessage}

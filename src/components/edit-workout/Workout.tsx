@@ -22,7 +22,7 @@ type WorkoutProps = {
   setDescription: (value: string) => void;
   workoutDate: string;
   setWorkoutDate: (value: string) => void;
-  workoutState: WorkoutState;
+  workout: WorkoutState;
   isSaving: boolean;
   errorMessage: string | null;
   successMessage: string | null;
@@ -37,7 +37,7 @@ export function Workout({
   setDescription,
   workoutDate,
   setWorkoutDate,
-  workoutState,
+  workout,
   isSaving,
   errorMessage,
   successMessage,
@@ -79,14 +79,14 @@ export function Workout({
           </label>
         </div>
 
-        {workoutState.segments.map((segment, segmentIndex) => (
+        {workout.segments.map((segment, segmentIndex) => (
           <WorkoutSegment
             key={`segment-${segmentIndex + 1}`}
             segmentIndex={segmentIndex}
             segment={segment}
             exercises={exercises}
-            canDelete={workoutState.segments.length > 1}
-            updateWorkout={workoutState.update}
+            canDelete={workout.segments.length > 1}
+            updateWorkout={workout.update}
           />
         ))}
 
@@ -94,7 +94,7 @@ export function Workout({
           <Button
             type="button"
             onClick={() => {
-              workoutState.update(state => {
+              workout.update(state => {
                 state.segments.push({
                   segment: defaultSegment,
                   exercises: [defaultExercise],
