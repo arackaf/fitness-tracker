@@ -8,17 +8,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 
 type WorkoutSegmentExerciseFieldsProps = {
-  updateExercise: (
-    callback: (exercise: WorkoutSegmentExercise) => void,
-  ) => void;
   segmentExercise: WorkoutSegmentExercise;
   exercises: Exercise[];
+  onExerciseSelect: (exerciseId: number) => void;
+  onRepsToFailureChange: (checked: boolean) => void;
+  onRepChange: (index: number, reps: number) => void;
   onRemove?: () => void;
 };
 
 export const WorkoutSegmentExerciseFields: FC<
   WorkoutSegmentExerciseFieldsProps
-> = ({ updateExercise, segmentExercise, exercises, onRemove }) => {
+> = ({
+  segmentExercise,
+  exercises,
+  onExerciseSelect,
+  onRepsToFailureChange,
+  onRepChange,
+  onRemove,
+}) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5">
       <div className="flex gap-3 items-center">
@@ -28,9 +35,7 @@ export const WorkoutSegmentExerciseFields: FC<
             value={segmentExercise.exerciseId ?? null}
             exercises={exercises}
             onSelect={exerciseId => {
-              updateExercise(exercise => {
-                exercise.exerciseId = exerciseId;
-              });
+              onExerciseSelect(exerciseId);
             }}
           />
         </label>
@@ -55,9 +60,7 @@ export const WorkoutSegmentExerciseFields: FC<
             <Checkbox
               checked={segmentExercise.repsToFailure}
               onCheckedChange={checked => {
-                updateExercise(exercise => {
-                  exercise.repsToFailure = checked === true;
-                });
+                onRepsToFailureChange(checked === true);
               }}
             />
             Reps to failure
@@ -83,9 +86,7 @@ export const WorkoutSegmentExerciseFields: FC<
                     type="number"
                     value={reps}
                     onChange={event => {
-                      updateExercise(exercise => {
-                        exercise.reps![index] = parseInt(event.target.value);
-                      });
+                      onRepChange(index, parseInt(event.target.value));
                     }}
                     className="h-7 w-16 px-2 py-1"
                   />

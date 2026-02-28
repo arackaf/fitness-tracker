@@ -6,25 +6,40 @@ import { WorkoutSegmentExerciseFields } from "@/components/edit-workout/WorkoutS
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  defaultExercise,
   type SegmentWithExercises,
-  type WorkoutState,
 } from "@/data/zustand-state/workout-state";
 
 type WorkoutSegmentProps = {
-  segmentIndex: number;
   segment: SegmentWithExercises;
   exercises: Exercise[];
   canDelete: boolean;
-  updateWorkout: (callback: (state: WorkoutState) => void) => void;
+  onSetCountChange: (setCount: number) => void;
+  onAddExercise: () => void;
+  onRemoveSegment: () => void;
+  onRemoveExercise: (exerciseIndex: number) => void;
+  onExerciseIdChange: (exerciseIndex: number, exerciseId: number) => void;
+  onExerciseRepsToFailureChange: (
+    exerciseIndex: number,
+    checked: boolean,
+  ) => void;
+  onExerciseRepChange: (
+    exerciseIndex: number,
+    repIndex: number,
+    reps: number,
+  ) => void;
 };
 
 export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
-  segmentIndex,
   segment,
   exercises,
   canDelete,
-  updateWorkout,
+  onSetCountChange,
+  onAddExercise,
+  onRemoveSegment,
+  onRemoveExercise,
+  onExerciseIdChange,
+  onExerciseRepsToFailureChange,
+  onExerciseRepChange,
 }) => {
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
@@ -37,18 +52,7 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
           value={String(segment.segment.sets)}
           onChange={event => {
             const setCount = Number(event.target.value);
-
-            updateWorkout(state => {
-              state.segments[segmentIndex].segment.sets = setCount;
-              state.segments[segmentIndex].exercises.forEach(exercise => {
-                if (!exercise.reps) {
-                  exercise.reps = [];
-                }
-
-                exercise.reps.length = setCount;
-                exercise.reps[setCount - 1] = exercise.reps[setCount - 2] || 0;
-              });
-            });
+            onSetCountChange(setCount);
           }}
         />
       </label>
@@ -56,26 +60,22 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
       <div className="space-y-3">
         {segment.exercises.map((segmentExercise, exerciseIndex) => (
           <WorkoutSegmentExerciseFields
-            updateExercise={updater => {
-              updateWorkout(state => {
-                const exercise =
-                  state.segments[segmentIndex].exercises[exerciseIndex];
-                updater(exercise);
-              });
-            }}
-            key={`segment-${segmentIndex + 1}-exercise-${exerciseIndex + 1}`}
+            key={`exercise-${exerciseIndex + 1}`}
             segmentExercise={segmentExercise}
             exercises={exercises}
+            onExerciseSelect={exerciseId => {
+              onExerciseIdChange(exerciseIndex, exerciseId);
+            }}
+            onRepsToFailureChange={checked => {
+              onExerciseRepsToFailureChange(exerciseIndex, checked);
+            }}
+            onRepChange={(repIndex, reps) => {
+              onExerciseRepChange(exerciseIndex, repIndex, reps);
+            }}
             onRemove={
               segment.exercises.length === 1
                 ? undefined
-                : () =>
-                    updateWorkout(state => {
-                      state.segments[segmentIndex].exercises.splice(
-                        exerciseIndex,
-                        1,
-                      );
-                    })
+                : () => onRemoveExercise(exerciseIndex)
             }
           />
         ))}
@@ -83,11 +83,7 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
         <div className="flex items-center">
           <Button
             type="button"
-            onClick={() => {
-              updateWorkout(state => {
-                state.segments[segmentIndex].exercises.push(defaultExercise);
-              });
-            }}
+            onClick={onAddExercise}
             variant="outline"
             size="sm"
             className="font-semibold"
@@ -97,11 +93,7 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
           </Button>
           <Button
             type="button"
-            onClick={() => {
-              updateWorkout(state => {
-                state.segments.splice(segmentIndex, 1);
-              });
-            }}
+            onClick={onRemoveSegment}
             disabled={!canDelete}
             variant="secondary"
             size="sm"

@@ -7,16 +7,36 @@ import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  defaultExercise,
-  defaultSegment,
-  type WorkoutState,
-} from "@/data/zustand-state/workout-state";
+import { type WorkoutState } from "@/data/zustand-state/workout-state";
 
 type WorkoutProps = {
   exercises: Exercise[];
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
   workout: WorkoutState;
+  onWorkoutNameChange: (name: string) => void;
+  onWorkoutDateChange: (workoutDate: string) => void;
+  onWorkoutDescriptionChange: (description: string) => void;
+  onAddSegment: () => void;
+  onSegmentSetCountChange: (segmentIndex: number, setCount: number) => void;
+  onAddSegmentExercise: (segmentIndex: number) => void;
+  onRemoveSegment: (segmentIndex: number) => void;
+  onRemoveSegmentExercise: (segmentIndex: number, exerciseIndex: number) => void;
+  onSegmentExerciseIdChange: (
+    segmentIndex: number,
+    exerciseIndex: number,
+    exerciseId: number,
+  ) => void;
+  onSegmentExerciseRepsToFailureChange: (
+    segmentIndex: number,
+    exerciseIndex: number,
+    checked: boolean,
+  ) => void;
+  onSegmentExerciseRepChange: (
+    segmentIndex: number,
+    exerciseIndex: number,
+    repIndex: number,
+    reps: number,
+  ) => void;
   isSaving: boolean;
   errorMessage: string | null;
   successMessage: string | null;
@@ -26,6 +46,17 @@ export const Workout: FC<WorkoutProps> = ({
   exercises,
   handleSubmit,
   workout,
+  onWorkoutNameChange,
+  onWorkoutDateChange,
+  onWorkoutDescriptionChange,
+  onAddSegment,
+  onSegmentSetCountChange,
+  onAddSegmentExercise,
+  onRemoveSegment,
+  onRemoveSegmentExercise,
+  onSegmentExerciseIdChange,
+  onSegmentExerciseRepsToFailureChange,
+  onSegmentExerciseRepChange,
   isSaving,
   errorMessage,
   successMessage,
@@ -42,9 +73,7 @@ export const Workout: FC<WorkoutProps> = ({
               required
               value={workout.name}
               onChange={event => {
-                workout.update(state => {
-                  state.name = event.target.value;
-                });
+                onWorkoutNameChange(event.target.value);
               }}
               placeholder="Push Day"
             />
@@ -57,9 +86,7 @@ export const Workout: FC<WorkoutProps> = ({
               type="date"
               value={workout.workoutDate}
               onChange={event => {
-                workout.update(state => {
-                  state.workoutDate = event.target.value;
-                });
+                onWorkoutDateChange(event.target.value);
               }}
             />
           </label>
@@ -69,9 +96,7 @@ export const Workout: FC<WorkoutProps> = ({
             <Textarea
               value={workout.description ?? ""}
               onChange={event => {
-                workout.update(state => {
-                  state.description = event.target.value;
-                });
+                onWorkoutDescriptionChange(event.target.value);
               }}
               className="min-h-20"
               placeholder="Optional notes about this workout."
@@ -82,25 +107,46 @@ export const Workout: FC<WorkoutProps> = ({
         {workout.segments.map((segment, segmentIndex) => (
           <WorkoutSegment
             key={`segment-${segmentIndex + 1}`}
-            segmentIndex={segmentIndex}
             segment={segment}
             exercises={exercises}
             canDelete={workout.segments.length > 1}
-            updateWorkout={workout.update}
+            onSetCountChange={setCount => {
+              onSegmentSetCountChange(segmentIndex, setCount);
+            }}
+            onAddExercise={() => {
+              onAddSegmentExercise(segmentIndex);
+            }}
+            onRemoveSegment={() => {
+              onRemoveSegment(segmentIndex);
+            }}
+            onRemoveExercise={exerciseIndex => {
+              onRemoveSegmentExercise(segmentIndex, exerciseIndex);
+            }}
+            onExerciseIdChange={(exerciseIndex, exerciseId) => {
+              onSegmentExerciseIdChange(segmentIndex, exerciseIndex, exerciseId);
+            }}
+            onExerciseRepsToFailureChange={(exerciseIndex, checked) => {
+              onSegmentExerciseRepsToFailureChange(
+                segmentIndex,
+                exerciseIndex,
+                checked,
+              );
+            }}
+            onExerciseRepChange={(exerciseIndex, repIndex, reps) => {
+              onSegmentExerciseRepChange(
+                segmentIndex,
+                exerciseIndex,
+                repIndex,
+                reps,
+              );
+            }}
           />
         ))}
 
         <div className="flex flex-wrap items-center gap-3">
           <Button
             type="button"
-            onClick={() => {
-              workout.update(state => {
-                state.segments.push({
-                  segment: defaultSegment,
-                  exercises: [defaultExercise],
-                });
-              });
-            }}
+            onClick={onAddSegment}
             variant="outline"
             className="font-semibold"
           >

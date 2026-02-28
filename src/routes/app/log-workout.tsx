@@ -8,7 +8,11 @@ import { Workout } from "@/components/edit-workout/Workout";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
-import { createWorkoutState } from "@/data/zustand-state/workout-state";
+import {
+  createWorkoutState,
+  defaultExercise,
+  defaultSegment,
+} from "@/data/zustand-state/workout-state";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -73,6 +77,75 @@ function RouteComponent() {
       exercises={exercises}
       handleSubmit={handleSubmit}
       workout={workoutState}
+      onWorkoutNameChange={name => {
+        workoutState.update(state => {
+          state.name = name;
+        });
+      }}
+      onWorkoutDateChange={workoutDate => {
+        workoutState.update(state => {
+          state.workoutDate = workoutDate;
+        });
+      }}
+      onWorkoutDescriptionChange={description => {
+        workoutState.update(state => {
+          state.description = description;
+        });
+      }}
+      onAddSegment={() => {
+        workoutState.update(state => {
+          state.segments.push({
+            segment: defaultSegment,
+            exercises: [defaultExercise],
+          });
+        });
+      }}
+      onSegmentSetCountChange={(segmentIndex, setCount) => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].segment.sets = setCount;
+          state.segments[segmentIndex].exercises.forEach(exercise => {
+            if (!exercise.reps) {
+              exercise.reps = [];
+            }
+
+            exercise.reps.length = setCount;
+            exercise.reps[setCount - 1] = exercise.reps[setCount - 2] || 0;
+          });
+        });
+      }}
+      onAddSegmentExercise={segmentIndex => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].exercises.push(defaultExercise);
+        });
+      }}
+      onRemoveSegment={segmentIndex => {
+        workoutState.update(state => {
+          state.segments.splice(segmentIndex, 1);
+        });
+      }}
+      onRemoveSegmentExercise={(segmentIndex, exerciseIndex) => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].exercises.splice(exerciseIndex, 1);
+        });
+      }}
+      onSegmentExerciseIdChange={(segmentIndex, exerciseIndex, exerciseId) => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].exercises[exerciseIndex].exerciseId =
+            exerciseId;
+        });
+      }}
+      onSegmentExerciseRepsToFailureChange={(segmentIndex, exerciseIndex, checked) => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].exercises[exerciseIndex].repsToFailure =
+            checked;
+        });
+      }}
+      onSegmentExerciseRepChange={(segmentIndex, exerciseIndex, repIndex, reps) => {
+        workoutState.update(state => {
+          state.segments[segmentIndex].exercises[exerciseIndex].reps![repIndex] =
+            reps;
+        });
+      }}
       isSaving={isSaving}
       errorMessage={errorMessage}
       successMessage={successMessage}
