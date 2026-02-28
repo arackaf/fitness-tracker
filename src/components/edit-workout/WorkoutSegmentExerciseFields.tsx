@@ -42,7 +42,7 @@ export function WorkoutSegmentExerciseFields({
             type="button"
             onClick={onRemove}
             disabled={!onRemove}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             <Trash2 className="size-3.5" aria-hidden="true" />
