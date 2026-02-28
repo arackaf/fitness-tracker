@@ -77,10 +77,8 @@ function RouteComponent() {
       exercises={exercises}
       handleSubmit={handleSubmit}
       workout={workoutState}
-      onWorkoutChange={edits => {
+      onWorkoutChange={({ name, workoutDate, description }) => {
         workoutState.update(state => {
-          const { name, workoutDate, description } = edits;
-
           if (name != null) {
             state.name = name;
           }
@@ -94,10 +92,8 @@ function RouteComponent() {
           }
         });
       }}
-      onSegmentsListChange={edits => {
+      onSegmentsListChange={({ removeIndex, addNew }) => {
         workoutState.update(state => {
-          const { removeIndex, addNew } = edits;
-
           if (removeIndex != null) {
             state.segments.splice(removeIndex, 1);
           }
@@ -110,10 +106,8 @@ function RouteComponent() {
           }
         });
       }}
-      onSegmentChange={(segmentIndex, edits) => {
+      onSegmentChange={(segmentIndex, { sets }) => {
         workoutState.update(state => {
-          const { sets } = edits;
-
           if (sets != null) {
             state.segments[segmentIndex].segment.sets = sets;
             state.segments[segmentIndex].exercises.forEach(exercise => {
@@ -127,10 +121,8 @@ function RouteComponent() {
           }
         });
       }}
-      onSegmentExerciseListChange={(segmentIndex, edits) => {
+      onSegmentExerciseListChange={(segmentIndex, { removeIndex, addNew }) => {
         workoutState.update(state => {
-          const { removeIndex, addNew } = edits;
-
           if (removeIndex != null) {
             state.segments[segmentIndex].exercises.splice(removeIndex, 1);
           }
