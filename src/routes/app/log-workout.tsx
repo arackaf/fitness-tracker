@@ -77,19 +77,21 @@ function RouteComponent() {
       exercises={exercises}
       handleSubmit={handleSubmit}
       workout={workoutState}
-      onWorkoutNameChange={name => {
+      onWorkoutChange={edits => {
         workoutState.update(state => {
-          state.name = name;
-        });
-      }}
-      onWorkoutDateChange={workoutDate => {
-        workoutState.update(state => {
-          state.workoutDate = workoutDate;
-        });
-      }}
-      onWorkoutDescriptionChange={description => {
-        workoutState.update(state => {
-          state.description = description;
+          const { name, workoutDate, description } = edits;
+
+          if (name != null) {
+            state.name = name;
+          }
+
+          if (workoutDate != null) {
+            state.workoutDate = workoutDate;
+          }
+
+          if (description != null) {
+            state.description = description;
+          }
         });
       }}
       onAddSegment={() => {

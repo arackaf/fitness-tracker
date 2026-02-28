@@ -13,9 +13,11 @@ type WorkoutProps = {
   exercises: Exercise[];
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
   workout: WorkoutState;
-  onWorkoutNameChange: (name: string) => void;
-  onWorkoutDateChange: (workoutDate: string) => void;
-  onWorkoutDescriptionChange: (description: string) => void;
+  onWorkoutChange: (edits: {
+    name?: string | null;
+    workoutDate?: string | null;
+    description?: string | null;
+  }) => void;
   onAddSegment: () => void;
   onSegmentSetCountChange: (segmentIndex: number, setCount: number) => void;
   onAddSegmentExercise: (segmentIndex: number) => void;
@@ -43,9 +45,7 @@ export const Workout: FC<WorkoutProps> = ({
   exercises,
   handleSubmit,
   workout,
-  onWorkoutNameChange,
-  onWorkoutDateChange,
-  onWorkoutDescriptionChange,
+  onWorkoutChange,
   onAddSegment,
   onSegmentSetCountChange,
   onAddSegmentExercise,
@@ -68,7 +68,7 @@ export const Workout: FC<WorkoutProps> = ({
               required
               value={workout.name}
               onChange={event => {
-                onWorkoutNameChange(event.target.value);
+                onWorkoutChange({ name: event.target.value });
               }}
               placeholder="Push Day"
             />
@@ -81,7 +81,7 @@ export const Workout: FC<WorkoutProps> = ({
               type="date"
               value={workout.workoutDate}
               onChange={event => {
-                onWorkoutDateChange(event.target.value);
+                onWorkoutChange({ workoutDate: event.target.value });
               }}
             />
           </label>
@@ -91,7 +91,7 @@ export const Workout: FC<WorkoutProps> = ({
             <Textarea
               value={workout.description ?? ""}
               onChange={event => {
-                onWorkoutDescriptionChange(event.target.value);
+                onWorkoutChange({ description: event.target.value });
               }}
               className="min-h-20"
               placeholder="Optional notes about this workout."
