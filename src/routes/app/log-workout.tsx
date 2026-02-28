@@ -127,14 +127,17 @@ function RouteComponent() {
           }
         });
       }}
-      onAddSegmentExercise={segmentIndex => {
+      onSegmentExerciseListChange={(segmentIndex, edits) => {
         workoutState.update(state => {
-          state.segments[segmentIndex].exercises.push(defaultExercise);
-        });
-      }}
-      onRemoveSegmentExercise={(segmentIndex, exerciseIndex) => {
-        workoutState.update(state => {
-          state.segments[segmentIndex].exercises.splice(exerciseIndex, 1);
+          const { removeIndex, addNew } = edits;
+
+          if (removeIndex != null) {
+            state.segments[segmentIndex].exercises.splice(removeIndex, 1);
+          }
+
+          if (addNew) {
+            state.segments[segmentIndex].exercises.push(defaultExercise);
+          }
         });
       }}
       onSegmentExerciseChange={(segmentIndex, exerciseIndex, edits) => {

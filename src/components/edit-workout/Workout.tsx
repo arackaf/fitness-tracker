@@ -28,10 +28,12 @@ type WorkoutProps = {
       sets?: number | null;
     },
   ) => void;
-  onAddSegmentExercise: (segmentIndex: number) => void;
-  onRemoveSegmentExercise: (
+  onSegmentExerciseListChange: (
     segmentIndex: number,
-    exerciseIndex: number,
+    edits: {
+      removeIndex?: number | null;
+      addNew?: boolean | null;
+    },
   ) => void;
   onSegmentExerciseChange: (
     segmentIndex: number,
@@ -55,8 +57,7 @@ export const Workout: FC<WorkoutProps> = ({
   onWorkoutChange,
   onSegmentsListChange,
   onSegmentChange,
-  onAddSegmentExercise,
-  onRemoveSegmentExercise,
+  onSegmentExerciseListChange,
   onSegmentExerciseChange,
   isSaving,
   errorMessage,
@@ -115,13 +116,15 @@ export const Workout: FC<WorkoutProps> = ({
               onSegmentChange(segmentIndex, { sets: setCount });
             }}
             onAddExercise={() => {
-              onAddSegmentExercise(segmentIndex);
+              onSegmentExerciseListChange(segmentIndex, { addNew: true });
             }}
             onRemoveSegment={() => {
               onSegmentsListChange({ removeIndex: segmentIndex });
             }}
             onRemoveExercise={exerciseIndex => {
-              onRemoveSegmentExercise(segmentIndex, exerciseIndex);
+              onSegmentExerciseListChange(segmentIndex, {
+                removeIndex: exerciseIndex,
+              });
             }}
             onExerciseChange={(exerciseIndex, edits) => {
               onSegmentExerciseChange(segmentIndex, exerciseIndex, edits);
