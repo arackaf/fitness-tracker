@@ -102,17 +102,21 @@ function RouteComponent() {
           });
         });
       }}
-      onSegmentSetCountChange={(segmentIndex, setCount) => {
+      onSegmentChange={(segmentIndex, edits) => {
         workoutState.update(state => {
-          state.segments[segmentIndex].segment.sets = setCount;
-          state.segments[segmentIndex].exercises.forEach(exercise => {
-            if (!exercise.reps) {
-              exercise.reps = [];
-            }
+          const { sets } = edits;
 
-            exercise.reps.length = setCount;
-            exercise.reps[setCount - 1] = exercise.reps[setCount - 2] || 0;
-          });
+          if (sets != null) {
+            state.segments[segmentIndex].segment.sets = sets;
+            state.segments[segmentIndex].exercises.forEach(exercise => {
+              if (!exercise.reps) {
+                exercise.reps = [];
+              }
+
+              exercise.reps.length = sets;
+              exercise.reps[sets - 1] = exercise.reps[sets - 2] || 0;
+            });
+          }
         });
       }}
       onAddSegmentExercise={segmentIndex => {

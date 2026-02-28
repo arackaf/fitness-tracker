@@ -19,7 +19,12 @@ type WorkoutProps = {
     description?: string | null;
   }) => void;
   onAddSegment: () => void;
-  onSegmentSetCountChange: (segmentIndex: number, setCount: number) => void;
+  onSegmentChange: (
+    segmentIndex: number,
+    edits: {
+      sets?: number | null;
+    },
+  ) => void;
   onAddSegmentExercise: (segmentIndex: number) => void;
   onRemoveSegment: (segmentIndex: number) => void;
   onRemoveSegmentExercise: (
@@ -47,7 +52,7 @@ export const Workout: FC<WorkoutProps> = ({
   workout,
   onWorkoutChange,
   onAddSegment,
-  onSegmentSetCountChange,
+  onSegmentChange,
   onAddSegmentExercise,
   onRemoveSegment,
   onRemoveSegmentExercise,
@@ -106,7 +111,7 @@ export const Workout: FC<WorkoutProps> = ({
             exercises={exercises}
             canDelete={workout.segments.length > 1}
             onSetCountChange={setCount => {
-              onSegmentSetCountChange(segmentIndex, setCount);
+              onSegmentChange(segmentIndex, { sets: setCount });
             }}
             onAddExercise={() => {
               onAddSegmentExercise(segmentIndex);
