@@ -66,38 +66,36 @@ export function WorkoutSegmentExerciseFields({
           </label>
         </div>
 
-        {!segmentExercise.repsToFailure ? (
-          <div className="flex items-center gap-3 text-sm md:col-span-2 ml-2">
-            <div className="h-7 flex self-start items-center">
-              <span className="font-medium">Reps</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {segmentExercise.reps?.map((reps, index) => {
-                const setNumber = index + 1;
-                return (
-                  <label
-                    key={`reps-${setNumber}`}
-                    className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
-                  >
-                    <span>{setNumber}:</span>
-                    <Input
-                      required={index === 0}
-                      min={1}
-                      type="number"
-                      value={reps}
-                      onChange={event => {
-                        updateExercise(exercise => {
-                          exercise.reps![index] = parseInt(event.target.value);
-                        });
-                      }}
-                      className="h-7 w-16 px-2 py-1"
-                    />
-                  </label>
-                );
-              })}
-            </div>
+        <div className="flex items-center gap-3 text-sm md:col-span-2 ml-2">
+          <div className="h-7 flex self-start items-center">
+            <span className="font-medium">Reps</span>
           </div>
-        ) : null}
+          <div className="flex flex-wrap gap-2">
+            {segmentExercise.reps?.map((reps, index) => {
+              const setNumber = index + 1;
+              return (
+                <label
+                  key={`reps-${setNumber}`}
+                  className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
+                >
+                  <span>{setNumber}:</span>
+                  <Input
+                    required={index === 0}
+                    min={1}
+                    type="number"
+                    value={reps}
+                    onChange={event => {
+                      updateExercise(exercise => {
+                        exercise.reps![index] = parseInt(event.target.value);
+                      });
+                    }}
+                    className="h-7 w-16 px-2 py-1"
+                  />
+                </label>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
