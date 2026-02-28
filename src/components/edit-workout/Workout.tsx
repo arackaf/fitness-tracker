@@ -18,7 +18,10 @@ type WorkoutProps = {
     workoutDate?: string | null;
     description?: string | null;
   }) => void;
-  onAddSegment: () => void;
+  onSegmentsListChange: (edits: {
+    removeIndex?: number | null;
+    addNew?: boolean | null;
+  }) => void;
   onSegmentChange: (
     segmentIndex: number,
     edits: {
@@ -26,7 +29,6 @@ type WorkoutProps = {
     },
   ) => void;
   onAddSegmentExercise: (segmentIndex: number) => void;
-  onRemoveSegment: (segmentIndex: number) => void;
   onRemoveSegmentExercise: (
     segmentIndex: number,
     exerciseIndex: number,
@@ -51,10 +53,9 @@ export const Workout: FC<WorkoutProps> = ({
   handleSubmit,
   workout,
   onWorkoutChange,
-  onAddSegment,
+  onSegmentsListChange,
   onSegmentChange,
   onAddSegmentExercise,
-  onRemoveSegment,
   onRemoveSegmentExercise,
   onSegmentExerciseChange,
   isSaving,
@@ -117,7 +118,7 @@ export const Workout: FC<WorkoutProps> = ({
               onAddSegmentExercise(segmentIndex);
             }}
             onRemoveSegment={() => {
-              onRemoveSegment(segmentIndex);
+              onSegmentsListChange({ removeIndex: segmentIndex });
             }}
             onRemoveExercise={exerciseIndex => {
               onRemoveSegmentExercise(segmentIndex, exerciseIndex);
@@ -131,7 +132,7 @@ export const Workout: FC<WorkoutProps> = ({
         <div className="flex flex-wrap items-center gap-3">
           <Button
             type="button"
-            onClick={onAddSegment}
+            onClick={() => onSegmentsListChange({ addNew: true })}
             variant="outline"
             className="font-semibold"
           >

@@ -94,17 +94,20 @@ function RouteComponent() {
           }
         });
       }}
-      onAddSegment={() => {
+      onSegmentsListChange={edits => {
         workoutState.update(state => {
-          state.segments.push({
-            segment: defaultSegment,
-            exercises: [defaultExercise],
-          });
-        });
-      }}
-      onRemoveSegment={segmentIndex => {
-        workoutState.update(state => {
-          state.segments.splice(segmentIndex, 1);
+          const { removeIndex, addNew } = edits;
+
+          if (removeIndex != null) {
+            state.segments.splice(removeIndex, 1);
+          }
+
+          if (addNew) {
+            state.segments.push({
+              segment: defaultSegment,
+              exercises: [defaultExercise],
+            });
+          }
         });
       }}
       onSegmentChange={(segmentIndex, edits) => {
