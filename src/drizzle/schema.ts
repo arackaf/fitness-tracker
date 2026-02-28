@@ -236,7 +236,7 @@ export const workoutSegmentExercise = pgTable(
     workoutSegmentId: integer("workout_segment_id").notNull(),
     exerciseOrder: integer("exercise_order").notNull(),
     exerciseId: integer("exercise_id").notNull(),
-    reps: integer().array(),
+    reps: integer().array().default([]).notNull(),
     repsToFailure: boolean("reps_to_failure").notNull(),
   },
   table => [
