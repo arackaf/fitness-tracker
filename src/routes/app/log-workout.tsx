@@ -38,11 +38,8 @@ export const Route = createFileRoute("/app/log-workout")({
 
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [workoutDate, setWorkoutDate] = useState(
-    new Date().toISOString().split("T")[0] ?? "",
-  );
+  const [useWorkoutState] = useState(() => createWorkoutState());
+  const workoutState = useWorkoutState();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -57,9 +54,11 @@ function RouteComponent() {
 
     try {
       // TODO
-      setName("");
-      setDescription("");
-      setWorkoutDate(new Date().toISOString().split("T")[0] ?? "");
+      workoutState.update(state => {
+        state.workout.name = "";
+        state.workout.description = "";
+        state.workout.workoutDate = new Date().toISOString().split("T")[0] ?? "";
+      });
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Unable to create workout.",
@@ -69,19 +68,10 @@ function RouteComponent() {
     }
   };
 
-  const [useWorkoutState] = useState(() => createWorkoutState());
-  const workoutState = useWorkoutState();
-
   return (
     <Workout
       exercises={exercises}
       handleSubmit={handleSubmit}
-      name={name}
-      setName={setName}
-      description={description}
-      setDescription={setDescription}
-      workoutDate={workoutDate}
-      setWorkoutDate={setWorkoutDate}
       workout={workoutState}
       isSaving={isSaving}
       errorMessage={errorMessage}

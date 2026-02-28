@@ -16,12 +16,6 @@ import {
 type WorkoutProps = {
   exercises: Exercise[];
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  name: string;
-  setName: (value: string) => void;
-  description: string;
-  setDescription: (value: string) => void;
-  workoutDate: string;
-  setWorkoutDate: (value: string) => void;
   workout: WorkoutState;
   isSaving: boolean;
   errorMessage: string | null;
@@ -31,12 +25,6 @@ type WorkoutProps = {
 export function Workout({
   exercises,
   handleSubmit,
-  name,
-  setName,
-  description,
-  setDescription,
-  workoutDate,
-  setWorkoutDate,
   workout,
   isSaving,
   errorMessage,
@@ -52,8 +40,12 @@ export function Workout({
             <span className="font-medium">Workout name</span>
             <Input
               required
-              value={name}
-              onChange={event => setName(event.target.value)}
+              value={workout.workout.name}
+              onChange={event => {
+                workout.update(state => {
+                  state.workout.name = event.target.value;
+                });
+              }}
               placeholder="Push Day"
             />
           </label>
@@ -63,16 +55,24 @@ export function Workout({
             <Input
               required
               type="date"
-              value={workoutDate}
-              onChange={event => setWorkoutDate(event.target.value)}
+              value={workout.workout.workoutDate}
+              onChange={event => {
+                workout.update(state => {
+                  state.workout.workoutDate = event.target.value;
+                });
+              }}
             />
           </label>
 
           <label className="flex flex-col gap-2 text-sm md:col-span-2">
             <span className="font-medium">Description</span>
             <Textarea
-              value={description}
-              onChange={event => setDescription(event.target.value)}
+              value={workout.workout.description ?? ""}
+              onChange={event => {
+                workout.update(state => {
+                  state.workout.description = event.target.value;
+                });
+              }}
               className="min-h-20"
               placeholder="Optional notes about this workout."
             />
