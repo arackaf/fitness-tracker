@@ -84,9 +84,6 @@ function RouteComponent() {
   return (
     <section>
       <Header title="Log Workout" />
-      <p className="mb-8 text-sm text-muted-foreground dark:text-slate-300/80">
-        Create a full workout with segments and ordered exercises.
-      </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
