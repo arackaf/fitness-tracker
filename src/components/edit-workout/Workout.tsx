@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import type { FormEvent } from "react";
+import type { FC, FormEvent } from "react";
 
 import { Header } from "@/components/Header";
 import type { Exercise } from "@/components/ExerciseSelector";
@@ -22,14 +22,14 @@ type WorkoutProps = {
   successMessage: string | null;
 };
 
-export function Workout({
+export const Workout: FC<WorkoutProps> = ({
   exercises,
   handleSubmit,
   workout,
   isSaving,
   errorMessage,
   successMessage,
-}: WorkoutProps) {
+}) => {
   return (
     <div>
       <Header title="Log Workout" />
@@ -127,7 +127,4 @@ export function Workout({
       </form>
     </div>
   );
-}
-
-
-
+};

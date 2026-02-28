@@ -1,5 +1,6 @@
 import type { WorkoutSegmentExercise } from "@/data/zustand-state/workout-state";
 import { Trash2 } from "lucide-react";
+import type { FC } from "react";
 
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
@@ -15,12 +16,9 @@ type WorkoutSegmentExerciseFieldsProps = {
   onRemove?: () => void;
 };
 
-export function WorkoutSegmentExerciseFields({
-  updateExercise,
-  segmentExercise,
-  exercises,
-  onRemove,
-}: WorkoutSegmentExerciseFieldsProps) {
+export const WorkoutSegmentExerciseFields: FC<
+  WorkoutSegmentExerciseFieldsProps
+> = ({ updateExercise, segmentExercise, exercises, onRemove }) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5">
       <div className="flex gap-3 items-center">
@@ -99,4 +97,4 @@ export function WorkoutSegmentExerciseFields({
       </div>
     </div>
   );
-}
+};

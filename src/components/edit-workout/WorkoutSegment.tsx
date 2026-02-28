@@ -1,4 +1,5 @@
 import { Plus, Trash2 } from "lucide-react";
+import type { FC } from "react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { WorkoutSegmentExerciseFields } from "@/components/edit-workout/WorkoutSegmentExerciseFields";
@@ -18,13 +19,13 @@ type WorkoutSegmentProps = {
   updateWorkout: (callback: (state: WorkoutState) => void) => void;
 };
 
-export function WorkoutSegment({
+export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
   segmentIndex,
   segment,
   exercises,
   canDelete,
   updateWorkout,
-}: WorkoutSegmentProps) {
+}) => {
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <label className="flex items-center max-w-36 gap-2 text-sm">
@@ -113,4 +114,4 @@ export function WorkoutSegment({
       </div>
     </div>
   );
-}
+};
