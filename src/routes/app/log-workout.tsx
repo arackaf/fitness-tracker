@@ -128,27 +128,21 @@ function RouteComponent() {
           state.segments[segmentIndex].exercises.splice(exerciseIndex, 1);
         });
       }}
-      onSegmentExerciseChange={(
-        segmentIndex,
-        exerciseIndex,
-        exerciseId = null,
-        repsToFailure = null,
-        repIndex = null,
-        reps = null,
-      ) => {
+      onSegmentExerciseChange={(segmentIndex, exerciseIndex, edits) => {
         workoutState.update(state => {
           const segmentExercise =
             state.segments[segmentIndex].exercises[exerciseIndex];
+          const { exerciseId, repsToFailure, repIndex, reps } = edits;
 
-          if (exerciseId !== null) {
+          if (exerciseId != null) {
             segmentExercise.exerciseId = exerciseId;
           }
 
-          if (repsToFailure !== null) {
+          if (repsToFailure != null) {
             segmentExercise.repsToFailure = repsToFailure;
           }
 
-          if (reps !== null && repIndex !== null) {
+          if (reps != null && repIndex != null) {
             segmentExercise.reps![repIndex] = reps;
           }
         });

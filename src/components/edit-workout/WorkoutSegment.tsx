@@ -17,10 +17,12 @@ type WorkoutSegmentProps = {
   onRemoveExercise: (exerciseIndex: number) => void;
   onExerciseChange: (
     exerciseIndex: number,
-    exerciseId?: number | null,
-    repsToFailure?: boolean | null,
-    repIndex?: number | null,
-    reps?: number | null,
+    edits: {
+      exerciseId?: number | null;
+      repsToFailure?: boolean | null;
+      repIndex?: number | null;
+      reps?: number | null;
+    },
   ) => void;
 };
 
@@ -56,14 +58,8 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
             key={`exercise-${exerciseIndex + 1}`}
             segmentExercise={segmentExercise}
             exercises={exercises}
-            onExerciseChange={(exerciseId, repsToFailure, repIndex, reps) => {
-              onExerciseChange(
-                exerciseIndex,
-                exerciseId,
-                repsToFailure,
-                repIndex,
-                reps,
-              );
+            onExerciseChange={edits => {
+              onExerciseChange(exerciseIndex, edits);
             }}
             onRemove={
               segment.exercises.length === 1

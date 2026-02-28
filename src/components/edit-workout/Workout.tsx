@@ -27,10 +27,12 @@ type WorkoutProps = {
   onSegmentExerciseChange: (
     segmentIndex: number,
     exerciseIndex: number,
-    exerciseId?: number | null,
-    repsToFailure?: boolean | null,
-    repIndex?: number | null,
-    reps?: number | null,
+    edits: {
+      exerciseId?: number | null;
+      repsToFailure?: boolean | null;
+      repIndex?: number | null;
+      reps?: number | null;
+    },
   ) => void;
   isSaving: boolean;
   errorMessage: string | null;
@@ -115,21 +117,8 @@ export const Workout: FC<WorkoutProps> = ({
             onRemoveExercise={exerciseIndex => {
               onRemoveSegmentExercise(segmentIndex, exerciseIndex);
             }}
-            onExerciseChange={(
-              exerciseIndex,
-              exerciseId,
-              repsToFailure,
-              repIndex,
-              reps,
-            ) => {
-              onSegmentExerciseChange(
-                segmentIndex,
-                exerciseIndex,
-                exerciseId,
-                repsToFailure,
-                repIndex,
-                reps,
-              );
+            onExerciseChange={(exerciseIndex, edits) => {
+              onSegmentExerciseChange(segmentIndex, exerciseIndex, edits);
             }}
           />
         ))}

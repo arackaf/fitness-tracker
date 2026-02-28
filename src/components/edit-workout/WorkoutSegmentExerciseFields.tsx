@@ -10,12 +10,12 @@ import { Input } from "@/components/ui/input";
 type WorkoutSegmentExerciseFieldsProps = {
   segmentExercise: WorkoutSegmentExercise;
   exercises: Exercise[];
-  onExerciseChange: (
-    exerciseId?: number | null,
-    repsToFailure?: boolean | null,
-    repIndex?: number | null,
-    reps?: number | null,
-  ) => void;
+  onExerciseChange: (edits: {
+    exerciseId?: number | null;
+    repsToFailure?: boolean | null;
+    repIndex?: number | null;
+    reps?: number | null;
+  }) => void;
   onRemove?: () => void;
 };
 
@@ -31,7 +31,9 @@ export const WorkoutSegmentExerciseFields: FC<
             value={segmentExercise.exerciseId ?? null}
             exercises={exercises}
             onSelect={exerciseId => {
-              onExerciseChange(exerciseId, null, null, null);
+              onExerciseChange({
+                exerciseId,
+              });
             }}
           />
         </label>
@@ -56,7 +58,9 @@ export const WorkoutSegmentExerciseFields: FC<
             <Checkbox
               checked={segmentExercise.repsToFailure}
               onCheckedChange={checked => {
-                onExerciseChange(null, checked === true, null, null);
+                onExerciseChange({
+                  repsToFailure: checked === true,
+                });
               }}
             />
             Reps to failure
@@ -82,12 +86,10 @@ export const WorkoutSegmentExerciseFields: FC<
                     type="number"
                     value={reps}
                     onChange={event => {
-                      onExerciseChange(
-                        null,
-                        null,
-                        index,
-                        parseInt(event.target.value),
-                      );
+                      onExerciseChange({
+                        repIndex: index,
+                        reps: parseInt(event.target.value),
+                      });
                     }}
                     className="h-7 w-16 px-2 py-1"
                   />
