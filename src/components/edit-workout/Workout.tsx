@@ -1,0 +1,130 @@
+import { Plus } from "lucide-react";
+import type { FormEvent } from "react";
+
+import { Header } from "@/components/Header";
+import type { Exercise } from "@/components/ExerciseSelector";
+import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  defaultExercise,
+  defaultSegment,
+  type WorkoutState,
+} from "@/data/zustand-state/workout-state";
+
+type WorkoutProps = {
+  exercises: Exercise[];
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  name: string;
+  setName: (value: string) => void;
+  description: string;
+  setDescription: (value: string) => void;
+  workoutDate: string;
+  setWorkoutDate: (value: string) => void;
+  workoutState: WorkoutState;
+  isSaving: boolean;
+  errorMessage: string | null;
+  successMessage: string | null;
+};
+
+export function Workout({
+  exercises,
+  handleSubmit,
+  name,
+  setName,
+  description,
+  setDescription,
+  workoutDate,
+  setWorkoutDate,
+  workoutState,
+  isSaving,
+  errorMessage,
+  successMessage,
+}: WorkoutProps) {
+  return (
+    <div>
+      <Header title="Log Workout" />
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
+          <label className="flex flex-col gap-2 text-sm">
+            <span className="font-medium">Workout name</span>
+            <Input
+              required
+              value={name}
+              onChange={event => setName(event.target.value)}
+              placeholder="Push Day"
+            />
+          </label>
+
+          <label className="flex flex-col gap-2 text-sm">
+            <span className="font-medium">Workout date</span>
+            <Input
+              required
+              type="date"
+              value={workoutDate}
+              onChange={event => setWorkoutDate(event.target.value)}
+            />
+          </label>
+
+          <label className="flex flex-col gap-2 text-sm md:col-span-2">
+            <span className="font-medium">Description</span>
+            <Textarea
+              value={description}
+              onChange={event => setDescription(event.target.value)}
+              className="min-h-20"
+              placeholder="Optional notes about this workout."
+            />
+          </label>
+        </div>
+
+        {workoutState.segments.map((segment, segmentIndex) => (
+          <WorkoutSegment
+            key={`segment-${segmentIndex + 1}`}
+            segmentIndex={segmentIndex}
+            segment={segment}
+            exercises={exercises}
+            canDelete={workoutState.segments.length > 1}
+            updateWorkout={workoutState.update}
+          />
+        ))}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            onClick={() => {
+              workoutState.update(state => {
+                state.segments.push({
+                  segment: defaultSegment,
+                  exercises: [defaultExercise],
+                });
+              });
+            }}
+            variant="outline"
+            className="font-semibold"
+          >
+            <Plus className="size-4" aria-hidden="true" />
+            Add segment
+          </Button>
+
+          <Button type="submit" disabled={isSaving} className="font-semibold">
+            {isSaving ? "Saving..." : "Create workout"}
+          </Button>
+        </div>
+
+        {errorMessage ? (
+          <p className="rounded-md border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300">
+            {errorMessage}
+          </p>
+        ) : null}
+
+        {successMessage ? (
+          <p className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
+            {successMessage}
+          </p>
+        ) : null}
+      </form>
+    </div>
+  );
+}

@@ -2,22 +2,13 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { asc } from "drizzle-orm";
-import { Plus } from "lucide-react";
 import { useState } from "react";
 
-import { Header } from "@/components/Header";
-import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Workout } from "@/components/edit-workout/Workout";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
-import {
-  createWorkoutState,
-  defaultExercise,
-  defaultSegment,
-} from "@/data/zustand-state/workout-state";
+import { createWorkoutState } from "@/data/zustand-state/workout-state";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -82,88 +73,19 @@ function RouteComponent() {
   const workoutState = useWorkoutState();
 
   return (
-    <section>
-      <Header title="Log Workout" />
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium">Workout name</span>
-            <Input
-              required
-              value={name}
-              onChange={event => setName(event.target.value)}
-              placeholder="Push Day"
-            />
-          </label>
-
-          <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium">Workout date</span>
-            <Input
-              required
-              type="date"
-              value={workoutDate}
-              onChange={event => setWorkoutDate(event.target.value)}
-            />
-          </label>
-
-          <label className="flex flex-col gap-2 text-sm md:col-span-2">
-            <span className="font-medium">Description</span>
-            <Textarea
-              value={description}
-              onChange={event => setDescription(event.target.value)}
-              className="min-h-20"
-              placeholder="Optional notes about this workout."
-            />
-          </label>
-        </div>
-
-        {workoutState.segments.map((segment, segmentIndex) => (
-          <WorkoutSegment
-            key={`segment-${segmentIndex + 1}`}
-            segmentIndex={segmentIndex}
-            segment={segment}
-            exercises={exercises}
-            canDelete={workoutState.segments.length > 1}
-            updateWorkout={workoutState.update}
-          />
-        ))}
-
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            type="button"
-            onClick={() => {
-              workoutState.update(state => {
-                state.segments.push({
-                  segment: defaultSegment,
-                  exercises: [defaultExercise],
-                });
-              });
-            }}
-            variant="outline"
-            className="font-semibold"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            Add segment
-          </Button>
-
-          <Button type="submit" disabled={isSaving} className="font-semibold">
-            {isSaving ? "Saving..." : "Create workout"}
-          </Button>
-        </div>
-
-        {errorMessage ? (
-          <p className="rounded-md border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300">
-            {errorMessage}
-          </p>
-        ) : null}
-
-        {successMessage ? (
-          <p className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
-            {successMessage}
-          </p>
-        ) : null}
-      </form>
-    </section>
+    <Workout
+      exercises={exercises}
+      handleSubmit={handleSubmit}
+      name={name}
+      setName={setName}
+      description={description}
+      setDescription={setDescription}
+      workoutDate={workoutDate}
+      setWorkoutDate={setWorkoutDate}
+      workoutState={workoutState}
+      isSaving={isSaving}
+      errorMessage={errorMessage}
+      successMessage={successMessage}
+    />
   );
 }
