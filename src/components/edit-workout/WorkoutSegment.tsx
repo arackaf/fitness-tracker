@@ -27,48 +27,53 @@ export function WorkoutSegment({
 }: WorkoutSegmentProps) {
   return (
     <div className="space-y-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">Segment {segmentIndex + 1}</h2>
-        <Button
-          type="button"
-          onClick={() => {
-            updateWorkout(state => {
-              state.segments.splice(segmentIndex, 1);
-            });
-          }}
-          disabled={!canDelete}
-          variant="outline"
-          size="sm"
-        >
-          <Trash2 className="size-3.5" aria-hidden="true" />
-          Remove segment
-        </Button>
-      </div>
-
-      <label className="flex max-w-36 flex-col gap-2 text-sm">
-        <span className="font-medium">Sets</span>
-        <Input
-          required
-          min={1}
-          type="number"
-          value={String(segment.segment.sets)}
-          onChange={event => {
-            const setCount = Number(event.target.value);
-
-            updateWorkout(state => {
-              state.segments[segmentIndex].segment.sets = setCount;
-              state.segments[segmentIndex].exercises.forEach(exercise => {
-                if (!exercise.reps) {
-                  exercise.reps = [];
-                }
-
-                exercise.reps.length = setCount;
-                exercise.reps[setCount - 1] = exercise.reps[setCount - 2] || 0;
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between">
+          <h2 className="text-base font-semibold">
+            Segment {segmentIndex + 1}
+          </h2>
+          <Button
+            type="button"
+            onClick={() => {
+              updateWorkout(state => {
+                state.segments.splice(segmentIndex, 1);
               });
-            });
-          }}
-        />
-      </label>
+            }}
+            disabled={!canDelete}
+            variant="outline"
+            size="sm"
+          >
+            <Trash2 className="size-3.5" aria-hidden="true" />
+            Remove segment
+          </Button>
+        </div>
+
+        <label className="flex max-w-36 flex-col gap-2 text-sm">
+          <span className="font-medium">Sets</span>
+          <Input
+            required
+            min={1}
+            type="number"
+            value={String(segment.segment.sets)}
+            onChange={event => {
+              const setCount = Number(event.target.value);
+
+              updateWorkout(state => {
+                state.segments[segmentIndex].segment.sets = setCount;
+                state.segments[segmentIndex].exercises.forEach(exercise => {
+                  if (!exercise.reps) {
+                    exercise.reps = [];
+                  }
+
+                  exercise.reps.length = setCount;
+                  exercise.reps[setCount - 1] =
+                    exercise.reps[setCount - 2] || 0;
+                });
+              });
+            }}
+          />
+        </label>
+      </div>
 
       <div className="space-y-3">
         {segment.exercises.map((segmentExercise, exerciseIndex) => (
