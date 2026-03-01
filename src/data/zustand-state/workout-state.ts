@@ -11,8 +11,7 @@ export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
 
-export type SegmentWithExercises = {
-  segment: WorkoutSegment;
+export type SegmentWithExercises = WorkoutSegment & {
   exercises: WorkoutSegmentExercise[];
 };
 
@@ -57,11 +56,9 @@ export const createDefaultWorkout = () => {
     description: "",
     segments: [
       {
-        segment: {
-          segmentOrder: 1,
-          sets: 1,
-          workoutId: 0,
-        },
+        segmentOrder: 1,
+        sets: 1,
+        workoutId: 0,
         exercises: [defaultExercise],
       },
     ],

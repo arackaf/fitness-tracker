@@ -12,7 +12,7 @@ import {
   defaultExercise,
   defaultSegment,
 } from "@/data/zustand-state/workout-state";
-import { useWotkoutForm } from "@/lib/workout-form";
+import { useWorkoutForm } from "@/lib/workout-form";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -46,7 +46,7 @@ function RouteComponent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const form = useWotkoutForm();
+  const form = useWorkoutForm();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -1,7 +1,7 @@
 import { createDefaultWorkout } from "@/data/zustand-state/workout-state";
 import { useForm } from "@tanstack/react-form";
 
-export const useWotkoutForm = () => {
+export const useWorkoutForm = () => {
   return useForm({
     defaultValues: createDefaultWorkout(),
 
@@ -11,4 +11,4 @@ export const useWotkoutForm = () => {
   });
 };
 
-export type WorkoutForm = ReturnType<typeof useWotkoutForm>;
+export type WorkoutForm = ReturnType<typeof useWorkoutForm>;
