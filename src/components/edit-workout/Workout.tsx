@@ -52,7 +52,6 @@ type WorkoutProps = {
 export const Workout: FC<WorkoutProps> = ({
   form,
   exercises,
-  onWorkoutChange,
   onSegmentsListChange,
   onSegmentChange,
   onSegmentExerciseListChange,
@@ -61,6 +60,8 @@ export const Workout: FC<WorkoutProps> = ({
   errorMessage,
   successMessage,
 }) => {
+  const workout = form.state.values;
+
   return (
     <div>
       <Header title="Log Workout" />
@@ -95,29 +96,51 @@ export const Workout: FC<WorkoutProps> = ({
           )}
         />
 
-        <label className="flex flex-col gap-2 text-sm">
-          <span className="font-medium">Workout date</span>
-          <Input
-            required
-            type="date"
-            value={workout.workoutDate}
-            onChange={event => {
-              onWorkoutChange({ workoutDate: event.target.value });
-            }}
-          />
-        </label>
+        <form.Field
+          name="workoutDate"
+          validators={{
+            onBlur: ({ value }) => {
+              if (!value) {
+                return "Required";
+              }
+            },
+          }}
+          children={field => (
+            <div className="flex flex-col gap-2 text-sm">
+              <label className="flex flex-col gap-2">
+                <span className="font-medium">Workout date</span>
+                <Input
+                  required
+                  type="date"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={event => field.handleChange(event.target.value)}
+                />
+              </label>
+              {!field.state.meta.isValid ? (
+                <span className="text-sm text-red-500">
+                  {field.state.meta.errors.join(", ")}
+                </span>
+              ) : null}
+            </div>
+          )}
+        />
 
-        <label className="flex flex-col gap-2 text-sm md:col-span-2">
-          <span className="font-medium">Description</span>
-          <Textarea
-            value={workout.description ?? ""}
-            onChange={event => {
-              onWorkoutChange({ description: event.target.value });
-            }}
-            className="min-h-20"
-            placeholder="Optional notes about this workout."
-          />
-        </label>
+        <form.Field
+          name="description"
+          children={field => (
+            <label className="flex flex-col gap-2 text-sm md:col-span-2">
+              <span className="font-medium">Description</span>
+              <Textarea
+                value={field.state.value ?? ""}
+                onBlur={field.handleBlur}
+                onChange={event => field.handleChange(event.target.value)}
+                className="min-h-20"
+                placeholder="Optional notes about this workout."
+              />
+            </label>
+          )}
+        />
       </div>
 
       {workout.segments.map((segment, segmentIndex) => (
