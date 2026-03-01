@@ -35,23 +35,11 @@ export const defaultSegment: WorkoutSegment = {
   workoutId: 0,
 };
 
-export const createWorkoutState = () => {
+export const createDefaultWorkoutState = () => {
   return create<WorkoutState>()(
     immer(set => {
       return {
-        name: "",
-        workoutDate: new Date().toISOString().split("T")[0] ?? "",
-        description: "",
-        segments: [
-          {
-            segment: {
-              segmentOrder: 1,
-              sets: 1,
-              workoutId: 0,
-            },
-            exercises: [defaultExercise],
-          },
-        ],
+        ...createDefaultWorkout(),
         update: (doUpdate: (update: WorkoutState) => void) => {
           set(state => {
             doUpdate(state);
@@ -60,4 +48,22 @@ export const createWorkoutState = () => {
       };
     }),
   );
+};
+
+export const createDefaultWorkout = () => {
+  return {
+    name: "",
+    workoutDate: new Date().toISOString().split("T")[0] ?? "",
+    description: "",
+    segments: [
+      {
+        segment: {
+          segmentOrder: 1,
+          sets: 1,
+          workoutId: 0,
+        },
+        exercises: [defaultExercise],
+      },
+    ],
+  };
 };
