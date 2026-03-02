@@ -47,11 +47,21 @@ export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProp
                         ...segment.exercises.map(exercise => exercise.reps.length),
                       ),
                     },
-                    (_, repIndex) =>
-                      `(${segment.exercises
-                        .map(exercise => (exercise.reps[repIndex] ?? "_").toString())
-                        .join(", ")})`,
-                  ).join(", ")}
+                    (_, repIndex) => {
+                      const repsForSet = segment.exercises.map(
+                        exercise => exercise.reps[repIndex],
+                      );
+                      const hasAnyRepValue = repsForSet.some(rep => rep !== null);
+
+                      if (!hasAnyRepValue) {
+                        return "";
+                      }
+
+                      return `(${repsForSet.map(rep => (rep ?? "_").toString()).join(", ")})`;
+                    },
+                  )
+                    .filter(Boolean)
+                    .join(", ")}
                 </p>
               </>
             ) : (
@@ -66,7 +76,9 @@ export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProp
                       <span className="ml-1 text-xs">(to failure)</span>
                     ) : null}
                     :{" "}
-                    {exercise.reps.map(rep => (rep ?? "_").toString()).join(", ")}
+                    {exercise.reps.some(rep => rep !== null)
+                      ? exercise.reps.map(rep => (rep ?? "_").toString()).join(", ")
+                      : ""}
                   </li>
                 ))}
               </ul>
