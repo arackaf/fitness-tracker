@@ -54,8 +54,13 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                         }}
                       />
                       {!segmentExercise.state.meta.isValid &&
-                        segmentExercise.state.meta.errors.map(error => (
-                          <span className="text-red-500 text-xs">{error}</span>
+                        segmentExercise.state.meta.errors.map((error, idx) => (
+                          <span
+                            key={`error-${idx}`}
+                            className="text-red-500 text-xs"
+                          >
+                            {error}
+                          </span>
                         ))}
                     </label>
                   )}
