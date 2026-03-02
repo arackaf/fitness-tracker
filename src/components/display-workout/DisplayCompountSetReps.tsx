@@ -2,19 +2,21 @@ import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 type DisplayCompountSetRepsProps = {
   segment: SegmentWithExercises;
-  exerciseNameById: Map<number, string>;
+  exerciseLookup: Map<number, string>;
 };
 
 export function DisplayCompountSetReps({
   segment,
-  exerciseNameById,
+  exerciseLookup,
 }: DisplayCompountSetRepsProps) {
   return (
     <>
       <p className="mt-2 text-sm text-muted-foreground">
         {segment.exercises.map((exercise, exerciseIndex) => (
-          <span key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}>
-            {exerciseNameById.get(exercise.exerciseId) ??
+          <span
+            key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}
+          >
+            {exerciseLookup.get(exercise.exerciseId) ??
               `Exercise #${exercise.exerciseId}`}
             {exercise.repsToFailure ? (
               <span className="ml-1 text-xs">(to failure)</span>

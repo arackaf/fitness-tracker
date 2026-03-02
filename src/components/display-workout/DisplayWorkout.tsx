@@ -28,7 +28,7 @@ export function DisplayWorkout({
             className="rounded-lg border border-border/80 bg-background/70 p-3"
           >
             <p className="text-sm font-medium">{segment.sets} sets</p>
-            <DisplayReps segment={segment} exerciseNameById={exerciseNameById} />
+            <DisplayReps segment={segment} exerciseLookup={exerciseNameById} />
           </section>
         ))}
       </div>

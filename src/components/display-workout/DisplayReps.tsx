@@ -5,19 +5,13 @@ import { DisplaySimpleSetReps } from "@/components/display-workout/DisplaySimple
 
 type DisplayRepsProps = {
   segment: SegmentWithExercises;
-  exerciseNameById: Map<number, string>;
+  exerciseLookup: Map<number, string>;
 };
 
-export function DisplayReps({ segment, exerciseNameById }: DisplayRepsProps) {
+export function DisplayReps({ segment, exerciseLookup }: DisplayRepsProps) {
   return segment.exercises.length > 1 ? (
-    <DisplayCompountSetReps
-      segment={segment}
-      exerciseNameById={exerciseNameById}
-    />
+    <DisplayCompountSetReps segment={segment} exerciseLookup={exerciseLookup} />
   ) : (
-    <DisplaySimpleSetReps
-      segment={segment}
-      exerciseNameById={exerciseNameById}
-    />
+    <DisplaySimpleSetReps segment={segment} exerciseLookup={exerciseLookup} />
   );
 }

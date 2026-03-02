@@ -2,19 +2,19 @@ import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 type DisplaySimpleSetRepsProps = {
   segment: SegmentWithExercises;
-  exerciseNameById: Map<number, string>;
+  exerciseLookup: Map<number, string>;
 };
 
 export function DisplaySimpleSetReps({
   segment,
-  exerciseNameById,
+  exerciseLookup,
 }: DisplaySimpleSetRepsProps) {
   const exercise = segment.exercises[0];
 
   return (
     <ul className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
       <li>
-        {exerciseNameById.get(exercise.exerciseId) ??
+        {exerciseLookup.get(exercise.exerciseId) ??
           `Exercise #${exercise.exerciseId}`}
         {exercise.repsToFailure ? (
           <span className="ml-1 text-xs">(to failure)</span>
