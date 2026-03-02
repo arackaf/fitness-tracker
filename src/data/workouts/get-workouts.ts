@@ -10,12 +10,21 @@ import {
 
 const WORKOUT_HISTORY_LIMIT = 10;
 
-export const getWorkouts = async (): Promise<WorkoutState[]> => {
-  const limitedWorkoutIds = await db
-    .select({ id: workoutTable.id })
-    .from(workoutTable)
-    .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
-    .limit(WORKOUT_HISTORY_LIMIT);
+type GetWorkoutsOptions = {
+  id?: number;
+};
+
+export const getWorkouts = async (
+  options?: GetWorkoutsOptions,
+): Promise<WorkoutState[]> => {
+  const limitedWorkoutIds =
+    options?.id == null
+      ? await db
+          .select({ id: workoutTable.id })
+          .from(workoutTable)
+          .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
+          .limit(WORKOUT_HISTORY_LIMIT)
+      : [{ id: options.id }];
 
   if (limitedWorkoutIds.length === 0) {
     return [];

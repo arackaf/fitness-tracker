@@ -9,8 +9,22 @@ const getWorkoutHistory = createServerFn({ method: "GET" }).handler(
   },
 );
 
+const getWorkoutById = createServerFn({ method: "GET" })
+  .inputValidator((input: { id: number }) => input)
+  .handler(async ({ data }) => {
+    const workouts = await getWorkouts({ id: data.id });
+
+    return workouts[0] ?? null;
+  });
+
 export const workoutHistoryQueryOptions = () =>
   queryOptions({
     queryKey: ["workouts", "history", "latest-10"],
     queryFn: () => getWorkoutHistory(),
+  });
+
+export const workoutByIdQueryOptions = (id: number) =>
+  queryOptions({
+    queryKey: ["workouts", "detail", id],
+    queryFn: () => getWorkoutById({ data: { id } }),
   });

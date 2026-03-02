@@ -6,9 +6,10 @@ import { useForm } from "@tanstack/react-form";
 
 export const useWorkoutForm = (
   submitValue: (value: WorkoutState) => void | Promise<void>,
+  defaultValues: WorkoutState = createDefaultWorkout(),
 ) => {
   return useForm({
-    defaultValues: createDefaultWorkout(),
+    defaultValues,
 
     onSubmit: async ({ value }) => {
       await submitValue(value);
