@@ -1,21 +1,21 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { asc } from "drizzle-orm";
 import { useMemo } from "react";
 
 import { Header } from "@/components/Header";
+import { getExercises } from "@/data/exercises/get-exercises";
 import { getWorkouts } from "@/data/workouts/get-workouts";
-import { db } from "@/drizzle/db";
-import { exercises as exercisesTable } from "@/drizzle/schema";
 
 const getWorkoutHistory = createServerFn({ method: "GET" }).handler(async () => {
   return getWorkouts();
 });
 
-const getExercises = createServerFn({ method: "GET" }).handler(async () => {
-  return db.select().from(exercisesTable).orderBy(asc(exercisesTable.name));
-});
+const getExercisesForHistory = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return getExercises();
+  },
+);
 
 const workoutHistoryQueryOptions = () =>
   queryOptions({
@@ -26,7 +26,7 @@ const workoutHistoryQueryOptions = () =>
 const exercisesQueryOptions = () =>
   queryOptions({
     queryKey: ["exercises", "list"],
-    queryFn: () => getExercises(),
+    queryFn: () => getExercisesForHistory(),
   });
 
 export const Route = createFileRoute("/app/workout-history")({

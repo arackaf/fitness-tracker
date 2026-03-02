@@ -3,18 +3,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 
-import { asc, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 import { ExerciseFilters } from "@/components/ExerciseFilters";
 import { Header } from "@/components/Header";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
+import { getExercises } from "@/data/exercises/get-exercises";
 
 import { db } from "../../../drizzle/db";
-import { exercises } from "../../../drizzle/schema";
 
-const getExercises = createServerFn({ method: "GET" }).handler(async () => {
-  return db.select().from(exercises).orderBy(asc(exercises.name));
-});
+const getExercisesForAdmin = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return getExercises();
+  },
+);
 
 const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
   const result = await db.execute<{ value: string }>(sql`
@@ -27,7 +29,7 @@ const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
 const exercisesQueryOptions = () =>
   queryOptions({
     queryKey: ["exercises", "list"],
-    queryFn: () => getExercises(),
+    queryFn: () => getExercisesForAdmin(),
   });
 
 const muscleGroupsQueryOptions = () =>
