@@ -26,11 +26,11 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
       mode="array"
       name="segments"
       children={segmentsField => (
-        <>
+        <div className="flex flex-col gap-4 XXX">
           {segmentsField.state.value.map((_, segmentIndex) => (
             <div
               key={`segment-${segmentIndex + 1}`}
-              className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
+              className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
             >
               <label className="flex max-w-36 items-center gap-2 text-sm">
                 <span className="font-medium">Sets:</span>
@@ -87,7 +87,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                 mode="array"
                 name={`segments[${segmentIndex}].exercises`}
                 children={segmentExercisesField => (
-                  <div>
+                  <>
                     {segmentExercisesField.state.value.map(
                       (_, exerciseIndex) => (
                         <div
@@ -135,7 +135,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                             </div>
                           </div>
 
-                          <div className="flex gap-2  min-h-7">
+                          <div className="flex gap-2 min-h-7">
                             <div className="h-7 flex items-center">
                               <form.Field
                                 name={`segments[${segmentIndex}].exercises[${exerciseIndex}].repsToFailure`}
@@ -248,7 +248,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                         Add exercise
                       </Button>
                     </div>
-                  </div>
+                  </>
                 )}
               />
             </div>
@@ -264,7 +264,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
             <Plus className="size-4" aria-hidden="true" />
             Add segment
           </Button>
-        </>
+        </div>
       )}
     />
   );
