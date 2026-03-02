@@ -259,3 +259,40 @@ JOIN (
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
 WHERE wt.name = 'Back Day';
+
+-- ================================================================================
+-- Workout Data
+-- ================================================================================
+
+INSERT INTO workout (id, name, description, workout_date)
+OVERRIDING SYSTEM VALUE
+VALUES
+  (1, 'Workout 1 - Chest Day', '', CURRENT_DATE),
+  (2, 'Workout 1 - Arm Day', '', CURRENT_DATE - INTERVAL '1 day');
+
+INSERT INTO workout_segment (id, workout_id, segment_order, sets)
+OVERRIDING SYSTEM VALUE
+VALUES
+  (1, 1, 1, 4),
+  (2, 1, 2, 4),
+  (3, 1, 3, 4),
+  (4, 1, 4, 4),
+  (5, 2, 1, 4),
+  (6, 2, 2, 4),
+  (7, 2, 3, 4),
+  (8, 2, 4, 4);
+
+INSERT INTO workout_segment_exercise (id, workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+OVERRIDING SYSTEM VALUE
+VALUES
+  (1, 1, 1, 1, ARRAY[8, 8, 7, 7], false),       -- Bench Press
+  (2, 1, 2, 5, ARRAY[12, 12, 12, 11], false),   -- Dumbbell Fly (Chest Fly)
+  (3, 2, 1, 7, ARRAY[8, 7, 5, 5], false),       -- Chest Dips
+  (4, 3, 1, 2, ARRAY[10, 10, 9, 8], false),     -- Incline Dumbbell Press
+  (5, 4, 1, 9, ARRAY[12, 12, 12, 12], false),   -- Pec Deck
+  (6, 5, 1, 56, ARRAY[10, 10, 10, 10], false),  -- Barbell Curl
+  (7, 5, 2, 63, ARRAY[12, 12, 11, 10], false),  -- Close-Grip Bench Press
+  (8, 6, 1, 58, ARRAY[10, 10, 10, 10], false),  -- Hammer Curl
+  (9, 6, 2, 70, ARRAY[8, 8, 7, 7], false),      -- Kickback
+  (10, 7, 1, 67, ARRAY[10, 10, 10, 10], false), -- Cable Pushdown
+  (11, 8, 1, 61, ARRAY[8, 8, 7, 7], false);     -- Cable Curl
