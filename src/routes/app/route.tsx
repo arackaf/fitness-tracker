@@ -33,13 +33,13 @@ function RouteComponent() {
             Log Workout
           </Link>
           <Link
-            to="/app/workout-history"
+            to="/app/workouts"
             className={navLinkClassName}
             activeProps={activeNavLinkProps}
             inactiveProps={inactiveNavLinkProps}
           >
             <History className="size-4" aria-hidden="true" />
-            Workout History
+            Workouts
           </Link>
           <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link

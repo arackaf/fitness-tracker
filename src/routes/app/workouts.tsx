@@ -7,7 +7,7 @@ import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workout-history";
 
-export const Route = createFileRoute("/app/workout-history")({
+export const Route = createFileRoute("/app/workouts")({
   loader: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(workoutHistoryQueryOptions()),
@@ -28,7 +28,7 @@ function RouteComponent() {
 
   return (
     <section>
-      <Header title="Workout History" />
+      <Header title="Workouts" />
 
       {workouts.length === 0 ? (
         <p className="text-muted-foreground">
