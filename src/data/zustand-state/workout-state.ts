@@ -20,18 +20,31 @@ export type WorkoutState = Workout & {
   update: (doUpdate: (state: WorkoutState) => void) => void;
 };
 
-export const defaultExercise: WorkoutSegmentExercise = {
+const defaultExercise: WorkoutSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
   repsToFailure: false,
-  reps: [8],
+  reps: [8, 8, 8, 8],
   workoutSegmentId: 0,
 };
 
-export const defaultSegment: WorkoutSegment = {
+export const createDefaultExercise = () => {
+  return {
+    ...defaultExercise,
+  };
+};
+
+const defaultSegment: WorkoutSegment = {
   segmentOrder: 1,
   sets: 4,
   workoutId: 0,
+};
+
+export const createDefaultSegment = () => {
+  return {
+    ...defaultSegment,
+    exercises: [createDefaultExercise()],
+  };
 };
 
 export const createDefaultWorkoutState = () => {
@@ -54,13 +67,6 @@ export const createDefaultWorkout = () => {
     name: "",
     workoutDate: new Date().toISOString().split("T")[0] ?? "",
     description: "",
-    segments: [
-      {
-        segmentOrder: 1,
-        sets: 1,
-        workoutId: 0,
-        exercises: [defaultExercise],
-      },
-    ],
+    segments: [createDefaultSegment()],
   };
 };

@@ -1,49 +1,16 @@
-import { Plus } from "lucide-react";
 import type { FC } from "react";
 
 import { Header } from "@/components/Header";
 import type { Exercise } from "@/components/ExerciseSelector";
-import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutForm } from "@/lib/workout-form";
+import { WorkoutSegments } from "./WorkoutSegments";
 
 type WorkoutProps = {
   exercises: Exercise[];
   form: WorkoutForm;
-  onWorkoutChange: (edits: {
-    name?: string | null;
-    workoutDate?: string | null;
-    description?: string | null;
-  }) => void;
-  onSegmentsListChange: (edits: {
-    removeIndex?: number | null;
-    addNew?: boolean | null;
-  }) => void;
-  onSegmentChange: (
-    segmentIndex: number,
-    edits: {
-      sets?: number | null;
-    },
-  ) => void;
-  onSegmentExerciseListChange: (
-    segmentIndex: number,
-    edits: {
-      removeIndex?: number | null;
-      addNew?: boolean | null;
-    },
-  ) => void;
-  onSegmentExerciseChange: (
-    segmentIndex: number,
-    exerciseIndex: number,
-    edits: {
-      exerciseId?: number | null;
-      repsToFailure?: boolean | null;
-      repIndex?: number | null;
-      reps?: number | null;
-    },
-  ) => void;
   isSaving: boolean;
   errorMessage: string | null;
   successMessage: string | null;
@@ -52,16 +19,10 @@ type WorkoutProps = {
 export const Workout: FC<WorkoutProps> = ({
   form,
   exercises,
-  onSegmentsListChange,
-  onSegmentChange,
-  onSegmentExerciseListChange,
-  onSegmentExerciseChange,
   isSaving,
   errorMessage,
   successMessage,
 }) => {
-  const workout = form.state.values;
-
   return (
     <div>
       <Header title="Log Workout" />
@@ -143,43 +104,9 @@ export const Workout: FC<WorkoutProps> = ({
         />
       </div>
 
-      {workout.segments.map((segment, segmentIndex) => (
-        <WorkoutSegment
-          key={`segment-${segmentIndex + 1}`}
-          segment={segment}
-          exercises={exercises}
-          canDelete={workout.segments.length > 1}
-          onSetCountChange={setCount => {
-            onSegmentChange(segmentIndex, { sets: setCount });
-          }}
-          onAddExercise={() => {
-            onSegmentExerciseListChange(segmentIndex, { addNew: true });
-          }}
-          onRemoveSegment={() => {
-            onSegmentsListChange({ removeIndex: segmentIndex });
-          }}
-          onRemoveExercise={exerciseIndex => {
-            onSegmentExerciseListChange(segmentIndex, {
-              removeIndex: exerciseIndex,
-            });
-          }}
-          onExerciseChange={(exerciseIndex, edits) => {
-            onSegmentExerciseChange(segmentIndex, exerciseIndex, edits);
-          }}
-        />
-      ))}
+      <WorkoutSegments form={form} exercises={exercises} />
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Button
-          type="button"
-          onClick={() => onSegmentsListChange({ addNew: true })}
-          variant="outline"
-          className="font-semibold"
-        >
-          <Plus className="size-4" aria-hidden="true" />
-          Add segment
-        </Button>
-
+      <div>
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}
         </Button>

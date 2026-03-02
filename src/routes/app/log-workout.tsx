@@ -8,10 +8,7 @@ import { Workout } from "@/components/edit-workout/Workout";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
-import {
-  defaultExercise,
-  defaultSegment,
-} from "@/data/zustand-state/workout-state";
+
 import { useWorkoutForm } from "@/lib/workout-form";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
@@ -59,84 +56,8 @@ function RouteComponent() {
   return (
     <form>
       <Workout
+        form={form}
         exercises={exercises}
-        onWorkoutChange={({ name, workoutDate, description }) => {
-          workoutState.update(state => {
-            if (name != null) {
-              state.name = name;
-            }
-
-            if (workoutDate != null) {
-              state.workoutDate = workoutDate;
-            }
-
-            if (description != null) {
-              state.description = description;
-            }
-          });
-        }}
-        onSegmentsListChange={({ removeIndex, addNew }) => {
-          workoutState.update(state => {
-            if (removeIndex != null) {
-              state.segments.splice(removeIndex, 1);
-            }
-
-            if (addNew) {
-              state.segments.push({
-                segment: defaultSegment,
-                exercises: [defaultExercise],
-              });
-            }
-          });
-        }}
-        onSegmentChange={(segmentIndex, { sets }) => {
-          workoutState.update(state => {
-            if (sets != null) {
-              state.segments[segmentIndex].segment.sets = sets;
-              state.segments[segmentIndex].exercises.forEach(exercise => {
-                if (!exercise.reps) {
-                  exercise.reps = [];
-                }
-
-                exercise.reps.length = sets;
-                exercise.reps[sets - 1] = exercise.reps[sets - 2] || 0;
-              });
-            }
-          });
-        }}
-        onSegmentExerciseListChange={(
-          segmentIndex,
-          { removeIndex, addNew },
-        ) => {
-          workoutState.update(state => {
-            if (removeIndex != null) {
-              state.segments[segmentIndex].exercises.splice(removeIndex, 1);
-            }
-
-            if (addNew) {
-              state.segments[segmentIndex].exercises.push(defaultExercise);
-            }
-          });
-        }}
-        onSegmentExerciseChange={(segmentIndex, exerciseIndex, edits) => {
-          workoutState.update(state => {
-            const segmentExercise =
-              state.segments[segmentIndex].exercises[exerciseIndex];
-            const { exerciseId, repsToFailure, repIndex, reps } = edits;
-
-            if (exerciseId != null) {
-              segmentExercise.exerciseId = exerciseId;
-            }
-
-            if (repsToFailure != null) {
-              segmentExercise.repsToFailure = repsToFailure;
-            }
-
-            if (reps != null && repIndex != null) {
-              segmentExercise.reps![repIndex] = reps;
-            }
-          });
-        }}
         isSaving={isSaving}
         errorMessage={errorMessage}
         successMessage={successMessage}
