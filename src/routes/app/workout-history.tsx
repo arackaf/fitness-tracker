@@ -61,13 +61,20 @@ function RouteComponent() {
                     {segment.exercises.length > 1 ? (
                       <>
                         <p className="mt-2 text-sm text-muted-foreground">
-                          {segment.exercises
-                            .map(
-                              exercise =>
-                                exerciseNameById.get(exercise.exerciseId) ??
-                                `Exercise #${exercise.exerciseId}`,
-                            )
-                            .join(", ")}
+                          {segment.exercises.map((exercise, exerciseIndex) => (
+                            <span
+                              key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}
+                            >
+                              {exerciseNameById.get(exercise.exerciseId) ??
+                                `Exercise #${exercise.exerciseId}`}
+                              {exercise.repsToFailure ? (
+                                <span className="ml-1 text-xs">(to failure)</span>
+                              ) : null}
+                              {exerciseIndex < segment.exercises.length - 1
+                                ? ", "
+                                : null}
+                            </span>
+                          ))}
                         </p>
                         <p className="ml-4 text-sm text-muted-foreground">
                           {Array.from(
@@ -95,6 +102,9 @@ function RouteComponent() {
                           >
                             {exerciseNameById.get(exercise.exerciseId) ??
                               `Exercise #${exercise.exerciseId}`}
+                            {exercise.repsToFailure ? (
+                              <span className="ml-1 text-xs">(to failure)</span>
+                            ) : null}
                             : {exercise.reps.join(", ")}
                           </li>
                         ))}
