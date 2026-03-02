@@ -30,55 +30,73 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
               className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
             >
               <div className="flex items-end gap-3">
-                <label className="flex max-w-36 items-center gap-2 text-sm">
-                  <span className="font-medium">Sets:</span>
-                  <form.Field
-                    name={`segments[${segmentIndex}].sets`}
-                    validators={{
-                      onBlur: ({ value }) => {
-                        if (typeof value !== "number" || Number.isNaN(value)) {
-                          return "Invalid";
-                        }
+                <form.Field
+                  name={`segments[${segmentIndex}].sets`}
+                  validators={{
+                    onChange: ({ value }) => {
+                      if (
+                        typeof value !== "number" ||
+                        Number.isNaN(value) ||
+                        value < 1
+                      ) {
+                        return "Invalid";
+                      }
 
-                        if (value < 1) {
-                          return "Required";
-                        }
-                      },
-                    }}
-                    children={setsField => (
-                      <Input
-                        min={1}
-                        type="number"
-                        value={String(setsField.state.value)}
-                        onChange={event => {
-                          const newSetsValue = Number(event.target.value);
-                          setsField.handleChange(newSetsValue);
-
-                          segmentsField.state.value[
-                            segmentIndex
-                          ].exercises.forEach((exercise, idx) => {
-                            if (!exercise.reps?.length) {
+                      if (value == null) {
+                        return "Invalid";
+                      }
+                    },
+                  }}
+                  children={setsField => (
+                    <div className="flex flex-col gap-2">
+                      <label className="flex max-w-36 items-center gap-2 text-sm">
+                        <span className="font-medium">Sets:</span>
+                        <Input
+                          type="number"
+                          value={String(setsField.state.value)}
+                          onChange={event => {
+                            if (event.target.value === "") {
+                              setsField.handleChange(null as any);
                               return;
                             }
-                            if (newSetsValue > exercise.reps.length) {
-                              form.pushFieldValue(
-                                `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                exercise.reps.at(-1)!,
-                              );
-                            }
-                            if (newSetsValue < exercise.reps.length) {
-                              form.removeFieldValue(
-                                `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                exercise.reps.length - 1,
-                              );
-                            }
-                          });
-                        }}
-                        onBlur={setsField.handleBlur}
-                      />
-                    )}
-                  />
-                </label>
+                            const newSetsValue = Number(event.target.value);
+                            setsField.handleChange(newSetsValue);
+
+                            segmentsField.state.value[
+                              segmentIndex
+                            ].exercises.forEach((exercise, idx) => {
+                              if (!exercise.reps?.length) {
+                                return;
+                              }
+                              if (newSetsValue > exercise.reps.length) {
+                                form.pushFieldValue(
+                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
+                                  exercise.reps.at(-1)!,
+                                );
+                              }
+                              if (newSetsValue < exercise.reps.length) {
+                                form.removeFieldValue(
+                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
+                                  exercise.reps.length - 1,
+                                );
+                              }
+                            });
+                          }}
+                          onBlur={setsField.handleBlur}
+                        />
+                      </label>
+                      {!setsField.state.meta.isValid &&
+                        setsField.state.meta.errors.map((error, idx) => (
+                          <span
+                            key={`error-${idx}`}
+                            className="text-red-500 text-xs"
+                          >
+                            {error}
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                />
 
                 <Button
                   type="button"
