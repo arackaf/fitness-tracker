@@ -14,6 +14,7 @@
     "pg-raw": "docker container run -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -p 5432:5432 postgres:18.2-alpine3.23",
     "pg-clear": "rm -rf ~/Documents/pg-data",
     "db-pull": "npx drizzle-kit pull",
+    "tsc": "tsc",
     "update-tanstack": "npm i @tanstack/react-devtools@latest && npm i @tanstack/react-router@latest && npm i @tanstack/react-router-devtools@latest && npm i @tanstack/react-router-ssr-query@latest && npm i @tanstack/react-start@latest && npm i @tanstack/router-plugin@latest"
   },
   "dependencies": {
