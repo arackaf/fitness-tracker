@@ -1,12 +1,15 @@
-import { createDefaultWorkout } from "@/data/zustand-state/workout-state";
+import {
+  createDefaultWorkout,
+  type WorkoutState,
+} from "@/data/zustand-state/workout-state";
 import { useForm } from "@tanstack/react-form";
 
-export const useWorkoutForm = () => {
+export const useWorkoutForm = (submitValue: (value: WorkoutState) => void) => {
   return useForm({
     defaultValues: createDefaultWorkout(),
 
     onSubmit: async ({ value }) => {
-      console.log(value);
+      submitValue(value);
     },
   });
 };

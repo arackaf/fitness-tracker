@@ -97,6 +97,13 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                           <div className="flex gap-3 items-center">
                             <form.Field
                               name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
+                              validators={{
+                                onChange: ({ value }) => {
+                                  if (!value) {
+                                    return "Required";
+                                  }
+                                },
+                              }}
                               children={segmentExercise => (
                                 <label className="flex flex-col gap-2 text-sm">
                                   <ExerciseSelector
@@ -107,6 +114,14 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                       segmentExercise.handleChange(exerciseId);
                                     }}
                                   />
+                                  {!segmentExercise.state.meta.isValid &&
+                                    segmentExercise.state.meta.errors.map(
+                                      error => (
+                                        <span className="text-red-500 text-xs">
+                                          {error}
+                                        </span>
+                                      ),
+                                    )}
                                 </label>
                               )}
                             />
@@ -177,7 +192,6 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps[${repsIndex}]`}
                                             validators={{
                                               onChange: ({ value }) => {
-                                                console.log({ value });
                                                 if (
                                                   typeof value !== "number" ||
                                                   Number.isNaN(value)

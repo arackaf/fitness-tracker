@@ -43,18 +43,24 @@ function RouteComponent() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const form = useWorkoutForm();
+  const form = useWorkoutForm(state => {
+    console.log("Submitting", state);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
 
     setIsSaving(true);
+  });
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    await form.handleSubmit();
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Workout
         form={form}
         exercises={exercises}
