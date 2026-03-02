@@ -1,14 +1,83 @@
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+
+import { Header } from "@/components/Header";
+import { getWorkouts } from "@/data/workouts/get-workouts";
+
+const getWorkoutHistory = createServerFn({ method: "GET" }).handler(async () => {
+  return getWorkouts();
+});
+
+const workoutHistoryQueryOptions = () =>
+  queryOptions({
+    queryKey: ["workouts", "history", "latest-10"],
+    queryFn: () => getWorkoutHistory(),
+  });
 
 export const Route = createFileRoute("/app/workout-history")({
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(workoutHistoryQueryOptions());
+  },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { data: workouts } = useSuspenseQuery(workoutHistoryQueryOptions());
+
   return (
     <section>
-      <h2>Workout History</h2>
-      <p>View your completed workouts here.</p>
+      <Header title="Workout History" />
+
+      {workouts.length === 0 ? (
+        <p className="text-muted-foreground">
+          No workouts yet. Start by logging your first one.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {workouts.map((workout, workoutIndex) => (
+            <article
+              key={`${workout.workoutDate}-${workout.name}-${workoutIndex}`}
+              className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
+            >
+              <header className="mb-3">
+                <h3 className="text-lg font-semibold">{workout.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {workout.workoutDate}
+                </p>
+                {workout.description ? (
+                  <p className="mt-2 text-sm">{workout.description}</p>
+                ) : null}
+              </header>
+
+              <div className="flex flex-col gap-3">
+                {workout.segments.map((segment, segmentIndex) => (
+                  <section
+                    key={`${segment.segmentOrder}-${segmentIndex}`}
+                    className="rounded-lg border border-border/80 bg-background/70 p-3"
+                  >
+                    <p className="text-sm font-medium">
+                      Segment {segment.segmentOrder} • {segment.sets} sets
+                    </p>
+                    <ul className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground">
+                      {segment.exercises.map((exercise, exerciseIndex) => (
+                        <li
+                          key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}
+                        >
+                          Exercise #{exercise.exerciseId}:{" "}
+                          {exercise.repsToFailure
+                            ? "reps to failure"
+                            : exercise.reps.join(", ")}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
