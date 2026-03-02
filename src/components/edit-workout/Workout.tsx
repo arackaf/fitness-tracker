@@ -65,7 +65,6 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, isSaving }) => {
                 <label className="flex flex-col gap-2">
                   <span className="font-medium">Workout date</span>
                   <Input
-                    required
                     type="date"
                     value={field.state.value}
                     onBlur={field.handleBlur}

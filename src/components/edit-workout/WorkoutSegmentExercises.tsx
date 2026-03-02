@@ -47,7 +47,6 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                   children={segmentExercise => (
                     <label className="flex flex-col gap-2 text-sm">
                       <ExerciseSelector
-                        required
                         value={segmentExercise.state.value ?? null}
                         exercises={exercises}
                         onSelect={exerciseId => {

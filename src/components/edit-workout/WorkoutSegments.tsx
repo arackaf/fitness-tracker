@@ -46,7 +46,6 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                   }}
                   children={setsField => (
                     <Input
-                      required
                       min={1}
                       type="number"
                       value={String(setsField.state.value)}
