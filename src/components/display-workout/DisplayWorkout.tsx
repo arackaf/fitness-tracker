@@ -84,12 +84,14 @@ export function DisplayWorkout({
                     {exercise.repsToFailure ? (
                       <span className="ml-1 text-xs">(to failure)</span>
                     ) : null}
-                    :{" "}
-                    {exercise.reps.some(rep => rep !== null)
-                      ? exercise.reps
-                          .map(rep => (rep ?? "_").toString())
-                          .join(", ")
-                      : ""}
+                    :
+                    <span className="ml-1">
+                      {exercise.reps.some(rep => rep !== null)
+                        ? exercise.reps
+                            .map(rep => (rep ?? "_").toString())
+                            .join(", ")
+                        : ""}
+                    </span>
                   </li>
                 ))}
               </ul>
