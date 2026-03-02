@@ -1,165 +1,110 @@
-import { Plus } from "lucide-react";
-import type { FC, FormEvent } from "react";
+import type { FC } from "react";
 
 import { Header } from "@/components/Header";
 import type { Exercise } from "@/components/ExerciseSelector";
-import { WorkoutSegment } from "@/components/edit-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { type WorkoutState } from "@/data/zustand-state/workout-state";
+import type { WorkoutForm } from "@/lib/workout-form";
+import { WorkoutSegments } from "./WorkoutSegments";
 
 type WorkoutProps = {
   exercises: Exercise[];
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  workout: WorkoutState;
-  onWorkoutChange: (edits: {
-    name?: string | null;
-    workoutDate?: string | null;
-    description?: string | null;
-  }) => void;
-  onSegmentsListChange: (edits: {
-    removeIndex?: number | null;
-    addNew?: boolean | null;
-  }) => void;
-  onSegmentChange: (
-    segmentIndex: number,
-    edits: {
-      sets?: number | null;
-    },
-  ) => void;
-  onSegmentExerciseListChange: (
-    segmentIndex: number,
-    edits: {
-      removeIndex?: number | null;
-      addNew?: boolean | null;
-    },
-  ) => void;
-  onSegmentExerciseChange: (
-    segmentIndex: number,
-    exerciseIndex: number,
-    edits: {
-      exerciseId?: number | null;
-      repsToFailure?: boolean | null;
-      repIndex?: number | null;
-      reps?: number | null;
-    },
-  ) => void;
+  form: WorkoutForm;
   isSaving: boolean;
-  errorMessage: string | null;
-  successMessage: string | null;
 };
 
-export const Workout: FC<WorkoutProps> = ({
-  exercises,
-  handleSubmit,
-  workout,
-  onWorkoutChange,
-  onSegmentsListChange,
-  onSegmentChange,
-  onSegmentExerciseListChange,
-  onSegmentExerciseChange,
-  isSaving,
-  errorMessage,
-  successMessage,
-}) => {
+export const Workout: FC<WorkoutProps> = ({ form, exercises, isSaving }) => {
   return (
     <div>
       <Header title="Log Workout" />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex flex-col gap-4">
         <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
-          <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium">Workout name</span>
-            <Input
-              required
-              value={workout.name}
-              onChange={event => {
-                onWorkoutChange({ name: event.target.value });
-              }}
-              placeholder="Push Day"
-            />
-          </label>
+          <form.Field
+            name="name"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) {
+                  return "Required";
+                }
+              },
+            }}
+            children={field => (
+              <div className="flex flex-col gap-2">
+                <label className="flex flex-col gap-2 text-sm">
+                  <span className="font-medium">Workout name</span>
+                  <Input
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={evt => field.handleChange(evt.target.value)}
+                    placeholder="Push Day"
+                  />
+                </label>
+                {!field.state.meta.isValid ? (
+                  <span className="text-sm text-red-500">
+                    {field.state.meta.errors.join(", ")}
+                  </span>
+                ) : null}
+              </div>
+            )}
+          />
 
-          <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium">Workout date</span>
-            <Input
-              required
-              type="date"
-              value={workout.workoutDate}
-              onChange={event => {
-                onWorkoutChange({ workoutDate: event.target.value });
-              }}
-            />
-          </label>
+          <form.Field
+            name="workoutDate"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) {
+                  return "Required";
+                }
+              },
+            }}
+            children={field => (
+              <div className="flex flex-col gap-2 text-sm">
+                <label className="flex flex-col gap-2">
+                  <span className="font-medium">Workout date</span>
+                  <Input
+                    required
+                    type="date"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={event => field.handleChange(event.target.value)}
+                  />
+                </label>
+                {!field.state.meta.isValid ? (
+                  <span className="text-sm text-red-500">
+                    {field.state.meta.errors.join(", ")}
+                  </span>
+                ) : null}
+              </div>
+            )}
+          />
 
-          <label className="flex flex-col gap-2 text-sm md:col-span-2">
-            <span className="font-medium">Description</span>
-            <Textarea
-              value={workout.description ?? ""}
-              onChange={event => {
-                onWorkoutChange({ description: event.target.value });
-              }}
-              className="min-h-20"
-              placeholder="Optional notes about this workout."
-            />
-          </label>
+          <form.Field
+            name="description"
+            children={field => (
+              <label className="flex flex-col gap-2 text-sm md:col-span-2">
+                <span className="font-medium">Description</span>
+                <Textarea
+                  value={field.state.value ?? ""}
+                  onBlur={field.handleBlur}
+                  onChange={event => field.handleChange(event.target.value)}
+                  className="min-h-20"
+                  placeholder="Optional notes about this workout."
+                />
+              </label>
+            )}
+          />
         </div>
 
-        {workout.segments.map((segment, segmentIndex) => (
-          <WorkoutSegment
-            key={`segment-${segmentIndex + 1}`}
-            segment={segment}
-            exercises={exercises}
-            canDelete={workout.segments.length > 1}
-            onSetCountChange={setCount => {
-              onSegmentChange(segmentIndex, { sets: setCount });
-            }}
-            onAddExercise={() => {
-              onSegmentExerciseListChange(segmentIndex, { addNew: true });
-            }}
-            onRemoveSegment={() => {
-              onSegmentsListChange({ removeIndex: segmentIndex });
-            }}
-            onRemoveExercise={exerciseIndex => {
-              onSegmentExerciseListChange(segmentIndex, {
-                removeIndex: exerciseIndex,
-              });
-            }}
-            onExerciseChange={(exerciseIndex, edits) => {
-              onSegmentExerciseChange(segmentIndex, exerciseIndex, edits);
-            }}
-          />
-        ))}
+        <WorkoutSegments form={form} exercises={exercises} />
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            type="button"
-            onClick={() => onSegmentsListChange({ addNew: true })}
-            variant="outline"
-            className="font-semibold"
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            Add segment
-          </Button>
-
+        <div>
           <Button type="submit" disabled={isSaving} className="font-semibold">
             {isSaving ? "Saving..." : "Create workout"}
           </Button>
         </div>
-
-        {errorMessage ? (
-          <p className="rounded-md border border-red-500/50 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300">
-            {errorMessage}
-          </p>
-        ) : null}
-
-        {successMessage ? (
-          <p className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-300">
-            {successMessage}
-          </p>
-        ) : null}
-      </form>
+      </div>
     </div>
   );
 };

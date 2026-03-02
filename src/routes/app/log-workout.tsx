@@ -8,11 +8,8 @@ import { Workout } from "@/components/edit-workout/Workout";
 
 import { db } from "../../drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
-import {
-  createWorkoutState,
-  defaultExercise,
-  defaultSegment,
-} from "@/data/zustand-state/workout-state";
+
+import { useWorkoutForm } from "@/lib/workout-form";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -42,118 +39,24 @@ export const Route = createFileRoute("/app/log-workout")({
 
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-  const [useWorkoutState] = useState(() => createWorkoutState());
-  const workoutState = useWorkoutState();
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const form = useWorkoutForm(state => {
+    console.log("Submitting", state);
+
+    setIsSaving(true);
+  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setErrorMessage(null);
-    setSuccessMessage(null);
+    event.stopPropagation();
 
-    setIsSaving(true);
-
-    try {
-      // TODO
-      workoutState.update(state => {
-        state.name = "";
-        state.description = "";
-        state.workoutDate = new Date().toISOString().split("T")[0] ?? "";
-      });
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Unable to create workout.",
-      );
-    } finally {
-      setIsSaving(false);
-    }
+    await form.handleSubmit();
   };
 
   return (
-    <Workout
-      exercises={exercises}
-      handleSubmit={handleSubmit}
-      workout={workoutState}
-      onWorkoutChange={({ name, workoutDate, description }) => {
-        workoutState.update(state => {
-          if (name != null) {
-            state.name = name;
-          }
-
-          if (workoutDate != null) {
-            state.workoutDate = workoutDate;
-          }
-
-          if (description != null) {
-            state.description = description;
-          }
-        });
-      }}
-      onSegmentsListChange={({ removeIndex, addNew }) => {
-        workoutState.update(state => {
-          if (removeIndex != null) {
-            state.segments.splice(removeIndex, 1);
-          }
-
-          if (addNew) {
-            state.segments.push({
-              segment: defaultSegment,
-              exercises: [defaultExercise],
-            });
-          }
-        });
-      }}
-      onSegmentChange={(segmentIndex, { sets }) => {
-        workoutState.update(state => {
-          if (sets != null) {
-            state.segments[segmentIndex].segment.sets = sets;
-            state.segments[segmentIndex].exercises.forEach(exercise => {
-              if (!exercise.reps) {
-                exercise.reps = [];
-              }
-
-              exercise.reps.length = sets;
-              exercise.reps[sets - 1] = exercise.reps[sets - 2] || 0;
-            });
-          }
-        });
-      }}
-      onSegmentExerciseListChange={(segmentIndex, { removeIndex, addNew }) => {
-        workoutState.update(state => {
-          if (removeIndex != null) {
-            state.segments[segmentIndex].exercises.splice(removeIndex, 1);
-          }
-
-          if (addNew) {
-            state.segments[segmentIndex].exercises.push(defaultExercise);
-          }
-        });
-      }}
-      onSegmentExerciseChange={(segmentIndex, exerciseIndex, edits) => {
-        workoutState.update(state => {
-          const segmentExercise =
-            state.segments[segmentIndex].exercises[exerciseIndex];
-          const { exerciseId, repsToFailure, repIndex, reps } = edits;
-
-          if (exerciseId != null) {
-            segmentExercise.exerciseId = exerciseId;
-          }
-
-          if (repsToFailure != null) {
-            segmentExercise.repsToFailure = repsToFailure;
-          }
-
-          if (reps != null && repIndex != null) {
-            segmentExercise.reps![repIndex] = reps;
-          }
-        });
-      }}
-      isSaving={isSaving}
-      errorMessage={errorMessage}
-      successMessage={successMessage}
-    />
+    <form onSubmit={handleSubmit}>
+      <Workout form={form} exercises={exercises} isSaving={isSaving} />
+    </form>
   );
 }

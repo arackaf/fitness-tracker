@@ -11,48 +11,55 @@ export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
 
-export type SegmentWithExercises = {
-  segment: WorkoutSegment;
+export type SegmentWithExercises = WorkoutSegment & {
   exercises: WorkoutSegmentExercise[];
 };
 
 export type WorkoutState = Workout & {
   segments: SegmentWithExercises[];
-  update: (doUpdate: (state: WorkoutState) => void) => void;
 };
 
-export const defaultExercise: WorkoutSegmentExercise = {
+export type ZustandWorkoutState = Workout & {
+  segments: SegmentWithExercises[];
+  update: (doUpdate: (state: ZustandWorkoutState) => void) => void;
+};
+
+const DEFAULT_SET_COUNT = 4;
+
+const defaultExercise: WorkoutSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
   repsToFailure: false,
-  reps: [8],
+  reps: Array.from({ length: DEFAULT_SET_COUNT }, () => 8),
   workoutSegmentId: 0,
 };
 
-export const defaultSegment: WorkoutSegment = {
+export const createDefaultExercise = (sets?: number) => {
+  return {
+    ...defaultExercise,
+    reps: Array.from({ length: sets ?? DEFAULT_SET_COUNT }, () => 8),
+  };
+};
+
+const defaultSegment: WorkoutSegment = {
   segmentOrder: 1,
   sets: 4,
   workoutId: 0,
 };
 
-export const createWorkoutState = () => {
-  return create<WorkoutState>()(
+export const createDefaultSegment = () => {
+  return {
+    ...defaultSegment,
+    exercises: [createDefaultExercise()],
+  };
+};
+
+export const createZustandWorkoutState = () => {
+  return create<ZustandWorkoutState>()(
     immer(set => {
       return {
-        name: "",
-        workoutDate: new Date().toISOString().split("T")[0] ?? "",
-        description: "",
-        segments: [
-          {
-            segment: {
-              segmentOrder: 1,
-              sets: 1,
-              workoutId: 0,
-            },
-            exercises: [defaultExercise],
-          },
-        ],
-        update: (doUpdate: (update: WorkoutState) => void) => {
+        ...createDefaultWorkout(),
+        update: (doUpdate: (update: ZustandWorkoutState) => void) => {
           set(state => {
             doUpdate(state);
           });
@@ -60,4 +67,13 @@ export const createWorkoutState = () => {
       };
     }),
   );
+};
+
+export const createDefaultWorkout = () => {
+  return {
+    name: "",
+    workoutDate: new Date().toISOString().split("T")[0] ?? "",
+    description: "",
+    segments: [createDefaultSegment()],
+  };
 };
