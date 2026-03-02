@@ -73,17 +73,15 @@ function RouteComponent() {
                           {Array.from(
                             {
                               length: Math.max(
-                                ...segment.exercises.map(exercise =>
-                                  exercise.repsToFailure ? 0 : exercise.reps.length,
+                                ...segment.exercises.map(
+                                  exercise => exercise.reps.length,
                                 ),
                               ),
                             },
                             (_, repIndex) =>
                               `(${segment.exercises
                                 .map(exercise =>
-                                  exercise.repsToFailure
-                                    ? "to failure"
-                                    : (exercise.reps[repIndex] ?? "-").toString(),
+                                  (exercise.reps[repIndex] ?? "-").toString(),
                                 )
                                 .join(", ")})`,
                           ).join(", ")}
@@ -97,10 +95,7 @@ function RouteComponent() {
                           >
                             {exerciseNameById.get(exercise.exerciseId) ??
                               `Exercise #${exercise.exerciseId}`}
-                            :{" "}
-                            {exercise.repsToFailure
-                              ? "reps to failure"
-                              : exercise.reps.join(", ")}
+                            : {exercise.reps.join(", ")}
                           </li>
                         ))}
                       </ul>
