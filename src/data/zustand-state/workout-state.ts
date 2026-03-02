@@ -9,7 +9,10 @@ import {
 
 export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
-export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
+export type WorkoutSegmentExercise = Omit<
+  typeof workoutSegmentExercise.$inferInsert,
+  "reps"
+> & { reps: number[] };
 
 export type SegmentWithExercises = WorkoutSegment & {
   exercises: WorkoutSegmentExercise[];
@@ -20,17 +23,20 @@ export type WorkoutState = Workout & {
   update: (doUpdate: (state: WorkoutState) => void) => void;
 };
 
+const DEFAULT_SET_COUNT = 4;
+
 const defaultExercise: WorkoutSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
   repsToFailure: false,
-  reps: [8, 8, 8, 8],
+  reps: Array.from({ length: DEFAULT_SET_COUNT }, () => 8),
   workoutSegmentId: 0,
 };
 
-export const createDefaultExercise = () => {
+export const createDefaultExercise = (sets?: number) => {
   return {
     ...defaultExercise,
+    reps: Array.from({ length: sets ?? DEFAULT_SET_COUNT }, () => 8),
   };
 };
 

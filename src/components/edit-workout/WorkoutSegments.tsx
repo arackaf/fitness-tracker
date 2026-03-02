@@ -53,7 +53,28 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                       type="number"
                       value={String(setsField.state.value)}
                       onChange={event => {
-                        setsField.handleChange(Number(event.target.value));
+                        const newSetsValue = Number(event.target.value);
+                        setsField.handleChange(newSetsValue);
+
+                        segmentsField.state.value[
+                          segmentIndex
+                        ].exercises.forEach((exercise, idx) => {
+                          if (!exercise.reps?.length) {
+                            return;
+                          }
+                          if (newSetsValue > exercise.reps.length) {
+                            form.pushFieldValue(
+                              `segments[${segmentIndex}].exercises[${idx}].reps`,
+                              exercise.reps.at(-1)!,
+                            );
+                          }
+                          if (newSetsValue < exercise.reps.length) {
+                            form.removeFieldValue(
+                              `segments[${segmentIndex}].exercises[${idx}].reps`,
+                              exercise.reps.length - 1,
+                            );
+                          }
+                        });
                       }}
                       onBlur={setsField.handleBlur}
                     />
@@ -190,11 +211,12 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                       <Button
                         type="button"
                         onClick={() => {
-                          const defaultExercise = createDefaultExercise();
+                          const defaultExercise = createDefaultExercise(
+                            segmentsField.state.value[segmentIndex].sets,
+                          );
 
                           segmentExercisesField.pushValue({
                             ...defaultExercise,
-                            reps: [...(defaultExercise.reps ?? [8])],
                             exerciseOrder:
                               segmentExercisesField.state.value.length + 1,
                           });
