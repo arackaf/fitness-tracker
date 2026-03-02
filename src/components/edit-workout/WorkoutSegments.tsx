@@ -10,6 +10,7 @@ import {
 } from "@/data/zustand-state/workout-state";
 import type { WorkoutForm } from "@/lib/workout-form";
 import { Checkbox } from "../ui/checkbox";
+import { cn } from "@/lib/utils";
 
 type WorkoutSegmentsProps = {
   form: WorkoutForm;
@@ -119,10 +120,11 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                   )
                                 }
                                 disabled={
-                                  segmentsField.state.value.length === 1
+                                  segmentExercisesField.state.value.length === 1
                                 }
                                 variant="secondary"
                                 size="sm"
+                                className="disabled:cursor-not-allowed cursor-pointer"
                               >
                                 <Trash2
                                   className="size-3.5"
@@ -173,6 +175,17 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                         >
                                           <form.Field
                                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps[${repsIndex}]`}
+                                            validators={{
+                                              onChange: ({ value }) => {
+                                                console.log({ value });
+                                                if (
+                                                  typeof value !== "number" ||
+                                                  Number.isNaN(value)
+                                                ) {
+                                                  return "Invalid";
+                                                }
+                                              },
+                                            }}
                                             children={repsField => (
                                               <label
                                                 key={`reps-${setNumber}`}
@@ -180,7 +193,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                               >
                                                 <span>{setNumber}:</span>
                                                 <Input
-                                                  min={1}
+                                                  min={0}
                                                   type="number"
                                                   value={repsField.state.value}
                                                   onChange={event => {
@@ -190,7 +203,13 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                                       ),
                                                     );
                                                   }}
-                                                  className="h-7 w-16 px-2 py-1"
+                                                  className={cn(
+                                                    "h-7 w-16 px-2 py-1",
+                                                    !repsField.state.meta
+                                                      .isValid
+                                                      ? "border-red-500"
+                                                      : "",
+                                                  )}
                                                 />
                                               </label>
                                             )}

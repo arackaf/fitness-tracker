@@ -31,7 +31,7 @@ export const Workout: FC<WorkoutProps> = ({
         <form.Field
           name="name"
           validators={{
-            onBlur: ({ value }) => {
+            onChange: ({ value }) => {
               if (!value) {
                 return "Required";
               }
@@ -60,7 +60,7 @@ export const Workout: FC<WorkoutProps> = ({
         <form.Field
           name="workoutDate"
           validators={{
-            onBlur: ({ value }) => {
+            onChange: ({ value }) => {
               if (!value) {
                 return "Required";
               }
