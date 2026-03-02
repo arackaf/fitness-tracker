@@ -6,6 +6,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Workout } from "@/components/edit-workout/Workout";
+import type { WorkoutState } from "@/data/zustand-state/workout-state";
+import { insertWorkout } from "@/data/workouts/insert-workout";
 import { db } from "@/drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 
@@ -30,6 +32,12 @@ const exercisesQueryOptions = () =>
     queryFn: () => getExercisesForSelection(),
   });
 
+const saveWorkout = createServerFn({ method: "POST" })
+  .inputValidator((input: WorkoutState) => input)
+  .handler(async ({ data }) => {
+    await insertWorkout(data);
+  });
+
 export const Route = createFileRoute("/app/log-workout")({
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(exercisesQueryOptions());
@@ -41,10 +49,16 @@ function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
   const [isSaving, setIsSaving] = useState(false);
-  const form = useWorkoutForm(state => {
+  const form = useWorkoutForm(async state => {
     console.log("Submitting", state);
 
     setIsSaving(true);
+
+    try {
+      await saveWorkout({ data: state });
+    } finally {
+      setIsSaving(false);
+    }
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
