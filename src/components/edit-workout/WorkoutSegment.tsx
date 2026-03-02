@@ -44,7 +44,7 @@ export const WorkoutSegment: FC<WorkoutSegmentProps> = ({
           required
           min={1}
           type="number"
-          value={String(segment.segment.sets)}
+          value={String(segment.sets)}
           onChange={event => {
             const setCount = Number(event.target.value);
             onSetCountChange(setCount);

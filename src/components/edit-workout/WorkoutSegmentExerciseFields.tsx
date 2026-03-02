@@ -6,22 +6,19 @@ import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import type { WorkoutForm } from "@/lib/workout-form";
 
 type WorkoutSegmentExerciseFieldsProps = {
-  segmentExercise: WorkoutSegmentExercise;
+  form: WorkoutForm;
+  segmentIndex: number;
+  exerciseIndex: number;
   exercises: Exercise[];
-  onExerciseChange: (edits: {
-    exerciseId?: number | null;
-    repsToFailure?: boolean | null;
-    repIndex?: number | null;
-    reps?: number | null;
-  }) => void;
-  onRemove?: () => void;
+  // onRemove?: () => void;
 };
 
 export const WorkoutSegmentExerciseFields: FC<
   WorkoutSegmentExerciseFieldsProps
-> = ({ segmentExercise, exercises, onExerciseChange, onRemove }) => {
+> = ({ form, segmentIndex, exercises }) => {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5">
       <div className="flex gap-3 items-center">
