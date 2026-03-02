@@ -26,7 +26,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
       mode="array"
       name="segments"
       children={segmentsField => (
-        <div className="flex flex-col gap-4 XXX">
+        <div className="flex flex-col gap-4">
           {segmentsField.state.value.map((_, segmentIndex) => (
             <div
               key={`segment-${segmentIndex + 1}`}
@@ -92,7 +92,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                       (_, exerciseIndex) => (
                         <div
                           key={`segment-${segmentIndex}-exercise-${exerciseIndex}`}
-                          className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-5"
+                          className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-4"
                         >
                           <div className="flex gap-3 items-center">
                             <form.Field
@@ -120,7 +120,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                                   )
                                 }
                                 disabled={
-                                  segmentExercisesField.state.value.length === 1
+                                  segmentsField.state.value.length === 1
                                 }
                                 variant="secondary"
                                 size="sm"
