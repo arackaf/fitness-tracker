@@ -113,16 +113,6 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                           >
                             <form.Field
                               name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps[${repsIndex}]`}
-                              validators={{
-                                onChange: ({ value }) => {
-                                  if (
-                                    typeof value !== "number" ||
-                                    Number.isNaN(value)
-                                  ) {
-                                    return "Invalid";
-                                  }
-                                },
-                              }}
                               children={repsField => (
                                 <label
                                   key={`reps-${setNumber}`}
@@ -134,8 +124,14 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                                     type="number"
                                     value={repsField.state.value}
                                     onChange={event => {
+                                      const value = event.target.value;
                                       repsField.handleChange(
-                                        parseInt(event.target.value),
+                                        (value === ""
+                                          ? null
+                                          : parseInt(
+                                              value,
+                                              10,
+                                            )) as unknown as number,
                                       );
                                     }}
                                     className={cn(
