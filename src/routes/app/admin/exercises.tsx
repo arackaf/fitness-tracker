@@ -8,15 +8,9 @@ import { sql } from "drizzle-orm";
 import { ExerciseFilters } from "@/components/ExerciseFilters";
 import { Header } from "@/components/Header";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
-import { getExercises } from "@/data/exercises/get-exercises";
+import { exercisesQueryOptions } from "@/server-functions/exercises";
 
 import { db } from "../../../drizzle/db";
-
-const getExercisesForAdmin = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return getExercises();
-  },
-);
 
 const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
   const result = await db.execute<{ value: string }>(sql`
@@ -25,12 +19,6 @@ const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
 
   return result.rows.map(row => row.value);
 });
-
-const exercisesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["exercises", "list"],
-    queryFn: () => getExercisesForAdmin(),
-  });
 
 const muscleGroupsQueryOptions = () =>
   queryOptions({

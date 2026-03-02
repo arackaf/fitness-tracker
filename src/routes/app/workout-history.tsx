@@ -1,33 +1,10 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { useMemo } from "react";
 
 import { Header } from "@/components/Header";
-import { getExercises } from "@/data/exercises/get-exercises";
-import { getWorkouts } from "@/data/workouts/get-workouts";
-
-const getWorkoutHistory = createServerFn({ method: "GET" }).handler(async () => {
-  return getWorkouts();
-});
-
-const getExercisesForHistory = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return getExercises();
-  },
-);
-
-const workoutHistoryQueryOptions = () =>
-  queryOptions({
-    queryKey: ["workouts", "history", "latest-10"],
-    queryFn: () => getWorkoutHistory(),
-  });
-
-const exercisesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["exercises", "list"],
-    queryFn: () => getExercisesForHistory(),
-  });
+import { exercisesQueryOptions } from "@/server-functions/exercises";
+import { workoutHistoryQueryOptions } from "@/server-functions/workout-history";
 
 export const Route = createFileRoute("/app/workout-history")({
   loader: async ({ context }) => {

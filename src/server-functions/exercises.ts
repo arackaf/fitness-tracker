@@ -1,0 +1,16 @@
+import { queryOptions } from "@tanstack/react-query";
+import { createServerFn } from "@tanstack/react-start";
+
+import { getExercises } from "@/data/exercises/get-exercises";
+
+const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return getExercises();
+  },
+);
+
+export const exercisesQueryOptions = () =>
+  queryOptions({
+    queryKey: ["exercises", "list"],
+    queryFn: () => getExercisesServerFn(),
+  });
