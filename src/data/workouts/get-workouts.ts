@@ -77,6 +77,7 @@ export const getWorkouts = async (
     let workout = workouts.get(row.workoutId);
     if (!workout) {
       workout = {
+        id: row.workoutId,
         name: row.workoutName,
         description: row.workoutDescription,
         workoutDate: row.workoutDate,

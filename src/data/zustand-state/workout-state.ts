@@ -16,10 +16,12 @@ export type SegmentWithExercises = WorkoutSegment & {
 };
 
 export type WorkoutState = Workout & {
+  id?: number;
   segments: SegmentWithExercises[];
 };
 
 export type ZustandWorkoutState = Workout & {
+  id?: number;
   segments: SegmentWithExercises[];
   update: (doUpdate: (state: ZustandWorkoutState) => void) => void;
 };
