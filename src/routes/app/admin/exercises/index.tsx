@@ -10,7 +10,7 @@ import { Header } from "@/components/Header";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 
-import { db } from "../../../drizzle/db";
+import { db } from "@/drizzle/db";
 
 const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
   const result = await db.execute<{ value: string }>(sql`
@@ -26,7 +26,7 @@ const muscleGroupsQueryOptions = () =>
     queryFn: () => getMuscleGroups(),
   });
 
-export const Route = createFileRoute("/app/admin/exercises")({
+export const Route = createFileRoute("/app/admin/exercises/")({
   loader: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(exercisesQueryOptions()),

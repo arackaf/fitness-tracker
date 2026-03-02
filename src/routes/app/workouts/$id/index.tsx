@@ -9,7 +9,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
 import type { FC } from "react";
 
-export const Route = createFileRoute("/app/workouts/$id")({
+export const Route = createFileRoute("/app/workouts/$id/")({
   loader: async ({ context, params }) => {
     const workoutId = Number(params.id);
 

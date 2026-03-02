@@ -7,7 +7,7 @@ import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workout-history";
 
-export const Route = createFileRoute("/app/workouts")({
+export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {
     await Promise.all([
       context.queryClient.ensureQueryData(workoutHistoryQueryOptions()),

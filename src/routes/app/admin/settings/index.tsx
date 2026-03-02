@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/app/admin/settings")({
+export const Route = createFileRoute("/app/admin/settings/")({
   component: RouteComponent,
 });
 
