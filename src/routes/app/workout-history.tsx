@@ -1,12 +1,20 @@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { asc } from "drizzle-orm";
+import { useMemo } from "react";
 
 import { Header } from "@/components/Header";
 import { getWorkouts } from "@/data/workouts/get-workouts";
+import { db } from "@/drizzle/db";
+import { exercises as exercisesTable } from "@/drizzle/schema";
 
 const getWorkoutHistory = createServerFn({ method: "GET" }).handler(async () => {
   return getWorkouts();
+});
+
+const getExercises = createServerFn({ method: "GET" }).handler(async () => {
+  return db.select().from(exercisesTable).orderBy(asc(exercisesTable.name));
 });
 
 const workoutHistoryQueryOptions = () =>
@@ -15,15 +23,30 @@ const workoutHistoryQueryOptions = () =>
     queryFn: () => getWorkoutHistory(),
   });
 
+const exercisesQueryOptions = () =>
+  queryOptions({
+    queryKey: ["exercises", "list"],
+    queryFn: () => getExercises(),
+  });
+
 export const Route = createFileRoute("/app/workout-history")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(workoutHistoryQueryOptions());
+    await Promise.all([
+      context.queryClient.ensureQueryData(workoutHistoryQueryOptions()),
+      context.queryClient.ensureQueryData(exercisesQueryOptions()),
+    ]);
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { data: workouts } = useSuspenseQuery(workoutHistoryQueryOptions());
+  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+
+  const exerciseNameById = useMemo(
+    () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
+    [exercises],
+  );
 
   return (
     <section>
@@ -64,7 +87,9 @@ function RouteComponent() {
                         <li
                           key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}
                         >
-                          Exercise #{exercise.exerciseId}:{" "}
+                          {exerciseNameById.get(exercise.exerciseId) ??
+                            `Exercise #${exercise.exerciseId}`}
+                          :{" "}
                           {exercise.repsToFailure
                             ? "reps to failure"
                             : exercise.reps.join(", ")}
