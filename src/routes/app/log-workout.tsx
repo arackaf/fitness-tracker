@@ -40,14 +40,9 @@ export const Route = createFileRoute("/app/log-workout")({
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const form = useWorkoutForm(state => {
     console.log("Submitting", state);
-
-    setErrorMessage(null);
-    setSuccessMessage(null);
 
     setIsSaving(true);
   });
@@ -61,13 +56,7 @@ function RouteComponent() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Workout
-        form={form}
-        exercises={exercises}
-        isSaving={isSaving}
-        errorMessage={errorMessage}
-        successMessage={successMessage}
-      />
+      <Workout form={form} exercises={exercises} isSaving={isSaving} />
     </form>
   );
 }
