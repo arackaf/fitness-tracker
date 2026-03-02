@@ -14,7 +14,6 @@ type WorkoutSegmentExercisesProps = {
   exercises: Exercise[];
   segmentIndex: number;
   segmentSets: number;
-  segmentsCount: number;
 };
 
 export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
@@ -22,7 +21,6 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
   exercises,
   segmentIndex,
   segmentSets,
-  segmentsCount,
 }) => {
   return (
     <form.Field
@@ -66,8 +64,10 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                 <div className="flex items-end ml-auto">
                   <Button
                     type="button"
-                    onClick={() => segmentExercisesField.removeValue(exerciseIndex)}
-                    disabled={segmentsCount === 1}
+                    onClick={() =>
+                      segmentExercisesField.removeValue(exerciseIndex)
+                    }
+                    disabled={segmentExercisesField.state.value.length === 1}
                     variant="secondary"
                     size="sm"
                     className="disabled:cursor-not-allowed cursor-pointer"

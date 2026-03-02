@@ -84,7 +84,6 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                 exercises={exercises}
                 segmentIndex={segmentIndex}
                 segmentSets={segmentsField.state.value[segmentIndex].sets}
-                segmentsCount={segmentsField.state.value.length}
               />
             </div>
           ))}
