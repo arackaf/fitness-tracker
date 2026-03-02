@@ -296,3 +296,31 @@ VALUES
   (9, 6, 2, 70, ARRAY[8, 8, 7, 7], false),      -- Kickback
   (10, 7, 1, 67, ARRAY[10, 10, 10, 10], false), -- Cable Pushdown
   (11, 8, 1, 61, ARRAY[8, 8, 7, 7], false);     -- Cable Curl
+
+-- ================================================================================
+-- Sequence Sync (for explicit id seed inserts)
+-- ================================================================================
+
+SELECT setval(
+  pg_get_serial_sequence('exercises', 'id'),
+  COALESCE((SELECT MAX(id) FROM exercises), 0) + 1,
+  false
+);
+
+SELECT setval(
+  pg_get_serial_sequence('workout', 'id'),
+  COALESCE((SELECT MAX(id) FROM workout), 0) + 1,
+  false
+);
+
+SELECT setval(
+  pg_get_serial_sequence('workout_segment', 'id'),
+  COALESCE((SELECT MAX(id) FROM workout_segment), 0) + 1,
+  false
+);
+
+SELECT setval(
+  pg_get_serial_sequence('workout_segment_exercise', 'id'),
+  COALESCE((SELECT MAX(id) FROM workout_segment_exercise), 0) + 1,
+  false
+);
