@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutForm } from "@/lib/workout-form";
+
 import { WorkoutSegments } from "./WorkoutSegments";
 
 type WorkoutProps = {

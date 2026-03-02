@@ -1,5 +1,5 @@
-import { Plus, Trash2 } from "lucide-react";
 import type { FC } from "react";
+import { Plus, Trash2 } from "lucide-react";
 
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { createDefaultExercise } from "@/data/zustand-state/workout-state";
 import type { WorkoutForm } from "@/lib/workout-form";
 import { cn } from "@/lib/utils";
+
 import { Checkbox } from "../ui/checkbox";
 
 type WorkoutSegmentExercisesProps = {

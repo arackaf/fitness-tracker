@@ -1,12 +1,12 @@
+import { useState } from "react";
+import { asc } from "drizzle-orm";
+
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { asc } from "drizzle-orm";
-import { useState } from "react";
 
 import { Workout } from "@/components/edit-workout/Workout";
-
-import { db } from "../../drizzle/db";
+import { db } from "@/drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 
 import { useWorkoutForm } from "@/lib/workout-form";
