@@ -5,7 +5,10 @@ type DisplayWorkoutProps = {
   exerciseNameById: Map<number, string>;
 };
 
-export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProps) {
+export function DisplayWorkout({
+  workout,
+  exerciseNameById,
+}: DisplayWorkoutProps) {
   return (
     <article className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <header className="mb-3">
@@ -36,7 +39,9 @@ export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProp
                       {exercise.repsToFailure ? (
                         <span className="ml-1 text-xs">(to failure)</span>
                       ) : null}
-                      {exerciseIndex < segment.exercises.length - 1 ? ", " : null}
+                      {exerciseIndex < segment.exercises.length - 1
+                        ? ", "
+                        : null}
                     </span>
                   ))}
                 </p>
@@ -44,14 +49,18 @@ export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProp
                   {Array.from(
                     {
                       length: Math.max(
-                        ...segment.exercises.map(exercise => exercise.reps.length),
+                        ...segment.exercises.map(
+                          exercise => exercise.reps.length,
+                        ),
                       ),
                     },
                     (_, repIndex) => {
                       const repsForSet = segment.exercises.map(
                         exercise => exercise.reps[repIndex],
                       );
-                      const hasAnyRepValue = repsForSet.some(rep => rep !== null);
+                      const hasAnyRepValue = repsForSet.some(
+                        rep => rep !== null,
+                      );
 
                       if (!hasAnyRepValue) {
                         return "";
@@ -77,7 +86,9 @@ export function DisplayWorkout({ workout, exerciseNameById }: DisplayWorkoutProp
                     ) : null}
                     :{" "}
                     {exercise.reps.some(rep => rep !== null)
-                      ? exercise.reps.map(rep => (rep ?? "_").toString()).join(", ")
+                      ? exercise.reps
+                          .map(rep => (rep ?? "_").toString())
+                          .join(", ")
                       : ""}
                   </li>
                 ))}
