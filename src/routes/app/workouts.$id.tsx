@@ -1,11 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { useEffect } from "react";
 
+import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
+import type { WorkoutState } from "@/data/zustand-state/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
+import type { FC } from "react";
 
 export const Route = createFileRoute("/app/workouts/$id")({
   loader: async ({ context, params }) => {
@@ -28,25 +30,29 @@ export const Route = createFileRoute("/app/workouts/$id")({
 
 function RouteComponent() {
   const { id } = Route.useParams();
-  const navigate = Route.useNavigate();
   const workoutId = Number(id);
 
-  const { data: workout } = useSuspenseQuery(workoutByIdQueryOptions(workoutId));
+  const { data: workout } = useSuspenseQuery(
+    workoutByIdQueryOptions(workoutId),
+  );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-
-  useEffect(() => {
-    if (workout == null) {
-      navigate({
-        to: "/app/workouts/not-found",
-        replace: true,
-      });
-    }
-  }, [navigate, workout]);
 
   if (workout == null) {
     return null;
   }
 
+  return <WorkoutDetailForm workout={workout} exercises={exercises} />;
+}
+
+type WorkoutDetailFormProps = {
+  workout: WorkoutState;
+  exercises: Exercise[];
+};
+
+const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
+  workout,
+  exercises,
+}) => {
   const form = useWorkoutForm(async () => {}, workout);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -61,4 +67,4 @@ function RouteComponent() {
       <Workout form={form} exercises={exercises} isSaving={false} />
     </form>
   );
-}
+};
