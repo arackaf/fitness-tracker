@@ -45,7 +45,12 @@ export const getWorkouts = async (): Promise<WorkoutState[]> => {
       workoutSegmentExerciseTable,
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
-    .where(inArray(workoutTable.id, limitedWorkoutIds.map(row => row.id)))
+    .where(
+      inArray(
+        workoutTable.id,
+        limitedWorkoutIds.map(row => row.id),
+      ),
+    )
     .orderBy(
       desc(workoutTable.workoutDate),
       desc(workoutTable.id),
