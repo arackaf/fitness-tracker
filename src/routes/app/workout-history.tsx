@@ -88,7 +88,7 @@ function RouteComponent() {
                             (_, repIndex) =>
                               `(${segment.exercises
                                 .map(exercise =>
-                                  (exercise.reps[repIndex] ?? "-").toString(),
+                                  (exercise.reps[repIndex] ?? "_").toString(),
                                 )
                                 .join(", ")})`,
                           ).join(", ")}
@@ -105,7 +105,10 @@ function RouteComponent() {
                             {exercise.repsToFailure ? (
                               <span className="ml-1 text-xs">(to failure)</span>
                             ) : null}
-                            : {exercise.reps.join(", ")}
+                            :{" "}
+                            {exercise.reps
+                              .map(rep => (rep ?? "_").toString())
+                              .join(", ")}
                           </li>
                         ))}
                       </ul>
