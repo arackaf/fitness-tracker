@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
@@ -29,55 +29,69 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
               key={`segment-${segmentIndex + 1}`}
               className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
             >
-              <label className="flex max-w-36 items-center gap-2 text-sm">
-                <span className="font-medium">Sets:</span>
-                <form.Field
-                  name={`segments[${segmentIndex}].sets`}
-                  validators={{
-                    onBlur: ({ value }) => {
-                      if (typeof value !== "number" || Number.isNaN(value)) {
-                        return "Invalid";
-                      }
+              <div className="flex items-end gap-3">
+                <label className="flex max-w-36 items-center gap-2 text-sm">
+                  <span className="font-medium">Sets:</span>
+                  <form.Field
+                    name={`segments[${segmentIndex}].sets`}
+                    validators={{
+                      onBlur: ({ value }) => {
+                        if (typeof value !== "number" || Number.isNaN(value)) {
+                          return "Invalid";
+                        }
 
-                      if (value < 1) {
-                        return "Required";
-                      }
-                    },
-                  }}
-                  children={setsField => (
-                    <Input
-                      min={1}
-                      type="number"
-                      value={String(setsField.state.value)}
-                      onChange={event => {
-                        const newSetsValue = Number(event.target.value);
-                        setsField.handleChange(newSetsValue);
+                        if (value < 1) {
+                          return "Required";
+                        }
+                      },
+                    }}
+                    children={setsField => (
+                      <Input
+                        min={1}
+                        type="number"
+                        value={String(setsField.state.value)}
+                        onChange={event => {
+                          const newSetsValue = Number(event.target.value);
+                          setsField.handleChange(newSetsValue);
 
-                        segmentsField.state.value[
-                          segmentIndex
-                        ].exercises.forEach((exercise, idx) => {
-                          if (!exercise.reps?.length) {
-                            return;
-                          }
-                          if (newSetsValue > exercise.reps.length) {
-                            form.pushFieldValue(
-                              `segments[${segmentIndex}].exercises[${idx}].reps`,
-                              exercise.reps.at(-1)!,
-                            );
-                          }
-                          if (newSetsValue < exercise.reps.length) {
-                            form.removeFieldValue(
-                              `segments[${segmentIndex}].exercises[${idx}].reps`,
-                              exercise.reps.length - 1,
-                            );
-                          }
-                        });
-                      }}
-                      onBlur={setsField.handleBlur}
-                    />
-                  )}
-                />
-              </label>
+                          segmentsField.state.value[
+                            segmentIndex
+                          ].exercises.forEach((exercise, idx) => {
+                            if (!exercise.reps?.length) {
+                              return;
+                            }
+                            if (newSetsValue > exercise.reps.length) {
+                              form.pushFieldValue(
+                                `segments[${segmentIndex}].exercises[${idx}].reps`,
+                                exercise.reps.at(-1)!,
+                              );
+                            }
+                            if (newSetsValue < exercise.reps.length) {
+                              form.removeFieldValue(
+                                `segments[${segmentIndex}].exercises[${idx}].reps`,
+                                exercise.reps.length - 1,
+                              );
+                            }
+                          });
+                        }}
+                        onBlur={setsField.handleBlur}
+                      />
+                    )}
+                  />
+                </label>
+
+                <Button
+                  type="button"
+                  onClick={() => segmentsField.removeValue(segmentIndex)}
+                  disabled={segmentsField.state.value.length === 1}
+                  variant="secondary"
+                  size="sm"
+                  className="ml-auto cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <Trash2 className="size-3.5" aria-hidden="true" />
+                  Remove
+                </Button>
+              </div>
 
               <WorkoutSegmentExercises
                 form={form}
