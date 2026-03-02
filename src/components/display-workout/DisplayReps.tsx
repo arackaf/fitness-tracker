@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 import { DisplayCompountSetReps } from "@/components/display-workout/DisplayCompountSetReps";
@@ -8,10 +10,13 @@ type DisplayRepsProps = {
   exerciseLookup: Map<number, string>;
 };
 
-export function DisplayReps({ segment, exerciseLookup }: DisplayRepsProps) {
+export const DisplayReps: FC<DisplayRepsProps> = ({
+  segment,
+  exerciseLookup,
+}) => {
   return segment.exercises.length > 1 ? (
     <DisplayCompountSetReps segment={segment} exerciseLookup={exerciseLookup} />
   ) : (
     <DisplaySimpleSetReps segment={segment} exerciseLookup={exerciseLookup} />
   );
-}
+};

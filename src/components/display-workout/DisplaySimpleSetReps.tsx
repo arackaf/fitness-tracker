@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 type DisplaySimpleSetRepsProps = {
@@ -5,10 +7,10 @@ type DisplaySimpleSetRepsProps = {
   exerciseLookup: Map<number, string>;
 };
 
-export function DisplaySimpleSetReps({
+export const DisplaySimpleSetReps: FC<DisplaySimpleSetRepsProps> = ({
   segment,
   exerciseLookup,
-}: DisplaySimpleSetRepsProps) {
+}) => {
   const exercise = segment.exercises[0];
 
   return (
@@ -28,4 +30,4 @@ export function DisplaySimpleSetReps({
       </li>
     </ul>
   );
-}
+};

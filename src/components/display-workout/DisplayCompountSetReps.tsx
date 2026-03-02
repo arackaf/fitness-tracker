@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
 
 type DisplayCompountSetRepsProps = {
@@ -5,10 +7,10 @@ type DisplayCompountSetRepsProps = {
   exerciseLookup: Map<number, string>;
 };
 
-export function DisplayCompountSetReps({
+export const DisplayCompountSetReps: FC<DisplayCompountSetRepsProps> = ({
   segment,
   exerciseLookup,
-}: DisplayCompountSetRepsProps) {
+}) => {
   return (
     <>
       <p className="mt-2 text-sm text-muted-foreground">
@@ -50,4 +52,4 @@ export function DisplayCompountSetReps({
       </p>
     </>
   );
-}
+};

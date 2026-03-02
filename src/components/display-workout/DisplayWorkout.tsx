@@ -1,3 +1,5 @@
+import type { FC } from "react";
+
 import type { WorkoutState } from "@/data/zustand-state/workout-state";
 
 import { DisplayReps } from "@/components/display-workout/DisplayReps";
@@ -7,10 +9,10 @@ type DisplayWorkoutProps = {
   exerciseNameById: Map<number, string>;
 };
 
-export function DisplayWorkout({
+export const DisplayWorkout: FC<DisplayWorkoutProps> = ({
   workout,
   exerciseNameById,
-}: DisplayWorkoutProps) {
+}) => {
   return (
     <article className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <header className="mb-3">
@@ -34,4 +36,4 @@ export function DisplayWorkout({
       </div>
     </article>
   );
-}
+};
