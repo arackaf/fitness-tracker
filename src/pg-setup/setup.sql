@@ -220,9 +220,9 @@ FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
-    (1, 1, 1, {8, 8, 8, 8}, false),
-    (1, 2, 5, {12, 12, 12, 12}, false),
-    (2, 1, 7, {8, 8, 8, 8}, false),
+    (1, 1, 1, ARRAY[8, 8, 8, 8], false),
+    (1, 2, 5, ARRAY[12, 12, 12, 12], false),
+    (2, 1, 7, ARRAY[8, 8, 8, 8], false),
     (3, 1, 4, NULL, true)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
@@ -252,10 +252,10 @@ JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
     (1, 1, 46, NULL, true),
-    (1, 2, 49, {8, 8, 8, 8}, false),
-    (2, 1, 50, {8, 8, 8, 8}, false),
-    (3, 1, 51, {12, 12, 12, 12}, false),
-    (4, 1, 48, {12, 12, 12, 12}, false)
+    (1, 2, 49, ARRAY[8, 8, 8, 8], false),
+    (2, 1, 50, ARRAY[8, 8, 8, 8], false),
+    (3, 1, 51, ARRAY[12, 12, 12, 12], false),
+    (4, 1, 48, ARRAY[12, 12, 12, 12], false)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
 WHERE wt.name = 'Back Day';

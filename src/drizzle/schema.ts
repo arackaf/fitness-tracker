@@ -111,7 +111,7 @@ export const workoutTemplateSegmentExercise = pgTable(
     workoutTemplateSegmentId: integer("workout_template_segment_id").notNull(),
     exerciseOrder: integer("exercise_order").notNull(),
     exerciseId: integer("exercise_id").notNull(),
-    reps: integer(),
+    reps: integer().array(),
     repsToFailure: boolean("reps_to_failure").notNull(),
   },
   table => [
@@ -136,7 +136,6 @@ export const workoutTemplateSegmentExercise = pgTable(
       "workout_template_segment_exercise_exercise_order_check",
       sql`exercise_order > 0`,
     ),
-    check("workout_template_segment_exercise_reps_check", sql`reps > 0`),
     check(
       "workout_template_segment_exercise_check",
       sql`(reps_to_failure = true) OR (reps IS NOT NULL)`,
