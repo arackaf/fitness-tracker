@@ -34,12 +34,14 @@ export const updateWorkout = async (input: WorkoutState) => {
       .map(segment => segment.id)
       .filter((id): id is number => id != null && id !== 0);
 
-    await tx.delete(workoutSegmentTable).where(
-      and(
-        eq(workoutSegmentTable.workoutId, workoutId),
-        not(inArray(workoutSegmentTable.id, incomingSegmentIds)),
-      ),
-    );
+    await tx
+      .delete(workoutSegmentTable)
+      .where(
+        and(
+          eq(workoutSegmentTable.workoutId, workoutId),
+          not(inArray(workoutSegmentTable.id, incomingSegmentIds)),
+        ),
+      );
 
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
@@ -76,24 +78,21 @@ export const updateWorkout = async (input: WorkoutState) => {
         segmentId = insertedSegment.id;
       }
 
-      const existingExercises = await tx
-        .select({ id: workoutSegmentExerciseTable.id })
-        .from(workoutSegmentExerciseTable)
-        .where(eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId));
+      const incomingExerciseIds = segment.exercises
+        .map(exercise => exercise.id)
+        .filter((id): id is number => id != null && id !== 0);
 
-      const existingExerciseIds = new Set(
-        existingExercises.map(exercise => exercise.id),
-      );
-      const retainedExerciseIds: number[] = [];
+      await tx
+        .delete(workoutSegmentExerciseTable)
+        .where(
+          and(
+            eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId),
+            not(inArray(workoutSegmentExerciseTable.id, incomingExerciseIds)),
+          ),
+        );
 
       for (const [exerciseIndex, exercise] of segment.exercises.entries()) {
-        if (exercise.id != null) {
-          if (!existingExerciseIds.has(exercise.id)) {
-            throw new Error(
-              `Exercise row ${exercise.id} does not belong to segment ${segmentId}.`,
-            );
-          }
-
+        if (exercise.id) {
           const [updatedExercise] = await tx
             .update(workoutSegmentExerciseTable)
             .set({
@@ -111,37 +110,18 @@ export const updateWorkout = async (input: WorkoutState) => {
             .returning({ id: workoutSegmentExerciseTable.id });
 
           if (!updatedExercise) {
-            throw new Error(
-              `Exercise row ${exercise.id} could not be updated for segment ${segmentId}.`,
-            );
+            // Exercise ID does not belong to this segment; skip without error.
+            continue;
           }
-
-          retainedExerciseIds.push(exercise.id);
-          continue;
-        }
-
-        const [insertedExercise] = await tx
-          .insert(workoutSegmentExerciseTable)
-          .values({
+        } else {
+          await tx.insert(workoutSegmentExerciseTable).values({
             workoutSegmentId: segmentId,
             exerciseOrder: exerciseIndex + 1,
             exerciseId: exercise.exerciseId,
             reps: exercise.reps,
             repsToFailure: exercise.repsToFailure,
-          })
-          .returning({ id: workoutSegmentExerciseTable.id });
-
-        retainedExerciseIds.push(insertedExercise.id);
-      }
-
-      const exerciseIdsToDelete = existingExercises
-        .map(exercise => exercise.id)
-        .filter(id => !retainedExerciseIds.includes(id));
-
-      if (exerciseIdsToDelete.length > 0) {
-        await tx
-          .delete(workoutSegmentExerciseTable)
-          .where(inArray(workoutSegmentExerciseTable.id, exerciseIdsToDelete));
+          });
+        }
       }
     }
 
