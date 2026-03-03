@@ -117,6 +117,17 @@ export const WorkoutTemplateSegmentExercises: FC<
                           >
                             <form.Field
                               name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps[${repsIndex}]`}
+                              validators={{
+                                onChange: ({ value }) => {
+                                  const repsToFailure =
+                                    form.state.values.segments[segmentIndex]
+                                      ?.exercises[exerciseIndex]?.repsToFailure;
+
+                                  if (!repsToFailure && value == null) {
+                                    return "Required";
+                                  }
+                                },
+                              }}
                               children={repsField => (
                                 <label
                                   key={`reps-${setNumber}`}
@@ -130,12 +141,9 @@ export const WorkoutTemplateSegmentExercises: FC<
                                     onChange={event => {
                                       const value = event.target.value;
                                       repsField.handleChange(
-                                        (value === ""
+                                        value === ""
                                           ? null
-                                          : parseInt(
-                                              value,
-                                              10,
-                                            )) as unknown as number,
+                                          : parseInt(value, 10),
                                       );
                                     }}
                                     className={cn(
