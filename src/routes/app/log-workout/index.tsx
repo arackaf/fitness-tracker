@@ -1,23 +1,14 @@
 import { useState } from "react";
-import { asc } from "drizzle-orm";
 
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 
 import { Workout } from "@/components/edit-workout/Workout";
-import type { WorkoutState } from "@/data/workouts/workout-state";
-import { insertWorkout } from "@/data/workouts/insert-workout";
 
 import { useWorkoutForm } from "@/lib/workout-form";
 import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-
-const saveWorkout = createServerFn({ method: "POST" })
-  .inputValidator((input: WorkoutState) => input)
-  .handler(async ({ data }) => {
-    await insertWorkout(data);
-  });
+import { saveWorkout } from "@/server-functions/workouts";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: async ({ context }) => {
