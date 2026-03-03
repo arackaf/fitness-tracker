@@ -11,7 +11,7 @@ function RouteComponent() {
     "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
 
   const activeNavLinkProps = {
-    className: "bg-primary text-primary-foreground",
+    className: "cursor-default bg-primary text-primary-foreground",
   };
 
   const inactiveNavLinkProps = {
