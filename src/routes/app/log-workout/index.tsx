@@ -8,22 +8,14 @@ import { createServerFn } from "@tanstack/react-start";
 import { Workout } from "@/components/edit-workout/Workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { insertWorkout } from "@/data/workouts/insert-workout";
-import { db } from "@/drizzle/db";
-import { exercises as exercisesTable } from "@/drizzle/schema";
 
 import { useWorkoutForm } from "@/lib/workout-form";
 import { Header } from "@/components/Header";
+import { getExercises } from "@/data/exercises/get-exercises";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
-    return db
-      .select({
-        id: exercisesTable.id,
-        name: exercisesTable.name,
-        muscleGroups: exercisesTable.muscleGroups,
-      })
-      .from(exercisesTable)
-      .orderBy(asc(exercisesTable.name));
+    return getExercises();
   },
 );
 
