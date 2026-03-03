@@ -32,7 +32,7 @@ export const updateWorkout = async (input: WorkoutState) => {
 
     const incomingSegmentIds = input.segments
       .map(segment => segment.id)
-      .filter((id): id is number => id != null && id !== 0);
+      .filter((id): id is number => Boolean(id));
 
     await tx
       .delete(workoutSegmentTable)
@@ -46,7 +46,7 @@ export const updateWorkout = async (input: WorkoutState) => {
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
 
-      if (segmentId != null) {
+      if (segmentId) {
         const [updatedSegment] = await tx
           .update(workoutSegmentTable)
           .set({
@@ -80,7 +80,7 @@ export const updateWorkout = async (input: WorkoutState) => {
 
       const incomingExerciseIds = segment.exercises
         .map(exercise => exercise.id)
-        .filter((id): id is number => id != null && id !== 0);
+        .filter((id): id is number => Boolean(id));
 
       await tx
         .delete(workoutSegmentExerciseTable)
