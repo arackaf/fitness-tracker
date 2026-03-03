@@ -1,7 +1,7 @@
 import {
   createDefaultWorkout,
   type WorkoutState,
-} from "@/data/zustand-state/workout-state";
+} from "@/data/workouts/workout-state";
 import { useForm } from "@tanstack/react-form";
 
 export const useWorkoutForm = (

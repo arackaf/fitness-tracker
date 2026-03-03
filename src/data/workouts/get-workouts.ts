@@ -1,6 +1,6 @@
 import { asc, desc, eq, inArray } from "drizzle-orm";
 
-import type { WorkoutState } from "@/data/zustand-state/workout-state";
+import type { WorkoutState } from "@/data/workouts/workout-state";
 import { db } from "@/drizzle/db";
 import {
   workout as workoutTable,

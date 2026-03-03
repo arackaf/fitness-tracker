@@ -1,6 +1,3 @@
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-
 import {
   workout,
   workoutSegment,
@@ -54,21 +51,6 @@ export const createDefaultSegment = () => {
     ...defaultSegment,
     exercises: [createDefaultExercise()],
   };
-};
-
-export const createZustandWorkoutState = () => {
-  return create<ZustandWorkoutState>()(
-    immer(set => {
-      return {
-        ...createDefaultWorkout(),
-        update: (doUpdate: (update: ZustandWorkoutState) => void) => {
-          set(state => {
-            doUpdate(state);
-          });
-        },
-      };
-    }),
-  );
 };
 
 export const createDefaultWorkout = () => {

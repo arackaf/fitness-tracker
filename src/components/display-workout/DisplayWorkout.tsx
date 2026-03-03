@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { Link } from "@tanstack/react-router";
 
-import type { WorkoutState } from "@/data/zustand-state/workout-state";
+import type { WorkoutState } from "@/data/workouts/workout-state";
 
 import { DisplayReps } from "@/components/display-workout/DisplayReps";
 import { Button } from "@/components/ui/button";

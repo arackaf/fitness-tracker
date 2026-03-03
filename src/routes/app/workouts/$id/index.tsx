@@ -3,7 +3,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
-import type { WorkoutState } from "@/data/zustand-state/workout-state";
+import type { WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";

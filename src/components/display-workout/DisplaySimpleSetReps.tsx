@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { SegmentWithExercises } from "@/data/zustand-state/workout-state";
+import type { SegmentWithExercises } from "@/data/workouts/workout-state";
 
 type DisplaySimpleSetRepsProps = {
   segment: SegmentWithExercises;

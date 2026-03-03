@@ -6,7 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Workout } from "@/components/edit-workout/Workout";
-import type { WorkoutState } from "@/data/zustand-state/workout-state";
+import type { WorkoutState } from "@/data/workouts/workout-state";
 import { insertWorkout } from "@/data/workouts/insert-workout";
 import { db } from "@/drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
