@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { db } from "@/drizzle/db";
@@ -30,24 +30,21 @@ export const updateWorkout = async (input: WorkoutState) => {
       throw new Error(`Workout ${workoutId} was not found.`);
     }
 
-    const existingSegments = await tx
-      .select({ id: workoutSegmentTable.id })
-      .from(workoutSegmentTable)
-      .where(eq(workoutSegmentTable.workoutId, workoutId));
+    const incomingSegmentIds = input.segments
+      .map(segment => segment.id)
+      .filter((id): id is number => id != null && id !== 0);
 
-    const existingSegmentIds = new Set(existingSegments.map(segment => segment.id));
-    const retainedSegmentIds: number[] = [];
+    await tx.delete(workoutSegmentTable).where(
+      and(
+        eq(workoutSegmentTable.workoutId, workoutId),
+        not(inArray(workoutSegmentTable.id, incomingSegmentIds)),
+      ),
+    );
 
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
 
       if (segmentId != null) {
-        if (!existingSegmentIds.has(segmentId)) {
-          throw new Error(
-            `Segment ${segmentId} does not belong to workout ${workoutId}.`,
-          );
-        }
-
         const [updatedSegment] = await tx
           .update(workoutSegmentTable)
           .set({
@@ -63,9 +60,8 @@ export const updateWorkout = async (input: WorkoutState) => {
           .returning({ id: workoutSegmentTable.id });
 
         if (!updatedSegment) {
-          throw new Error(
-            `Segment ${segmentId} could not be updated for workout ${workoutId}.`,
-          );
+          // Segment ID does not belong to this workout; skip without error.
+          continue;
         }
       } else {
         const [insertedSegment] = await tx
@@ -79,8 +75,6 @@ export const updateWorkout = async (input: WorkoutState) => {
 
         segmentId = insertedSegment.id;
       }
-
-      retainedSegmentIds.push(segmentId);
 
       const existingExercises = await tx
         .select({ id: workoutSegmentExerciseTable.id })
@@ -149,21 +143,6 @@ export const updateWorkout = async (input: WorkoutState) => {
           .delete(workoutSegmentExerciseTable)
           .where(inArray(workoutSegmentExerciseTable.id, exerciseIdsToDelete));
       }
-    }
-
-    const segmentIdsToDelete = existingSegments
-      .map(segment => segment.id)
-      .filter(id => !retainedSegmentIds.includes(id));
-
-    if (segmentIdsToDelete.length > 0) {
-      await tx
-        .delete(workoutSegmentTable)
-        .where(
-          and(
-            eq(workoutSegmentTable.workoutId, workoutId),
-            inArray(workoutSegmentTable.id, segmentIdsToDelete),
-          ),
-        );
     }
 
     return updatedWorkout.id;
