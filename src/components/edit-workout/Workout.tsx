@@ -1,6 +1,5 @@
 import type { FC } from "react";
 
-import { Header } from "@/components/Header";
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
