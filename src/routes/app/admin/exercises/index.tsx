@@ -1,30 +1,12 @@
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
-
-import { sql } from "drizzle-orm";
 
 import { ExerciseFilters } from "@/components/ExerciseFilters";
 import { Header } from "@/components/Header";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-
-import { db } from "@/drizzle/db";
-
-const getMuscleGroups = createServerFn({ method: "GET" }).handler(async () => {
-  const result = await db.execute<{ value: string }>(sql`
-    select unnest(enum_range(null::muscle_group))::text as value
-  `);
-
-  return result.rows.map(row => row.value);
-});
-
-const muscleGroupsQueryOptions = () =>
-  queryOptions({
-    queryKey: ["exercises", "muscle-groups"],
-    queryFn: () => getMuscleGroups(),
-  });
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/admin/exercises/")({
   loader: async ({ context }) => {
