@@ -1,4 +1,4 @@
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { db } from "@/drizzle/db";
@@ -8,7 +8,19 @@ import {
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
 } from "@/drizzle/schema";
 
-export const getWorkoutTemplates = async (): Promise<WorkoutTemplateState[]> => {
+type GetWorkoutTemplatesParams = {
+  id?: number;
+};
+
+export const getWorkoutTemplates = async (
+  params?: GetWorkoutTemplatesParams,
+): Promise<WorkoutTemplateState[]> => {
+  const conditions = [];
+
+  if (params?.id != null) {
+    conditions.push(eq(workoutTemplateTable.id, params.id));
+  }
+
   const rows = await db
     .select({
       templateId: workoutTemplateTable.id,
@@ -26,7 +38,10 @@ export const getWorkoutTemplates = async (): Promise<WorkoutTemplateState[]> => 
     .from(workoutTemplateTable)
     .leftJoin(
       workoutTemplateSegmentTable,
-      eq(workoutTemplateSegmentTable.workoutTemplateId, workoutTemplateTable.id),
+      eq(
+        workoutTemplateSegmentTable.workoutTemplateId,
+        workoutTemplateTable.id,
+      ),
     )
     .leftJoin(
       workoutTemplateSegmentExerciseTable,
@@ -35,6 +50,7 @@ export const getWorkoutTemplates = async (): Promise<WorkoutTemplateState[]> => 
         workoutTemplateSegmentTable.id,
       ),
     )
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(
       desc(workoutTemplateTable.id),
       asc(workoutTemplateSegmentTable.segmentOrder),
@@ -74,6 +90,7 @@ export const getWorkoutTemplates = async (): Promise<WorkoutTemplateState[]> => 
 
     if (!segment) {
       segment = {
+        id: row.segmentRowId,
         workoutTemplateId: row.templateId,
         segmentOrder: row.segmentOrder,
         sets: row.segmentSets,
@@ -94,6 +111,7 @@ export const getWorkoutTemplates = async (): Promise<WorkoutTemplateState[]> => 
     }
 
     segment.exercises.push({
+      id: row.exerciseRowId,
       workoutTemplateSegmentId: row.segmentRowId,
       exerciseOrder: row.exerciseOrder,
       exerciseId: row.exerciseExerciseId,

@@ -1,6 +1,8 @@
 import type { FC } from "react";
+import { Link } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { Button } from "@/components/ui/button";
 
 import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
 
@@ -19,6 +21,16 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
         <div>
           <h3 className="text-lg font-semibold">{workoutTemplate.name}</h3>
         </div>
+        {workoutTemplate.id != null ? (
+          <Button variant="outline" size="sm" asChild>
+            <Link
+              to="/app/admin/workout-templates/edit/$id"
+              params={{ id: String(workoutTemplate.id) }}
+            >
+              Edit
+            </Link>
+          </Button>
+        ) : null}
       </header>
 
       {workoutTemplate.description ? (
