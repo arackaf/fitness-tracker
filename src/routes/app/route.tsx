@@ -43,7 +43,7 @@ function RouteComponent() {
           </Link>
           <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link
-            to="/app/admin/exercises"
+            to="/app/admin"
             className={navLinkClassName}
             activeProps={activeNavLinkProps}
             inactiveProps={inactiveNavLinkProps}
