@@ -11,19 +11,7 @@ import { insertWorkout } from "@/data/workouts/insert-workout";
 
 import { useWorkoutForm } from "@/lib/workout-form";
 import { Header } from "@/components/Header";
-import { getExercises } from "@/data/exercises/get-exercises";
-
-const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return getExercises();
-  },
-);
-
-const exercisesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["exercises", "for-workout-create"],
-    queryFn: () => getExercisesForSelection(),
-  });
+import { exercisesQueryOptions } from "@/server-functions/exercises";
 
 const saveWorkout = createServerFn({ method: "POST" })
   .inputValidator((input: WorkoutState) => input)
