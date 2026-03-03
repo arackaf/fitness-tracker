@@ -64,6 +64,8 @@ export async function setupIfNeeded() {
     console.log(
       "=========================================================================",
     );
+
+    process.exit(1);
   } finally {
     await client.end();
   }
