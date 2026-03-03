@@ -7,6 +7,7 @@ import type { WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
+import { updateWorkout } from "@/server-functions/workouts";
 import { useState, type FC } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ function RouteComponent() {
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
-  if (workout == null) {
+  if (workout == null || workout.id == null) {
     return null;
   }
 
@@ -61,6 +62,12 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
     setIsSaving(true);
 
     try {
+      await updateWorkout({
+        data: {
+          ...state,
+          id: workout.id,
+        },
+      });
     } finally {
       setIsSaving(false);
     }

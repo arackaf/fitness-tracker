@@ -8,8 +8,13 @@ export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
 
+export type WorkoutSegmentExerciseState = WorkoutSegmentExercise & {
+  id?: number;
+};
+
 export type SegmentWithExercises = WorkoutSegment & {
-  exercises: WorkoutSegmentExercise[];
+  id?: number;
+  exercises: WorkoutSegmentExerciseState[];
 };
 
 export type WorkoutState = Workout & {

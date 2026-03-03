@@ -101,6 +101,7 @@ export const getWorkouts = async (
 
     if (!segment) {
       segment = {
+        id: row.segmentRowId,
         workoutId: row.workoutId,
         segmentOrder: row.segmentOrder,
         sets: row.segmentSets,
@@ -122,6 +123,7 @@ export const getWorkouts = async (
     }
 
     segment.exercises.push({
+      id: row.exerciseRowId,
       workoutSegmentId: row.segmentRowId,
       exerciseOrder: row.exerciseOrder,
       exerciseId: row.exerciseExerciseId,
