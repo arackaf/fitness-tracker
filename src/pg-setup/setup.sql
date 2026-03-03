@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
   workout_template_segment_id INT NOT NULL REFERENCES workout_template_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  reps INT CHECK (reps > 0),
+  reps INT[],
   reps_to_failure BOOL NOT NULL,
   CHECK (reps_to_failure = true OR reps IS NOT NULL)
 );
@@ -220,9 +220,9 @@ FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
-    (1, 1, 1, 8, false),
-    (1, 2, 5, 12, false),
-    (2, 1, 7, 8, false),
+    (1, 1, 1, {8, 8, 8, 8}, false),
+    (1, 2, 5, {12, 12, 12, 12}, false),
+    (2, 1, 7, {8, 8, 8, 8}, false),
     (3, 1, 4, NULL, true)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
@@ -252,10 +252,10 @@ JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
   VALUES
     (1, 1, 46, NULL, true),
-    (1, 2, 49, 8, false),
-    (2, 1, 50, 8, false),
-    (3, 1, 51, 12, false),
-    (4, 1, 48, 12, false)
+    (1, 2, 49, {8, 8, 8, 8}, false),
+    (2, 1, 50, {8, 8, 8, 8}, false),
+    (3, 1, 51, {12, 12, 12, 12}, false),
+    (4, 1, 48, {12, 12, 12, 12}, false)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
 WHERE wt.name = 'Back Day';
