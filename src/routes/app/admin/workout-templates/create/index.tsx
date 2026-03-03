@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Header } from "@/components/Header";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
+import { Button } from "@/components/ui/button";
 import { createDefaultWorkout } from "@/data/workout-templates/workout-state";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
@@ -41,7 +42,12 @@ function RouteComponent() {
     <section>
       <Header title="Create Workout Template" />
       <form onSubmit={handleSubmit}>
-        <WorkoutTemplate form={form} exercises={exercises} isSaving={isSaving} />
+        <WorkoutTemplate form={form} exercises={exercises} />
+        <div className="mt-8">
+          <Button type="submit" disabled={isSaving} className="font-semibold">
+            {isSaving ? "Saving..." : "Create workout"}
+          </Button>
+        </div>
       </form>
     </section>
   );

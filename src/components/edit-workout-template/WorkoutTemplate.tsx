@@ -1,7 +1,6 @@
 import type { FC } from "react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
@@ -11,14 +10,9 @@ import { WorkoutTemplateSegments } from "./WorkoutTemplateSegments";
 type WorkoutTemplateProps = {
   exercises: Exercise[];
   form: WorkoutTemplateForm;
-  isSaving: boolean;
 };
 
-export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
-  form,
-  exercises,
-  isSaving,
-}) => {
+export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
@@ -71,12 +65,6 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
       </div>
 
       <WorkoutTemplateSegments form={form} exercises={exercises} />
-
-      <div>
-        <Button type="submit" disabled={isSaving} className="font-semibold">
-          {isSaving ? "Saving..." : "Create workout"}
-        </Button>
-      </div>
     </div>
   );
 };
