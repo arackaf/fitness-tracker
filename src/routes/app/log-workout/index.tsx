@@ -12,6 +12,7 @@ import { db } from "@/drizzle/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 
 import { useWorkoutForm } from "@/lib/workout-form";
+import { Header } from "@/components/Header";
 
 const getExercisesForSelection = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -69,8 +70,11 @@ function RouteComponent() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Workout form={form} exercises={exercises} isSaving={isSaving} />
-    </form>
+    <section>
+      <Header title="Log Workout" />
+      <form onSubmit={handleSubmit}>
+        <Workout form={form} exercises={exercises} isSaving={isSaving} />
+      </form>
+    </section>
   );
 }

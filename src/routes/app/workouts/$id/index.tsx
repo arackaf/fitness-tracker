@@ -8,6 +8,7 @@ import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
 import type { FC } from "react";
+import { Header } from "@/components/Header";
 
 export const Route = createFileRoute("/app/workouts/$id/")({
   loader: async ({ context, params }) => {
@@ -63,8 +64,11 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Workout form={form} exercises={exercises} isSaving={false} />
-    </form>
+    <section>
+      <Header title={workout.name} />
+      <form onSubmit={handleSubmit}>
+        <Workout form={form} exercises={exercises} isSaving={false} />
+      </form>
+    </section>
   );
 };
