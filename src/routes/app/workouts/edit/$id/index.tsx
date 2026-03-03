@@ -10,7 +10,7 @@ import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
 import type { FC } from "react";
 import { Header } from "@/components/Header";
 
-export const Route = createFileRoute("/app/workouts/$id/")({
+export const Route = createFileRoute("/app/workouts/edit/$id/")({
   loader: async ({ context, params }) => {
     const workoutId = Number(params.id);
 
@@ -59,8 +59,6 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
-
-    await form.handleSubmit();
   };
 
   return (

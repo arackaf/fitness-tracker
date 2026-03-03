@@ -24,7 +24,10 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({
         </div>
         {workout.id != null ? (
           <Button variant="outline" size="sm" asChild>
-            <Link to="/app/workouts/$id" params={{ id: String(workout.id) }}>
+            <Link
+              to="/app/workouts/edit/$id"
+              params={{ id: String(workout.id) }}
+            >
               Edit
             </Link>
           </Button>
