@@ -110,7 +110,11 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
 
                 <Button
                   type="button"
-                  onClick={() => segmentsField.removeValue(segmentIndex)}
+                  onClick={() =>
+                    segmentsField.removeValue(segmentIndex, {
+                      dontValidate: true,
+                    })
+                  }
                   disabled={segmentsField.state.value.length === 1}
                   variant="secondary"
                   size="sm"

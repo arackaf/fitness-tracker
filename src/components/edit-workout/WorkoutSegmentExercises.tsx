@@ -70,7 +70,9 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                   <Button
                     type="button"
                     onClick={() =>
-                      segmentExercisesField.removeValue(exerciseIndex)
+                      segmentExercisesField.removeValue(exerciseIndex, {
+                        dontValidate: true,
+                      })
                     }
                     disabled={segmentExercisesField.state.value.length === 1}
                     variant="secondary"
