@@ -18,7 +18,6 @@ import { Route as AppWorkoutsNotFoundIndexRouteImport } from './routes/app/worko
 import { Route as AppWorkoutsInvalidIndexRouteImport } from './routes/app/workouts/invalid/index'
 import { Route as AppWorkoutsIdIndexRouteImport } from './routes/app/workouts/$id/index'
 import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from './routes/app/admin/workout-templates/index'
-import { Route as AppAdminSettingsIndexRouteImport } from './routes/app/admin/settings/index'
 import { Route as AppAdminExercisesIndexRouteImport } from './routes/app/admin/exercises/index'
 
 const AppRouteRoute = AppRouteRouteImport.update({
@@ -68,11 +67,6 @@ const AppAdminWorkoutTemplatesIndexRoute =
     path: '/workout-templates/',
     getParentRoute: () => AppAdminRouteRoute,
   } as any)
-const AppAdminSettingsIndexRoute = AppAdminSettingsIndexRouteImport.update({
-  id: '/settings/',
-  path: '/settings/',
-  getParentRoute: () => AppAdminRouteRoute,
-} as any)
 const AppAdminExercisesIndexRoute = AppAdminExercisesIndexRouteImport.update({
   id: '/exercises/',
   path: '/exercises/',
@@ -86,7 +80,6 @@ export interface FileRoutesByFullPath {
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises/': typeof AppAdminExercisesIndexRoute
-  '/app/admin/settings/': typeof AppAdminSettingsIndexRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/$id/': typeof AppWorkoutsIdIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
@@ -99,7 +92,6 @@ export interface FileRoutesByTo {
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
   '/app/workouts': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises': typeof AppAdminExercisesIndexRoute
-  '/app/admin/settings': typeof AppAdminSettingsIndexRoute
   '/app/admin/workout-templates': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/$id': typeof AppWorkoutsIdIndexRoute
   '/app/workouts/invalid': typeof AppWorkoutsInvalidIndexRoute
@@ -113,7 +105,6 @@ export interface FileRoutesById {
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises/': typeof AppAdminExercisesIndexRoute
-  '/app/admin/settings/': typeof AppAdminSettingsIndexRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/$id/': typeof AppWorkoutsIdIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
@@ -128,7 +119,6 @@ export interface FileRouteTypes {
     | '/app/log-workout/'
     | '/app/workouts/'
     | '/app/admin/exercises/'
-    | '/app/admin/settings/'
     | '/app/admin/workout-templates/'
     | '/app/workouts/$id/'
     | '/app/workouts/invalid/'
@@ -141,7 +131,6 @@ export interface FileRouteTypes {
     | '/app/log-workout'
     | '/app/workouts'
     | '/app/admin/exercises'
-    | '/app/admin/settings'
     | '/app/admin/workout-templates'
     | '/app/workouts/$id'
     | '/app/workouts/invalid'
@@ -154,7 +143,6 @@ export interface FileRouteTypes {
     | '/app/log-workout/'
     | '/app/workouts/'
     | '/app/admin/exercises/'
-    | '/app/admin/settings/'
     | '/app/admin/workout-templates/'
     | '/app/workouts/$id/'
     | '/app/workouts/invalid/'
@@ -231,13 +219,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminWorkoutTemplatesIndexRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/app/admin/settings/': {
-      id: '/app/admin/settings/'
-      path: '/settings'
-      fullPath: '/app/admin/settings/'
-      preLoaderRoute: typeof AppAdminSettingsIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
     '/app/admin/exercises/': {
       id: '/app/admin/exercises/'
       path: '/exercises'
@@ -250,13 +231,11 @@ declare module '@tanstack/react-router' {
 
 interface AppAdminRouteRouteChildren {
   AppAdminExercisesIndexRoute: typeof AppAdminExercisesIndexRoute
-  AppAdminSettingsIndexRoute: typeof AppAdminSettingsIndexRoute
   AppAdminWorkoutTemplatesIndexRoute: typeof AppAdminWorkoutTemplatesIndexRoute
 }
 
 const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
   AppAdminExercisesIndexRoute: AppAdminExercisesIndexRoute,
-  AppAdminSettingsIndexRoute: AppAdminSettingsIndexRoute,
   AppAdminWorkoutTemplatesIndexRoute: AppAdminWorkoutTemplatesIndexRoute,
 }
 
