@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -38,12 +38,22 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
 
 function RouteComponent() {
   const { id } = Route.useParams();
+  const navigate = Route.useNavigate();
   const workoutTemplateId = Number(id);
 
   const { data: workoutTemplate } = useSuspenseQuery(
     workoutTemplateByIdQueryOptions(workoutTemplateId),
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+
+  useEffect(() => {
+    if (workoutTemplate == null || workoutTemplate.id == null) {
+      void navigate({
+        to: "/app/admin/workout-templates/not-found",
+        replace: true,
+      });
+    }
+  }, [navigate, workoutTemplate]);
 
   if (workoutTemplate == null || workoutTemplate.id == null) {
     return null;

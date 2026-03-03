@@ -8,7 +8,7 @@ import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
 import { updateWorkout } from "@/server-functions/workouts";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 
@@ -33,12 +33,22 @@ export const Route = createFileRoute("/app/workouts/edit/$id/")({
 
 function RouteComponent() {
   const { id } = Route.useParams();
+  const navigate = Route.useNavigate();
   const workoutId = Number(id);
 
   const { data: workout } = useSuspenseQuery(
     workoutByIdQueryOptions(workoutId),
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+
+  useEffect(() => {
+    if (workout == null || workout.id == null) {
+      void navigate({
+        to: "/app/workouts/not-found",
+        replace: true,
+      });
+    }
+  }, [navigate, workout]);
 
   if (workout == null || workout.id == null) {
     return null;
