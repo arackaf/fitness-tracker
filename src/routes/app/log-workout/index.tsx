@@ -38,7 +38,7 @@ const saveWorkout = createServerFn({ method: "POST" })
     await insertWorkout(data);
   });
 
-export const Route = createFileRoute("/app/log-workout")({
+export const Route = createFileRoute("/app/log-workout/")({
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(exercisesQueryOptions());
   },

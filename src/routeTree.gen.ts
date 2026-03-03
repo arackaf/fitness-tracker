@@ -11,9 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppLogWorkoutRouteImport } from './routes/app/log-workout'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
+import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
 import { Route as AppWorkoutsNotFoundIndexRouteImport } from './routes/app/workouts/not-found/index'
 import { Route as AppWorkoutsInvalidIndexRouteImport } from './routes/app/workouts/invalid/index'
 import { Route as AppWorkoutsIdIndexRouteImport } from './routes/app/workouts/$id/index'
@@ -31,11 +31,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppLogWorkoutRoute = AppLogWorkoutRouteImport.update({
-  id: '/log-workout',
-  path: '/log-workout',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -44,6 +39,11 @@ const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
 const AppWorkoutsIndexRoute = AppWorkoutsIndexRouteImport.update({
   id: '/workouts/',
   path: '/workouts/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLogWorkoutIndexRoute = AppLogWorkoutIndexRouteImport.update({
+  id: '/log-workout/',
+  path: '/log-workout/',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppWorkoutsNotFoundIndexRoute =
@@ -83,7 +83,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/app/log-workout': typeof AppLogWorkoutRoute
+  '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises/': typeof AppAdminExercisesIndexRoute
   '/app/admin/settings/': typeof AppAdminSettingsIndexRoute
@@ -96,7 +96,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/app/log-workout': typeof AppLogWorkoutRoute
+  '/app/log-workout': typeof AppLogWorkoutIndexRoute
   '/app/workouts': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises': typeof AppAdminExercisesIndexRoute
   '/app/admin/settings': typeof AppAdminSettingsIndexRoute
@@ -110,7 +110,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/app/log-workout': typeof AppLogWorkoutRoute
+  '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
   '/app/admin/exercises/': typeof AppAdminExercisesIndexRoute
   '/app/admin/settings/': typeof AppAdminSettingsIndexRoute
@@ -125,7 +125,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/admin'
-    | '/app/log-workout'
+    | '/app/log-workout/'
     | '/app/workouts/'
     | '/app/admin/exercises/'
     | '/app/admin/settings/'
@@ -151,7 +151,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/admin'
-    | '/app/log-workout'
+    | '/app/log-workout/'
     | '/app/workouts/'
     | '/app/admin/exercises/'
     | '/app/admin/settings/'
@@ -182,13 +182,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/app/log-workout': {
-      id: '/app/log-workout'
-      path: '/log-workout'
-      fullPath: '/app/log-workout'
-      preLoaderRoute: typeof AppLogWorkoutRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/app/admin': {
       id: '/app/admin'
       path: '/admin'
@@ -201,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/workouts'
       fullPath: '/app/workouts/'
       preLoaderRoute: typeof AppWorkoutsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/log-workout/': {
+      id: '/app/log-workout/'
+      path: '/log-workout'
+      fullPath: '/app/log-workout/'
+      preLoaderRoute: typeof AppLogWorkoutIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/workouts/not-found/': {
@@ -266,7 +266,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
-  AppLogWorkoutRoute: typeof AppLogWorkoutRoute
+  AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppWorkoutsIndexRoute: typeof AppWorkoutsIndexRoute
   AppWorkoutsIdIndexRoute: typeof AppWorkoutsIdIndexRoute
   AppWorkoutsInvalidIndexRoute: typeof AppWorkoutsInvalidIndexRoute
@@ -275,7 +275,7 @@ interface AppRouteRouteChildren {
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
-  AppLogWorkoutRoute: AppLogWorkoutRoute,
+  AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppWorkoutsIndexRoute: AppWorkoutsIndexRoute,
   AppWorkoutsIdIndexRoute: AppWorkoutsIdIndexRoute,
   AppWorkoutsInvalidIndexRoute: AppWorkoutsInvalidIndexRoute,
