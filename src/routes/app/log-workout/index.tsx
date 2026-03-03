@@ -5,11 +5,10 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Workout } from "@/components/edit-workout/Workout";
 
-import { workoutFormOptions } from "@/lib/workout-form";
+import { useWorkoutForm } from "@/lib/workout-form";
 import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout } from "@/server-functions/workouts";
-import { useForm } from "@tanstack/react-form";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: async ({ context }) => {
@@ -22,20 +21,17 @@ function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
   const [isSaving, setIsSaving] = useState(false);
+  const form = useWorkoutForm(async state => {
+    console.log("Submitting", state);
 
-  const form = useForm(
-    workoutFormOptions(async state => {
-      console.log("Submitting", state);
+    setIsSaving(true);
 
-      setIsSaving(true);
-
-      try {
-        await saveWorkout({ data: state });
-      } finally {
-        setIsSaving(false);
-      }
-    }),
-  );
+    try {
+      await saveWorkout({ data: state });
+    } finally {
+      setIsSaving(false);
+    }
+  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

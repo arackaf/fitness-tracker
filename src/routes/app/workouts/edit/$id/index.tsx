@@ -4,12 +4,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
-import { workoutFormOptions } from "@/lib/workout-form";
+import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
 import type { FC } from "react";
 import { Header } from "@/components/Header";
-import { useForm } from "@tanstack/react-form";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({
   loader: async ({ context, params }) => {
@@ -55,7 +54,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
   workout,
   exercises,
 }) => {
-  const form = useForm(workoutFormOptions(async () => {}, workout));
+  const form = useWorkoutForm(async () => {}, workout);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

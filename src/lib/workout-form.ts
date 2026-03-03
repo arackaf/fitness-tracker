@@ -2,13 +2,13 @@ import {
   createDefaultWorkout,
   type WorkoutState,
 } from "@/data/workouts/workout-state";
-import { formOptions, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 
-export const workoutFormOptions = (
+export const useWorkoutForm = (
   submitValue: (value: WorkoutState) => void | Promise<void>,
   defaultValues: WorkoutState = createDefaultWorkout(),
 ) => {
-  return formOptions({
+  return useForm({
     defaultValues,
 
     onSubmit: async ({ value }) => {
@@ -17,8 +17,4 @@ export const workoutFormOptions = (
   });
 };
 
-function useWorkoutForm__(options: ReturnType<typeof workoutFormOptions>) {
-  return useForm(options);
-}
-
-export type WorkoutForm = ReturnType<typeof useWorkoutForm__>;
+export type WorkoutForm = ReturnType<typeof useWorkoutForm>;
