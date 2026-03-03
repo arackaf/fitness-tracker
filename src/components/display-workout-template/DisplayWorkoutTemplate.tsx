@@ -2,7 +2,7 @@ import type { FC } from "react";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
-import { WorkoutTemplateSegmentExerciseReps } from "./WorkoutTemplateSegmentExerciseReps";
+import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
 
 type DisplayWorkoutTemplateProps = {
   exerciseNameById: Map<number, string>;
@@ -27,28 +27,11 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
 
       <div className="flex flex-col gap-3">
         {workoutTemplate.segments.map((segment, segmentIndex) => (
-          <section
+          <WorkoutTemplateSegment
             key={`${segment.segmentOrder}-${segmentIndex}`}
-            className="rounded-lg border border-border/80 bg-background/70 p-3"
-          >
-            <p className="text-sm font-medium">{segment.sets} sets</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {segment.exercises.map((exercise, exerciseIndex) => (
-                <span
-                  key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}
-                >
-                  {exerciseNameById.get(exercise.exerciseId) ??
-                    `Exercise #${exercise.exerciseId}`}
-                  {exercise.repsToFailure ? (
-                    <span className="ml-1 text-xs">(to failure)</span>
-                  ) : null}
-                  {exerciseIndex < segment.exercises.length - 1 ? ", " : null}
-                </span>
-              ))}
-            </p>
-
-            <WorkoutTemplateSegmentExerciseReps segment={segment} />
-          </section>
+            segment={segment}
+            exerciseNameById={exerciseNameById}
+          />
         ))}
       </div>
     </article>
