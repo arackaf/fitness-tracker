@@ -65,19 +65,29 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                             segmentsField.state.value[
                               segmentIndex
                             ].exercises.forEach((exercise, idx) => {
-                              if (!exercise.reps?.length) {
+                              if (exercise.repsToFailure) {
                                 return;
                               }
-                              if (newSetsValue > exercise.reps.length) {
-                                form.pushFieldValue(
-                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                  exercise.reps.at(-1)!,
+                              const currentReps = exercise.reps ?? [];
+                              const repsFieldName =
+                                `segments[${segmentIndex}].exercises[${idx}].reps` as const;
+
+                              if (newSetsValue > currentReps.length) {
+                                const lastRep = currentReps.at(-1)!;
+                                const additionalReps = Array.from(
+                                  { length: newSetsValue - currentReps.length },
+                                  () => lastRep,
                                 );
+                                form.setFieldValue(repsFieldName, [
+                                  ...currentReps,
+                                  ...additionalReps,
+                                ]);
                               }
-                              if (newSetsValue < exercise.reps.length) {
-                                form.removeFieldValue(
-                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                  exercise.reps.length - 1,
+
+                              if (newSetsValue < currentReps.length) {
+                                form.setFieldValue(
+                                  repsFieldName,
+                                  currentReps.slice(0, newSetsValue),
                                 );
                               }
                             });
