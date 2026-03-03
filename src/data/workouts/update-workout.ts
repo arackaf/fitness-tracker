@@ -93,7 +93,7 @@ export const updateWorkout = async (input: WorkoutState) => {
 
       for (const [exerciseIndex, exercise] of segment.exercises.entries()) {
         if (exercise.id) {
-          const [updatedExercise] = await tx
+          await tx
             .update(workoutSegmentExerciseTable)
             .set({
               exerciseOrder: exerciseIndex + 1,
@@ -106,13 +106,7 @@ export const updateWorkout = async (input: WorkoutState) => {
                 eq(workoutSegmentExerciseTable.id, exercise.id),
                 eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId),
               ),
-            )
-            .returning({ id: workoutSegmentExerciseTable.id });
-
-          if (!updatedExercise) {
-            // Exercise ID does not belong to this segment; skip without error.
-            continue;
-          }
+            );
         } else {
           await tx.insert(workoutSegmentExerciseTable).values({
             workoutSegmentId: segmentId,
