@@ -13,4 +13,6 @@ export const exercisesQueryOptions = () =>
   queryOptions({
     queryKey: ["exercises", "list"],
     queryFn: () => getExercisesServerFn(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });

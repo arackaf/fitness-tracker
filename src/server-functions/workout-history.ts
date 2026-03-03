@@ -9,6 +9,14 @@ const getWorkoutHistory = createServerFn({ method: "GET" }).handler(
   },
 );
 
+export const workoutHistoryQueryOptions = () =>
+  queryOptions({
+    queryKey: ["workouts"],
+    queryFn: () => getWorkoutHistory(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+  });
+
 const getWorkoutById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
   .handler(async ({ data }) => {
@@ -17,14 +25,10 @@ const getWorkoutById = createServerFn({ method: "GET" })
     return workouts[0] ?? null;
   });
 
-export const workoutHistoryQueryOptions = () =>
-  queryOptions({
-    queryKey: ["workouts", "history", "latest-10"],
-    queryFn: () => getWorkoutHistory(),
-  });
-
 export const workoutByIdQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: ["workouts", "detail", id],
+    queryKey: ["workout", id],
     queryFn: () => getWorkoutById({ data: { id } }),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });

@@ -11,6 +11,6 @@ const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" }).handler(
 
 export const workoutTemplatesQueryOptions = () =>
   queryOptions({
-    queryKey: ["workout-templates", "list"],
+    queryKey: ["workout-templates"],
     queryFn: () => getWorkoutTemplatesServerFn(),
   });
