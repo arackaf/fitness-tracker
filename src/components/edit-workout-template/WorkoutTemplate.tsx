@@ -4,13 +4,13 @@ import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { WorkoutForm } from "@/lib/workout-form";
+import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 
 import { WorkoutTemplateSegments } from "./WorkoutTemplateSegments";
 
 type WorkoutTemplateProps = {
   exercises: Exercise[];
-  form: WorkoutForm;
+  form: WorkoutTemplateForm;
   isSaving: boolean;
 };
 
@@ -51,34 +51,7 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
           )}
         />
 
-        <form.Field
-          name="workoutDate"
-          validators={{
-            onChange: ({ value }) => {
-              if (!value) {
-                return "Required";
-              }
-            },
-          }}
-          children={field => (
-            <div className="flex flex-col gap-2 text-sm">
-              <label className="flex flex-col gap-2">
-                <span className="font-medium">Workout date</span>
-                <Input
-                  type="date"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={event => field.handleChange(event.target.value)}
-                />
-              </label>
-              {!field.state.meta.isValid ? (
-                <span className="text-sm text-red-500">
-                  {field.state.meta.errors.join(", ")}
-                </span>
-              ) : null}
-            </div>
-          )}
-        />
+        <span />
 
         <form.Field
           name="description"
