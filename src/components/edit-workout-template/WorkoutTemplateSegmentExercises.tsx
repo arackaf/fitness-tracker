@@ -5,13 +5,13 @@ import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createDefaultExercise } from "@/data/workout-templates/workout-state";
-import type { WorkoutForm } from "@/lib/workout-form";
+import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import { cn } from "@/lib/utils";
 
 import { Checkbox } from "../ui/checkbox";
 
 type WorkoutTemplateSegmentExercisesProps = {
-  form: WorkoutForm;
+  form: WorkoutTemplateForm;
   exercises: Exercise[];
   segmentIndex: number;
   segmentSets: number;
@@ -124,7 +124,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                                   <Input
                                     min={0}
                                     type="number"
-                                    value={repsField.state.value}
+                                    value={repsField.state.value ?? ""}
                                     onChange={event => {
                                       const value = event.target.value;
                                       repsField.handleChange(

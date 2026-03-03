@@ -18,12 +18,6 @@ export type WorkoutTemplateState = WorkoutTemplate & {
   segments: TemplateSegmentWithExercises[];
 };
 
-export type ZustandWorkoutState = WorkoutTemplate & {
-  id?: number;
-  segments: TemplateSegmentWithExercises[];
-  update: (doUpdate: (state: ZustandWorkoutState) => void) => void;
-};
-
 const DEFAULT_SET_COUNT = 4;
 
 const defaultExercise: WorkoutTemplateSegmentExercise = {

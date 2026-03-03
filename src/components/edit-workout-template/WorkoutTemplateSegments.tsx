@@ -5,12 +5,12 @@ import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createDefaultSegment } from "@/data/workout-templates/workout-state";
-import type { WorkoutForm } from "@/lib/workout-form";
+import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 
 import { WorkoutTemplateSegmentExercises } from "./WorkoutTemplateSegmentExercises";
 
 type WorkoutTemplateSegmentsProps = {
-  form: WorkoutForm;
+  form: WorkoutTemplateForm;
   exercises: Exercise[];
 };
 
