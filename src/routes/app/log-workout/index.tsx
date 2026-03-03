@@ -9,6 +9,7 @@ import { useWorkoutForm } from "@/lib/workout-form";
 import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout } from "@/server-functions/workouts";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: async ({ context }) => {
@@ -19,8 +20,8 @@ export const Route = createFileRoute("/app/log-workout/")({
 
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-
   const [isSaving, setIsSaving] = useState(false);
+
   const form = useWorkoutForm(async state => {
     console.log("Submitting", state);
 
@@ -44,7 +45,12 @@ function RouteComponent() {
     <section>
       <Header title="Log Workout" />
       <form onSubmit={handleSubmit}>
-        <Workout form={form} exercises={exercises} isSaving={isSaving} />
+        <Workout form={form} exercises={exercises} />
+        <div className="mt-8">
+          <Button type="submit" disabled={isSaving} className="font-semibold">
+            {isSaving ? "Saving..." : "Create workout"}
+          </Button>
+        </div>
       </form>
     </section>
   );
