@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
+import type { WorkoutNextPageToken } from "@/data/workouts/get-workouts";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {
@@ -20,8 +21,14 @@ export const Route = createFileRoute("/app/workouts/")({
 });
 
 function RouteComponent() {
-  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions());
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+
+  const [nextPageToken, setNextPageToken] = useState<
+    WorkoutNextPageToken | undefined
+  >();
+  const { data: workoutsPayload } = useSuspenseQuery(
+    workoutHistoryQueryOptions(nextPageToken),
+  );
   const workouts = workoutsPayload.workouts;
   const nextPage = workoutsPayload.nextPage;
 
@@ -48,7 +55,11 @@ function RouteComponent() {
             />
           ))}
           {nextPage ? (
-            <Button variant="outline" className="self-start">
+            <Button
+              onClick={() => setNextPageToken(nextPage)}
+              variant="outline"
+              className="self-start"
+            >
               Next Page
             </Button>
           ) : null}
