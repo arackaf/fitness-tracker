@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
+import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
@@ -29,14 +30,11 @@ function RouteComponent() {
 
   return (
     <section>
-      <header className="mb-8 flex items-start justify-between gap-3">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-slate-50 md:text-4xl">
-          Workout Templates
-        </h1>
+      <Header title="Workout Templates">
         <Button asChild variant="secondary">
           <Link to="/app/admin/workout-templates/create">Create</Link>
         </Button>
-      </header>
+      </Header>
       {workoutTemplates.length === 0 ? (
         <p className="text-muted-foreground">
           No workout templates yet. Create your first one to get started.
