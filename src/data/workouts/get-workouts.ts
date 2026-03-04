@@ -1,6 +1,8 @@
 import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
+import { getPaginationResults } from "@/data/util/pagination-helpers";
+
 import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
@@ -190,58 +192,6 @@ export const getWorkouts = async (
           date: workout.workoutDate,
         };
   };
-
-  type PaginationPayload<TResult, TPaginationToken> = {
-    results: TResult[];
-    nextPageToken?: TPaginationToken | null;
-    previousPageToken?: TPaginationToken | null;
-  };
-  type PaginationTokens<TPaginationToken> = {
-    nextPage?: TPaginationToken | null;
-    previousPage?: TPaginationToken | null;
-  };
-
-  function getPaginationResults<TResult, TPaginationToken>(
-    rawResults: TResult[],
-    currentPagination: PaginationTokens<TPaginationToken>,
-    rowToToken: (row: TResult) => TPaginationToken,
-    pageSize: number,
-  ): PaginationPayload<TResult, TPaginationToken> {
-    let nextPageToken: TPaginationToken | null | undefined;
-    let previousPageToken: TPaginationToken | null | undefined;
-
-    let adjustedResults = currentPagination.previousPage
-      ? [...rawResults].reverse()
-      : [...rawResults];
-
-    if (currentPagination.previousPage) {
-      previousPageToken =
-        adjustedResults.length > pageSize
-          ? rowToToken(adjustedResults[1])
-          : null;
-
-      nextPageToken = currentPagination.previousPage;
-    } else {
-      if (currentPagination.nextPage) {
-        previousPageToken = currentPagination.nextPage;
-      }
-      nextPageToken = rowToToken(adjustedResults[WORKOUT_HISTORY_LIMIT]);
-    }
-
-    if (adjustedResults.length > pageSize) {
-      if (currentPagination.previousPage) {
-        adjustedResults = adjustedResults.slice(1);
-      } else {
-        adjustedResults = adjustedResults.slice(0, WORKOUT_HISTORY_LIMIT);
-      }
-    }
-
-    return {
-      results: adjustedResults,
-      nextPageToken,
-      previousPageToken,
-    };
-  }
 
   const { results, nextPageToken, previousPageToken } = getPaginationResults(
     workouts,
