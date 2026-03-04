@@ -199,9 +199,11 @@ export const getWorkouts = async (
         };
   };
 
-  if (isPagingBackwards) {
-    workouts.reverse();
-  }
+  console.log({ workouts });
+  let finalWorkoutsPage = isPagingBackwards
+    ? [...workouts].reverse()
+    : [...workouts];
+
   if (isPagingBackwards) {
     previousPageToken =
       workouts.length > WORKOUT_HISTORY_LIMIT ? toPageToken(workouts[1]) : null;
@@ -214,10 +216,6 @@ export const getWorkouts = async (
     }
     nextPageToken = toPageToken(workouts[WORKOUT_HISTORY_LIMIT]);
   }
-
-  let finalWorkoutsPage = isPagingBackwards
-    ? [...workouts].reverse()
-    : [...workouts];
 
   if (workouts.length > WORKOUT_HISTORY_LIMIT) {
     if (isPagingBackwards) {

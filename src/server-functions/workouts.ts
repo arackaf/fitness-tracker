@@ -23,7 +23,10 @@ export const workoutHistoryQueryOptions = (input?: WorkoutHistoryInput) =>
 const getWorkoutHistory = createServerFn({ method: "GET" })
   .inputValidator((input: WorkoutHistoryInput) => input)
   .handler(async ({ data }) => {
-    const payload = await getWorkouts({ nextPage: data.nextPage });
+    const payload = await getWorkouts({
+      nextPage: data.nextPage,
+      previousPage: data.previousPage,
+    });
 
     return {
       ...payload,
