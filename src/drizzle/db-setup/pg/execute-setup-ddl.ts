@@ -51,6 +51,7 @@ export async function setupIfNeeded() {
       }
     }
   } catch (er) {
+    console.error("\n\n", er, "\n\n");
     console.log(
       "=========================================================================",
     );
