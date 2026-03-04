@@ -180,9 +180,6 @@ export const getWorkouts = async (
     });
   }
 
-  let nextPageToken: WorkoutNextPageToken | null | undefined;
-  let previousPageToken: WorkoutNextPageToken | null | undefined;
-
   const toPageToken = (
     workout: PageTokenInput | null | undefined,
   ): WorkoutNextPageToken | null => {
@@ -194,34 +191,70 @@ export const getWorkouts = async (
         };
   };
 
-  let finalWorkoutsPage = activeTokenPrev
-    ? [...workouts].reverse()
-    : [...workouts];
+  type PaginationPayload<TResult, TPaginationToken> = {
+    results: TResult[];
+    nextPageToken?: TPaginationToken | null;
+    previousPageToken?: TPaginationToken | null;
+  };
+  type PaginationTokens<TPaginationToken> = {
+    nextPage?: TPaginationToken | null;
+    previousPage?: TPaginationToken | null;
+  };
 
-  if (activeTokenPrev) {
-    previousPageToken =
-      workouts.length > WORKOUT_HISTORY_LIMIT
-        ? toPageToken(finalWorkoutsPage[1])
-        : null;
+  function getPaginationResults<TResult, TPaginationToken>(
+    rawResults: TResult[],
+    currentPagination: PaginationTokens<TPaginationToken>,
+    rowToToken: (row: TResult) => TPaginationToken,
+    pageSize: number,
+  ): PaginationPayload<TResult, TPaginationToken> {
+    let nextPageToken: TPaginationToken | null | undefined;
+    let previousPageToken: TPaginationToken | null | undefined;
 
-    nextPageToken = options!.previousPage!;
-  } else {
-    if (options.nextPage != null) {
-      previousPageToken = options!.nextPage;
-    }
-    nextPageToken = toPageToken(workouts[WORKOUT_HISTORY_LIMIT]);
-  }
+    let adjustedResults = currentPagination.previousPage
+      ? [...rawResults].reverse()
+      : [...rawResults];
 
-  if (workouts.length > WORKOUT_HISTORY_LIMIT) {
-    if (activeTokenPrev) {
-      finalWorkoutsPage = finalWorkoutsPage.slice(1);
+    if (currentPagination.previousPage) {
+      previousPageToken =
+        adjustedResults.length > pageSize
+          ? rowToToken(adjustedResults[1])
+          : null;
+
+      nextPageToken = currentPagination.previousPage;
     } else {
-      finalWorkoutsPage = finalWorkoutsPage.slice(0, WORKOUT_HISTORY_LIMIT);
+      if (currentPagination.nextPage) {
+        previousPageToken = currentPagination.nextPage;
+      }
+      nextPageToken = rowToToken(adjustedResults[WORKOUT_HISTORY_LIMIT]);
     }
+
+    if (adjustedResults.length > pageSize) {
+      if (currentPagination.previousPage) {
+        adjustedResults = adjustedResults.slice(1);
+      } else {
+        adjustedResults = adjustedResults.slice(0, WORKOUT_HISTORY_LIMIT);
+      }
+    }
+
+    return {
+      results: adjustedResults,
+      nextPageToken,
+      previousPageToken,
+    };
   }
+
+  const { results, nextPageToken, previousPageToken } = getPaginationResults(
+    workouts,
+    {
+      nextPage: activeTokenNext,
+      previousPage: activeTokenPrev,
+    },
+    toPageToken,
+    WORKOUT_HISTORY_LIMIT,
+  );
 
   return {
-    workouts: finalWorkoutsPage,
+    workouts: results,
     previousPage: previousPageToken,
     nextPage: nextPageToken,
   };
