@@ -1,7 +1,6 @@
 import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
-import { getPaginationResults } from "@/data/util/pagination-helpers";
 
 import { getDb } from "@/drizzle/db";
 import {
@@ -24,11 +23,6 @@ export type WorkoutNextPageToken = {
   date: string;
 };
 
-type PageTokenInput = Pick<
-  typeof workoutTable.$inferSelect,
-  "id" | "workoutDate"
->;
-
 type WorkoutsPayload = {
   workouts: ExistingWorkoutState[];
   nextPage?: WorkoutNextPageToken | null;
@@ -45,29 +39,13 @@ export const getWorkouts = async (
     baseWhereConditions.push(eq(workoutTable.id, options.id));
   }
 
-  const { nextPage: activeTokenNext, previousPage: activeTokenPrev } = options;
-  if (activeTokenNext) {
-    baseWhereConditions.push(
-      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) <= (${activeTokenNext.date}, ${activeTokenNext.id})`,
-    );
-  }
-  if (activeTokenPrev) {
-    baseWhereConditions.push(
-      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) > (${activeTokenPrev.date}, ${activeTokenPrev.id})`,
-    );
-  }
-
   const workoutIds = db.$with("valid_workouts").as(
     db
       .select({
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
-        rn: activeTokenPrev
-          ? sql`dense_rank() over (order by ${workoutTable.workoutDate} asc, ${workoutTable.id} asc)`.as(
-              "rn",
-            )
-          : sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
-              "rn",
-            ),
+        rn: sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
+          "rn",
+        ),
       })
       .from(workoutTable)
       .where(
@@ -75,11 +53,7 @@ export const getWorkouts = async (
           ? and(...baseWhereConditions)
           : undefined,
       )
-      .orderBy(
-        ...(activeTokenPrev
-          ? [asc(workoutTable.workoutDate), asc(workoutTable.id)]
-          : [desc(workoutTable.workoutDate), desc(workoutTable.id)]),
-      ),
+      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id)),
   );
 
   const rows = await db
@@ -109,19 +83,10 @@ export const getWorkouts = async (
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
     .orderBy(
-      ...(activeTokenPrev
-        ? [
-            asc(workoutTable.workoutDate),
-            asc(workoutTable.id),
-            asc(workoutSegmentTable.segmentOrder),
-            asc(workoutSegmentExerciseTable.exerciseOrder),
-          ]
-        : [
-            desc(workoutTable.workoutDate),
-            desc(workoutTable.id),
-            asc(workoutSegmentTable.segmentOrder),
-            asc(workoutSegmentExerciseTable.exerciseOrder),
-          ]),
+      desc(workoutTable.workoutDate),
+      desc(workoutTable.id),
+      asc(workoutSegmentTable.segmentOrder),
+      asc(workoutSegmentExerciseTable.exerciseOrder),
     )
     .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
 
@@ -182,30 +147,9 @@ export const getWorkouts = async (
     });
   }
 
-  const toPageToken = (
-    workout: PageTokenInput | null | undefined,
-  ): WorkoutNextPageToken | null => {
-    return workout == null
-      ? null
-      : {
-          id: workout.id,
-          date: workout.workoutDate,
-        };
-  };
-
-  const { results, nextPageToken, previousPageToken } = getPaginationResults(
-    workouts,
-    {
-      nextPage: activeTokenNext,
-      previousPage: activeTokenPrev,
-    },
-    toPageToken,
-    WORKOUT_HISTORY_LIMIT,
-  );
-
   return {
-    workouts: results,
-    previousPage: previousPageToken,
-    nextPage: nextPageToken,
+    workouts: workouts,
+    previousPage: null,
+    nextPage: null,
   };
 };
