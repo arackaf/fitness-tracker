@@ -1,4 +1,4 @@
-import { asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { getDb } from "@/drizzle/db";
@@ -19,20 +19,30 @@ export const getWorkouts = async (
 ): Promise<WorkoutState[]> => {
   const db = await getDb();
 
-  const limitedWorkoutIds =
-    options?.id == null
-      ? await db
-          .select({ id: workoutTable.id })
-          .from(workoutTable)
-          .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
-          .limit(WORKOUT_HISTORY_LIMIT)
-      : [{ id: options.id }];
-
-  if (limitedWorkoutIds.length === 0) {
-    return [];
+  const baseWhereConditions: SQLWrapper[] = [];
+  if (options?.id != null) {
+    baseWhereConditions.push(eq(workoutTable.id, options.id));
   }
 
-  const rows = await db
+  const workoutIds = db.$with("valid_workouts").as(
+    db
+      .select({
+        workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
+        rn: sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
+          "rn",
+        ),
+      })
+      .from(workoutTable)
+      .where(
+        baseWhereConditions.length > 0
+          ? and(...baseWhereConditions)
+          : undefined,
+      )
+      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id)),
+  );
+
+  const __rows = db
+    .with(workoutIds)
     .select({
       workoutId: workoutTable.id,
       workoutName: workoutTable.name,
@@ -48,6 +58,7 @@ export const getWorkouts = async (
       exerciseRepsToFailure: workoutSegmentExerciseTable.repsToFailure,
     })
     .from(workoutTable)
+    .innerJoin(workoutIds, eq(workoutTable.id, workoutIds.workout_id))
     .leftJoin(
       workoutSegmentTable,
       eq(workoutSegmentTable.workoutId, workoutTable.id),
@@ -56,24 +67,23 @@ export const getWorkouts = async (
       workoutSegmentExerciseTable,
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
-    .where(
-      inArray(
-        workoutTable.id,
-        limitedWorkoutIds.map(row => row.id),
-      ),
-    )
     .orderBy(
       desc(workoutTable.workoutDate),
       desc(workoutTable.id),
       asc(workoutSegmentTable.segmentOrder),
       asc(workoutSegmentExerciseTable.exerciseOrder),
-    );
+    )
+    .where(lte(workoutIds.rn, WORKOUT_HISTORY_LIMIT));
 
   const workouts = new Map<number, WorkoutState>();
   const segmentsByWorkout = new Map<
     number,
     Map<number, WorkoutState["segments"][number]>
   >();
+
+  console.log("SQL\n\n", __rows.toSQL());
+
+  const rows = await __rows;
 
   for (const row of rows) {
     let workout = workouts.get(row.workoutId);
