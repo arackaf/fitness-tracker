@@ -5,6 +5,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { DisplayWorkout } from "@/components/display-workout/DisplayWorkout";
 import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 
@@ -22,6 +23,7 @@ function RouteComponent() {
   const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions());
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const workouts = workoutsPayload.workouts;
+  const nextPage = workoutsPayload.nextPage;
 
   const exerciseNameById = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
@@ -45,6 +47,11 @@ function RouteComponent() {
               exerciseNameById={exerciseNameById}
             />
           ))}
+          {nextPage ? (
+            <Button variant="outline" className="self-start">
+              Next Page
+            </Button>
+          ) : null}
         </div>
       )}
     </section>
