@@ -13,7 +13,7 @@ type WorkoutHistoryInput = {
 
 export const workoutHistoryQueryOptions = (nextPage?: WorkoutNextPageToken) =>
   queryOptions({
-    queryKey: ["workouts", nextPage?.date ?? null, nextPage?.id ?? null],
+    queryKey: ["workouts", { nextPage }],
     queryFn: () => getWorkoutHistory({ data: { nextPage } }),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
