@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/app/workouts/")({
 
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const [, startTransition] = useTransition();
 
   const [nextPageToken, setNextPageToken] = useState<
     WorkoutNextPageToken | undefined
@@ -56,7 +57,7 @@ function RouteComponent() {
           ))}
           {nextPage ? (
             <Button
-              onClick={() => setNextPageToken(nextPage)}
+              onClick={() => startTransition(() => setNextPageToken(nextPage))}
               variant="outline"
               className="self-start"
             >
