@@ -10,10 +10,12 @@ export function getContext() {
 
 export default function TanStackQueryProvider({
   children,
+  context,
 }: {
   children: ReactNode;
+  context: ReturnType<typeof getContext>;
 }) {
-  const { queryClient } = getContext();
+  const { queryClient } = context;
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
