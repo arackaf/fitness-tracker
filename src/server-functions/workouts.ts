@@ -31,7 +31,7 @@ export const workoutByIdQueryOptions = (id: number) =>
 const getWorkoutById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
   .handler(async ({ data }) => {
-    const workouts = await getWorkouts({ id: data.id });
+    const { workouts } = await getWorkouts({ id: data.id });
 
     return workouts[0] ?? null;
   });

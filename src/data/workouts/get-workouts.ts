@@ -15,9 +15,14 @@ type GetWorkoutsOptions = {
   id?: number;
 };
 
+type WorkoutsPayload = {
+  workouts: WorkoutState[];
+  nextPage: { id: number; date: string } | null;
+};
+
 export const getWorkouts = async (
   options?: GetWorkoutsOptions,
-): Promise<WorkoutState[]> => {
+): Promise<WorkoutsPayload> => {
   const db = await getDb();
 
   const baseWhereConditions: SQLWrapper[] = [];
@@ -141,5 +146,16 @@ export const getWorkouts = async (
     });
   }
 
-  return Array.from(workouts.values()).slice(0, WORKOUT_HISTORY_LIMIT);
+  const workoutList = Array.from(workouts.values());
+  const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
+  const workoutsPage = workoutList.slice(0, WORKOUT_HISTORY_LIMIT);
+  const nextWorkout = workoutList[WORKOUT_HISTORY_LIMIT];
+
+  return {
+    workouts: workoutsPage,
+    nextPage:
+      hasNextPage && nextWorkout?.id != null
+        ? { id: nextWorkout.id, date: nextWorkout.workoutDate }
+        : null,
+  };
 };

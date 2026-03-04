@@ -19,8 +19,9 @@ export const Route = createFileRoute("/app/workouts/")({
 });
 
 function RouteComponent() {
-  const { data: workouts } = useSuspenseQuery(workoutHistoryQueryOptions());
+  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions());
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const workouts = workoutsPayload.workouts;
 
   const exerciseNameById = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
