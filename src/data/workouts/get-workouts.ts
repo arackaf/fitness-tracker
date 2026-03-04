@@ -206,7 +206,9 @@ export const getWorkouts = async (
 
   if (isPagingBackwards) {
     previousPageToken =
-      workouts.length > WORKOUT_HISTORY_LIMIT ? toPageToken(workouts[1]) : null;
+      workouts.length > WORKOUT_HISTORY_LIMIT
+        ? toPageToken(finalWorkoutsPage[1])
+        : null;
     nextPageToken = options!.previousPage!;
   } else {
     console.log("A", { np: options?.nextPage });
