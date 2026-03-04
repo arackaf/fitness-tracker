@@ -1,76 +1,39 @@
-import { relations } from "drizzle-orm/relations";
-import {
-  workoutTemplate,
-  workoutTemplateSegment,
-  workoutTemplateSegmentExercise,
-  exercises,
-  workout,
-  workoutSegment,
-  workoutSegmentExercise,
-} from "./schema";
+import { defineRelations } from "drizzle-orm";
+import * as schema from "./schema";
 
-export const workoutTemplateSegmentRelations = relations(
-  workoutTemplateSegment,
-  ({ one, many }) => ({
-    workoutTemplate: one(workoutTemplate, {
-      fields: [workoutTemplateSegment.workoutTemplateId],
-      references: [workoutTemplate.id],
+export const relations = defineRelations(schema, r => ({
+  workoutSegment: {
+    workout: r.one.workout({
+      from: r.workoutSegment.workoutId,
+      to: r.workout.id,
     }),
-    workoutTemplateSegmentExercises: many(workoutTemplateSegmentExercise),
-  }),
-);
-
-export const workoutTemplateRelations = relations(
-  workoutTemplate,
-  ({ many }) => ({
-    workoutTemplateSegments: many(workoutTemplateSegment),
-  }),
-);
-
-export const workoutTemplateSegmentExerciseRelations = relations(
-  workoutTemplateSegmentExercise,
-  ({ one }) => ({
-    workoutTemplateSegment: one(workoutTemplateSegment, {
-      fields: [workoutTemplateSegmentExercise.workoutTemplateSegmentId],
-      references: [workoutTemplateSegment.id],
+    exercises: r.many.exercises(),
+  },
+  workout: {
+    workoutSegments: r.many.workoutSegment(),
+  },
+  exercises: {
+    workoutSegments: r.many.workoutSegment({
+      from: r.exercises.id.through(r.workoutSegmentExercise.exerciseId),
+      to: r.workoutSegment.id.through(
+        r.workoutSegmentExercise.workoutSegmentId,
+      ),
     }),
-    exercise: one(exercises, {
-      fields: [workoutTemplateSegmentExercise.exerciseId],
-      references: [exercises.id],
+    workoutTemplateSegments: r.many.workoutTemplateSegment(),
+  },
+  workoutTemplateSegment: {
+    workoutTemplate: r.one.workoutTemplate({
+      from: r.workoutTemplateSegment.workoutTemplateId,
+      to: r.workoutTemplate.id,
     }),
-  }),
-);
-
-export const exercisesRelations = relations(exercises, ({ many }) => ({
-  workoutTemplateSegmentExercises: many(workoutTemplateSegmentExercise),
-  workoutSegmentExercises: many(workoutSegmentExercise),
+    exercises: r.many.exercises({
+      from: r.workoutTemplateSegment.id.through(
+        r.workoutTemplateSegmentExercise.workoutTemplateSegmentId,
+      ),
+      to: r.exercises.id.through(r.workoutTemplateSegmentExercise.exerciseId),
+    }),
+  },
+  workoutTemplate: {
+    workoutTemplateSegments: r.many.workoutTemplateSegment(),
+  },
 }));
-
-export const workoutSegmentRelations = relations(
-  workoutSegment,
-  ({ one, many }) => ({
-    workout: one(workout, {
-      fields: [workoutSegment.workoutId],
-      references: [workout.id],
-    }),
-    workoutSegmentExercises: many(workoutSegmentExercise),
-  }),
-);
-
-export const workoutRelations = relations(workout, ({ many }) => ({
-  workoutSegments: many(workoutSegment),
-}));
-
-export const workoutSegmentExerciseRelations = relations(
-  workoutSegmentExercise,
-  ({ one }) => ({
-    workoutSegment: one(workoutSegment, {
-      fields: [workoutSegmentExercise.workoutSegmentId],
-      references: [workoutSegment.id],
-    }),
-    exercise: one(exercises, {
-      fields: [workoutSegmentExercise.exerciseId],
-      references: [exercises.id],
-    }),
-  }),
-);
