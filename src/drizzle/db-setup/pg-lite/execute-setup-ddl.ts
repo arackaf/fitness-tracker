@@ -4,9 +4,10 @@ import { fileURLToPath } from "node:url";
 import { client } from "./pg-lite-client";
 
 const THIS_FILE_DIR = dirname(fileURLToPath(import.meta.url));
-const SETUP_SQL_PATH = join(THIS_FILE_DIR, "setup.sql");
+const SETUP_SQL_PATH = join(THIS_FILE_DIR, "../setup.sql");
 
 export async function runDDL() {
+  console.log("RUN DDL");
   const postgresUrl = process.env.POSTGRES;
 
   if (!postgresUrl) {

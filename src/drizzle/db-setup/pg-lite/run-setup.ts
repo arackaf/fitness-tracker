@@ -8,4 +8,4 @@ import { runDDL } from "./execute-setup-ddl";
 const thisFileDir = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(thisFileDir, "../../.env") });
 
-export const setupPromise = () => runDDL();
+export const setupPromise = runDDL();
