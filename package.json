@@ -7,7 +7,6 @@
   },
   "scripts": {
     "dev": "vite dev --port 3000",
-    "dev-pg": "npx tsx src/pg-setup/run-setup-pg.ts && vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
