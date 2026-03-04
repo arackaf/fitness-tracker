@@ -2,23 +2,28 @@ import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getWorkouts } from "@/data/workouts/get-workouts";
+import type { WorkoutNextPageToken } from "@/data/workouts/get-workouts";
 import { insertWorkout } from "@/data/workouts/insert-workout";
 import { updateWorkout as updateWorkoutData } from "@/data/workouts/update-workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
 
-export const workoutHistoryQueryOptions = () =>
+type WorkoutHistoryInput = {
+  nextPage?: WorkoutNextPageToken;
+};
+
+export const workoutHistoryQueryOptions = (nextPage?: WorkoutNextPageToken) =>
   queryOptions({
-    queryKey: ["workouts"],
-    queryFn: () => getWorkoutHistory(),
+    queryKey: ["workouts", nextPage?.date ?? null, nextPage?.id ?? null],
+    queryFn: () => getWorkoutHistory({ data: { nextPage } }),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
 
-const getWorkoutHistory = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return getWorkouts();
-  },
-);
+const getWorkoutHistory = createServerFn({ method: "GET" })
+  .inputValidator((input: WorkoutHistoryInput) => input)
+  .handler(async ({ data }) => {
+    return getWorkouts({ nextPage: data.nextPage });
+  });
 
 export const workoutByIdQueryOptions = (id: number) =>
   queryOptions({

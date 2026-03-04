@@ -1,4 +1,14 @@
-import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  lt,
+  lte,
+  or,
+  sql,
+  type SQLWrapper,
+} from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { getDb } from "@/drizzle/db";
@@ -13,11 +23,17 @@ const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 
 type GetWorkoutsOptions = {
   id?: number;
+  nextPage?: WorkoutNextPageToken;
+};
+
+export type WorkoutNextPageToken = {
+  id: number;
+  date: string;
 };
 
 type WorkoutsPayload = {
   workouts: WorkoutState[];
-  nextPage: { id: number; date: string } | null;
+  nextPage: WorkoutNextPageToken | null;
 };
 
 export const getWorkouts = async (
@@ -28,6 +44,17 @@ export const getWorkouts = async (
   const baseWhereConditions: SQLWrapper[] = [];
   if (options?.id != null) {
     baseWhereConditions.push(eq(workoutTable.id, options.id));
+  }
+  if (options?.nextPage != null) {
+    baseWhereConditions.push(
+      or(
+        lt(workoutTable.workoutDate, options.nextPage.date),
+        and(
+          eq(workoutTable.workoutDate, options.nextPage.date),
+          lte(workoutTable.id, options.nextPage.id),
+        ),
+      )!,
+    );
   }
 
   const workoutIds = db.$with("valid_workouts").as(
