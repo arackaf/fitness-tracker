@@ -81,15 +81,11 @@ export const getWorkouts = async (
     )
     .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
 
-  const workouts = new Map<number, WorkoutState>();
-  const segmentsByWorkout = new Map<
-    number,
-    Map<number, WorkoutState["segments"][number]>
-  >();
+  const workouts: WorkoutState[] = [];
 
   for (const row of rows) {
-    let workout = workouts.get(row.workoutId);
-    if (!workout) {
+    let workout = workouts.at(-1);
+    if (!workout || workout.id !== row.workoutId) {
       workout = {
         id: row.workoutId,
         name: row.workoutName,
@@ -98,8 +94,7 @@ export const getWorkouts = async (
         segments: [],
       };
 
-      workouts.set(row.workoutId, workout);
-      segmentsByWorkout.set(row.workoutId, new Map());
+      workouts.push(workout);
     }
 
     if (
@@ -110,10 +105,8 @@ export const getWorkouts = async (
       continue;
     }
 
-    const workoutSegments = segmentsByWorkout.get(row.workoutId)!;
-    let segment = workoutSegments.get(row.segmentRowId);
-
-    if (!segment) {
+    let segment = workout.segments.at(-1);
+    if (!segment || segment.id !== row.segmentRowId) {
       segment = {
         id: row.segmentRowId,
         workoutId: row.workoutId,
@@ -122,7 +115,6 @@ export const getWorkouts = async (
         exercises: [],
       };
 
-      workoutSegments.set(row.segmentRowId, segment);
       workout.segments.push(segment);
     }
 
@@ -146,7 +138,7 @@ export const getWorkouts = async (
     });
   }
 
-  const workoutList = Array.from(workouts.values());
+  const workoutList = workouts;
   const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
   const workoutsPage = workoutList.slice(0, WORKOUT_HISTORY_LIMIT);
   const nextWorkout = workoutList[WORKOUT_HISTORY_LIMIT];
