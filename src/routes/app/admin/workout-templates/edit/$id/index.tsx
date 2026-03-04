@@ -103,6 +103,7 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
   return (
     <section>
       <Header title={workoutTemplate.name} />
+
       <form onSubmit={handleSubmit}>
         <WorkoutTemplate form={form} exercises={exercises} />
         <div className="mt-8">

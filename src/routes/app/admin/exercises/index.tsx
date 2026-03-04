@@ -48,7 +48,7 @@ function RouteComponent() {
   };
 
   return (
-    <div>
+    <section>
       <Header title="Exercises" />
 
       <ExerciseFilters
@@ -58,6 +58,6 @@ function RouteComponent() {
       />
 
       <ExerciseListDisplay exercises={filteredExercises} />
-    </div>
+    </section>
   );
 }
