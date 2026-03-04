@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const TARGET_DB_NAME = "tanstack-jacked";
 const quoteIdentifier = (value: string) => `"${value.replaceAll('"', '""')}"`;
 const THIS_FILE_DIR = dirname(fileURLToPath(import.meta.url));
-const SETUP_SQL_PATH = join(THIS_FILE_DIR, "setup.sql");
+const SETUP_SQL_PATH = join(THIS_FILE_DIR, "../setup.sql");
 
 export async function setupIfNeeded() {
   const postgresUrl = process.env.POSTGRES;
@@ -51,6 +51,7 @@ export async function setupIfNeeded() {
       }
     }
   } catch (er) {
+    console.error("\n\n", er, "\n\n");
     console.log(
       "=========================================================================",
     );

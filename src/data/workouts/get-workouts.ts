@@ -1,7 +1,7 @@
 import { asc, desc, eq, inArray } from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
@@ -17,6 +17,8 @@ type GetWorkoutsOptions = {
 export const getWorkouts = async (
   options?: GetWorkoutsOptions,
 ): Promise<WorkoutState[]> => {
+  const db = await getDb();
+
   const limitedWorkoutIds =
     options?.id == null
       ? await db

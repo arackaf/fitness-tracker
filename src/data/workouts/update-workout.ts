@@ -1,7 +1,7 @@
 import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
@@ -9,6 +9,8 @@ import {
 } from "@/drizzle/schema";
 
 export const updateWorkout = async (input: WorkoutState) => {
+  const db = await getDb();
+
   if (input.id == null) {
     throw new Error("Workout ID is required for update.");
   }

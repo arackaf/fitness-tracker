@@ -1,23 +1,10 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { USE_PG_LITE } from "@/PG-MODE";
 
-import * as schema from "./schema";
-import * as relations from "./relations";
+import { getPgLiteDb } from "./db-setup/pg-lite/get-pg-lite-db";
+import { getPgDb } from "./db-setup/pg/get-pg-db";
 
-const TARGET_DB_NAME = "tanstack-jacked";
+import type { DbType } from "./types";
 
-const postgresUrl = process.env.POSTGRES;
-
-if (!postgresUrl) {
-  throw new Error("POSTGRES environment variable is required.");
-}
-
-const connectionString = `${postgresUrl}/${TARGET_DB_NAME}`;
-const pool = new Pool({ connectionString });
-
-export const db = drizzle(pool, {
-  schema: {
-    ...schema,
-    ...relations,
-  },
-});
+export const getDb = async (): Promise<DbType> => {
+  return USE_PG_LITE ? getPgLiteDb() : getPgDb();
+};

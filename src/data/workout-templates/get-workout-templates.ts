@@ -1,7 +1,7 @@
 import { and, asc, desc, eq } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -15,6 +15,8 @@ type GetWorkoutTemplatesParams = {
 export const getWorkoutTemplates = async (
   params?: GetWorkoutTemplatesParams,
 ): Promise<WorkoutTemplateState[]> => {
+  const db = await getDb();
+
   const conditions = [];
 
   if (params?.id != null) {
