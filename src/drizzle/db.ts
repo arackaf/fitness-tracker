@@ -1,7 +1,7 @@
 import { USE_PG_LITE } from "@/PG-MODE";
 
-import { getPgLiteDb } from "./get-pg-lite-db";
-import { getPgDb } from "./get-pg-db";
+import { getPgLiteDb } from "./db-setup/pg-lite/get-pg-lite-db";
+import { getPgDb } from "./db-setup/pg/get-pg-db";
 
 import type { DbType } from "./types";
 

@@ -1,10 +1,10 @@
 import { drizzle } from "drizzle-orm/pglite";
 
-import { client } from "./db-setup/pg-lite/pg-lite-client";
-import { setupPromise } from "./db-setup/pg-lite/run-setup";
+import { client } from "./pg-lite-client";
+import { setupPromise } from "./run-setup";
 
-import { dbSchema } from "./drizzle-schema";
-import type { DbType } from "./types";
+import { dbSchema } from "../../drizzle-schema";
+import type { DbType } from "../../types";
 
 let db: DbType | null = null;
 
