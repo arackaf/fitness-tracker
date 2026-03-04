@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { dbSchema } from "../../drizzle-schema";
 
 import { setUp } from "./run-setup";
+import type { DbType } from "@/drizzle/types";
 
 const TARGET_DB_NAME = "tanstack-jacked";
 
@@ -12,13 +13,19 @@ if (!postgresUrl) {
   throw new Error("POSTGRES environment variable is required.");
 }
 
+let db: DbType | null = null;
+
 export const getPgDb = async () => {
   await setUp();
 
   const connectionString = `${postgresUrl}/${TARGET_DB_NAME}`;
   const pool = new Pool({ connectionString });
 
-  return drizzle(pool, {
-    schema: dbSchema,
-  });
+  if (!db) {
+    db = drizzle(pool, {
+      schema: dbSchema,
+    });
+  }
+
+  return db;
 };

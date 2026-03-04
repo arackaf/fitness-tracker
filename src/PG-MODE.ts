@@ -1,1 +1,1 @@
-export const USE_PG_LITE = true;
+export const USE_PG_LITE = false;
