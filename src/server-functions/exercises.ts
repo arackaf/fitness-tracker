@@ -11,7 +11,7 @@ const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
 
 export const exercisesQueryOptions = () =>
   queryOptions({
-    queryKey: ["exercises", "list"],
+    queryKey: ["exercises"],
     queryFn: () => getExercisesServerFn(),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,

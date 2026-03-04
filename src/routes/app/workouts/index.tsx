@@ -1,11 +1,12 @@
+import { useMemo } from "react";
+
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
 
 import { DisplayWorkout } from "@/components/display-workout/DisplayWorkout";
 import { Header } from "@/components/Header";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { workoutHistoryQueryOptions } from "@/server-functions/workout-history";
+import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {

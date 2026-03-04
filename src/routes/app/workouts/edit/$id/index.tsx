@@ -1,3 +1,4 @@
+import { useEffect, useState, type FC } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
@@ -6,9 +7,10 @@ import { Workout } from "@/components/edit-workout/Workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { workoutByIdQueryOptions } from "@/server-functions/workout-history";
-import { updateWorkout } from "@/server-functions/workouts";
-import { useEffect, useState, type FC } from "react";
+import {
+  workoutByIdQueryOptions,
+  updateWorkout,
+} from "@/server-functions/workouts";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 

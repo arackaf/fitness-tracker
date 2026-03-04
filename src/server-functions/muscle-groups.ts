@@ -11,6 +11,6 @@ const getMuscleGroupsServerFn = createServerFn({ method: "GET" }).handler(
 
 export const muscleGroupsQueryOptions = () =>
   queryOptions({
-    queryKey: ["exercises", "muscle-groups"],
+    queryKey: ["muscle-groups"],
     queryFn: () => getMuscleGroupsServerFn(),
   });
