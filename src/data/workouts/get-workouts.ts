@@ -23,7 +23,8 @@ const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 
 type GetWorkoutsOptions = {
   id?: number;
-  nextPage?: WorkoutNextPageToken;
+  nextPage?: WorkoutNextPageToken | null;
+  previousPage?: WorkoutNextPageToken | null;
 };
 
 export type WorkoutNextPageToken = {
@@ -33,7 +34,7 @@ export type WorkoutNextPageToken = {
 
 type WorkoutsPayload = {
   workouts: WorkoutState[];
-  nextPage: WorkoutNextPageToken | null;
+  nextPage?: WorkoutNextPageToken | null;
   previousPage?: WorkoutNextPageToken | null;
 };
 
@@ -51,14 +52,25 @@ export const getWorkouts = async (
       sql`(${workoutTable.workoutDate}, ${workoutTable.id}) <= (${options.nextPage.date}, ${options.nextPage.id})`,
     );
   }
+  const isPagingBackwards = options?.previousPage != null;
+
+  if (isPagingBackwards) {
+    baseWhereConditions.push(
+      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) > (${options.previousPage!.date}, ${options.previousPage!.id})`,
+    );
+  }
 
   const workoutIds = db.$with("valid_workouts").as(
     db
       .select({
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
-        rn: sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
-          "rn",
-        ),
+        rn: isPagingBackwards
+          ? sql`dense_rank() over (order by ${workoutTable.workoutDate} asc, ${workoutTable.id} asc)`.as(
+              "rn",
+            )
+          : sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
+              "rn",
+            ),
       })
       .from(workoutTable)
       .where(
@@ -66,7 +78,11 @@ export const getWorkouts = async (
           ? and(...baseWhereConditions)
           : undefined,
       )
-      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id)),
+      .orderBy(
+        ...(isPagingBackwards
+          ? [asc(workoutTable.workoutDate), asc(workoutTable.id)]
+          : [desc(workoutTable.workoutDate), desc(workoutTable.id)]),
+      ),
   );
 
   const rows = await db
@@ -96,10 +112,19 @@ export const getWorkouts = async (
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
     .orderBy(
-      desc(workoutTable.workoutDate),
-      desc(workoutTable.id),
-      asc(workoutSegmentTable.segmentOrder),
-      asc(workoutSegmentExerciseTable.exerciseOrder),
+      ...(isPagingBackwards
+        ? [
+            asc(workoutTable.workoutDate),
+            asc(workoutTable.id),
+            asc(workoutSegmentTable.segmentOrder),
+            asc(workoutSegmentExerciseTable.exerciseOrder),
+          ]
+        : [
+            desc(workoutTable.workoutDate),
+            desc(workoutTable.id),
+            asc(workoutSegmentTable.segmentOrder),
+            asc(workoutSegmentExerciseTable.exerciseOrder),
+          ]),
     )
     .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
 
@@ -160,16 +185,51 @@ export const getWorkouts = async (
     });
   }
 
-  const workoutList = workouts;
-  const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
-  const workoutsPage = workoutList.slice(0, WORKOUT_HISTORY_LIMIT);
-  const nextWorkout = workoutList[WORKOUT_HISTORY_LIMIT];
+  let nextPageToken: WorkoutNextPageToken | null | undefined;
+  let previousPageToken: WorkoutNextPageToken | null | undefined;
+
+  const toPageToken = (
+    workout: WorkoutState | null | undefined,
+  ): WorkoutNextPageToken | null => {
+    return workout == null
+      ? null
+      : {
+          id: workout.id!, // TODO
+          date: workout.workoutDate,
+        };
+  };
+
+  if (isPagingBackwards) {
+    workouts.reverse();
+  }
+  if (isPagingBackwards) {
+    previousPageToken =
+      workouts.length > WORKOUT_HISTORY_LIMIT ? toPageToken(workouts[1]) : null;
+    nextPageToken = options!.previousPage!;
+  } else {
+    console.log("A", { np: options?.nextPage });
+    if (options?.nextPage != null) {
+      console.log("B", { pt: options!.nextPage });
+      previousPageToken = options!.nextPage;
+    }
+    nextPageToken = toPageToken(workouts[WORKOUT_HISTORY_LIMIT]);
+  }
+
+  let finalWorkoutsPage = isPagingBackwards
+    ? [...workouts].reverse()
+    : [...workouts];
+
+  if (workouts.length > WORKOUT_HISTORY_LIMIT) {
+    if (isPagingBackwards) {
+      finalWorkoutsPage = finalWorkoutsPage.slice(1);
+    } else {
+      finalWorkoutsPage = finalWorkoutsPage.slice(0, WORKOUT_HISTORY_LIMIT);
+    }
+  }
 
   return {
-    workouts: workoutsPage,
-    nextPage:
-      hasNextPage && nextWorkout?.id != null
-        ? { id: nextWorkout.id, date: nextWorkout.workoutDate }
-        : null,
+    workouts: finalWorkoutsPage,
+    previousPage: previousPageToken,
+    nextPage: nextPageToken,
   };
 };

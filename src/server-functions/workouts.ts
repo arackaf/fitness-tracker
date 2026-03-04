@@ -27,7 +27,6 @@ const getWorkoutHistory = createServerFn({ method: "GET" })
 
     return {
       ...payload,
-      previousPage: data.previousPage ?? null,
     };
   });
 

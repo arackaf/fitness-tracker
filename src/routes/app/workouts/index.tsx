@@ -36,6 +36,7 @@ function RouteComponent() {
       previousPage: previousPageToken,
     }),
   );
+
   const workouts = workoutsPayload.workouts;
   const nextPage = workoutsPayload.nextPage;
   const previousPage = workoutsPayload.previousPage;
