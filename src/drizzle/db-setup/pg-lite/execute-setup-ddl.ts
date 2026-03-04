@@ -24,13 +24,7 @@ export async function runDDL() {
     console.log(
       "=========================================================================",
     );
-    console.log(
-      "Unable to connect to the database. Do you have Docker running?",
-    );
-    console.log(
-      "If not, please install Docker desktop, make sure it's running, and make",
-    );
-    console.log("sure you have `npm run pg` running in a separate terminal.");
+    console.log("Something has gone wrong starting pg-lite.");
     console.log(
       "=========================================================================",
     );
