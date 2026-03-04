@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
 
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
@@ -22,31 +22,36 @@ export type WorkoutNextPageToken = {
   date: string;
 };
 
+type PageTokenInput = Pick<
+  typeof workoutTable.$inferSelect,
+  "id" | "workoutDate"
+>;
+
 type WorkoutsPayload = {
-  workouts: WorkoutState[];
+  workouts: ExistingWorkoutState[];
   nextPage?: WorkoutNextPageToken | null;
   previousPage?: WorkoutNextPageToken | null;
 };
 
 export const getWorkouts = async (
-  options?: GetWorkoutsOptions,
+  options: GetWorkoutsOptions = {},
 ): Promise<WorkoutsPayload> => {
   const db = await getDb();
 
   const baseWhereConditions: SQLWrapper[] = [];
-  if (options?.id != null) {
+  if (options.id != null) {
     baseWhereConditions.push(eq(workoutTable.id, options.id));
   }
-  if (options?.nextPage != null) {
+
+  const { nextPage: activeTokenNext, previousPage: activeTokenPrev } = options;
+  if (activeTokenNext) {
     baseWhereConditions.push(
-      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) <= (${options.nextPage.date}, ${options.nextPage.id})`,
+      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) <= (${activeTokenNext.date}, ${activeTokenNext.id})`,
     );
   }
-  const isPagingBackwards = options?.previousPage != null;
-
-  if (isPagingBackwards) {
+  if (activeTokenPrev) {
     baseWhereConditions.push(
-      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) > (${options.previousPage!.date}, ${options.previousPage!.id})`,
+      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) > (${activeTokenPrev.date}, ${activeTokenPrev.id})`,
     );
   }
 
@@ -54,7 +59,7 @@ export const getWorkouts = async (
     db
       .select({
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
-        rn: isPagingBackwards
+        rn: activeTokenPrev
           ? sql`dense_rank() over (order by ${workoutTable.workoutDate} asc, ${workoutTable.id} asc)`.as(
               "rn",
             )
@@ -69,7 +74,7 @@ export const getWorkouts = async (
           : undefined,
       )
       .orderBy(
-        ...(isPagingBackwards
+        ...(activeTokenPrev
           ? [asc(workoutTable.workoutDate), asc(workoutTable.id)]
           : [desc(workoutTable.workoutDate), desc(workoutTable.id)]),
       ),
@@ -102,7 +107,7 @@ export const getWorkouts = async (
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
     .orderBy(
-      ...(isPagingBackwards
+      ...(activeTokenPrev
         ? [
             asc(workoutTable.workoutDate),
             asc(workoutTable.id),
@@ -118,7 +123,7 @@ export const getWorkouts = async (
     )
     .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
 
-  const workouts: WorkoutState[] = [];
+  const workouts: ExistingWorkoutState[] = [];
 
   for (const row of rows) {
     let workout = workouts.at(-1);
@@ -179,35 +184,36 @@ export const getWorkouts = async (
   let previousPageToken: WorkoutNextPageToken | null | undefined;
 
   const toPageToken = (
-    workout: WorkoutState | null | undefined,
+    workout: PageTokenInput | null | undefined,
   ): WorkoutNextPageToken | null => {
     return workout == null
       ? null
       : {
-          id: workout.id!, // TODO
+          id: workout.id,
           date: workout.workoutDate,
         };
   };
 
-  let finalWorkoutsPage = isPagingBackwards
+  let finalWorkoutsPage = activeTokenPrev
     ? [...workouts].reverse()
     : [...workouts];
 
-  if (isPagingBackwards) {
+  if (activeTokenPrev) {
     previousPageToken =
       workouts.length > WORKOUT_HISTORY_LIMIT
         ? toPageToken(finalWorkoutsPage[1])
         : null;
+
     nextPageToken = options!.previousPage!;
   } else {
-    if (options?.nextPage != null) {
+    if (options.nextPage != null) {
       previousPageToken = options!.nextPage;
     }
     nextPageToken = toPageToken(workouts[WORKOUT_HISTORY_LIMIT]);
   }
 
   if (workouts.length > WORKOUT_HISTORY_LIMIT) {
-    if (isPagingBackwards) {
+    if (activeTokenPrev) {
       finalWorkoutsPage = finalWorkoutsPage.slice(1);
     } else {
       finalWorkoutsPage = finalWorkoutsPage.slice(0, WORKOUT_HISTORY_LIMIT);

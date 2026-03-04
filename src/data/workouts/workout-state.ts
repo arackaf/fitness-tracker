@@ -22,6 +22,11 @@ export type WorkoutState = Workout & {
   segments: SegmentWithExercises[];
 };
 
+export type ExistingWorkoutState = Workout & {
+  id: number;
+  segments: SegmentWithExercises[];
+};
+
 const DEFAULT_SET_COUNT = 4;
 
 const defaultExercise: WorkoutSegmentExercise = {
