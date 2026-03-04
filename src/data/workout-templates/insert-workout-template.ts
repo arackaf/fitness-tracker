@@ -1,5 +1,5 @@
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -7,6 +7,8 @@ import {
 } from "@/drizzle/schema";
 
 export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
+  const db = await getDb();
+
   return db.transaction(async tx => {
     const [insertedWorkoutTemplate] = await tx
       .insert(workoutTemplateTable)

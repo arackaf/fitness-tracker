@@ -1,5 +1,5 @@
 import type { WorkoutState } from "@/data/workouts/workout-state";
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
@@ -7,6 +7,8 @@ import {
 } from "@/drizzle/schema";
 
 export const insertWorkout = async (input: WorkoutState) => {
+  const db = await getDb();
+
   return db.transaction(async tx => {
     const [insertedWorkout] = await tx
       .insert(workoutTable)
