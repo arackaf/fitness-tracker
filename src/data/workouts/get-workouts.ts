@@ -8,7 +8,8 @@ import {
   workoutSegmentExercise as workoutSegmentExerciseTable,
 } from "@/drizzle/schema";
 
-const WORKOUT_HISTORY_LIMIT = 10;
+const WORKOUT_HISTORY_LIMIT = 3;
+const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 
 type GetWorkoutsOptions = {
   id?: number;
@@ -73,7 +74,7 @@ export const getWorkouts = async (
       asc(workoutSegmentTable.segmentOrder),
       asc(workoutSegmentExerciseTable.exerciseOrder),
     )
-    .where(lte(workoutIds.rn, WORKOUT_HISTORY_LIMIT));
+    .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
 
   const workouts = new Map<number, WorkoutState>();
   const segmentsByWorkout = new Map<
@@ -140,5 +141,5 @@ export const getWorkouts = async (
     });
   }
 
-  return Array.from(workouts.values());
+  return Array.from(workouts.values()).slice(0, WORKOUT_HISTORY_LIMIT);
 };
