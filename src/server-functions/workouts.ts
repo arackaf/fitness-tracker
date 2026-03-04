@@ -9,12 +9,13 @@ import type { WorkoutState } from "@/data/workouts/workout-state";
 
 type WorkoutHistoryInput = {
   nextPage?: WorkoutNextPageToken;
+  previousPage?: WorkoutNextPageToken;
 };
 
-export const workoutHistoryQueryOptions = (nextPage?: WorkoutNextPageToken) =>
+export const workoutHistoryQueryOptions = (input?: WorkoutHistoryInput) =>
   queryOptions({
-    queryKey: ["workouts", { nextPage }],
-    queryFn: () => getWorkoutHistory({ data: { nextPage } }),
+    queryKey: ["workouts", input],
+    queryFn: () => getWorkoutHistory({ data: input ?? {} }),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
@@ -22,7 +23,12 @@ export const workoutHistoryQueryOptions = (nextPage?: WorkoutNextPageToken) =>
 const getWorkoutHistory = createServerFn({ method: "GET" })
   .inputValidator((input: WorkoutHistoryInput) => input)
   .handler(async ({ data }) => {
-    return getWorkouts({ nextPage: data.nextPage });
+    const payload = await getWorkouts({ nextPage: data.nextPage });
+
+    return {
+      ...payload,
+      previousPage: data.previousPage ?? null,
+    };
   });
 
 export const workoutByIdQueryOptions = (id: number) =>

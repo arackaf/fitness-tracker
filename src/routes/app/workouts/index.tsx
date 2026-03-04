@@ -27,11 +27,18 @@ function RouteComponent() {
   const [nextPageToken, setNextPageToken] = useState<
     WorkoutNextPageToken | undefined
   >();
+  const [previousPageToken, setPreviousPageToken] = useState<
+    WorkoutNextPageToken | undefined
+  >();
   const { data: workoutsPayload } = useSuspenseQuery(
-    workoutHistoryQueryOptions(nextPageToken),
+    workoutHistoryQueryOptions({
+      nextPage: nextPageToken,
+      previousPage: previousPageToken,
+    }),
   );
   const workouts = workoutsPayload.workouts;
   const nextPage = workoutsPayload.nextPage;
+  const previousPage = workoutsPayload.previousPage;
 
   const exerciseNameById = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
@@ -55,15 +62,36 @@ function RouteComponent() {
               exerciseNameById={exerciseNameById}
             />
           ))}
-          {nextPage ? (
-            <Button
-              onClick={() => startTransition(() => setNextPageToken(nextPage))}
-              variant="outline"
-              className="self-start"
-            >
-              Next Page
-            </Button>
-          ) : null}
+          <div className="flex gap-2">
+            {previousPage ? (
+              <Button
+                onClick={() =>
+                  startTransition(() => {
+                    setPreviousPageToken(previousPage);
+                    setNextPageToken(undefined);
+                  })
+                }
+                variant="outline"
+                className="self-start"
+              >
+                Previous Page
+              </Button>
+            ) : null}
+            {nextPage ? (
+              <Button
+                onClick={() =>
+                  startTransition(() => {
+                    setPreviousPageToken(undefined);
+                    setNextPageToken(nextPage);
+                  })
+                }
+                variant="outline"
+                className="self-start"
+              >
+                Next Page
+              </Button>
+            ) : null}
+          </div>
         </div>
       )}
     </section>

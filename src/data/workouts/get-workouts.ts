@@ -34,6 +34,7 @@ export type WorkoutNextPageToken = {
 type WorkoutsPayload = {
   workouts: WorkoutState[];
   nextPage: WorkoutNextPageToken | null;
+  previousPage?: WorkoutNextPageToken | null;
 };
 
 export const getWorkouts = async (
