@@ -1,14 +1,4 @@
-import {
-  and,
-  asc,
-  desc,
-  eq,
-  lt,
-  lte,
-  or,
-  sql,
-  type SQLWrapper,
-} from "drizzle-orm";
+import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { getDb } from "@/drizzle/db";

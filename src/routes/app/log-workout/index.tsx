@@ -23,8 +23,6 @@ function RouteComponent() {
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useWorkoutForm(async state => {
-    console.log("Submitting", state);
-
     setIsSaving(true);
 
     try {

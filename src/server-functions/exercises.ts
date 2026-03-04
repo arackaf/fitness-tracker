@@ -13,7 +13,6 @@ export const exercisesQueryOptions = () =>
   queryOptions({
     queryKey: ["exercises"],
     queryFn: () => {
-      console.log("Exercises Query");
       return getExercisesServerFn();
     },
     staleTime: 1000 * 60 * 5,
