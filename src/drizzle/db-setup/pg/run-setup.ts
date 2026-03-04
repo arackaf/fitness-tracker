@@ -1,3 +1,4 @@
+import once from "lodash/once";
 import dotenv from "dotenv";
 
 import { dirname, join } from "node:path";
@@ -8,4 +9,4 @@ import { setupIfNeeded } from "./execute-setup-ddl";
 const thisFileDir = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(thisFileDir, "../../.env") });
 
-export const setUpPromise = setupIfNeeded();
+export const setUp = once(() => setupIfNeeded());

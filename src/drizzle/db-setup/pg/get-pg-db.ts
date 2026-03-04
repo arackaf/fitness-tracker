@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { dbSchema } from "../../drizzle-schema";
 
-import { setUpPromise } from "./run-setup";
+import { setUp } from "./run-setup";
 
 const TARGET_DB_NAME = "tanstack-jacked";
 
@@ -13,7 +13,7 @@ if (!postgresUrl) {
 }
 
 export const getPgDb = async () => {
-  await setUpPromise;
+  await setUp();
 
   const connectionString = `${postgresUrl}/${TARGET_DB_NAME}`;
   const pool = new Pool({ connectionString });
