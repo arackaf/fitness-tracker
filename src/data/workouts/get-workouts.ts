@@ -41,7 +41,7 @@ export const getWorkouts = async (
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id)),
   );
 
-  const __rows = db
+  const rows = await db
     .with(workoutIds)
     .select({
       workoutId: workoutTable.id,
@@ -80,10 +80,6 @@ export const getWorkouts = async (
     number,
     Map<number, WorkoutState["segments"][number]>
   >();
-
-  console.log("SQL\n\n", __rows.toSQL());
-
-  const rows = await __rows;
 
   for (const row of rows) {
     let workout = workouts.get(row.workoutId);
