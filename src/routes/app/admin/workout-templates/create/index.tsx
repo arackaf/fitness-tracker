@@ -40,14 +40,13 @@ function RouteComponent() {
 
   return (
     <section>
-      <Header title="Create Workout Template" />
       <form onSubmit={handleSubmit}>
-        <WorkoutTemplate form={form} exercises={exercises} />
-        <div className="mt-8">
+        <Header title="Create Workout Template">
           <Button type="submit" disabled={isSaving} className="font-semibold">
             {isSaving ? "Saving..." : "Create workout"}
           </Button>
-        </div>
+        </Header>
+        <WorkoutTemplate form={form} exercises={exercises} />
       </form>
     </section>
   );

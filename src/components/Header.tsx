@@ -1,13 +1,19 @@
+import type { FC, PropsWithChildren } from "react";
+
 type HeaderProps = {
   title: string;
 };
 
-export function Header({ title }: HeaderProps) {
+export const Header: FC<PropsWithChildren<HeaderProps>> = ({
+  title,
+  children,
+}) => {
   return (
-    <header className="mb-8">
+    <header className="mb-8 flex items-start justify-between">
       <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-slate-50 md:text-4xl">
         {title}
       </h1>
+      {children}
     </header>
   );
-}
+};
