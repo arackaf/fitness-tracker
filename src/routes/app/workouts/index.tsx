@@ -13,7 +13,8 @@ import type { WorkoutNextPageToken } from "@/data/workouts/get-workouts";
 export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {
     await Promise.all([
-      context.queryClient.ensureQueryData(workoutHistoryQueryOptions()),
+      // TODO: arg here - fix the keys to be more resilient
+      context.queryClient.ensureQueryData(workoutHistoryQueryOptions({})),
       context.queryClient.ensureQueryData(exercisesQueryOptions()),
     ]);
   },
