@@ -199,7 +199,6 @@ export const getWorkouts = async (
         };
   };
 
-  console.log({ workouts });
   let finalWorkoutsPage = isPagingBackwards
     ? [...workouts].reverse()
     : [...workouts];
@@ -211,9 +210,7 @@ export const getWorkouts = async (
         : null;
     nextPageToken = options!.previousPage!;
   } else {
-    console.log("A", { np: options?.nextPage });
     if (options?.nextPage != null) {
-      console.log("B", { pt: options!.nextPage });
       previousPageToken = options!.nextPage;
     }
     nextPageToken = toPageToken(workouts[WORKOUT_HISTORY_LIMIT]);
