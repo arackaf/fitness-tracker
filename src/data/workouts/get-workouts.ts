@@ -47,13 +47,7 @@ export const getWorkouts = async (
   }
   if (options?.nextPage != null) {
     baseWhereConditions.push(
-      or(
-        lt(workoutTable.workoutDate, options.nextPage.date),
-        and(
-          eq(workoutTable.workoutDate, options.nextPage.date),
-          lte(workoutTable.id, options.nextPage.id),
-        ),
-      )!,
+      sql`(${workoutTable.workoutDate}, ${workoutTable.id}) <= (${options.nextPage.date}, ${options.nextPage.id})`,
     );
   }
 
