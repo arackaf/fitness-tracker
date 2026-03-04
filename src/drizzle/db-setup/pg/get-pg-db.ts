@@ -22,7 +22,8 @@ export const getPgDb = async () => {
   const pool = new Pool({ connectionString });
 
   if (!db) {
-    db = drizzle(pool, {
+    db = drizzle({
+      client: pool,
       schema: dbSchema,
     });
   }
