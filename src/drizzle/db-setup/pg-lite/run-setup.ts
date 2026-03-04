@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { setupIfNeeded } from "./setup";
+import { runDDL } from "./execute-setup-ddl";
 
 const thisFileDir = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(thisFileDir, "../../.env") });
 
-setupIfNeeded();
+export const setupPromise = () => runDDL();
