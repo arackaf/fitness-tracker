@@ -1,26 +1,33 @@
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DisplayWorkout } from "@/components/display-workout/DisplayWorkout";
-import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {
-    await Promise.all([
-      // TODO: arg here - fix the keys to be more resilient
-      context.queryClient.ensureQueryData(workoutHistoryQueryOptions({ page: 1 })),
-      context.queryClient.ensureQueryData(exercisesQueryOptions()),
-    ]);
+    context.queryClient.ensureQueryData(
+      workoutHistoryQueryOptions({ page: 1 }),
+    );
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="Workouts">
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+const RouteContent: FC = () => {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [, startTransition] = useTransition();
   const [page, setPage] = useState(1);
@@ -39,9 +46,7 @@ function RouteComponent() {
   );
 
   return (
-    <section>
-      <Header title="Workouts" />
-
+    <>
       {workouts.length === 0 ? (
         <p className="text-muted-foreground">
           No workouts yet. Start by logging your first one.
@@ -85,6 +90,6 @@ function RouteComponent() {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
-}
+};
