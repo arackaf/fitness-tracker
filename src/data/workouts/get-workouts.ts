@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, lte, sql, type SQLWrapper } from "drizzle-orm";
+import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 
@@ -14,25 +14,21 @@ const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 
 type GetWorkoutsOptions = {
   id?: number;
-  nextPage?: WorkoutNextPageToken | null;
-  previousPage?: WorkoutNextPageToken | null;
-};
-
-export type WorkoutNextPageToken = {
-  id: number;
-  date: string;
+  page?: number;
 };
 
 type WorkoutsPayload = {
   workouts: ExistingWorkoutState[];
-  nextPage?: WorkoutNextPageToken | null;
-  previousPage?: WorkoutNextPageToken | null;
+  page: number;
+  hasNextPage: boolean;
 };
 
 export const getWorkouts = async (
   options: GetWorkoutsOptions = {},
 ): Promise<WorkoutsPayload> => {
   const db = await getDb();
+  const page = Math.max(1, Math.floor(options.page ?? 1));
+  const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
 
   const baseWhereConditions: SQLWrapper[] = [];
   if (options.id != null) {
@@ -43,9 +39,6 @@ export const getWorkouts = async (
     db
       .select({
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
-        rn: sql`dense_rank() over (order by ${workoutTable.workoutDate} desc, ${workoutTable.id} desc)`.as(
-          "rn",
-        ),
       })
       .from(workoutTable)
       .where(
@@ -53,7 +46,9 @@ export const getWorkouts = async (
           ? and(...baseWhereConditions)
           : undefined,
       )
-      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id)),
+      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
+      .limit(WORKOUT_HISTORY_QUERY_LIMIT)
+      .offset(offset),
   );
 
   const rows = await db
@@ -87,8 +82,7 @@ export const getWorkouts = async (
       desc(workoutTable.id),
       asc(workoutSegmentTable.segmentOrder),
       asc(workoutSegmentExerciseTable.exerciseOrder),
-    )
-    .where(lte(workoutIds.rn, WORKOUT_HISTORY_QUERY_LIMIT));
+    );
 
   const workouts: ExistingWorkoutState[] = [];
 
@@ -147,9 +141,14 @@ export const getWorkouts = async (
     });
   }
 
+  const hasNextPage = workouts.length > WORKOUT_HISTORY_LIMIT;
+  const currentPageWorkouts = hasNextPage
+    ? workouts.slice(0, WORKOUT_HISTORY_LIMIT)
+    : workouts;
+
   return {
-    workouts: workouts,
-    previousPage: null,
-    nextPage: null,
+    workouts: currentPageWorkouts,
+    page,
+    hasNextPage,
   };
 };

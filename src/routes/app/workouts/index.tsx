@@ -8,13 +8,12 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
-import type { WorkoutNextPageToken } from "@/data/workouts/get-workouts";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: async ({ context }) => {
     await Promise.all([
       // TODO: arg here - fix the keys to be more resilient
-      context.queryClient.ensureQueryData(workoutHistoryQueryOptions({})),
+      context.queryClient.ensureQueryData(workoutHistoryQueryOptions({ page: 1 })),
       context.queryClient.ensureQueryData(exercisesQueryOptions()),
     ]);
   },
@@ -24,23 +23,15 @@ export const Route = createFileRoute("/app/workouts/")({
 function RouteComponent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [, startTransition] = useTransition();
-
-  const [nextPageToken, setNextPageToken] = useState<
-    WorkoutNextPageToken | undefined
-  >();
-  const [previousPageToken, setPreviousPageToken] = useState<
-    WorkoutNextPageToken | undefined
-  >();
+  const [page, setPage] = useState(1);
   const { data: workoutsPayload } = useSuspenseQuery(
     workoutHistoryQueryOptions({
-      nextPage: nextPageToken,
-      previousPage: previousPageToken,
+      page,
     }),
   );
 
   const workouts = workoutsPayload.workouts;
-  const nextPage = workoutsPayload.nextPage;
-  const previousPage = workoutsPayload.previousPage;
+  const hasNextPage = workoutsPayload.hasNextPage;
 
   const exerciseNameById = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
@@ -65,12 +56,11 @@ function RouteComponent() {
             />
           ))}
           <div className="flex gap-2">
-            {previousPage ? (
+            {page > 1 ? (
               <Button
                 onClick={() =>
                   startTransition(() => {
-                    setPreviousPageToken(previousPage);
-                    setNextPageToken(undefined);
+                    setPage(currentPage => Math.max(1, currentPage - 1));
                   })
                 }
                 variant="outline"
@@ -79,12 +69,11 @@ function RouteComponent() {
                 Previous Page
               </Button>
             ) : null}
-            {nextPage ? (
+            {hasNextPage ? (
               <Button
                 onClick={() =>
                   startTransition(() => {
-                    setPreviousPageToken(undefined);
-                    setNextPageToken(nextPage);
+                    setPage(currentPage => currentPage + 1);
                   })
                 }
                 variant="outline"
