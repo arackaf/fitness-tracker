@@ -3,24 +3,35 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useTransition } from "react";
 
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
-import { Header } from "@/components/Header";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(
-        workoutTemplatesQueryOptions({ page: 1 }),
-      ),
-      context.queryClient.ensureQueryData(exercisesQueryOptions()),
-    ]);
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(workoutTemplatesQueryOptions({ page: 1 }));
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout
+      title="Workout Templates"
+      headerChildren={
+        <Button asChild variant="secondary">
+          <Link to="/app/admin/workout-templates/create">Create</Link>
+        </Button>
+      }
+    >
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteContent() {
   const [, startTransition] = useTransition();
   const [page, setPage] = useState(1);
   const { data: workoutTemplatesPayload } = useSuspenseQuery(
@@ -35,12 +46,7 @@ function RouteComponent() {
   );
 
   return (
-    <section>
-      <Header title="Workout Templates">
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/create">Create</Link>
-        </Button>
-      </Header>
+    <>
       {workoutTemplates.length === 0 ? (
         <p className="text-muted-foreground">
           No workout templates yet. Create your first one to get started.
@@ -84,6 +90,6 @@ function RouteComponent() {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }

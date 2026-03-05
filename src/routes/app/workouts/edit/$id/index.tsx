@@ -11,11 +11,11 @@ import {
   workoutByIdQueryOptions,
   updateWorkout,
 } from "@/server-functions/workouts";
-import { Header } from "@/components/Header";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({
-  loader: async ({ context, params }) => {
+  loader: ({ context, params }) => {
     const workoutId = Number(params.id);
 
     if (Number.isNaN(workoutId)) {
@@ -25,15 +25,21 @@ export const Route = createFileRoute("/app/workouts/edit/$id/")({
       });
     }
 
-    await Promise.all([
-      context.queryClient.ensureQueryData(workoutByIdQueryOptions(workoutId)),
-      context.queryClient.ensureQueryData(exercisesQueryOptions()),
-    ]);
+    context.queryClient.ensureQueryData(workoutByIdQueryOptions(workoutId));
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="Edit Workout">
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteContent() {
   const { id } = Route.useParams();
   const navigate = Route.useNavigate();
   const workoutId = Number(id);
@@ -56,7 +62,9 @@ function RouteComponent() {
     return null;
   }
 
-  return <WorkoutDetailForm workout={workout} exercises={exercises} />;
+  return (
+    <WorkoutDetailForm workout={workout} exercises={exercises} />
+  );
 }
 
 type WorkoutDetailFormProps = {
@@ -93,17 +101,13 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
   };
 
   return (
-    <section>
-      <Header title={workout.name} />
-
-      <form onSubmit={handleSubmit}>
-        <Workout form={form} exercises={exercises} />
-        <div className="mt-8">
-          <Button type="submit" disabled={isSaving} className="font-semibold">
-            {isSaving ? "Saving..." : "Update workout"}
-          </Button>
-        </div>
-      </form>
-    </section>
+    <form onSubmit={handleSubmit}>
+      <Workout form={form} exercises={exercises} />
+      <div className="mt-8">
+        <Button type="submit" disabled={isSaving} className="font-semibold">
+          {isSaving ? "Saving..." : "Update workout"}
+        </Button>
+      </div>
+    </form>
   );
 };

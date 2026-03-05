@@ -3,22 +3,28 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import { ExerciseFilters } from "@/components/ExerciseFilters";
-import { Header } from "@/components/Header";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/admin/exercises/")({
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(exercisesQueryOptions()),
-      context.queryClient.ensureQueryData(muscleGroupsQueryOptions()),
-    ]);
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="Exercises">
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
   const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>(
@@ -48,9 +54,7 @@ function RouteComponent() {
   };
 
   return (
-    <section>
-      <Header title="Exercises" />
-
+    <>
       <ExerciseFilters
         muscleGroups={muscleGroups}
         selectedMuscleGroups={selectedMuscleGroups}
@@ -58,6 +62,6 @@ function RouteComponent() {
       />
 
       <ExerciseListDisplay exercises={filteredExercises} />
-    </section>
+    </>
   );
 }

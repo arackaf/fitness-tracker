@@ -4,7 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import type { Exercise } from "@/components/ExerciseSelector";
-import { Header } from "@/components/Header";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
 import { Button } from "@/components/ui/button";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
@@ -16,7 +16,7 @@ import {
 } from "@/server-functions/workout-templates";
 
 export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
-  loader: async ({ context, params }) => {
+  loader: ({ context, params }) => {
     const workoutTemplateId = Number(params.id);
 
     if (Number.isNaN(workoutTemplateId)) {
@@ -26,17 +26,23 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
       });
     }
 
-    await Promise.all([
-      context.queryClient.ensureQueryData(
-        workoutTemplateByIdQueryOptions(workoutTemplateId),
-      ),
-      context.queryClient.ensureQueryData(exercisesQueryOptions()),
-    ]);
+    context.queryClient.ensureQueryData(
+      workoutTemplateByIdQueryOptions(workoutTemplateId),
+    );
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="Edit Workout Template">
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteContent() {
   const { id } = Route.useParams();
   const navigate = Route.useNavigate();
   const workoutTemplateId = Number(id);
@@ -101,17 +107,13 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
   };
 
   return (
-    <section>
-      <Header title={workoutTemplate.name} />
-
-      <form onSubmit={handleSubmit}>
-        <WorkoutTemplate form={form} exercises={exercises} />
-        <div className="mt-8">
-          <Button type="submit" disabled={isSaving} className="font-semibold">
-            {isSaving ? "Saving..." : "Update workout template"}
-          </Button>
-        </div>
-      </form>
-    </section>
+    <form onSubmit={handleSubmit}>
+      <WorkoutTemplate form={form} exercises={exercises} />
+      <div className="mt-8">
+        <Button type="submit" disabled={isSaving} className="font-semibold">
+          {isSaving ? "Saving..." : "Update workout template"}
+        </Button>
+      </div>
+    </form>
   );
 };

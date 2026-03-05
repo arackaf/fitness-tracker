@@ -10,7 +10,7 @@ import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 
 export const Route = createFileRoute("/app/workouts/")({
-  loader: async ({ context }) => {
+  loader: ({ context }) => {
     context.queryClient.ensureQueryData(
       workoutHistoryQueryOptions({ page: 1 }),
     );
