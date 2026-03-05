@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
@@ -11,21 +11,47 @@ import {
 
 type GetWorkoutTemplatesParams = {
   id?: number;
+  page?: number;
+};
+
+const WORKOUT_TEMPLATE_LIST_LIMIT = 3;
+const WORKOUT_TEMPLATE_LIST_QUERY_LIMIT = WORKOUT_TEMPLATE_LIST_LIMIT + 1;
+
+type WorkoutTemplatesPayload = {
+  workoutTemplates: WorkoutTemplateState[];
+  page: number;
+  hasNextPage: boolean;
 };
 
 export const getWorkoutTemplates = async (
-  params?: GetWorkoutTemplatesParams,
-): Promise<WorkoutTemplateState[]> => {
+  params: GetWorkoutTemplatesParams = {},
+): Promise<WorkoutTemplatesPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
+  const page = Math.max(1, Math.floor(params.page ?? 1));
+  const offset = (page - 1) * WORKOUT_TEMPLATE_LIST_LIMIT;
 
-  const conditions = [];
+  const conditions: SQLWrapper[] = [];
 
-  if (params?.id != null) {
+  if (params.id != null) {
     conditions.push(eq(workoutTemplateTable.id, params.id));
   }
 
+  const templateIds = db.$with("valid_workout_templates").as(
+    db
+      .select({
+        workout_template_id:
+          sql<number>`${workoutTemplateTable.id}`.as("workout_template_id"),
+      })
+      .from(workoutTemplateTable)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(workoutTemplateTable.id))
+      .limit(WORKOUT_TEMPLATE_LIST_QUERY_LIMIT)
+      .offset(offset),
+  );
+
   const rows = await db
+    .with(templateIds)
     .select({
       templateId: workoutTemplateTable.id,
       templateName: workoutTemplateTable.name,
@@ -40,6 +66,10 @@ export const getWorkoutTemplates = async (
       exerciseRepsToFailure: workoutTemplateSegmentExerciseTable.repsToFailure,
     })
     .from(workoutTemplateTable)
+    .innerJoin(
+      templateIds,
+      eq(workoutTemplateTable.id, templateIds.workout_template_id),
+    )
     .leftJoin(
       workoutTemplateSegmentTable,
       eq(
@@ -124,5 +154,15 @@ export const getWorkoutTemplates = async (
     });
   }
 
-  return Array.from(workoutTemplates.values());
+  const templates = Array.from(workoutTemplates.values());
+  const hasNextPage = templates.length > WORKOUT_TEMPLATE_LIST_LIMIT;
+  const currentPageTemplates = hasNextPage
+    ? templates.slice(0, WORKOUT_TEMPLATE_LIST_LIMIT)
+    : templates;
+
+  return {
+    workoutTemplates: currentPageTemplates,
+    page,
+    hasNextPage,
+  };
 };

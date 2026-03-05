@@ -6,17 +6,26 @@ import { insertWorkoutTemplate } from "@/data/workout-templates/insert-workout-t
 import { updateWorkoutTemplate as updateWorkoutTemplateData } from "@/data/workout-templates/update-workout-template";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
-export const workoutTemplatesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["workout-templates"],
-    queryFn: () => getWorkoutTemplatesServerFn(),
-  });
+type WorkoutTemplatesInput = {
+  page?: number;
+};
 
-const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" }).handler(
-  async () => {
-    return getWorkoutTemplates();
-  },
-);
+const normalizePage = (page?: number) => Math.max(1, Math.floor(page ?? 1));
+
+export const workoutTemplatesQueryOptions = (input?: WorkoutTemplatesInput) => {
+  const page = normalizePage(input?.page);
+
+  return queryOptions({
+    queryKey: ["workout-templates", { page }],
+    queryFn: () => getWorkoutTemplatesServerFn({ data: { page } }),
+  });
+};
+
+const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
+  .inputValidator((input: WorkoutTemplatesInput) => input)
+  .handler(async ({ data }) => {
+    return getWorkoutTemplates({ page: data.page });
+  });
 
 export const workoutTemplateByIdQueryOptions = (id: number) =>
   queryOptions({
@@ -29,9 +38,9 @@ export const workoutTemplateByIdQueryOptions = (id: number) =>
 const getWorkoutTemplateById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
   .handler(async ({ data }) => {
-    const workoutTemplates = await getWorkoutTemplates({ id: data.id });
+    const payload = await getWorkoutTemplates({ id: data.id });
 
-    return workoutTemplates[0] ?? null;
+    return payload.workoutTemplates[0] ?? null;
   });
 
 export const saveWorkoutTemplate = createServerFn({ method: "POST" })
