@@ -1,6 +1,7 @@
 import { and, asc, desc, eq } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { getDb } from "@/drizzle/db";
 import {
   workoutTemplate as workoutTemplateTable,
@@ -15,6 +16,7 @@ type GetWorkoutTemplatesParams = {
 export const getWorkoutTemplates = async (
   params?: GetWorkoutTemplatesParams,
 ): Promise<WorkoutTemplateState[]> => {
+  await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 
   const conditions = [];

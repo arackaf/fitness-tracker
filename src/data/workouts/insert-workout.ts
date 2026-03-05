@@ -1,4 +1,5 @@
 import type { WorkoutState } from "@/data/workouts/workout-state";
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
@@ -7,6 +8,7 @@ import {
 } from "@/drizzle/schema";
 
 export const insertWorkout = async (input: WorkoutState) => {
+  await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 
   return db.transaction(async tx => {

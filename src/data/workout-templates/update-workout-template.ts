@@ -1,6 +1,7 @@
 import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { getDb } from "@/drizzle/db";
 import {
   workoutTemplate as workoutTemplateTable,
@@ -13,6 +14,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
     throw new Error("Workout template ID is required for update.");
   }
 
+  await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 
   const workoutTemplateId = input.id;

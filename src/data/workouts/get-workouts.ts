@@ -2,6 +2,7 @@ import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { getDb } from "@/drizzle/db";
 import {
   workout as workoutTable,
@@ -26,6 +27,7 @@ type WorkoutsPayload = {
 export const getWorkouts = async (
   options: GetWorkoutsOptions = {},
 ): Promise<WorkoutsPayload> => {
+  await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
   const page = Math.max(1, Math.floor(options.page ?? 1));
   const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
