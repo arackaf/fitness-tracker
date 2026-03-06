@@ -37,6 +37,8 @@ function RouteComponent() {
             className={navLinkClassName}
             activeProps={activeNavLinkProps}
             inactiveProps={inactiveNavLinkProps}
+            activeOptions={{ exact: false, includeSearch: false }}
+            search={{ page: 1 }}
           >
             <History className="size-4" aria-hidden="true" />
             Workouts

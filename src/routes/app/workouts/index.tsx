@@ -1,7 +1,13 @@
-import { useMemo, useState, useTransition, type FC } from "react";
+import {
+  useDeferredValue,
+  useMemo,
+  useState,
+  useTransition,
+  type FC,
+} from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { DisplayWorkout } from "@/components/display-workout/DisplayWorkout";
 import { Button } from "@/components/ui/button";
@@ -18,6 +24,11 @@ export const Route = createFileRoute("/app/workouts/")({
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
+  validateSearch: (search: Record<string, string>) => {
+    return {
+      page: Number(search.page) || 1,
+    };
+  },
 });
 
 function RouteComponent() {
@@ -30,11 +41,14 @@ function RouteComponent() {
 
 const RouteContent: FC = () => {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-  const [pending, startTransition] = useTransition();
-  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
+
+  const { page } = Route.useSearch();
+  const deferredPage = useDeferredValue(page);
+
   const { data: workoutsPayload } = useSuspenseQuery(
     workoutHistoryQueryOptions({
-      page,
+      page: deferredPage,
     }),
   );
 
@@ -45,6 +59,8 @@ const RouteContent: FC = () => {
     () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
     [exercises],
   );
+
+  const pending = page !== deferredPage;
 
   return (
     <div>
@@ -66,11 +82,14 @@ const RouteContent: FC = () => {
           <div className="flex gap-2">
             <Button
               disabled={page === 1}
-              onClick={() =>
-                startTransition(() => {
-                  setPage(currentPage => Math.max(1, currentPage - 1));
-                })
-              }
+              onClick={() => {
+                navigate({
+                  to: "/app/workouts",
+                  search: {
+                    page: page - 1,
+                  },
+                });
+              }}
               variant="outline"
               className="self-start"
             >
@@ -79,11 +98,14 @@ const RouteContent: FC = () => {
 
             <Button
               disabled={!hasNextPage}
-              onClick={() =>
-                startTransition(() => {
-                  setPage(currentPage => currentPage + 1);
-                })
-              }
+              onClick={() => {
+                navigate({
+                  to: "/app/workouts",
+                  search: {
+                    page: page + 1,
+                  },
+                });
+              }}
               variant="outline"
               className="self-start"
             >
