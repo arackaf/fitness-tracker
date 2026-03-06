@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { FadeInLoading } from "@/components/loading-state/FadeInLoading";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: ({ context }) => {
@@ -29,7 +30,7 @@ function RouteComponent() {
 
 const RouteContent: FC = () => {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-  const [, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
   const [page, setPage] = useState(1);
   const { data: workoutsPayload } = useSuspenseQuery(
     workoutHistoryQueryOptions({
@@ -46,7 +47,9 @@ const RouteContent: FC = () => {
   );
 
   return (
-    <>
+    <div>
+      {pending ? <FadeInLoading /> : null}
+
       {workouts.length === 0 ? (
         <p className="text-muted-foreground">
           No workouts yet. Start by logging your first one.
@@ -61,35 +64,34 @@ const RouteContent: FC = () => {
             />
           ))}
           <div className="flex gap-2">
-            {page > 1 ? (
-              <Button
-                onClick={() =>
-                  startTransition(() => {
-                    setPage(currentPage => Math.max(1, currentPage - 1));
-                  })
-                }
-                variant="outline"
-                className="self-start"
-              >
-                Previous Page
-              </Button>
-            ) : null}
-            {hasNextPage ? (
-              <Button
-                onClick={() =>
-                  startTransition(() => {
-                    setPage(currentPage => currentPage + 1);
-                  })
-                }
-                variant="outline"
-                className="self-start"
-              >
-                Next Page
-              </Button>
-            ) : null}
+            <Button
+              disabled={page === 1}
+              onClick={() =>
+                startTransition(() => {
+                  setPage(currentPage => Math.max(1, currentPage - 1));
+                })
+              }
+              variant="outline"
+              className="self-start"
+            >
+              Previous Page
+            </Button>
+
+            <Button
+              disabled={!hasNextPage}
+              onClick={() =>
+                startTransition(() => {
+                  setPage(currentPage => currentPage + 1);
+                })
+              }
+              variant="outline"
+              className="self-start"
+            >
+              Next Page
+            </Button>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
