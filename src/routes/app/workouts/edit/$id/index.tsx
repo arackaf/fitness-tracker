@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { Undo2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
@@ -33,7 +34,19 @@ export const Route = createFileRoute("/app/workouts/edit/$id/")({
 
 function RouteComponent() {
   return (
-    <SuspensePageLayout title="Edit Workout">
+    <SuspensePageLayout
+      title="Edit Workout"
+      headerChildren={
+        <Link
+          to="/app/workouts"
+          search={{ page: 1 }}
+          className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground dark:text-slate-300"
+        >
+          <Undo2 className="size-4" aria-hidden="true" />
+          Workouts
+        </Link>
+      }
+    >
       <RouteContent />
     </SuspensePageLayout>
   );
@@ -62,9 +75,7 @@ function RouteContent() {
     return null;
   }
 
-  return (
-    <WorkoutDetailForm workout={workout} exercises={exercises} />
-  );
+  return <WorkoutDetailForm workout={workout} exercises={exercises} />;
 }
 
 type WorkoutDetailFormProps = {
