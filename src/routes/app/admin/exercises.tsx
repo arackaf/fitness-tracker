@@ -8,7 +8,7 @@ import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
-export const Route = createFileRoute("/app/admin/exercises/")({
+export const Route = createFileRoute("/app/admin/exercises")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(exercisesQueryOptions());
     context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
