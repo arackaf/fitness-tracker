@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LessonsLesson1FinalRouteRouteImport } from './routes/lessons/lesson1-final/route'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
@@ -37,6 +38,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LessonsLesson1FinalRouteRoute =
+  LessonsLesson1FinalRouteRouteImport.update({
+    id: '/lessons/lesson1-final',
+    path: '/lessons/lesson1-final',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -59,15 +66,15 @@ const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
 } as any)
 const LessonsLesson1FinalPage2Route =
   LessonsLesson1FinalPage2RouteImport.update({
-    id: '/lessons/lesson1-final/page2',
-    path: '/lessons/lesson1-final/page2',
-    getParentRoute: () => rootRouteImport,
+    id: '/page2',
+    path: '/page2',
+    getParentRoute: () => LessonsLesson1FinalRouteRoute,
   } as any)
 const LessonsLesson1FinalPage1Route =
   LessonsLesson1FinalPage1RouteImport.update({
-    id: '/lessons/lesson1-final/page1',
-    path: '/lessons/lesson1-final/page1',
-    getParentRoute: () => rootRouteImport,
+    id: '/page1',
+    path: '/page1',
+    getParentRoute: () => LessonsLesson1FinalRouteRoute,
   } as any)
 const LessonsLesson1DemoPage1Route = LessonsLesson1DemoPage1RouteImport.update({
   id: '/lessons/lesson1-demo/page1',
@@ -124,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
   '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
@@ -142,6 +150,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
   '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
@@ -162,6 +171,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
   '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/admin'
+    | '/lessons/lesson1-final'
     | '/app/admin/exercises'
     | '/lessons/lesson1-demo/page1'
     | '/lessons/lesson1-final/page1'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/app'
+    | '/lessons/lesson1-final'
     | '/app/admin/exercises'
     | '/lessons/lesson1-demo/page1'
     | '/lessons/lesson1-final/page1'
@@ -220,6 +232,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/app/admin'
+    | '/lessons/lesson1-final'
     | '/app/admin/exercises'
     | '/lessons/lesson1-demo/page1'
     | '/lessons/lesson1-final/page1'
@@ -239,9 +252,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  LessonsLesson1FinalRouteRoute: typeof LessonsLesson1FinalRouteRouteWithChildren
   LessonsLesson1DemoPage1Route: typeof LessonsLesson1DemoPage1Route
-  LessonsLesson1FinalPage1Route: typeof LessonsLesson1FinalPage1Route
-  LessonsLesson1FinalPage2Route: typeof LessonsLesson1FinalPage2Route
 }
 
 declare module '@tanstack/react-router' {
@@ -258,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lessons/lesson1-final': {
+      id: '/lessons/lesson1-final'
+      path: '/lessons/lesson1-final'
+      fullPath: '/lessons/lesson1-final'
+      preLoaderRoute: typeof LessonsLesson1FinalRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/admin': {
@@ -290,17 +309,17 @@ declare module '@tanstack/react-router' {
     }
     '/lessons/lesson1-final/page2': {
       id: '/lessons/lesson1-final/page2'
-      path: '/lessons/lesson1-final/page2'
+      path: '/page2'
       fullPath: '/lessons/lesson1-final/page2'
       preLoaderRoute: typeof LessonsLesson1FinalPage2RouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof LessonsLesson1FinalRouteRoute
     }
     '/lessons/lesson1-final/page1': {
       id: '/lessons/lesson1-final/page1'
-      path: '/lessons/lesson1-final/page1'
+      path: '/page1'
       fullPath: '/lessons/lesson1-final/page1'
       preLoaderRoute: typeof LessonsLesson1FinalPage1RouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof LessonsLesson1FinalRouteRoute
     }
     '/lessons/lesson1-demo/page1': {
       id: '/lessons/lesson1-demo/page1'
@@ -415,12 +434,27 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface LessonsLesson1FinalRouteRouteChildren {
+  LessonsLesson1FinalPage1Route: typeof LessonsLesson1FinalPage1Route
+  LessonsLesson1FinalPage2Route: typeof LessonsLesson1FinalPage2Route
+}
+
+const LessonsLesson1FinalRouteRouteChildren: LessonsLesson1FinalRouteRouteChildren =
+  {
+    LessonsLesson1FinalPage1Route: LessonsLesson1FinalPage1Route,
+    LessonsLesson1FinalPage2Route: LessonsLesson1FinalPage2Route,
+  }
+
+const LessonsLesson1FinalRouteRouteWithChildren =
+  LessonsLesson1FinalRouteRoute._addFileChildren(
+    LessonsLesson1FinalRouteRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
+  LessonsLesson1FinalRouteRoute: LessonsLesson1FinalRouteRouteWithChildren,
   LessonsLesson1DemoPage1Route: LessonsLesson1DemoPage1Route,
-  LessonsLesson1FinalPage1Route: LessonsLesson1FinalPage1Route,
-  LessonsLesson1FinalPage2Route: LessonsLesson1FinalPage2Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
