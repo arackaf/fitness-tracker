@@ -67,3 +67,7 @@ I'll briefly add a /blog and /blog/$post route, with static data
 ## Exercise
 
 Hope fully the demo went well. Your turn:
+
+- Add a /workouts route to the in-class folder
+  - So you'll browse to it via /in-class/workouts
+- Then add a /workouts/$id route

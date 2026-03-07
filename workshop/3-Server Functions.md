@@ -88,3 +88,10 @@ I'll briefly add a /blog and /blog/$post route, with static data
 ## Exercise
 
 Hope fully the demo went well. Your turn:
+
+==========
+TODO::
+==========
+
+Add an app/workouts route. Load exercises and workouts, display the workouts, and exercise names
+Add an app/workouts/$id route. Load the exercises and workouts
