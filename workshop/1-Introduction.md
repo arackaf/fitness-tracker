@@ -63,3 +63,17 @@ Which looks like this
 <img alt="User SSR" src="./img/1_img4.png" width="500" />
 
 SSR (with a framework like React) is usually (for reasons we won't get into) tricky to get right. But TanStack Start handles this for you.
+
+## Using TanStack Start
+
+We'll be exclusively using Start, here. Every bit of the route definitions, navigations, route loading and layouts are purely TanStack Router. Start just adds SSR, and the ability to run code on the server.
+
+But we'll always be using Start.
+
+### Quick start
+
+To scaffold a fresh TanStack Start application
+
+```
+npm create @tanstack/start@latest
+```
