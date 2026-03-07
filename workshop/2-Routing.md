@@ -10,11 +10,19 @@ Docs: [https://tanstack.com/router/latest/docs/routing/file-based-routing#direct
 
 TanStack supports directory routes, or flat routes. We'll be using directory routes, here, but they're functionally equivalent; it's just a matter of taste. Directory routes are cleaner and clearer in my opinion, and most importantly will be simpler to demo in this workshop.
 
-## Creating routes
+## Flat (file) routes
 
-Docs: https://tanstack.com/router/latest/docs/routing/routing-concepts
-and
-https://tanstack.com/router/latest/docs/routing/file-based-routing
+The [docs](https://tanstack.com/router/latest/docs/routing/file-based-routing#flat-routes) are here but we won't cover this in class.
+
+The tl;dr is that, instead of (with directories)
+
+app/workouts/edit/$id.tsx
+
+You do
+
+app.workouts.edit.$id.tsx
+
+I mush prefer directory organization for files, but either are fine, and you can even mix and match!
 
 ## Directory routing
 
@@ -45,6 +53,10 @@ Loaders load the data for your given page (or layout)
 - Request your data (we'll see how to do that soon) in the loader, and return it.
   - Access that data with the Route.useLoaderData() hook
   - Or the `useLoaderData` hook, with the route passed in via `{ from }`
+
+==========================
+Loaders are isomorphic!!!!
+==========================
 
 ## Demo
 

@@ -77,3 +77,26 @@ To scaffold a fresh TanStack Start application
 ```
 npm create @tanstack/start@latest
 ```
+
+## Our app
+
+Run this repo, and then navigate to localhost:3000/app
+
+That's the proof of concept for this application. It's somewhat realistic, and should give you a decent taste of actually using TanStack Start for something real.
+
+For this workshop, we'll be focusing on contrived exercises that re-create simplified portions of certain features.
+
+## Struture of the src folder
+
+- components folder has various react components (duh)
+  - I purposefully kept the routes as minimal as possible (just render components from here)
+- data folder contains all data access code (Drizzle)
+  - I purposefully kept all server functions as minimal as possible (single call to a method here)
+- drizzle folder contains the Drizzle schema and migration metadata
+- routes us where all the TanStack routes live
+- server-functions is where all my server functions live
+  - This helped keep route files uncluttered and minimal
+
+You do **NOT** (and likely should not) keep everything quite so obsessively separated. I did that to help focus our attention where it's needed. Rather than a long Drizzle db query chain, you just see a call to a function that executes that query. If you're curious what the query looks like you're of course free to command-click into it, but otherwise it should help remove distractions
+
+## Quick Drizzle Demo
