@@ -10,6 +10,8 @@ Docs: https://tanstack.com/router/latest/docs/routing/routing-concepts
 and
 https://tanstack.com/router/latest/docs/routing/file-based-routing
 
+## Creating routes
+
 Just put them under the right folder, and name it accordingly.
 
 // matches /workouts
@@ -17,3 +19,21 @@ routes/workouts/index.tsx
 
 // matches /workouts/6
 routes/workouts/$id.tsx
+
+## Layouts
+
+layouts are named `route.tsx`
+
+## Escaping
+
+What if you want a route called `/route` ??
+
+Use `[]` to escape.
+
+```
+foo/[route].tsx
+```
+
+##
+
+There are MANY advanced routing features that we will not pour over
