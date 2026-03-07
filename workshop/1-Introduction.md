@@ -100,3 +100,9 @@ For this workshop, we'll be focusing on contrived exercises that re-create simpl
 You do **NOT** (and likely should not) keep everything quite so obsessively separated. I did that to help focus our attention where it's needed. Rather than a long Drizzle db query chain, you just see a call to a function that executes that query. If you're curious what the query looks like you're of course free to command-click into it, but otherwise it should help remove distractions
 
 ## Quick Drizzle Demo
+
+Step 1: Create your Database
+Step 2: Create a drizzle.config.js
+Step 3: npx drizzle-kit generate
+Step 4: Set up your connection
+Step 5: Profit
