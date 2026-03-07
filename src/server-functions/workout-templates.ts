@@ -21,7 +21,7 @@ export const workoutTemplatesQueryOptions = (input?: WorkoutTemplatesInput) => {
   });
 };
 
-const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
+export const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
   .inputValidator((input: WorkoutTemplatesInput) => input)
   .handler(async ({ data }) => {
     return getWorkoutTemplates({ page: data.page });
@@ -35,7 +35,7 @@ export const workoutTemplateByIdQueryOptions = (id: number) =>
     gcTime: 1000 * 60 * 5,
   });
 
-const getWorkoutTemplateById = createServerFn({ method: "GET" })
+export const getWorkoutTemplateById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
   .handler(async ({ data }) => {
     const payload = await getWorkoutTemplates({ id: data.id });
