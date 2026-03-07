@@ -1,4 +1,4 @@
-# Routing
+# Routing Basics
 
 Docs: [https://tanstack.com/router/latest/docs/routing/file-based-routing#directory-routes](https://tanstack.com/router/latest/docs/routing/file-based-routing#directory-routes)
 
@@ -10,30 +10,28 @@ Docs: https://tanstack.com/router/latest/docs/routing/routing-concepts
 and
 https://tanstack.com/router/latest/docs/routing/file-based-routing
 
-## Creating routes
+## Directory routing
 
-Just put them under the right folder, and name it accordingly.
+Just put them under the right folder, and name accordingly.
 
-// matches /workouts
+// For the /workouts route
 routes/workouts/index.tsx
 
-// matches /workouts/6
+// For the /workouts/6
 routes/workouts/$id.tsx
 
-## Layouts
+## Route structure
 
-layouts are named `route.tsx`
+- Use $xyz for path params
+- Use route.tsx for a layout
+- Escape route names with `[]`
+  - So [route].tsx if you literally want a /route route
+- Load data in a loader method
+  - Get that data with the Route.useLoaderData() hook
+  - Or the `useLoaderData` hook, with the route passed in via `{ from }`
 
-## Escaping
+## This list is incomplete, paltry, even
 
-What if you want a route called `/route` ??
+Check the docs, there's a TON of advanced use cases.
 
-Use `[]` to escape.
-
-```
-foo/[route].tsx
-```
-
-##
-
-There are MANY advanced routing features that we will not pour over
+There are MANY advanced routing features we won't be pouring over, here
