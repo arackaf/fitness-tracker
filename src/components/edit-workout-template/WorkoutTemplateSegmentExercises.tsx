@@ -179,7 +179,7 @@ export const WorkoutTemplateSegmentExercises: FC<
               }}
               variant="outline"
               size="sm"
-              className="font-semibold"
+              className="font-semibold cursor-pointer"
             >
               <Plus className="size-4" aria-hidden="true" />
               Add exercise
