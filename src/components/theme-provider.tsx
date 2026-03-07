@@ -1,3 +1,4 @@
+import { DARK_MODE } from "@/APPLICATION-SETTINGS";
 import {
   createContext,
   type PropsWithChildren,
@@ -17,7 +18,7 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>(DARK_MODE ? "dark" : "light");
 
   useEffect(() => {
     const rootElement = document.documentElement;
