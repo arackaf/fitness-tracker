@@ -91,7 +91,7 @@ const RouteContent: FC = () => {
                 });
               }}
               variant="outline"
-              className="self-start"
+              className="self-start cursor-pointer"
             >
               Previous Page
             </Button>
@@ -107,7 +107,7 @@ const RouteContent: FC = () => {
                 });
               }}
               variant="outline"
-              className="self-start"
+              className="self-start cursor-pointer"
             >
               Next Page
             </Button>
