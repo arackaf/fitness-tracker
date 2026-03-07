@@ -129,7 +129,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
               segmentsField.pushValue(createDefaultSegment());
             }}
             variant="outline"
-            className="font-semibold"
+            className="font-semibold cursor-pointer"
           >
             <Plus className="size-4" aria-hidden="true" />
             Add segment
