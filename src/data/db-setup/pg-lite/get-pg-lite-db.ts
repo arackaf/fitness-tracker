@@ -3,8 +3,8 @@ import { drizzle } from "drizzle-orm/pglite";
 import { client } from "./pg-lite-client";
 import { setup } from "./run-setup";
 
-import { dbSchema } from "../../drizzle-schema";
-import type { DbType } from "../../types";
+import { dbSchema } from "@/data/drizzle-schema";
+import type { DbType } from "@/data/types";
 
 let db: DbType | null = null;
 

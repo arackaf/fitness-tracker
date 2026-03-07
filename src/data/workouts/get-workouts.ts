@@ -3,7 +3,7 @@ import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { getDb } from "@/drizzle/db";
+import { getDb } from "@/data/db";
 import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,

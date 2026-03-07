@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { getDb } from "@/drizzle/db";
+import { getDb } from "@/data/db";
 
 export async function getMuscleGroups() {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));

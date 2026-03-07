@@ -1,5 +1,5 @@
-import * as schema from "./schema";
-import * as relations from "./relations";
+import * as schema from "@/drizzle/schema";
+import * as relations from "@/drizzle/relations";
 
 export const dbSchema = {
   ...schema,

@@ -1,9 +1,9 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
-import { dbSchema } from "../../drizzle-schema";
+import { dbSchema } from "@/data/drizzle-schema";
 
 import { setUp } from "./run-setup";
-import type { DbType } from "@/drizzle/types";
+import type { DbType } from "@/data/types";
 
 const TARGET_DB_NAME = "tanstack-jacked";
 

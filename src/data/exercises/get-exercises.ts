@@ -1,6 +1,6 @@
 import { asc } from "drizzle-orm";
 
-import { getDb } from "@/drizzle/db";
+import { getDb } from "@/data/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 
