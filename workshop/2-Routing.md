@@ -32,6 +32,4 @@ routes/workouts/$id.tsx
 
 ## This list is incomplete, paltry, even
 
-Check the docs, there's a TON of advanced use cases.
-
-There are MANY advanced routing features we won't be pouring over, here
+Check the docs, there's a TON of advanced use cases. Splat routes, pathless layouts, etc. We won't pour over every cool routing trick TanStack Route is capable of, so check the docs!
