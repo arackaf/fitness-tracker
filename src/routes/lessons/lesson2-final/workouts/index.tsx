@@ -8,12 +8,14 @@ type Workout = {
 export const Route = createFileRoute("/lessons/lesson2-final/workouts/")({
   component: RouteComponent,
   loader: () => {
+    const workouts: Workout[] = [
+      { id: 1, name: "Workout 1" },
+      { id: 2, name: "Workout 2" },
+      { id: 3, name: "Workout 3" },
+    ];
+
     return {
-      workouts: [
-        { id: 1, name: "Workout 1" },
-        { id: 2, name: "Workout 2" },
-        { id: 3, name: "Workout 3" },
-      ],
+      workouts,
     };
   },
 });

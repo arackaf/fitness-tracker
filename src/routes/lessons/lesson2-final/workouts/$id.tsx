@@ -1,13 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+type Workout = {
+  id: number;
+  name: string;
+};
+
 export const Route = createFileRoute("/lessons/lesson2-final/workouts/$id")({
   component: RouteComponent,
   loader: ({ params }) => {
+    const workout: Workout = {
+      id: Number(params.id),
+      name: "My Workout",
+    };
+
     return {
-      workout: {
-        id: Number(params.id),
-        name: "My Workout",
-      },
+      workout,
     };
   },
 });
@@ -16,9 +23,9 @@ function RouteComponent() {
   const { workout } = Route.useLoaderData();
 
   return (
-    <div className="flex gap-4">
-      <h1>{workout.name}</h1>
-      <span>{workout.name}</span>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-lg">{workout.name}</h1>
+      <span>id: {workout.id}</span>
     </div>
   );
 }
