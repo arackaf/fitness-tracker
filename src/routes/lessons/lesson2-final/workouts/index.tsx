@@ -1,4 +1,7 @@
+import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo } from "react";
 
 type Workout = {
   id: number;
@@ -6,23 +9,37 @@ type Workout = {
   exercises: number[];
 };
 
+type Exercise = {
+  id: number;
+  name: string;
+};
+
 export const Route = createFileRoute("/lessons/lesson2-final/workouts/")({
   component: RouteComponent,
-  loader: () => {
+  loader: async () => {
     const workouts: Workout[] = [
       { id: 1, name: "Workout 1", exercises: [1, 2, 3] },
       { id: 2, name: "Workout 2", exercises: [1, 2, 3] },
       { id: 3, name: "Workout 3", exercises: [1, 2, 3] },
     ];
+    const exercises: Exercise[] = [
+      { id: 1, name: "Pull-ups" },
+      { id: 2, name: "Push-ups" },
+      { id: 3, name: "Bench Press" },
+    ];
 
     return {
       workouts,
+      exercises,
     };
   },
 });
 
 function RouteComponent() {
-  const { workouts } = Route.useLoaderData();
+  const { workouts, exercises } = Route.useLoaderData();
+  const exerciseLookup = useMemo(() => {
+    return new Map(exercises.map(exercise => [exercise.id, exercise]));
+  }, [exercises]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -37,7 +54,11 @@ function RouteComponent() {
               <span>{workout.name}</span>
               <span>Exercises:</span>
               <span>
-                ({workout.exercises.map(exercise => exercise).join(", ")})
+                (
+                {workout.exercises
+                  .map(exercise => exerciseLookup.get(exercise)!.name)
+                  .join(", ")}
+                )
               </span>
             </span>
           </Link>

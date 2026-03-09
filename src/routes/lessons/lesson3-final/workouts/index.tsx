@@ -1,22 +1,18 @@
+import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 import { createFileRoute, Link } from "@tanstack/react-router";
-
-type Workout = {
-  id: number;
-  name: string;
-  exercises: number[];
-};
 
 export const Route = createFileRoute("/lessons/lesson3-final/workouts/")({
   component: RouteComponent,
-  loader: () => {
-    const workouts: Workout[] = [
-      { id: 1, name: "Workout 1", exercises: [1, 2, 3] },
-      { id: 2, name: "Workout 2", exercises: [1, 2, 3] },
-      { id: 3, name: "Workout 3", exercises: [1, 2, 3] },
-    ];
+  loader: async () => {
+    const [workouts, exercises] = await Promise.all([
+      getInClassWorkoutHistory(),
+      getInClassExercisesServerFn(),
+    ]);
 
     return {
       workouts,
+      exercises,
     };
   },
 });
@@ -33,13 +29,7 @@ function RouteComponent() {
             to={`/lessons/lesson2-final/workouts/$id`}
             params={{ id: String(workout.id) }}
           >
-            <span className="flex gap-2">
-              <span>{workout.name}</span>
-              <span>Exercises:</span>
-              <span>
-                ({workout.exercises.map(exercise => exercise).join(", ")})
-              </span>
-            </span>
+            <span>{workout.name}</span>
           </Link>
         </div>
       ))}
