@@ -1,13 +1,6 @@
 import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
-import { createFileRoute } from "@tanstack/react-router";
-
-type Workout = {
-  id: number;
-  name: string;
-  date: string;
-  exercises: number[];
-};
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lessons/lesson3-final/workouts/$id")({
   component: RouteComponent,
@@ -31,7 +24,12 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-lg">{workout.name}</h1>
+      <div className="flex">
+        <h1 className="text-lg">{workout.name}</h1>
+        <Link className="ml-auto" to="/lessons/lesson3-final/workouts">
+          Back
+        </Link>
+      </div>
       <span>Id: {workout.id}</span>
       <span>Date: {workout.date}</span>
       <span>

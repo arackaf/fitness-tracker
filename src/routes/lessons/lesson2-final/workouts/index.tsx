@@ -46,22 +46,24 @@ function RouteComponent() {
       <h1>Workouts</h1>
       {workouts.map(workout => (
         <div key={workout.id}>
-          <Link
-            to={`/lessons/lesson2-final/workouts/$id`}
-            params={{ id: String(workout.id) }}
-          >
-            <span className="flex gap-2">
-              <span>{workout.name}</span>
-              <span>Exercises:</span>
-              <span>
-                (
-                {workout.exercises
-                  .map(exercise => exerciseLookup.get(exercise)!.name)
-                  .join(", ")}
-                )
-              </span>
+          <span className="flex gap-2">
+            <span>{workout.name}</span>
+            <span>Exercises:</span>
+            <span>
+              (
+              {workout.exercises
+                .map(exercise => exerciseLookup.get(exercise)!.name)
+                .join(", ")}
+              )
             </span>
-          </Link>
+            <Link
+              className="ml-auto"
+              to={`/lessons/lesson2-final/workouts/$id`}
+              params={{ id: String(workout.id) }}
+            >
+              View
+            </Link>
+          </span>
         </div>
       ))}
     </div>

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 type Workout = {
   id: number;
@@ -44,7 +44,12 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-lg">{workout.name}</h1>
+      <div className="flex">
+        <h1 className="text-lg">{workout.name}</h1>
+        <Link className="ml-auto" to="/lessons/lesson2-final/workouts">
+          Back
+        </Link>
+      </div>
       <span>Id: {workout.id}</span>
       <span>Date: {workout.date}</span>
       <span>
