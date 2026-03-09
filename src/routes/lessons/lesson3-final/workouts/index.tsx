@@ -40,9 +40,10 @@ function RouteComponent() {
               )
             </span>
             <Link
-              className="ml-auto"
               to={`/lessons/lesson3-final/workouts/$id`}
               params={{ id: String(workout.id) }}
+              className="ml-auto"
+              preload={false}
             >
               View
             </Link>

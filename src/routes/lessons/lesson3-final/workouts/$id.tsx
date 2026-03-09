@@ -26,7 +26,11 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
-        <Link className="ml-auto" to="/lessons/lesson3-final/workouts">
+        <Link
+          to="/lessons/lesson3-final/workouts"
+          className="ml-auto"
+          preload={false}
+        >
           Back
         </Link>
       </div>
