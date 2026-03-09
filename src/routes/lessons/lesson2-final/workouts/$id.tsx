@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 type Workout = {
   id: number;
   name: string;
+  exercises: number[];
 };
 
 export const Route = createFileRoute("/lessons/lesson2-final/workouts/$id")({
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/lessons/lesson2-final/workouts/$id")({
     const workout: Workout = {
       id: Number(params.id),
       name: "My Workout",
+      exercises: [1, 2, 3],
     };
 
     return {
@@ -26,6 +28,9 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <h1 className="text-lg">{workout.name}</h1>
       <span>id: {workout.id}</span>
+      <span>
+        exercises: {workout.exercises.map(exercise => exercise).join(", ")}
+      </span>
     </div>
   );
 }
