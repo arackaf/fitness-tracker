@@ -8,7 +8,6 @@ type Workout = {
 export const Route = createFileRoute("/lessons/lesson2-final/workouts/")({
   component: RouteComponent,
   loader: () => {
-    console.log("XXX");
     return {
       workouts: [
         { id: 1, name: "Workout 1" },
