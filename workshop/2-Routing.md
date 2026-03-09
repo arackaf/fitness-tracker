@@ -70,4 +70,6 @@ Hope fully the demo went well. Your turn:
 
 - Add a /workouts route to the in-class folder
   - So you'll browse to it via /in-class/workouts
+  - Return some static data
 - Then add a /workouts/$id route
+  - Return some static data here, too

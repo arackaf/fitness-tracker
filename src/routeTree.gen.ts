@@ -9,25 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LessonsRouteRouteImport } from './routes/lessons/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as LessonsLesson1FinalRouteRouteImport } from './routes/lessons/lesson1-final/route'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
-import { Route as LessonsLesson1FinalPage2RouteImport } from './routes/lessons/lesson1-final/page2'
-import { Route as LessonsLesson1FinalPage1RouteImport } from './routes/lessons/lesson1-final/page1'
-import { Route as LessonsLesson1DemoPage1RouteImport } from './routes/lessons/lesson1-demo/page1'
+import { Route as LessonsLesson2DemoPage1RouteImport } from './routes/lessons/lesson2-demo/page1'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
+import { Route as LessonsLesson2FinalWorkoutsIndexRouteImport } from './routes/lessons/lesson2-final/workouts/index'
 import { Route as AppWorkoutsNotFoundIndexRouteImport } from './routes/app/workouts/not-found/index'
 import { Route as AppWorkoutsInvalidIndexRouteImport } from './routes/app/workouts/invalid/index'
 import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from './routes/app/admin/workout-templates/index'
+import { Route as LessonsLesson2FinalWorkoutsIdRouteImport } from './routes/lessons/lesson2-final/workouts/$id'
 import { Route as AppWorkoutsEditIdIndexRouteImport } from './routes/app/workouts/edit/$id/index'
 import { Route as AppAdminWorkoutTemplatesNotFoundIndexRouteImport } from './routes/app/admin/workout-templates/not-found/index'
 import { Route as AppAdminWorkoutTemplatesCreateIndexRouteImport } from './routes/app/admin/workout-templates/create/index'
 import { Route as AppAdminWorkoutTemplatesEditIdIndexRouteImport } from './routes/app/admin/workout-templates/edit/$id/index'
 
+const LessonsRouteRoute = LessonsRouteRouteImport.update({
+  id: '/lessons',
+  path: '/lessons',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/app',
   path: '/app',
@@ -38,12 +43,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LessonsLesson1FinalRouteRoute =
-  LessonsLesson1FinalRouteRouteImport.update({
-    id: '/lessons/lesson1-final',
-    path: '/lessons/lesson1-final',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -64,28 +63,22 @@ const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
-const LessonsLesson1FinalPage2Route =
-  LessonsLesson1FinalPage2RouteImport.update({
-    id: '/page2',
-    path: '/page2',
-    getParentRoute: () => LessonsLesson1FinalRouteRoute,
-  } as any)
-const LessonsLesson1FinalPage1Route =
-  LessonsLesson1FinalPage1RouteImport.update({
-    id: '/page1',
-    path: '/page1',
-    getParentRoute: () => LessonsLesson1FinalRouteRoute,
-  } as any)
-const LessonsLesson1DemoPage1Route = LessonsLesson1DemoPage1RouteImport.update({
-  id: '/lessons/lesson1-demo/page1',
-  path: '/lessons/lesson1-demo/page1',
-  getParentRoute: () => rootRouteImport,
+const LessonsLesson2DemoPage1Route = LessonsLesson2DemoPage1RouteImport.update({
+  id: '/lesson2-demo/page1',
+  path: '/lesson2-demo/page1',
+  getParentRoute: () => LessonsRouteRoute,
 } as any)
 const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
   id: '/exercises',
   path: '/exercises',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
+const LessonsLesson2FinalWorkoutsIndexRoute =
+  LessonsLesson2FinalWorkoutsIndexRouteImport.update({
+    id: '/lesson2-final/workouts/',
+    path: '/lesson2-final/workouts/',
+    getParentRoute: () => LessonsRouteRoute,
+  } as any)
 const AppWorkoutsNotFoundIndexRoute =
   AppWorkoutsNotFoundIndexRouteImport.update({
     id: '/workouts/not-found/',
@@ -102,6 +95,12 @@ const AppAdminWorkoutTemplatesIndexRoute =
     id: '/workout-templates/',
     path: '/workout-templates/',
     getParentRoute: () => AppAdminRouteRoute,
+  } as any)
+const LessonsLesson2FinalWorkoutsIdRoute =
+  LessonsLesson2FinalWorkoutsIdRouteImport.update({
+    id: '/lesson2-final/workouts/$id',
+    path: '/lesson2-final/workouts/$id',
+    getParentRoute: () => LessonsRouteRoute,
   } as any)
 const AppWorkoutsEditIdIndexRoute = AppWorkoutsEditIdIndexRouteImport.update({
   id: '/workouts/edit/$id/',
@@ -130,18 +129,18 @@ const AppAdminWorkoutTemplatesEditIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
-  '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
-  '/lessons/lesson1-final/page2': typeof LessonsLesson1FinalPage2Route
+  '/lessons/lesson2-demo/page1': typeof LessonsLesson2DemoPage1Route
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
+  '/lessons/lesson2-final/workouts/$id': typeof LessonsLesson2FinalWorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
+  '/lessons/lesson2-final/workouts/': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
@@ -150,17 +149,17 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
-  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
+  '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
-  '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
-  '/lessons/lesson1-final/page2': typeof LessonsLesson1FinalPage2Route
+  '/lessons/lesson2-demo/page1': typeof LessonsLesson2DemoPage1Route
   '/app/admin': typeof AppAdminIndexRoute
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
   '/app/workouts': typeof AppWorkoutsIndexRoute
+  '/lessons/lesson2-final/workouts/$id': typeof LessonsLesson2FinalWorkoutsIdRoute
   '/app/admin/workout-templates': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found': typeof AppWorkoutsNotFoundIndexRoute
+  '/lessons/lesson2-final/workouts': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id': typeof AppWorkoutsEditIdIndexRoute
@@ -170,18 +169,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
+  '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/lessons/lesson1-final': typeof LessonsLesson1FinalRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/lessons/lesson1-demo/page1': typeof LessonsLesson1DemoPage1Route
-  '/lessons/lesson1-final/page1': typeof LessonsLesson1FinalPage1Route
-  '/lessons/lesson1-final/page2': typeof LessonsLesson1FinalPage2Route
+  '/lessons/lesson2-demo/page1': typeof LessonsLesson2DemoPage1Route
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
+  '/lessons/lesson2-final/workouts/$id': typeof LessonsLesson2FinalWorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
+  '/lessons/lesson2-final/workouts/': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
@@ -192,18 +191,18 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/lessons'
     | '/app/admin'
-    | '/lessons/lesson1-final'
     | '/app/admin/exercises'
-    | '/lessons/lesson1-demo/page1'
-    | '/lessons/lesson1-final/page1'
-    | '/lessons/lesson1-final/page2'
+    | '/lessons/lesson2-demo/page1'
     | '/app/admin/'
     | '/app/log-workout/'
     | '/app/workouts/'
+    | '/lessons/lesson2-final/workouts/$id'
     | '/app/admin/workout-templates/'
     | '/app/workouts/invalid/'
     | '/app/workouts/not-found/'
+    | '/lessons/lesson2-final/workouts/'
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
@@ -212,17 +211,17 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/app'
-    | '/lessons/lesson1-final'
+    | '/lessons'
     | '/app/admin/exercises'
-    | '/lessons/lesson1-demo/page1'
-    | '/lessons/lesson1-final/page1'
-    | '/lessons/lesson1-final/page2'
+    | '/lessons/lesson2-demo/page1'
     | '/app/admin'
     | '/app/log-workout'
     | '/app/workouts'
+    | '/lessons/lesson2-final/workouts/$id'
     | '/app/admin/workout-templates'
     | '/app/workouts/invalid'
     | '/app/workouts/not-found'
+    | '/lessons/lesson2-final/workouts'
     | '/app/admin/workout-templates/create'
     | '/app/admin/workout-templates/not-found'
     | '/app/workouts/edit/$id'
@@ -231,18 +230,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/lessons'
     | '/app/admin'
-    | '/lessons/lesson1-final'
     | '/app/admin/exercises'
-    | '/lessons/lesson1-demo/page1'
-    | '/lessons/lesson1-final/page1'
-    | '/lessons/lesson1-final/page2'
+    | '/lessons/lesson2-demo/page1'
     | '/app/admin/'
     | '/app/log-workout/'
     | '/app/workouts/'
+    | '/lessons/lesson2-final/workouts/$id'
     | '/app/admin/workout-templates/'
     | '/app/workouts/invalid/'
     | '/app/workouts/not-found/'
+    | '/lessons/lesson2-final/workouts/'
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
@@ -252,12 +251,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
-  LessonsLesson1FinalRouteRoute: typeof LessonsLesson1FinalRouteRouteWithChildren
-  LessonsLesson1DemoPage1Route: typeof LessonsLesson1DemoPage1Route
+  LessonsRouteRoute: typeof LessonsRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/lessons': {
+      id: '/lessons'
+      path: '/lessons'
+      fullPath: '/lessons'
+      preLoaderRoute: typeof LessonsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -270,13 +275,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lessons/lesson1-final': {
-      id: '/lessons/lesson1-final'
-      path: '/lessons/lesson1-final'
-      fullPath: '/lessons/lesson1-final'
-      preLoaderRoute: typeof LessonsLesson1FinalRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/admin': {
@@ -307,26 +305,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminIndexRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/lessons/lesson1-final/page2': {
-      id: '/lessons/lesson1-final/page2'
-      path: '/page2'
-      fullPath: '/lessons/lesson1-final/page2'
-      preLoaderRoute: typeof LessonsLesson1FinalPage2RouteImport
-      parentRoute: typeof LessonsLesson1FinalRouteRoute
-    }
-    '/lessons/lesson1-final/page1': {
-      id: '/lessons/lesson1-final/page1'
-      path: '/page1'
-      fullPath: '/lessons/lesson1-final/page1'
-      preLoaderRoute: typeof LessonsLesson1FinalPage1RouteImport
-      parentRoute: typeof LessonsLesson1FinalRouteRoute
-    }
-    '/lessons/lesson1-demo/page1': {
-      id: '/lessons/lesson1-demo/page1'
-      path: '/lessons/lesson1-demo/page1'
-      fullPath: '/lessons/lesson1-demo/page1'
-      preLoaderRoute: typeof LessonsLesson1DemoPage1RouteImport
-      parentRoute: typeof rootRouteImport
+    '/lessons/lesson2-demo/page1': {
+      id: '/lessons/lesson2-demo/page1'
+      path: '/lesson2-demo/page1'
+      fullPath: '/lessons/lesson2-demo/page1'
+      preLoaderRoute: typeof LessonsLesson2DemoPage1RouteImport
+      parentRoute: typeof LessonsRouteRoute
     }
     '/app/admin/exercises': {
       id: '/app/admin/exercises'
@@ -334,6 +318,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin/exercises'
       preLoaderRoute: typeof AppAdminExercisesRouteImport
       parentRoute: typeof AppAdminRouteRoute
+    }
+    '/lessons/lesson2-final/workouts/': {
+      id: '/lessons/lesson2-final/workouts/'
+      path: '/lesson2-final/workouts'
+      fullPath: '/lessons/lesson2-final/workouts/'
+      preLoaderRoute: typeof LessonsLesson2FinalWorkoutsIndexRouteImport
+      parentRoute: typeof LessonsRouteRoute
     }
     '/app/workouts/not-found/': {
       id: '/app/workouts/not-found/'
@@ -355,6 +346,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin/workout-templates/'
       preLoaderRoute: typeof AppAdminWorkoutTemplatesIndexRouteImport
       parentRoute: typeof AppAdminRouteRoute
+    }
+    '/lessons/lesson2-final/workouts/$id': {
+      id: '/lessons/lesson2-final/workouts/$id'
+      path: '/lesson2-final/workouts/$id'
+      fullPath: '/lessons/lesson2-final/workouts/$id'
+      preLoaderRoute: typeof LessonsLesson2FinalWorkoutsIdRouteImport
+      parentRoute: typeof LessonsRouteRoute
     }
     '/app/workouts/edit/$id/': {
       id: '/app/workouts/edit/$id/'
@@ -434,27 +432,26 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
-interface LessonsLesson1FinalRouteRouteChildren {
-  LessonsLesson1FinalPage1Route: typeof LessonsLesson1FinalPage1Route
-  LessonsLesson1FinalPage2Route: typeof LessonsLesson1FinalPage2Route
+interface LessonsRouteRouteChildren {
+  LessonsLesson2DemoPage1Route: typeof LessonsLesson2DemoPage1Route
+  LessonsLesson2FinalWorkoutsIdRoute: typeof LessonsLesson2FinalWorkoutsIdRoute
+  LessonsLesson2FinalWorkoutsIndexRoute: typeof LessonsLesson2FinalWorkoutsIndexRoute
 }
 
-const LessonsLesson1FinalRouteRouteChildren: LessonsLesson1FinalRouteRouteChildren =
-  {
-    LessonsLesson1FinalPage1Route: LessonsLesson1FinalPage1Route,
-    LessonsLesson1FinalPage2Route: LessonsLesson1FinalPage2Route,
-  }
+const LessonsRouteRouteChildren: LessonsRouteRouteChildren = {
+  LessonsLesson2DemoPage1Route: LessonsLesson2DemoPage1Route,
+  LessonsLesson2FinalWorkoutsIdRoute: LessonsLesson2FinalWorkoutsIdRoute,
+  LessonsLesson2FinalWorkoutsIndexRoute: LessonsLesson2FinalWorkoutsIndexRoute,
+}
 
-const LessonsLesson1FinalRouteRouteWithChildren =
-  LessonsLesson1FinalRouteRoute._addFileChildren(
-    LessonsLesson1FinalRouteRouteChildren,
-  )
+const LessonsRouteRouteWithChildren = LessonsRouteRoute._addFileChildren(
+  LessonsRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
-  LessonsLesson1FinalRouteRoute: LessonsLesson1FinalRouteRouteWithChildren,
-  LessonsLesson1DemoPage1Route: LessonsLesson1DemoPage1Route,
+  LessonsRouteRoute: LessonsRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
