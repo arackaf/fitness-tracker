@@ -19,8 +19,8 @@ export const Route = createFileRoute("/lessons/lesson4-final/workouts/")({
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 0,
-  staleTime: 0,
+  gcTime: 5000,
+  staleTime: 500,
 });
 
 function RouteComponent() {
@@ -29,9 +29,14 @@ function RouteComponent() {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
   }, [exercises]);
 
+  const { isFetching } = Route.useMatch();
+
   return (
     <div className="flex flex-col gap-4">
-      <h1>Workouts</h1>
+      <div className="flex justify-between">
+        <h1>Workouts</h1>
+        {isFetching ? <span className="text-xs">Reloading...</span> : null}
+      </div>
       {workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">

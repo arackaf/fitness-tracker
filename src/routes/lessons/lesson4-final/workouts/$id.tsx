@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -20,12 +21,13 @@ export const Route = createFileRoute("/lessons/lesson4-final/workouts/$id")({
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 0,
-  staleTime: 0,
+  gcTime: 5000,
+  staleTime: 500,
 });
 
 function RouteComponent() {
   const { workout } = Route.useLoaderData();
+  const { isFetching } = Route.useMatch();
 
   return (
     <div className="flex flex-col gap-4">
@@ -43,6 +45,9 @@ function RouteComponent() {
       <span>Date: {workout.date}</span>
       <span>
         exercises: {workout.exercises.map(exercise => exercise).join(", ")}
+      </span>
+      <span className={cn("text-xs -my-2 ml-auto", !isFetching && "invisible")}>
+        Reloading...
       </span>
     </div>
   );
