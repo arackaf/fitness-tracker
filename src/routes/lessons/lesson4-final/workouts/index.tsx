@@ -6,7 +6,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/lessons/lesson4-final/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    console.log("list loader");
     const [workouts, exercises] = await Promise.all([
       getInClassWorkoutHistory(),
       getInClassExercisesServerFn(),
@@ -19,8 +18,8 @@ export const Route = createFileRoute("/lessons/lesson4-final/workouts/")({
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 5000,
-  staleTime: 500,
+  gcTime: 6000,
+  staleTime: 2000,
 });
 
 function RouteComponent() {
@@ -35,7 +34,9 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1>Workouts</h1>
-        {isFetching ? <span className="text-xs">Reloading...</span> : null}
+        {isFetching ? (
+          <span className="text-sm text-pink-500">Reloading...</span>
+        ) : null}
       </div>
       {workouts.map(workout => (
         <div key={workout.id}>
@@ -60,6 +61,7 @@ function RouteComponent() {
           </span>
         </div>
       ))}
+      <Link to="/lessons/lesson4-final/workouts/other-path">Other path</Link>
     </div>
   );
 }

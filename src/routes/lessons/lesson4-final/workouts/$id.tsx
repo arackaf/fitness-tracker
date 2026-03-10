@@ -6,7 +6,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/lessons/lesson4-final/workouts/$id")({
   component: RouteComponent,
   loader: async ({ params }) => {
-    console.log("id loader");
     const [workout, exercises] = await Promise.all([
       getInClassWorkoutById({
         data: { id: Number(params.id) },
@@ -21,8 +20,8 @@ export const Route = createFileRoute("/lessons/lesson4-final/workouts/$id")({
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 5000,
-  staleTime: 500,
+  gcTime: 6000,
+  staleTime: 2000,
 });
 
 function RouteComponent() {
@@ -46,7 +45,13 @@ function RouteComponent() {
       <span>
         exercises: {workout.exercises.map(exercise => exercise).join(", ")}
       </span>
-      <span className={cn("text-xs -my-2 ml-auto", !isFetching && "invisible")}>
+      <Link to="/lessons/lesson4-final/workouts/other-path">Other path</Link>
+      <span
+        className={cn(
+          "text-sm text-pink-500 -my-2 ml-auto",
+          !isFetching && "invisible",
+        )}
+      >
         Reloading...
       </span>
     </div>
