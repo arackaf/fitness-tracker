@@ -18,12 +18,14 @@ import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as LessonsLesson2DemoPage1RouteImport } from './routes/lessons/lesson2-demo/page1'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
+import { Route as LessonsLesson5FinalWorkoutsIndexRouteImport } from './routes/lessons/lesson5-final/workouts/index'
 import { Route as LessonsLesson4FinalWorkoutsIndexRouteImport } from './routes/lessons/lesson4-final/workouts/index'
 import { Route as LessonsLesson3FinalWorkoutsIndexRouteImport } from './routes/lessons/lesson3-final/workouts/index'
 import { Route as LessonsLesson2FinalWorkoutsIndexRouteImport } from './routes/lessons/lesson2-final/workouts/index'
 import { Route as AppWorkoutsNotFoundIndexRouteImport } from './routes/app/workouts/not-found/index'
 import { Route as AppWorkoutsInvalidIndexRouteImport } from './routes/app/workouts/invalid/index'
 import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from './routes/app/admin/workout-templates/index'
+import { Route as LessonsLesson5FinalWorkoutsIdRouteImport } from './routes/lessons/lesson5-final/workouts/$id'
 import { Route as LessonsLesson4FinalWorkoutsOtherPathRouteImport } from './routes/lessons/lesson4-final/workouts/other-path'
 import { Route as LessonsLesson4FinalWorkoutsIdRouteImport } from './routes/lessons/lesson4-final/workouts/$id'
 import { Route as LessonsLesson3FinalWorkoutsIdRouteImport } from './routes/lessons/lesson3-final/workouts/$id'
@@ -78,6 +80,12 @@ const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
   path: '/exercises',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
+const LessonsLesson5FinalWorkoutsIndexRoute =
+  LessonsLesson5FinalWorkoutsIndexRouteImport.update({
+    id: '/lesson5-final/workouts/',
+    path: '/lesson5-final/workouts/',
+    getParentRoute: () => LessonsRouteRoute,
+  } as any)
 const LessonsLesson4FinalWorkoutsIndexRoute =
   LessonsLesson4FinalWorkoutsIndexRouteImport.update({
     id: '/lesson4-final/workouts/',
@@ -112,6 +120,12 @@ const AppAdminWorkoutTemplatesIndexRoute =
     id: '/workout-templates/',
     path: '/workout-templates/',
     getParentRoute: () => AppAdminRouteRoute,
+  } as any)
+const LessonsLesson5FinalWorkoutsIdRoute =
+  LessonsLesson5FinalWorkoutsIdRouteImport.update({
+    id: '/lesson5-final/workouts/$id',
+    path: '/lesson5-final/workouts/$id',
+    getParentRoute: () => LessonsRouteRoute,
   } as any)
 const LessonsLesson4FinalWorkoutsOtherPathRoute =
   LessonsLesson4FinalWorkoutsOtherPathRouteImport.update({
@@ -175,12 +189,14 @@ export interface FileRoutesByFullPath {
   '/lessons/lesson3-final/workouts/$id': typeof LessonsLesson3FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/$id': typeof LessonsLesson4FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/other-path': typeof LessonsLesson4FinalWorkoutsOtherPathRoute
+  '/lessons/lesson5-final/workouts/$id': typeof LessonsLesson5FinalWorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/lesson2-final/workouts/': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/lessons/lesson3-final/workouts/': typeof LessonsLesson3FinalWorkoutsIndexRoute
   '/lessons/lesson4-final/workouts/': typeof LessonsLesson4FinalWorkoutsIndexRoute
+  '/lessons/lesson5-final/workouts/': typeof LessonsLesson5FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
@@ -199,12 +215,14 @@ export interface FileRoutesByTo {
   '/lessons/lesson3-final/workouts/$id': typeof LessonsLesson3FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/$id': typeof LessonsLesson4FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/other-path': typeof LessonsLesson4FinalWorkoutsOtherPathRoute
+  '/lessons/lesson5-final/workouts/$id': typeof LessonsLesson5FinalWorkoutsIdRoute
   '/app/admin/workout-templates': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/lesson2-final/workouts': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/lessons/lesson3-final/workouts': typeof LessonsLesson3FinalWorkoutsIndexRoute
   '/lessons/lesson4-final/workouts': typeof LessonsLesson4FinalWorkoutsIndexRoute
+  '/lessons/lesson5-final/workouts': typeof LessonsLesson5FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id': typeof AppWorkoutsEditIdIndexRoute
@@ -225,12 +243,14 @@ export interface FileRoutesById {
   '/lessons/lesson3-final/workouts/$id': typeof LessonsLesson3FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/$id': typeof LessonsLesson4FinalWorkoutsIdRoute
   '/lessons/lesson4-final/workouts/other-path': typeof LessonsLesson4FinalWorkoutsOtherPathRoute
+  '/lessons/lesson5-final/workouts/$id': typeof LessonsLesson5FinalWorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
   '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
   '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/lesson2-final/workouts/': typeof LessonsLesson2FinalWorkoutsIndexRoute
   '/lessons/lesson3-final/workouts/': typeof LessonsLesson3FinalWorkoutsIndexRoute
   '/lessons/lesson4-final/workouts/': typeof LessonsLesson4FinalWorkoutsIndexRoute
+  '/lessons/lesson5-final/workouts/': typeof LessonsLesson5FinalWorkoutsIndexRoute
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
@@ -252,12 +272,14 @@ export interface FileRouteTypes {
     | '/lessons/lesson3-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/other-path'
+    | '/lessons/lesson5-final/workouts/$id'
     | '/app/admin/workout-templates/'
     | '/app/workouts/invalid/'
     | '/app/workouts/not-found/'
     | '/lessons/lesson2-final/workouts/'
     | '/lessons/lesson3-final/workouts/'
     | '/lessons/lesson4-final/workouts/'
+    | '/lessons/lesson5-final/workouts/'
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
@@ -276,12 +298,14 @@ export interface FileRouteTypes {
     | '/lessons/lesson3-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/other-path'
+    | '/lessons/lesson5-final/workouts/$id'
     | '/app/admin/workout-templates'
     | '/app/workouts/invalid'
     | '/app/workouts/not-found'
     | '/lessons/lesson2-final/workouts'
     | '/lessons/lesson3-final/workouts'
     | '/lessons/lesson4-final/workouts'
+    | '/lessons/lesson5-final/workouts'
     | '/app/admin/workout-templates/create'
     | '/app/admin/workout-templates/not-found'
     | '/app/workouts/edit/$id'
@@ -301,12 +325,14 @@ export interface FileRouteTypes {
     | '/lessons/lesson3-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/$id'
     | '/lessons/lesson4-final/workouts/other-path'
+    | '/lessons/lesson5-final/workouts/$id'
     | '/app/admin/workout-templates/'
     | '/app/workouts/invalid/'
     | '/app/workouts/not-found/'
     | '/lessons/lesson2-final/workouts/'
     | '/lessons/lesson3-final/workouts/'
     | '/lessons/lesson4-final/workouts/'
+    | '/lessons/lesson5-final/workouts/'
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
@@ -384,6 +410,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminExercisesRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
+    '/lessons/lesson5-final/workouts/': {
+      id: '/lessons/lesson5-final/workouts/'
+      path: '/lesson5-final/workouts'
+      fullPath: '/lessons/lesson5-final/workouts/'
+      preLoaderRoute: typeof LessonsLesson5FinalWorkoutsIndexRouteImport
+      parentRoute: typeof LessonsRouteRoute
+    }
     '/lessons/lesson4-final/workouts/': {
       id: '/lessons/lesson4-final/workouts/'
       path: '/lesson4-final/workouts'
@@ -425,6 +458,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin/workout-templates/'
       preLoaderRoute: typeof AppAdminWorkoutTemplatesIndexRouteImport
       parentRoute: typeof AppAdminRouteRoute
+    }
+    '/lessons/lesson5-final/workouts/$id': {
+      id: '/lessons/lesson5-final/workouts/$id'
+      path: '/lesson5-final/workouts/$id'
+      fullPath: '/lessons/lesson5-final/workouts/$id'
+      preLoaderRoute: typeof LessonsLesson5FinalWorkoutsIdRouteImport
+      parentRoute: typeof LessonsRouteRoute
     }
     '/lessons/lesson4-final/workouts/other-path': {
       id: '/lessons/lesson4-final/workouts/other-path'
@@ -538,9 +578,11 @@ interface LessonsRouteRouteChildren {
   LessonsLesson3FinalWorkoutsIdRoute: typeof LessonsLesson3FinalWorkoutsIdRoute
   LessonsLesson4FinalWorkoutsIdRoute: typeof LessonsLesson4FinalWorkoutsIdRoute
   LessonsLesson4FinalWorkoutsOtherPathRoute: typeof LessonsLesson4FinalWorkoutsOtherPathRoute
+  LessonsLesson5FinalWorkoutsIdRoute: typeof LessonsLesson5FinalWorkoutsIdRoute
   LessonsLesson2FinalWorkoutsIndexRoute: typeof LessonsLesson2FinalWorkoutsIndexRoute
   LessonsLesson3FinalWorkoutsIndexRoute: typeof LessonsLesson3FinalWorkoutsIndexRoute
   LessonsLesson4FinalWorkoutsIndexRoute: typeof LessonsLesson4FinalWorkoutsIndexRoute
+  LessonsLesson5FinalWorkoutsIndexRoute: typeof LessonsLesson5FinalWorkoutsIndexRoute
 }
 
 const LessonsRouteRouteChildren: LessonsRouteRouteChildren = {
@@ -550,9 +592,11 @@ const LessonsRouteRouteChildren: LessonsRouteRouteChildren = {
   LessonsLesson4FinalWorkoutsIdRoute: LessonsLesson4FinalWorkoutsIdRoute,
   LessonsLesson4FinalWorkoutsOtherPathRoute:
     LessonsLesson4FinalWorkoutsOtherPathRoute,
+  LessonsLesson5FinalWorkoutsIdRoute: LessonsLesson5FinalWorkoutsIdRoute,
   LessonsLesson2FinalWorkoutsIndexRoute: LessonsLesson2FinalWorkoutsIndexRoute,
   LessonsLesson3FinalWorkoutsIndexRoute: LessonsLesson3FinalWorkoutsIndexRoute,
   LessonsLesson4FinalWorkoutsIndexRoute: LessonsLesson4FinalWorkoutsIndexRoute,
+  LessonsLesson5FinalWorkoutsIndexRoute: LessonsLesson5FinalWorkoutsIndexRoute,
 }
 
 const LessonsRouteRouteWithChildren = LessonsRouteRoute._addFileChildren(
