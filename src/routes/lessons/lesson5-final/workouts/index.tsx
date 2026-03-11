@@ -1,43 +1,36 @@
 import { useMemo } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
 export const Route = createFileRoute("/lessons/lesson5-final/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const [workouts, exercises] = await Promise.all([
-      getInClassWorkoutHistory(),
-      getInClassExercisesServerFn(),
-    ]);
+    const workouts = await getInClassWorkoutHistory();
 
     return {
       workouts,
-      exercises,
     };
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 6000,
-  staleTime: 2000,
+  gcTime: 0,
+  staleTime: 0,
 });
 
 function RouteComponent() {
-  const { workouts, exercises } = Route.useLoaderData();
+  const { workouts } = Route.useLoaderData();
+  const routeApi = getRouteApi("/lessons/lesson5-final/workouts");
+  const { exercises } = routeApi.useLoaderData();
+
   const exerciseLookup = useMemo(() => {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
   }, [exercises]);
-
-  const { isFetching } = Route.useMatch();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1>Workouts</h1>
-        {isFetching ? (
-          <span className="text-sm text-pink-500">Reloading...</span>
-        ) : null}
       </div>
       {workouts.map(workout => (
         <div key={workout.id}>
@@ -52,7 +45,7 @@ function RouteComponent() {
               )
             </span>
             <Link
-              to={`/lessons/lesson4-final/workouts/$id`}
+              to={`/lessons/lesson5-final/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}
@@ -62,7 +55,6 @@ function RouteComponent() {
           </span>
         </div>
       ))}
-      <Link to="/lessons/lesson4-final/workouts/other-path">Other path</Link>
     </div>
   );
 }
