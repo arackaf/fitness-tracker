@@ -36,7 +36,7 @@ export const getExercises = createServerFn({
   return db.select().from(exercisesTable).orderBy(asc(exercisesTable.name));
 });
 
-export const Route = createFileRoute("/lessons/lesson3-final/workouts/")({
+export const Route = createFileRoute("/lessons/3/workouts/")({
   component: RouteComponent,
   loader: async () => {
     const [workouts, exercises] = await Promise.all([
@@ -75,7 +75,7 @@ function RouteComponent() {
               )
             </span>
             <Link
-              to={`/lessons/lesson3-final/workouts/$id`}
+              to={`/lessons/3/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}

@@ -11,7 +11,7 @@ type Exercise = ArrayOf<
   Awaited<ReturnType<typeof getInClassExercisesServerFn>>
 >;
 
-export const Route = createFileRoute("/lessons/lesson6-final/workouts/")({
+export const Route = createFileRoute("/lessons/6/workouts/")({
   component: RouteComponent,
   loader: async () => {
     const workouts = getInClassWorkoutHistory();
@@ -77,7 +77,7 @@ const RouteContents: FC<{
               )
             </span>
             <Link
-              to={`/lessons/lesson5-final/workouts/$id`}
+              to={`/lessons/5/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}

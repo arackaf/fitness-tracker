@@ -41,7 +41,7 @@ export const getWorkout = createServerFn({
     });
   });
 
-export const Route = createFileRoute("/lessons/lesson3-final/workouts/$id")({
+export const Route = createFileRoute("/lessons/3/workouts/$id")({
   component: RouteComponent,
   loader: async ({ params }) => {
     const [workout, exercises] = await Promise.all([
@@ -68,11 +68,7 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
-        <Link
-          to="/lessons/lesson3-final/workouts"
-          className="ml-auto"
-          preload={false}
-        >
+        <Link to="/lessons/3/workouts" className="ml-auto" preload={false}>
           Back
         </Link>
       </div>

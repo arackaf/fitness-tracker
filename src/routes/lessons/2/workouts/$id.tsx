@@ -13,7 +13,7 @@ type Exercise = {
   name: string;
 };
 
-export const Route = createFileRoute("/lessons/lesson2-final/workouts/$id")({
+export const Route = createFileRoute("/lessons/2/workouts/$id")({
   component: RouteComponent,
   loader: ({ params }) => {
     const workout: Workout = {
@@ -46,7 +46,7 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
-        <Link className="ml-auto" to="/lessons/lesson2-final/workouts">
+        <Link className="ml-auto" to="/lessons/2/workouts">
           Back
         </Link>
       </div>

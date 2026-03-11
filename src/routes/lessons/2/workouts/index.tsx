@@ -14,7 +14,7 @@ type Exercise = {
   name: string;
 };
 
-export const Route = createFileRoute("/lessons/lesson2-final/workouts/")({
+export const Route = createFileRoute("/lessons/2/workouts/")({
   component: RouteComponent,
   loader: async () => {
     const workouts: Workout[] = [
@@ -58,7 +58,7 @@ function RouteComponent() {
             </span>
             <Link
               className="ml-auto"
-              to={`/lessons/lesson2-final/workouts/$id`}
+              to={`/lessons/2/workouts/$id`}
               params={{ id: String(workout.id) }}
             >
               View

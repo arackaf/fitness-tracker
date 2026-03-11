@@ -1,43 +1,43 @@
 import { useMemo } from "react";
-import {
-  createFileRoute,
-  getRouteApi,
-  Link,
-  useLoaderData,
-} from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
-export const Route = createFileRoute("/lessons/lesson5-final/workouts/")({
+export const Route = createFileRoute("/lessons/4/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const workouts = await getInClassWorkoutHistory();
+    const [workouts, exercises] = await Promise.all([
+      getInClassWorkoutHistory(),
+      getInClassExercisesServerFn(),
+    ]);
 
     return {
       workouts,
+      exercises,
     };
   },
   pendingComponent: () => <div>Loading...</div>,
   pendingMs: 0,
-  gcTime: 0,
-  staleTime: 0,
+  gcTime: 6000,
+  staleTime: 2000,
 });
 
 function RouteComponent() {
-  const { workouts } = Route.useLoaderData();
-
-  const { exercises } = useLoaderData({
-    from: "/lessons/lesson5-final/workouts",
-  });
-
+  const { workouts, exercises } = Route.useLoaderData();
   const exerciseLookup = useMemo(() => {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
   }, [exercises]);
+
+  const { isFetching } = Route.useMatch();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1>Workouts</h1>
+        {isFetching ? (
+          <span className="text-sm text-pink-500">Reloading...</span>
+        ) : null}
       </div>
       {workouts.map(workout => (
         <div key={workout.id}>
@@ -52,7 +52,7 @@ function RouteComponent() {
               )
             </span>
             <Link
-              to={`/lessons/lesson5-final/workouts/$id`}
+              to={`/lessons/4/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}
@@ -62,6 +62,7 @@ function RouteComponent() {
           </span>
         </div>
       ))}
+      <Link to="/lessons/4/workouts/other-path">Other path</Link>
     </div>
   );
 }
