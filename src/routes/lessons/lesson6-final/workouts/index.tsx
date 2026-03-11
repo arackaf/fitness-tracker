@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type FC } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+
 import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
-import { createFileRoute, Link } from "@tanstack/react-router";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
 
