@@ -1,68 +1,44 @@
-import { useEffect, useMemo, useState, type FC } from "react";
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
-import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-type ArrayOf<T> = T extends Array<infer U> ? U : never;
-
-type Workout = ArrayOf<Awaited<ReturnType<typeof getInClassWorkoutHistory>>>;
-type Exercise = ArrayOf<
-  Awaited<ReturnType<typeof getInClassExercisesServerFn>>
->;
+import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
 export const Route = createFileRoute("/lessons/lesson5-final/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const workouts = getInClassWorkoutHistory();
-    const exercises = getInClassExercisesServerFn();
+    const [workouts, exercises] = await Promise.all([
+      getInClassWorkoutHistory(),
+      getInClassExercisesServerFn(),
+    ]);
 
     return {
       workouts,
       exercises,
     };
   },
-  gcTime: 0,
-  staleTime: 0,
+  pendingComponent: () => <div>Loading...</div>,
+  pendingMs: 0,
+  gcTime: 6000,
+  staleTime: 2000,
 });
 
 function RouteComponent() {
-  const { workouts: workoutsPromise, exercises: exercisesPromise } =
-    Route.useLoaderData();
-
-  const [workouts, setWorkouts] = useState<Workout[] | null>(null);
-  const [exercises, setExercises] = useState<Exercise[] | null>(null);
-
-  useEffect(() => {
-    Promise.all([workoutsPromise, exercisesPromise]).then(
-      ([workouts, exercises]) => {
-        setWorkouts(workouts);
-        setExercises(exercises);
-      },
-    );
-  }, [workoutsPromise, exercisesPromise]);
-
-  return (
-    <div className="flex flex-col gap-4">
-      <h1>Workouts</h1>
-      {workouts && exercises ? (
-        <RouteContents workouts={workouts} exercises={exercises} />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
-  );
-}
-
-const RouteContents: FC<{
-  workouts: Workout[];
-  exercises: Exercise[];
-}> = ({ workouts, exercises }) => {
+  const { workouts, exercises } = Route.useLoaderData();
   const exerciseLookup = useMemo(() => {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
   }, [exercises]);
 
+  const { isFetching } = Route.useMatch();
+
   return (
-    <>
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between">
+        <h1>Workouts</h1>
+        {isFetching ? (
+          <span className="text-sm text-pink-500">Reloading...</span>
+        ) : null}
+      </div>
       {workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">
@@ -76,7 +52,7 @@ const RouteContents: FC<{
               )
             </span>
             <Link
-              to={`/lessons/lesson5-final/workouts/$id`}
+              to={`/lessons/lesson4-final/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}
@@ -86,6 +62,7 @@ const RouteContents: FC<{
           </span>
         </div>
       ))}
-    </>
+      <Link to="/lessons/lesson4-final/workouts/other-path">Other path</Link>
+    </div>
   );
-};
+}
