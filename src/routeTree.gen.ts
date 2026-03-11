@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LessonsRouteRouteImport } from './routes/lessons/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
@@ -51,6 +52,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LessonsIndexRoute = LessonsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LessonsRouteRoute,
 } as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/lessons/': typeof LessonsIndexRoute
   '/lessons/5/workouts': typeof Lessons5WorkoutsRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -211,7 +218,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
-  '/lessons': typeof LessonsRouteRouteWithChildren
+  '/lessons': typeof LessonsIndexRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin': typeof AppAdminIndexRoute
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
@@ -241,6 +248,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/lessons/': typeof LessonsIndexRoute
   '/lessons/5/workouts': typeof Lessons5WorkoutsRouteRouteWithChildren
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -272,6 +280,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/lessons'
     | '/app/admin'
+    | '/lessons/'
     | '/lessons/5/workouts'
     | '/app/admin/exercises'
     | '/app/admin/'
@@ -328,6 +337,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/lessons'
     | '/app/admin'
+    | '/lessons/'
     | '/lessons/5/workouts'
     | '/app/admin/exercises'
     | '/app/admin/'
@@ -381,6 +391,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/lessons/': {
+      id: '/lessons/'
+      path: '/'
+      fullPath: '/lessons/'
+      preLoaderRoute: typeof LessonsIndexRouteImport
+      parentRoute: typeof LessonsRouteRoute
     }
     '/app/admin': {
       id: '/app/admin'
@@ -616,6 +633,7 @@ const Lessons5WorkoutsRouteRouteWithChildren =
   )
 
 interface LessonsRouteRouteChildren {
+  LessonsIndexRoute: typeof LessonsIndexRoute
   Lessons5WorkoutsRouteRoute: typeof Lessons5WorkoutsRouteRouteWithChildren
   Lessons2WorkoutsIdRoute: typeof Lessons2WorkoutsIdRoute
   Lessons3WorkoutsIdRoute: typeof Lessons3WorkoutsIdRoute
@@ -629,6 +647,7 @@ interface LessonsRouteRouteChildren {
 }
 
 const LessonsRouteRouteChildren: LessonsRouteRouteChildren = {
+  LessonsIndexRoute: LessonsIndexRoute,
   Lessons5WorkoutsRouteRoute: Lessons5WorkoutsRouteRouteWithChildren,
   Lessons2WorkoutsIdRoute: Lessons2WorkoutsIdRoute,
   Lessons3WorkoutsIdRoute: Lessons3WorkoutsIdRoute,
