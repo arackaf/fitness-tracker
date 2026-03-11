@@ -23,7 +23,7 @@ export const getWorkouts = createServerFn({
   return workouts.map(workout => {
     return {
       ...workout,
-      exercises: [1, 2, 3],
+      exercises: [1, 2],
     };
   });
 });
