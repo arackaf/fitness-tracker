@@ -1,0 +1,52 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+
+import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
+import { useMemo } from "react";
+
+export const Route = createFileRoute("/lessons/7/workouts/$id")({
+  component: RouteComponent,
+  loader: async ({ params }) => {
+    const [workout, exercises] = await Promise.all([
+      getInClassWorkoutById({
+        data: { id: Number(params.id) },
+      }),
+      getInClassExercisesServerFn(),
+    ]);
+
+    return {
+      workout: workout!,
+      exercises,
+    };
+  },
+  pendingComponent: () => <div>Loading...</div>,
+  pendingMs: 0,
+  gcTime: 6000,
+  staleTime: 2000,
+});
+
+function RouteComponent() {
+  const { workout, exercises } = Route.useLoaderData();
+  const exerciseLookup = useMemo(() => {
+    return new Map(exercises.map(exercise => [exercise.id, exercise]));
+  }, [exercises]);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex">
+        <h1 className="text-lg">{workout.name}</h1>
+        <Link to="/lessons/5/workouts" className="ml-auto" preload={false}>
+          Back
+        </Link>
+      </div>
+      <span>Id: {workout.id}</span>
+      <span>Date: {workout.date}</span>
+      <span>
+        exercises:{" "}
+        {workout.exercises
+          .map(exercise => exerciseLookup.get(exercise)!.name)
+          .join(", ")}
+      </span>
+    </div>
+  );
+}
