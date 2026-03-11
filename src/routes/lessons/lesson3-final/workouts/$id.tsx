@@ -1,6 +1,7 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+
 import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
-import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/lessons/lesson3-final/workouts/$id")({
   component: RouteComponent,

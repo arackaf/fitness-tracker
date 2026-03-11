@@ -1,14 +1,47 @@
 import { useMemo } from "react";
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
-import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
+import { asc, desc } from "drizzle-orm";
+
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+
+import {
+  workout as workoutTable,
+  exercises as exercisesTable,
+} from "@/drizzle/schema";
+import { getDb } from "@/data/db";
+
+export const getWorkouts = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const db = await getDb();
+  const workouts = await db
+    .select()
+    .from(workoutTable)
+    .orderBy(desc(workoutTable.workoutDate))
+    .limit(3);
+
+  return workouts.map(workout => {
+    return {
+      ...workout,
+      exercises: [1, 2, 3],
+    };
+  });
+});
+
+export const getExercises = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const db = await getDb();
+
+  return db.select().from(exercisesTable).orderBy(asc(exercisesTable.name));
+});
 
 export const Route = createFileRoute("/lessons/lesson3-final/workouts/")({
   component: RouteComponent,
   loader: async () => {
     const [workouts, exercises] = await Promise.all([
-      getInClassWorkoutHistory(),
-      getInClassExercisesServerFn(),
+      getWorkouts(),
+      getExercises(),
     ]);
 
     return {
