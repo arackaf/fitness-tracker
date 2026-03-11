@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router";
 
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/lessons/lesson5-final/workouts/$id")({
   component: RouteComponent,
@@ -22,6 +23,13 @@ export const Route = createFileRoute("/lessons/lesson5-final/workouts/$id")({
 function RouteComponent() {
   const { workout } = Route.useLoaderData();
 
+  const routeApi = getRouteApi("/lessons/lesson5-final/workouts");
+  const { exercises } = routeApi.useLoaderData();
+
+  const exerciseLookup = useMemo(() => {
+    return new Map(exercises.map(exercise => [exercise.id, exercise]));
+  }, [exercises]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex">
@@ -37,7 +45,10 @@ function RouteComponent() {
       <span>Id: {workout.id}</span>
       <span>Date: {workout.date}</span>
       <span>
-        exercises: {workout.exercises.map(exercise => exercise).join(", ")}
+        exercises:{" "}
+        {workout.exercises
+          .map(exercise => exerciseLookup.get(exercise)!.name)
+          .join(", ")}
       </span>
     </div>
   );

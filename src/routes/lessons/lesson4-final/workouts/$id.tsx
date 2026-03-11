@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { cn } from "@/lib/utils";
@@ -26,8 +27,12 @@ export const Route = createFileRoute("/lessons/lesson4-final/workouts/$id")({
 });
 
 function RouteComponent() {
-  const { workout } = Route.useLoaderData();
+  const { workout, exercises } = Route.useLoaderData();
   const { isFetching } = Route.useMatch();
+
+  const exerciseLookup = useMemo(() => {
+    return new Map(exercises.map(exercise => [exercise.id, exercise]));
+  }, [exercises]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -44,7 +49,10 @@ function RouteComponent() {
       <span>Id: {workout.id}</span>
       <span>Date: {workout.date}</span>
       <span>
-        exercises: {workout.exercises.map(exercise => exercise).join(", ")}
+        exercises:{" "}
+        {workout.exercises
+          .map(exercise => exerciseLookup.get(exercise)!.name)
+          .join(", ")}
       </span>
       <Link to="/lessons/lesson4-final/workouts/other-path">Other path</Link>
       <span

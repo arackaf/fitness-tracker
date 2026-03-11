@@ -1,5 +1,10 @@
 import { useMemo } from "react";
-import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  getRouteApi,
+  Link,
+  useLoaderData,
+} from "@tanstack/react-router";
 
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
@@ -20,8 +25,10 @@ export const Route = createFileRoute("/lessons/lesson5-final/workouts/")({
 
 function RouteComponent() {
   const { workouts } = Route.useLoaderData();
-  const routeApi = getRouteApi("/lessons/lesson5-final/workouts");
-  const { exercises } = routeApi.useLoaderData();
+
+  const { exercises } = useLoaderData({
+    from: "/lessons/lesson5-final/workouts",
+  });
 
   const exerciseLookup = useMemo(() => {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
