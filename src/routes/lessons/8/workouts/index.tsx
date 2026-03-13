@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState, type FC } from "react";
+import { useMemo, useRef, useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -21,7 +21,6 @@ function RouteComponent() {
   const [selectedExerciseId, setSelectedExerciseId] = useState<number | null>(
     null,
   );
-  const selectedExerciseNameInputRef = useRef<HTMLInputElement>(null);
 
   const { data: exercises, isLoading: isExercisesPending } = useQuery({
     queryKey: ["exercises"],
@@ -55,11 +54,7 @@ function RouteComponent() {
         />
       )}
       {selectedExercise ? (
-        <EditExercise
-          key={selectedExercise.id}
-          ref={selectedExerciseNameInputRef}
-          exercise={selectedExercise}
-        />
+        <EditExercise key={selectedExercise.id} exercise={selectedExercise} />
       ) : null}
       <div className="border-t" />
       {isWorkoutsPending || !workouts ? (
@@ -77,11 +72,12 @@ function RouteComponent() {
   );
 }
 
-const EditExercise = forwardRef<HTMLInputElement, { exercise: Exercise }>(
-  function SelectedExerciseNameInput({ exercise }, ref) {
-    return <Input ref={ref} defaultValue={exercise.name} />;
-  },
-);
+const EditExercise: FC<{ exercise: Exercise }> = props => {
+  const { exercise } = props;
+  const exerciseNameInputRef = useRef<HTMLInputElement>(null);
+
+  return <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />;
+};
 
 const WorkoutRow: FC<{
   workout: Workout;
