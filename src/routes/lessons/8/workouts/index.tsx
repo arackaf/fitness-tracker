@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState } from "react";
+import { forwardRef, useMemo, useRef, useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -35,6 +35,7 @@ function RouteComponent() {
   const exerciseLookup = useMemo(() => {
     return new Map((exercises ?? []).map(exercise => [exercise.id, exercise]));
   }, [exercises]);
+
   const selectedExercise = exercises?.find(
     exercise => exercise.id === selectedExerciseId,
   );
@@ -57,7 +58,7 @@ function RouteComponent() {
         <EditExercise
           key={selectedExercise.id}
           ref={selectedExerciseNameInputRef}
-          exerciseName={selectedExercise.name}
+          exercise={selectedExercise}
         />
       ) : null}
       <div className="border-t" />
@@ -76,19 +77,17 @@ function RouteComponent() {
   );
 }
 
-const EditExercise = forwardRef<HTMLInputElement, { exerciseName: string }>(
-  function SelectedExerciseNameInput({ exerciseName }, ref) {
-    return <Input ref={ref} defaultValue={exerciseName} />;
+const EditExercise = forwardRef<HTMLInputElement, { exercise: Exercise }>(
+  function SelectedExerciseNameInput({ exercise }, ref) {
+    return <Input ref={ref} defaultValue={exercise.name} />;
   },
 );
 
-function WorkoutRow({
-  workout,
-  exerciseLookup,
-}: {
+const WorkoutRow: FC<{
   workout: Workout;
   exerciseLookup: Map<number, Exercise>;
-}) {
+}> = props => {
+  const { workout, exerciseLookup } = props;
   return (
     <div>
       <span className="flex gap-2">
@@ -104,4 +103,4 @@ function WorkoutRow({
       </span>
     </div>
   );
-}
+};
