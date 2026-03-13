@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { cn } from "@/lib/utils";
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getExercisesServerFn } from "@/server-functions/exercises";
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
 
 export const Route = createFileRoute("/lessons/4/workouts/$id")({
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/lessons/4/workouts/$id")({
       getInClassWorkoutById({
         data: { id: Number(params.id) },
       }),
-      getInClassExercisesServerFn(),
+      getExercisesServerFn(),
     ]);
 
     return {

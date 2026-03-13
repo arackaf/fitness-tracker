@@ -4,9 +4,8 @@ import { asc, desc, eq } from "drizzle-orm";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
-import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
 import { getDb } from "@/data/db";
+
 import {
   workout as workoutTable,
   exercises as exercisesTable,

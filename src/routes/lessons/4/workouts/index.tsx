@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getExercisesServerFn } from "@/server-functions/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
 export const Route = createFileRoute("/lessons/4/workouts/")({
@@ -9,7 +9,7 @@ export const Route = createFileRoute("/lessons/4/workouts/")({
   loader: async () => {
     const [workouts, exercises] = await Promise.all([
       getInClassWorkoutHistory(),
-      getInClassExercisesServerFn(),
+      getExercisesServerFn(),
     ]);
 
     return {
