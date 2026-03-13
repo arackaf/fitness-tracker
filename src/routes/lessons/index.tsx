@@ -4,7 +4,7 @@ export const Route = createFileRoute("/lessons/")({
   component: RouteComponent,
 });
 
-type LessonKey = "2" | "3" | "4" | "5" | "6" | "7";
+type LessonKey = "2" | "3" | "4" | "5" | "6" | "7" | "8";
 const lessonSummaryHeading: { [key in LessonKey]: string } = {
   2: "Loaders",
   3: "Loading data",
@@ -12,6 +12,7 @@ const lessonSummaryHeading: { [key in LessonKey]: string } = {
   5: "Data in layouts",
   6: "Streaming 1",
   7: "Streaming 2",
+  8: "Introducing TanStack Query",
 };
 
 function RouteComponent() {
