@@ -13,13 +13,15 @@ export const Route = createFileRoute("/lessons/8/workouts/")({
 });
 
 function RouteComponent() {
-  const [selectedExerciseId, setSelectedExerciseId] = useState<number | null>(null);
+  const [selectedExerciseId, setSelectedExerciseId] = useState<number | null>(
+    null,
+  );
 
-  const { data: exercises, isPending: isExercisesPending } = useQuery({
+  const { data: exercises, isLoading: isExercisesPending } = useQuery({
     queryKey: ["exercises"],
     queryFn: () => getExercisesServerFn(),
   });
-  const { data: workouts, isPending: isWorkoutsPending } = useQuery({
+  const { data: workouts, isLoading: isWorkoutsPending } = useQuery({
     queryKey: ["workouts"],
     queryFn: () => getInClassWorkoutHistory(),
   });
@@ -53,7 +55,9 @@ function RouteComponent() {
               <span>
                 (
                 {workout.exercises
-                  .map(exercise => exerciseLookup.get(exercise)?.name ?? exercise)
+                  .map(
+                    exercise => exerciseLookup.get(exercise)?.name ?? exercise,
+                  )
                   .join(", ")}
                 )
               </span>
