@@ -1,21 +1,19 @@
 import { useEffect, useMemo, useState, type FC } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
+import { getExercisesServerFn } from "@/server-functions/exercises";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
 
 type Workout = ArrayOf<Awaited<ReturnType<typeof getInClassWorkoutHistory>>>;
-type Exercise = ArrayOf<
-  Awaited<ReturnType<typeof getInClassExercisesServerFn>>
->;
+type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 
 export const Route = createFileRoute("/lessons/6/workouts/")({
   component: RouteComponent,
   loader: async () => {
     const workouts = getInClassWorkoutHistory();
-    const exercises = getInClassExercisesServerFn();
+    const exercises = getExercisesServerFn();
 
     return {
       workouts,

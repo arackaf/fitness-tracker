@@ -1,11 +1,11 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getExercisesServerFn } from "@/server-functions/exercises";
 
 export const Route = createFileRoute("/lessons/5/workouts")({
   component: RouteComponent,
   loader: async () => {
-    const exercises = await getInClassExercisesServerFn();
+    const exercises = await getExercisesServerFn();
 
     return {
       exercises,
@@ -16,9 +16,5 @@ export const Route = createFileRoute("/lessons/5/workouts")({
 });
 
 function RouteComponent() {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }

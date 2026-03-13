@@ -1,8 +1,8 @@
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { getInClassExercisesServerFn } from "@/server-functions/in-class/exercises";
+import { getExercisesServerFn } from "@/server-functions/exercises";
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
-import { useMemo } from "react";
 
 export const Route = createFileRoute("/lessons/7/workouts/$id")({
   component: RouteComponent,
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/lessons/7/workouts/$id")({
       getInClassWorkoutById({
         data: { id: Number(params.id) },
       }),
-      getInClassExercisesServerFn(),
+      getExercisesServerFn(),
     ]);
 
     return {

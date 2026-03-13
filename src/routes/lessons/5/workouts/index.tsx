@@ -1,10 +1,5 @@
 import { useMemo } from "react";
-import {
-  createFileRoute,
-  getRouteApi,
-  Link,
-  useLoaderData,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useLoaderData } from "@tanstack/react-router";
 
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 

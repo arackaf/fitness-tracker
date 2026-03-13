@@ -3,7 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { getExercises } from "@/data/exercises/get-exercises";
 
-const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
+export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
   async () => {
     return getExercises();
   },
