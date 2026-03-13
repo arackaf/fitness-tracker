@@ -1,7 +1,17 @@
+import { desc, eq, inArray } from "drizzle-orm";
+
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getWorkouts } from "@/data/workouts/get-workouts";
+import { getDb } from "@/data/db";
+
+import {
+  exercises as exercisesTable,
+  workout as workoutTable,
+  workoutSegment as workoutSegmentTable,
+  workoutSegmentExercise as workoutSegmentExerciseTable,
+} from "@/drizzle/schema";
 
 export const workoutHistoryQueryOptions = () => {
   return queryOptions({
@@ -60,3 +70,58 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
 
     return null;
   });
+
+export const getWorkoutsWithExerciseNames = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  const db = await getDb();
+  const workouts = await db
+    .select({
+      id: workoutTable.id,
+      name: workoutTable.name,
+      date: workoutTable.workoutDate,
+    })
+    .from(workoutTable)
+    .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
+    .limit(4);
+
+  if (workouts.length === 0) {
+    return [];
+  }
+
+  const workoutIds = workouts.map(workout => workout.id);
+  const workoutExerciseRows = await db
+    .select({
+      workoutId: workoutSegmentTable.workoutId,
+      exerciseName: exercisesTable.name,
+    })
+    .from(workoutSegmentTable)
+    .innerJoin(
+      workoutSegmentExerciseTable,
+      eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
+    )
+    .innerJoin(
+      exercisesTable,
+      eq(exercisesTable.id, workoutSegmentExerciseTable.exerciseId),
+    )
+    .where(inArray(workoutSegmentTable.workoutId, workoutIds))
+    .orderBy(desc(workoutSegmentTable.workoutId));
+
+  const exercisesByWorkoutId = new Map<number, string[]>();
+  for (const row of workoutExerciseRows) {
+    const existing = exercisesByWorkoutId.get(row.workoutId) ?? [];
+    if (!existing.includes(row.exerciseName)) {
+      existing.push(row.exerciseName);
+    }
+    exercisesByWorkoutId.set(row.workoutId, existing);
+  }
+
+  return workouts.map(workout => {
+    return {
+      id: workout.id,
+      name: workout.name,
+      date: workout.date,
+      exercises: exercisesByWorkoutId.get(workout.id) ?? [],
+    };
+  });
+});

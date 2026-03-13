@@ -5,10 +5,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ExerciseSelector } from "@/components/ExerciseSelector";
 import { Input } from "@/components/ui/input";
 import { getExercisesServerFn } from "@/server-functions/exercises";
-import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
+import { getWorkoutsWithExerciseNames } from "@/server-functions/in-class/workouts-simple";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
-type Workout = ArrayOf<Awaited<ReturnType<typeof getInClassWorkoutHistory>>>;
+type Workout = ArrayOf<
+  Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>
+>;
 type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 
 export const Route = createFileRoute("/lessons/8/workouts/")({
@@ -28,12 +30,8 @@ function RouteComponent() {
   });
   const { data: workouts, isLoading: isWorkoutsPending } = useQuery({
     queryKey: ["workouts"],
-    queryFn: () => getInClassWorkoutHistory(),
+    queryFn: () => getWorkoutsWithExerciseNames(),
   });
-
-  const exerciseLookup = useMemo(() => {
-    return new Map((exercises ?? []).map(exercise => [exercise.id, exercise]));
-  }, [exercises]);
 
   const selectedExercise = exercises?.find(
     exercise => exercise.id === selectedExerciseId,
@@ -61,11 +59,7 @@ function RouteComponent() {
         <span>Loading workouts...</span>
       ) : (
         workouts.map(workout => (
-          <WorkoutRow
-            key={workout.id}
-            workout={workout}
-            exerciseLookup={exerciseLookup}
-          />
+          <WorkoutRow key={workout.id} workout={workout} />
         ))
       )}
     </div>
@@ -81,21 +75,14 @@ const EditExercise: FC<{ exercise: Exercise }> = props => {
 
 const WorkoutRow: FC<{
   workout: Workout;
-  exerciseLookup: Map<number, Exercise>;
 }> = props => {
-  const { workout, exerciseLookup } = props;
+  const { workout } = props;
   return (
     <div>
       <span className="flex gap-2">
         <span>{workout.name}</span>
         <span>Exercises:</span>
-        <span>
-          (
-          {workout.exercises
-            .map(exercise => exerciseLookup.get(exercise)?.name ?? exercise)
-            .join(", ")}
-          )
-        </span>
+        <span>({workout.exercises.join(", ")})</span>
       </span>
     </div>
   );
