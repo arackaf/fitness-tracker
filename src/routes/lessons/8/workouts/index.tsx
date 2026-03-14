@@ -119,10 +119,11 @@ const WorkoutRow: FC<{
 
   return (
     <div>
-      <span className="flex gap-2">
-        <span>{workout.name}</span>
-        <span>Exercises:</span>
-        <span>({workout.exercises.join(", ")})</span>
+      <div className="flex items-start gap-2">
+        <div className="flex flex-col gap-1">
+          <span>{workout.name}</span>
+          <span>Exercises: ({workout.exercises.join(", ")})</span>
+        </div>
         <Button
           type="button"
           className="ml-auto"
@@ -132,7 +133,7 @@ const WorkoutRow: FC<{
         >
           Edit
         </Button>
-      </span>
+      </div>
       {isEditing ? <ViewWorkout workoutId={workout.id} /> : null}
     </div>
   );
