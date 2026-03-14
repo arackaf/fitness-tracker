@@ -125,8 +125,9 @@ const EditExercise: FC<EditExerciseProps> = props => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.invalidateQueries({ queryKey: ["workout"] });
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
+      queryClient.invalidateQueries({ queryKey: ["workout"], exact: false });
+
       onSaved();
     },
   });
