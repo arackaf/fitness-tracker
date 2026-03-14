@@ -5,6 +5,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getDb } from "@/data/db";
 import { getExercises } from "@/data/exercises/get-exercises";
 import { exercises as exercisesTable } from "@/drizzle/schema";
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 
 export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -30,6 +31,7 @@ type EditExerciseInput = {
 export const editExercise = createServerFn({ method: "POST" })
   .inputValidator((input: EditExerciseInput) => input)
   .handler(async ({ data }) => {
+    await new Promise(resolve => setTimeout(resolve, DELAY_MS));
     const name = data.name.trim();
     if (!name) {
       throw new Error("Exercise name is required.");
