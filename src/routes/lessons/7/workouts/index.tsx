@@ -67,7 +67,7 @@ const RouteContents: FC<{
               )
             </span>
             <Link
-              to={`/lessons/5/workouts/$id`}
+              to={`/lessons/7/workouts/$id`}
               params={{ id: String(workout.id) }}
               className="ml-auto"
               preload={false}

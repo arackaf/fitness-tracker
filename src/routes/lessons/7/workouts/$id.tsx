@@ -22,8 +22,8 @@ export const Route = createFileRoute("/lessons/7/workouts/$id")({
       exercises,
     };
   },
-  gcTime: 0,
-  staleTime: 0,
+  gcTime: 1000 * 5,
+  staleTime: 1000 * 5,
 });
 
 function RouteComponent() {
@@ -56,7 +56,7 @@ const RouteContents: FC<{
     <>
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
-        <Link to="/lessons/5/workouts" className="ml-auto" preload={false}>
+        <Link to="/lessons/7/workouts" className="ml-auto" preload={false}>
           Back
         </Link>
       </div>
