@@ -1,11 +1,19 @@
 import { useRef, useState, type FC } from "react";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ExerciseSelector } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getExercisesServerFn } from "@/server-functions/exercises";
+import {
+  editExercise,
+  getExercisesServerFn,
+} from "@/server-functions/exercises";
 import { getWorkoutsWithExerciseNames } from "@/server-functions/in-class/workouts-simple";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
@@ -13,18 +21,6 @@ type Workout = ArrayOf<
   Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>
 >;
 type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
-
-const singleWorkoutQueryOptions = (workoutId: number) =>
-  queryOptions({
-    queryKey: ["workouts", workoutId],
-    queryFn: async () => {
-      const workouts = await getWorkoutsWithExerciseNames({
-        data: { id: workoutId },
-      });
-
-      return workouts[0] ?? null;
-    },
-  });
 
 export const Route = createFileRoute("/lessons/8/workouts/")({
   component: RouteComponent,
@@ -82,8 +78,37 @@ function RouteComponent() {
 const EditExercise: FC<{ exercise: Exercise }> = props => {
   const { exercise } = props;
   const exerciseNameInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
+  const { mutateAsync: editExerciseMutation, isPending } = useMutation({
+    mutationFn: async (name: string) => {
+      await editExercise({
+        data: {
+          id: exercise.id,
+          name,
+        },
+      });
+    },
+    onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workouts"] });
+    },
+  });
 
-  return <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />;
+  return (
+    <div className="flex flex-col gap-2">
+      <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />
+      <Button
+        type="button"
+        disabled={isPending}
+        onClick={async () => {
+          const name = exerciseNameInputRef.current?.value ?? "";
+          await editExerciseMutation(name);
+        }}
+      >
+        {isPending ? "Saving..." : "Edit"}
+      </Button>
+    </div>
+  );
 };
 
 const WorkoutRow: FC<{
@@ -115,9 +140,16 @@ const WorkoutRow: FC<{
 
 const ViewWorkout: FC<{ workoutId: number }> = props => {
   const { workoutId } = props;
-  const { data: workout, isLoading } = useQuery(
-    singleWorkoutQueryOptions(workoutId),
-  );
+  const { data: workout, isLoading } = useQuery({
+    queryKey: ["workouts", workoutId],
+    queryFn: async () => {
+      const workouts = await getWorkoutsWithExerciseNames({
+        data: { id: workoutId },
+      });
+
+      return workouts[0] ?? null;
+    },
+  });
 
   return (
     <div className="ml-8 mt-2">
