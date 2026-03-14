@@ -28,6 +28,10 @@ function RouteComponent() {
     exercisesQueryOptions(),
   );
 
+  const exerciseLookup = useMemo(() => {
+    return new Map(exercises?.map(exercise => [exercise.id, exercise]) ?? []);
+  }, [exercises]);
+
   if (isWorkoutLoading || isExercisesLoading || !workout || !exercises) {
     return (
       <div className="flex flex-col gap-4">
@@ -35,10 +39,6 @@ function RouteComponent() {
       </div>
     );
   }
-
-  const exerciseLookup = useMemo(() => {
-    return new Map(exercises.map(exercise => [exercise.id, exercise]));
-  }, [exercises]);
 
   return (
     <div className="flex flex-col gap-4">
