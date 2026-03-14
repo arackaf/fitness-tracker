@@ -12,6 +12,7 @@ import {
   workoutSegment as workoutSegmentTable,
   workoutSegmentExercise as workoutSegmentExerciseTable,
 } from "@/drizzle/schema";
+import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 
 export const workoutHistoryQueryOptions = () => {
   return queryOptions({
@@ -73,55 +74,69 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
 
 export const getWorkoutsWithExerciseNames = createServerFn({
   method: "GET",
-}).handler(async () => {
-  const db = await getDb();
-  const workouts = await db
-    .select({
-      id: workoutTable.id,
-      name: workoutTable.name,
-      date: workoutTable.workoutDate,
-    })
-    .from(workoutTable)
-    .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
-    .limit(4);
+})
+  .inputValidator((input: { id?: number } | undefined) => input)
+  .handler(async ({ data }) => {
+    await new Promise(resolve => setTimeout(resolve, DELAY_MS));
 
-  if (workouts.length === 0) {
-    return [];
-  }
+    const db = await getDb();
 
-  const workoutIds = workouts.map(workout => workout.id);
-  const workoutExerciseRows = await db
-    .select({
-      workoutId: workoutSegmentTable.workoutId,
-      exerciseName: exercisesTable.name,
-    })
-    .from(workoutSegmentTable)
-    .innerJoin(
-      workoutSegmentExerciseTable,
-      eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
+    const workoutsBaseQuery = db
+      .select({
+        id: workoutTable.id,
+        name: workoutTable.name,
+        date: workoutTable.workoutDate,
+      })
+      .from(workoutTable);
+
+    const workouts = await (
+      data?.id !== undefined
+        ? workoutsBaseQuery.where(eq(workoutTable.id, data.id))
+        : workoutsBaseQuery
     )
-    .innerJoin(
-      exercisesTable,
-      eq(exercisesTable.id, workoutSegmentExerciseTable.exerciseId),
-    )
-    .where(inArray(workoutSegmentTable.workoutId, workoutIds))
-    .orderBy(desc(workoutSegmentTable.workoutId));
+      .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
+      .limit(4);
 
-  const exercisesByWorkoutId = new Map<number, string[]>();
-  for (const row of workoutExerciseRows) {
-    const existing = exercisesByWorkoutId.get(row.workoutId) ?? [];
-    if (!existing.includes(row.exerciseName)) {
-      existing.push(row.exerciseName);
+    if (workouts.length === 0) {
+      return [];
     }
-    exercisesByWorkoutId.set(row.workoutId, existing);
-  }
 
-  return workouts.map(workout => {
-    return {
-      id: workout.id,
-      name: workout.name,
-      date: workout.date,
-      exercises: exercisesByWorkoutId.get(workout.id) ?? [],
-    };
+    const workoutIds = workouts.map(workout => workout.id);
+    const workoutExerciseRows = await db
+      .select({
+        workoutId: workoutSegmentTable.workoutId,
+        exerciseName: exercisesTable.name,
+      })
+      .from(workoutSegmentTable)
+      .innerJoin(
+        workoutSegmentExerciseTable,
+        eq(
+          workoutSegmentExerciseTable.workoutSegmentId,
+          workoutSegmentTable.id,
+        ),
+      )
+      .innerJoin(
+        exercisesTable,
+        eq(exercisesTable.id, workoutSegmentExerciseTable.exerciseId),
+      )
+      .where(inArray(workoutSegmentTable.workoutId, workoutIds))
+      .orderBy(desc(workoutSegmentTable.workoutId));
+
+    const exercisesByWorkoutId = new Map<number, string[]>();
+    for (const row of workoutExerciseRows) {
+      const existing = exercisesByWorkoutId.get(row.workoutId) ?? [];
+      if (!existing.includes(row.exerciseName)) {
+        existing.push(row.exerciseName);
+      }
+      exercisesByWorkoutId.set(row.workoutId, existing);
+    }
+
+    return workouts.map(workout => {
+      return {
+        id: workout.id,
+        name: workout.name,
+        date: workout.date,
+        exercises: exercisesByWorkoutId.get(workout.id) ?? [],
+      };
+    });
   });
-});

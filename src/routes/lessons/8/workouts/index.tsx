@@ -1,8 +1,9 @@
-import { useMemo, useRef, useState, type FC } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useRef, useState, type FC } from "react";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ExerciseSelector } from "@/components/ExerciseSelector";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getExercisesServerFn } from "@/server-functions/exercises";
 import { getWorkoutsWithExerciseNames } from "@/server-functions/in-class/workouts-simple";
@@ -12,6 +13,18 @@ type Workout = ArrayOf<
   Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>
 >;
 type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
+
+const singleWorkoutQueryOptions = (workoutId: number) =>
+  queryOptions({
+    queryKey: ["workouts", workoutId],
+    queryFn: async () => {
+      const workouts = await getWorkoutsWithExerciseNames({
+        data: { id: workoutId },
+      });
+
+      return workouts[0] ?? null;
+    },
+  });
 
 export const Route = createFileRoute("/lessons/8/workouts/")({
   component: RouteComponent,
@@ -77,13 +90,49 @@ const WorkoutRow: FC<{
   workout: Workout;
 }> = props => {
   const { workout } = props;
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div>
       <span className="flex gap-2">
         <span>{workout.name}</span>
         <span>Exercises:</span>
         <span>({workout.exercises.join(", ")})</span>
+        <Button
+          type="button"
+          className="ml-auto"
+          onClick={() => {
+            setIsEditing(true);
+          }}
+        >
+          Edit
+        </Button>
       </span>
+      {isEditing ? <ViewWorkout workoutId={workout.id} /> : null}
+    </div>
+  );
+};
+
+const ViewWorkout: FC<{ workoutId: number }> = props => {
+  const { workoutId } = props;
+  const { data: workout, isLoading } = useQuery(
+    singleWorkoutQueryOptions(workoutId),
+  );
+
+  return (
+    <div className="ml-8 mt-2">
+      {isLoading ? (
+        <span>Loading workout...</span>
+      ) : !workout ? (
+        <span>Workout not found.</span>
+      ) : (
+        <div className="flex flex-col gap-1">
+          <span>ID: {workout.id}</span>
+          <span>Name: {workout.name}</span>
+          <span>Date: {new Date(workout.date).toLocaleDateString()}</span>
+          <span>Exercises: {workout.exercises.join(", ")}</span>
+        </div>
+      )}
     </div>
   );
 };
