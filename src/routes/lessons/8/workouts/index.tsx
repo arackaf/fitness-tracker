@@ -38,7 +38,11 @@ function RouteComponent() {
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
-  const { data: workouts, isLoading: isWorkoutsPending } = useQuery({
+  const {
+    data: workouts,
+    isLoading: isWorkoutsPending,
+    isFetching: isWorkoutsFetching,
+  } = useQuery({
     queryKey: ["workouts"],
     queryFn: () => getWorkoutsWithExerciseNames(),
     staleTime: 1000 * 60 * 5,
@@ -85,9 +89,17 @@ function RouteComponent() {
       {isWorkoutsPending || !workouts ? (
         <span>Loading workouts...</span>
       ) : (
-        workouts.map(workout => (
-          <WorkoutRow key={workout.id} workout={workout} />
-        ))
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl">Workouts</h1>
+            {isWorkoutsFetching ? (
+              <span className="text-blue-500">Refreshing ...</span>
+            ) : null}
+          </div>
+          {workouts.map(workout => (
+            <WorkoutRow key={workout.id} workout={workout} />
+          ))}
+        </div>
       )}
     </div>
   );
@@ -173,7 +185,11 @@ const WorkoutRow: FC<{
 
 const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
   const { workoutId, onDone } = props;
-  const { data: workout, isLoading } = useQuery({
+  const {
+    data: workout,
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ["workout", workoutId],
     queryFn: async () => {
       const workouts = await getWorkoutsWithExerciseNames({
@@ -198,14 +214,19 @@ const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
           <span>Name: {workout.name}</span>
           <span>Date: {new Date(workout.date).toLocaleDateString()}</span>
           <span>Exercises: {workout.exercises.join(", ")}</span>
-          <Button
-            size="sm"
-            className="self-start"
-            type="button"
-            onClick={onDone}
-          >
-            Done
-          </Button>
+          <div className="flex gap-2 items-center">
+            <Button
+              size="sm"
+              className="self-start"
+              type="button"
+              onClick={onDone}
+            >
+              Done
+            </Button>
+            {isFetching ? (
+              <span className="text-blue-500">Refreshing ...</span>
+            ) : null}
+          </div>
         </div>
       )}
     </div>
