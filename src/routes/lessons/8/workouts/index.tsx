@@ -36,10 +36,14 @@ function RouteComponent() {
   const { data: exercises, isLoading: isExercisesPending } = useQuery({
     queryKey: ["exercises"],
     queryFn: () => getExercisesServerFn(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });
   const { data: workouts, isLoading: isWorkoutsPending } = useQuery({
     queryKey: ["workouts"],
     queryFn: () => getWorkoutsWithExerciseNames(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });
 
   const selectedExercise = exercises?.find(
@@ -90,6 +94,7 @@ const EditExercise: FC<{ exercise: Exercise }> = props => {
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      queryClient.invalidateQueries({ queryKey: ["workout"] });
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
     },
   });
@@ -149,7 +154,7 @@ const WorkoutRow: FC<{
 const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
   const { workoutId, onDone } = props;
   const { data: workout, isLoading } = useQuery({
-    queryKey: ["workouts", workoutId],
+    queryKey: ["workout", workoutId],
     queryFn: async () => {
       const workouts = await getWorkoutsWithExerciseNames({
         data: { id: workoutId },
@@ -157,6 +162,8 @@ const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
 
       return workouts[0] ?? null;
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
   });
 
   return (
@@ -171,11 +178,16 @@ const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
           <span>Name: {workout.name}</span>
           <span>Date: {new Date(workout.date).toLocaleDateString()}</span>
           <span>Exercises: {workout.exercises.join(", ")}</span>
+          <Button
+            size="sm"
+            className="self-start"
+            type="button"
+            onClick={onDone}
+          >
+            Done
+          </Button>
         </div>
       )}
-      <Button size="sm" className="self-start" type="button" onClick={onDone}>
-        Done
-      </Button>
     </div>
   );
 };
