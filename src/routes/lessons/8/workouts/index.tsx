@@ -28,7 +28,11 @@ function RouteComponent() {
     null,
   );
 
-  const { data: exercises, isLoading: isExercisesPending } = useQuery({
+  const {
+    data: exercises,
+    isLoading: isExercisesLoading,
+    isFetching: isExercisesFetching,
+  } = useQuery({
     queryKey: ["exercises"],
     queryFn: () => getExercisesServerFn(),
     staleTime: 1000 * 60 * 5,
@@ -48,19 +52,34 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4">
       <h1>Workouts</h1>
-      {isExercisesPending || !exercises ? (
+      {isExercisesLoading || !exercises ? (
         <span>Loading exercises...</span>
       ) : (
-        <ExerciseSelector
-          value={selectedExerciseId}
-          exercises={exercises}
-          onSelect={exerciseId => {
-            setSelectedExerciseId(exerciseId);
-          }}
-        />
+        <div className="flex items-center gap-4">
+          <div className="w-1/2">
+            <ExerciseSelector
+              value={selectedExerciseId}
+              exercises={exercises}
+              onSelect={exerciseId => {
+                setSelectedExerciseId(exerciseId);
+              }}
+            />
+          </div>
+          {isExercisesFetching ? (
+            <div className="w-1/2">
+              <span className="text-blue-500">Refreshing ...</span>
+            </div>
+          ) : null}
+        </div>
       )}
       {selectedExercise ? (
-        <EditExercise key={selectedExercise.id} exercise={selectedExercise} />
+        <EditExercise
+          onSaved={() => {
+            setSelectedExerciseId(null);
+          }}
+          key={selectedExercise.id}
+          exercise={selectedExercise}
+        />
       ) : null}
       <div className="border-t" />
       {isWorkoutsPending || !workouts ? (
@@ -74,8 +93,13 @@ function RouteComponent() {
   );
 }
 
-const EditExercise: FC<{ exercise: Exercise }> = props => {
-  const { exercise } = props;
+type EditExerciseProps = {
+  exercise: Exercise;
+  onSaved: () => void;
+};
+
+const EditExercise: FC<EditExerciseProps> = props => {
+  const { exercise, onSaved } = props;
   const exerciseNameInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { mutateAsync: editExerciseMutation, isPending } = useMutation({
@@ -91,6 +115,7 @@ const EditExercise: FC<{ exercise: Exercise }> = props => {
       queryClient.invalidateQueries({ queryKey: ["exercises"] });
       queryClient.invalidateQueries({ queryKey: ["workout"] });
       queryClient.invalidateQueries({ queryKey: ["workouts"] });
+      onSaved();
     },
   });
 
