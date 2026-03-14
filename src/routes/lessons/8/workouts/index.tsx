@@ -156,7 +156,7 @@ const WorkoutRow: FC<{
             setIsEditing(true);
           }}
         >
-          Edit
+          View
         </Button>
       </div>
       {isEditing ? (
@@ -182,8 +182,8 @@ const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
 
       return workouts[0] ?? null;
     },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
+    staleTime: 1000 * 3,
+    gcTime: 1000 * 6,
   });
 
   return (
