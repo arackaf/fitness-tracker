@@ -22,8 +22,8 @@ export const Route = createFileRoute("/lessons/7/workouts/$id")({
       exercises,
     };
   },
-  gcTime: 1000 * 5,
-  staleTime: 1000 * 5,
+  gcTime: 0,
+  staleTime: 0,
 });
 
 function RouteComponent() {
