@@ -1,10 +1,5 @@
 import { useRef, useState, type FC } from "react";
-import {
-  queryOptions,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ExerciseSelector } from "@/components/ExerciseSelector";
