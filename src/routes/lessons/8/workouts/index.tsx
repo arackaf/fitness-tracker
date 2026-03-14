@@ -134,13 +134,20 @@ const WorkoutRow: FC<{
           Edit
         </Button>
       </div>
-      {isEditing ? <ViewWorkout workoutId={workout.id} /> : null}
+      {isEditing ? (
+        <ViewWorkout
+          workoutId={workout.id}
+          onDone={() => {
+            setIsEditing(false);
+          }}
+        />
+      ) : null}
     </div>
   );
 };
 
-const ViewWorkout: FC<{ workoutId: number }> = props => {
-  const { workoutId } = props;
+const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
+  const { workoutId, onDone } = props;
   const { data: workout, isLoading } = useQuery({
     queryKey: ["workouts", workoutId],
     queryFn: async () => {
@@ -153,7 +160,7 @@ const ViewWorkout: FC<{ workoutId: number }> = props => {
   });
 
   return (
-    <div className="ml-8 mt-2">
+    <div className="ml-8 mt-2 flex flex-col gap-2">
       {isLoading ? (
         <span>Loading workout...</span>
       ) : !workout ? (
@@ -166,6 +173,9 @@ const ViewWorkout: FC<{ workoutId: number }> = props => {
           <span>Exercises: {workout.exercises.join(", ")}</span>
         </div>
       )}
+      <Button size="sm" className="self-start" type="button" onClick={onDone}>
+        Done
+      </Button>
     </div>
   );
 };
