@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useState, useTransition } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/lessons/10/workouts/")({
 function RouteComponent() {
   return (
     <div className="flex flex-col gap-4">
+      <h1>Workouts</h1>
       <Suspense fallback={<span>Loading...</span>}>
         <WorkoutsListContent />
       </Suspense>
@@ -30,8 +31,11 @@ function RouteComponent() {
 
 function WorkoutsListContent() {
   const [page, setPage] = useState(1);
-  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions(page));
+  const { data: workoutsPayload } = useSuspenseQuery(
+    workoutHistoryQueryOptions(page),
+  );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const [isPending, startTransition] = useTransition();
 
   const exerciseLookup = useMemo(() => {
     return new Map(exercises.map(exercise => [exercise.id, exercise]));
@@ -39,7 +43,6 @@ function WorkoutsListContent() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1>Workouts</h1>
       {workoutsPayload.workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">
@@ -63,19 +66,28 @@ function WorkoutsListContent() {
           </span>
         </div>
       ))}
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <Button
-          onClick={() => setPage(currentPage => currentPage - 1)}
+          onClick={() => {
+            startTransition(() => {
+              setPage(currentPage => currentPage - 1);
+            });
+          }}
           disabled={workoutsPayload.page <= 1}
         >
           Previous
         </Button>
         <Button
-          onClick={() => setPage(currentPage => currentPage + 1)}
+          onClick={() => {
+            startTransition(() => {
+              setPage(currentPage => currentPage + 1);
+            });
+          }}
           disabled={!workoutsPayload.hasNextPage}
         >
           Next
         </Button>
+        {isPending ? <span>Loading...</span> : null}
       </div>
     </div>
   );
