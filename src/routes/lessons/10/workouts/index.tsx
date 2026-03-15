@@ -1,7 +1,8 @@
-import { Suspense, useMemo } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/in-class/workouts-simple";
 
@@ -28,7 +29,8 @@ function RouteComponent() {
 }
 
 function WorkoutsListContent() {
-  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions());
+  const [page, setPage] = useState(1);
+  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions(page));
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
   const exerciseLookup = useMemo(() => {
@@ -61,6 +63,20 @@ function WorkoutsListContent() {
           </span>
         </div>
       ))}
+      <div className="flex gap-2">
+        <Button
+          onClick={() => setPage(currentPage => currentPage - 1)}
+          disabled={workoutsPayload.page <= 1}
+        >
+          Previous
+        </Button>
+        <Button
+          onClick={() => setPage(currentPage => currentPage + 1)}
+          disabled={!workoutsPayload.hasNextPage}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }
