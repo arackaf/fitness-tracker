@@ -6,10 +6,10 @@ import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-s
 export const Route = createFileRoute("/lessons/5/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const workouts = await getInClassWorkoutHistory();
+    const workoutsPayload = await getInClassWorkoutHistory();
 
     return {
-      workouts,
+      workouts: workoutsPayload.workouts,
     };
   },
   pendingComponent: () => <div>Loading...</div>,

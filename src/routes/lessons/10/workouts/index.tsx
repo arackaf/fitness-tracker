@@ -28,7 +28,7 @@ function RouteComponent() {
 }
 
 function WorkoutsListContent() {
-  const { data: workouts } = useSuspenseQuery(workoutHistoryQueryOptions());
+  const { data: workoutsPayload } = useSuspenseQuery(workoutHistoryQueryOptions());
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
 
   const exerciseLookup = useMemo(() => {
@@ -38,7 +38,7 @@ function WorkoutsListContent() {
   return (
     <div className="flex flex-col gap-4">
       <h1>Workouts</h1>
-      {workouts.map(workout => (
+      {workoutsPayload.workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">
             <span>{workout.name}</span>

@@ -34,16 +34,19 @@ export const getInClassWorkoutHistory = createServerFn({
       page: data?.page ?? 1,
     });
 
-    return payload.workouts.map(workout => {
-      return {
-        id: workout.id,
-        name: workout.name,
-        date: workout.workoutDate,
-        exercises: workout.segments.flatMap(segment =>
-          segment.exercises.map(exercise => exercise.exerciseId),
-        ),
-      };
-    });
+    return {
+      ...payload,
+      workouts: payload.workouts.map(workout => {
+        return {
+          id: workout.id,
+          name: workout.name,
+          date: workout.workoutDate,
+          exercises: workout.segments.flatMap(segment =>
+            segment.exercises.map(exercise => exercise.exerciseId),
+          ),
+        };
+      }),
+    };
   });
 
 export const workoutByIdQueryOptions = (id: number) =>

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/lessons/9/workouts/")({
 });
 
 function RouteComponent() {
-  const { data: workouts, isLoading: isWorkoutsLoading } = useQuery(
+  const { data: workoutsPayload, isLoading: isWorkoutsLoading } = useQuery(
     workoutHistoryQueryOptions(),
   );
   const { data: exercises, isLoading: isExercisesLoading } = useQuery(
@@ -29,7 +29,12 @@ function RouteComponent() {
     return new Map(exercises?.map(exercise => [exercise.id, exercise]) ?? []);
   }, [exercises]);
 
-  if (isWorkoutsLoading || isExercisesLoading || !workouts || !exercises) {
+  if (
+    isWorkoutsLoading ||
+    isExercisesLoading ||
+    !workoutsPayload ||
+    !exercises
+  ) {
     return (
       <div className="flex flex-col gap-4">
         <h1>Workouts</h1>
@@ -41,7 +46,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4">
       <h1>Workouts</h1>
-      {workouts.map(workout => (
+      {workoutsPayload.workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">
             <span>{workout.name}</span>

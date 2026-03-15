@@ -4,10 +4,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 import { getExercisesServerFn } from "@/server-functions/exercises";
 
-type ArrayOf<T> = T extends Array<infer U> ? U : never;
-
-type Workout = ArrayOf<Awaited<ReturnType<typeof getInClassWorkoutHistory>>>;
-type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
+type WorkoutHistoryPayload = Awaited<
+  ReturnType<typeof getInClassWorkoutHistory>
+>;
+type Workout = WorkoutHistoryPayload["workouts"][number];
+type Exercise = Awaited<ReturnType<typeof getExercisesServerFn>>[number];
 
 export const Route = createFileRoute("/lessons/6/workouts/")({
   component: RouteComponent,
@@ -33,8 +34,8 @@ function RouteComponent() {
 
   useEffect(() => {
     Promise.all([workoutsPromise, exercisesPromise]).then(
-      ([workouts, exercises]) => {
-        setWorkouts(workouts);
+      ([workoutsPayload, exercises]) => {
+        setWorkouts(workoutsPayload.workouts);
         setExercises(exercises);
       },
     );

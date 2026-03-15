@@ -4,10 +4,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { getExercisesServerFn } from "@/server-functions/exercises";
 import { getInClassWorkoutHistory } from "@/server-functions/in-class/workouts-simple";
 
-type ArrayOf<T> = T extends Array<infer U> ? U : never;
-
-type Workout = ArrayOf<Awaited<ReturnType<typeof getInClassWorkoutHistory>>>;
-type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
+type WorkoutHistoryPayload = Awaited<
+  ReturnType<typeof getInClassWorkoutHistory>
+>;
+type Workout = WorkoutHistoryPayload["workouts"][number];
+type Exercise = Awaited<ReturnType<typeof getExercisesServerFn>>[number];
 
 export const Route = createFileRoute("/lessons/7/workouts/")({
   component: RouteComponent,
@@ -42,10 +43,10 @@ function RouteComponent() {
 }
 
 const RouteContents: FC<{
-  workoutsPromise: Promise<Workout[]>;
+  workoutsPromise: Promise<WorkoutHistoryPayload>;
   exercisesPromise: Promise<Exercise[]>;
 }> = ({ workoutsPromise, exercisesPromise }) => {
-  const workouts = use(workoutsPromise);
+  const workoutsPayload = use(workoutsPromise);
   const exercises = use(exercisesPromise);
 
   const exerciseLookup = useMemo(() => {
@@ -54,7 +55,7 @@ const RouteContents: FC<{
 
   return (
     <>
-      {workouts.map(workout => (
+      {workoutsPayload.workouts.map(workout => (
         <div key={workout.id}>
           <span className="flex gap-2">
             <span>{workout.name}</span>
