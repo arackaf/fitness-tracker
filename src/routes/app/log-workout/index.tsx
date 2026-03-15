@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -27,6 +27,20 @@ function RouteComponent() {
 }
 
 function RouteContent() {
+  const [formResetKey, setFormResetKey] = useState(0);
+
+  return (
+    <Fragment key={formResetKey}>
+      <WorkoutFormContent onSaved={() => setFormResetKey(key => key + 1)} />
+    </Fragment>
+  );
+}
+
+type WorkoutFormContentProps = {
+  onSaved: () => void;
+};
+
+function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [isSaving, setIsSaving] = useState(false);
 
@@ -35,6 +49,7 @@ function RouteContent() {
 
     try {
       await saveWorkout({ data: state });
+      onSaved();
     } finally {
       setIsSaving(false);
     }
