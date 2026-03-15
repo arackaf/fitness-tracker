@@ -14,11 +14,11 @@ import {
 } from "@/drizzle/schema";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 
-export const workoutHistoryQueryOptions = () => {
+export const workoutHistoryQueryOptions = (page: number = 1) => {
   return queryOptions({
-    queryKey: ["workouts"],
+    queryKey: ["workouts", page],
     queryFn: () => {
-      return getInClassWorkoutHistory();
+      return getInClassWorkoutHistory({ data: { page } });
     },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
@@ -27,22 +27,24 @@ export const workoutHistoryQueryOptions = () => {
 
 export const getInClassWorkoutHistory = createServerFn({
   method: "GET",
-}).handler(async () => {
-  const payload = await getWorkouts({
-    page: 1,
-  });
+})
+  .inputValidator((input: { page?: number } | undefined) => input)
+  .handler(async ({ data }) => {
+    const payload = await getWorkouts({
+      page: data?.page ?? 1,
+    });
 
-  return payload.workouts.map(workout => {
-    return {
-      id: workout.id,
-      name: workout.name,
-      date: workout.workoutDate,
-      exercises: workout.segments.flatMap(segment =>
-        segment.exercises.map(exercise => exercise.exerciseId),
-      ),
-    };
+    return payload.workouts.map(workout => {
+      return {
+        id: workout.id,
+        name: workout.name,
+        date: workout.workoutDate,
+        exercises: workout.segments.flatMap(segment =>
+          segment.exercises.map(exercise => exercise.exerciseId),
+        ),
+      };
+    });
   });
-});
 
 export const workoutByIdQueryOptions = (id: number) =>
   queryOptions({
