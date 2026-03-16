@@ -7,6 +7,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import type { MuscleGroup } from "@/data/types";
 
 export const Route = createFileRoute("/app/admin/exercises")({
   loader: ({ context }) => {
@@ -27,9 +28,13 @@ function RouteComponent() {
 function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<string[]>(
+  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<number[]>(
     [],
   );
+
+  const muscleGroupLookup = useMemo(() => {
+    return new Map(muscleGroups.map(group => [group.id, group]));
+  }, [muscleGroups]);
 
   const filteredExercises = useMemo(() => {
     if (!selectedMuscleGroups.length) {
@@ -43,13 +48,13 @@ function RouteContent() {
     );
   }, [exercises, selectedMuscleGroups]);
 
-  const toggleMuscleGroup = (muscleGroup: string, checked: boolean) => {
+  const toggleMuscleGroup = (muscleGroup: MuscleGroup, checked: boolean) => {
     setSelectedMuscleGroups(current =>
       checked
-        ? current.includes(muscleGroup)
+        ? current.includes(muscleGroup.id)
           ? current
-          : [...current, muscleGroup]
-        : current.filter(group => group !== muscleGroup),
+          : [...current, muscleGroup.id]
+        : current.filter(group => group !== muscleGroup.id),
     );
   };
 
@@ -61,7 +66,10 @@ function RouteContent() {
         onToggleMuscleGroup={toggleMuscleGroup}
       />
 
-      <ExerciseListDisplay exercises={filteredExercises} />
+      <ExerciseListDisplay
+        exercises={filteredExercises}
+        muscleGroups={muscleGroups}
+      />
     </>
   );
 }

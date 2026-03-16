@@ -9,17 +9,19 @@ import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import { cn } from "@/lib/utils";
 
 import { Checkbox } from "../ui/checkbox";
+import type { MuscleGroup } from "@/data/types";
 
 type WorkoutTemplateSegmentExercisesProps = {
   form: WorkoutTemplateForm;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
   segmentIndex: number;
   segmentSets: number;
 };
 
 export const WorkoutTemplateSegmentExercises: FC<
   WorkoutTemplateSegmentExercisesProps
-> = ({ form, exercises, segmentIndex, segmentSets }) => {
+> = ({ form, exercises, muscleGroups, segmentIndex, segmentSets }) => {
   return (
     <form.Field
       mode="array"
@@ -46,6 +48,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                       <ExerciseSelector
                         value={segmentExercise.state.value ?? null}
                         exercises={exercises}
+                        muscleGroups={muscleGroups}
                         onSelect={exerciseId => {
                           segmentExercise.handleChange(exerciseId);
                         }}

@@ -14,6 +14,8 @@ import {
 } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
+import type { MuscleGroup } from "@/data/types";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({
   loader: ({ context, params }) => {
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/app/workouts/edit/$id/")({
 
     context.queryClient.ensureQueryData(workoutByIdQueryOptions(workoutId));
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
   component: RouteComponent,
 });
@@ -61,6 +64,7 @@ function RouteContent() {
     workoutByIdQueryOptions(workoutId),
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
   useEffect(() => {
     if (workout == null || workout.id == null) {
@@ -75,17 +79,25 @@ function RouteContent() {
     return null;
   }
 
-  return <WorkoutDetailForm workout={workout} exercises={exercises} />;
+  return (
+    <WorkoutDetailForm
+      workout={workout}
+      exercises={exercises}
+      muscleGroups={muscleGroups}
+    />
+  );
 }
 
 type WorkoutDetailFormProps = {
   workout: WorkoutState;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
 };
 
 const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
   workout,
   exercises,
+  muscleGroups,
 }) => {
   const [isSaving, setIsSaving] = useState(false);
 
@@ -113,7 +125,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Workout form={form} exercises={exercises} />
+      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Update workout"}

@@ -10,10 +10,12 @@ import { createDefaultWorkout } from "@/data/workout-templates/workout-state";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/admin/workout-templates/create/")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
   component: RouteComponent,
 });
@@ -28,6 +30,7 @@ function RouteComponent() {
 
 function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
   const [isSaving, setIsSaving] = useState(false);
   const form = useWorkoutTemplateForm(async state => {
     setIsSaving(true);
@@ -48,7 +51,11 @@ function RouteContent() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <WorkoutTemplate form={form} exercises={exercises} />
+      <WorkoutTemplate
+        form={form}
+        exercises={exercises}
+        muscleGroups={muscleGroups}
+      />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout template"}

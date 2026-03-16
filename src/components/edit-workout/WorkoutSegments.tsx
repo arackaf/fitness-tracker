@@ -8,15 +8,18 @@ import { createDefaultSegment } from "@/data/workouts/workout-state";
 import type { WorkoutForm } from "@/lib/workout-form";
 
 import { WorkoutSegmentExercises } from "./WorkoutSegmentExercises";
+import type { MuscleGroup } from "@/data/types";
 
 type WorkoutSegmentsProps = {
   form: WorkoutForm;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
 };
 
 export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
   form,
   exercises,
+  muscleGroups,
 }) => {
   return (
     <form.Field
@@ -118,6 +121,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
               <WorkoutSegmentExercises
                 form={form}
                 exercises={exercises}
+                muscleGroups={muscleGroups}
                 segmentIndex={segmentIndex}
                 segmentSets={segmentsField.state.value[segmentIndex].sets}
               />
