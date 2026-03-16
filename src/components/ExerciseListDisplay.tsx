@@ -1,3 +1,6 @@
+import type { MuscleGroup } from "@/data/types";
+import { useMemo, type FC } from "react";
+
 type ExerciseListDisplayItem = {
   id: number;
   name: string | null;
@@ -8,9 +11,16 @@ type ExerciseListDisplayItem = {
 
 type ExerciseListDisplayProps = {
   exercises: ExerciseListDisplayItem[];
+  muscleGroups: MuscleGroup[];
 };
 
-export function ExerciseListDisplay({ exercises }: ExerciseListDisplayProps) {
+export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
+  const { exercises, muscleGroups } = props;
+
+  const muscleGroupLookup = useMemo(() => {
+    return new Map(muscleGroups.map(group => [group.id, group]));
+  }, [muscleGroups]);
+
   return (
     <ul className="space-y-3">
       {exercises.map(exercise => (
@@ -38,14 +48,16 @@ export function ExerciseListDisplay({ exercises }: ExerciseListDisplayProps) {
             </span>
           </div>
 
-          {/*TODO*/}
           {exercise.muscleGroups?.length ? (
             <p className="mt-3 text-xs uppercase tracking-wide text-muted-foreground dark:text-sky-200/80">
-              {exercise.muscleGroups.join(" • ")}
+              {exercise.muscleGroups
+                .map(group => muscleGroupLookup.get(group)?.name)
+                .filter(Boolean)
+                .join(" • ")}
             </p>
           ) : null}
         </li>
       ))}
     </ul>
   );
-}
+};

@@ -66,7 +66,10 @@ function RouteContent() {
         onToggleMuscleGroup={toggleMuscleGroup}
       />
 
-      <ExerciseListDisplay exercises={filteredExercises} />
+      <ExerciseListDisplay
+        exercises={filteredExercises}
+        muscleGroups={muscleGroups}
+      />
     </>
   );
 }
