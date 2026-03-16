@@ -1,5 +1,4 @@
 import {
-  pgEnum,
   pgTable,
   integer,
   varchar,
@@ -15,25 +14,13 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const muscleGroup = pgEnum("muscle_group", [
-  "chest",
-  "shoulders",
-  "biceps",
-  "triceps",
-  "quadriceps",
-  "hamstrings",
-  "calves",
-  "lats",
-  "back",
-]);
-
 export const exercises = pgTable(
   "exercises",
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 150 }).notNull(),
     description: text(),
-    muscleGroups: muscleGroup("muscle_groups").array().notNull(),
+    muscleGroups: integer("muscle_groups").array().notNull(),
     isCompound: boolean("is_compound"),
   },
   table => [
@@ -42,6 +29,15 @@ export const exercises = pgTable(
       table.muscleGroups.asc().nullsLast(),
     ),
   ],
+);
+
+export const muscleGroup = pgTable(
+  "muscle_group",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    name: varchar({ length: 50 }).notNull(),
+  },
+  table => [unique("muscle_group_name_key").on(table.name)],
 );
 
 export const users = pgTable(
