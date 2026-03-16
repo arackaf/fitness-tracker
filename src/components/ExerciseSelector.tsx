@@ -17,7 +17,9 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { exercises as exerciseTable } from "@/drizzle/schema";
+import { exercises as exerciseTable, muscleGroup } from "@/drizzle/schema";
+
+type MuscleGroup = typeof muscleGroup.$inferSelect;
 
 export type Exercise = Pick<
   typeof exerciseTable.$inferSelect,
@@ -27,6 +29,7 @@ export type Exercise = Pick<
 type ExerciseSelectorProps = {
   value: number | null;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
   onSelect: (exerciseId: number) => void;
   required?: boolean;
 };
@@ -41,10 +44,15 @@ type MuscleGroupOption = {
 export function ExerciseSelector({
   value,
   exercises,
+  muscleGroups,
   onSelect,
   required = false,
 }: ExerciseSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const muscleGroupLookup = useMemo(() => {
+    return new Map(muscleGroups.map(group => [group.id, group]));
+  }, [muscleGroups]);
 
   const groupedOptions = useMemo(() => {
     const groups = new Map<string, MuscleGroupOption[]>();
@@ -52,7 +60,12 @@ export function ExerciseSelector({
     for (const exercise of exercises) {
       const optionName = exercise.name;
       const normalizedMuscleGroups = exercise.muscleGroups
-        .map(group => group.charAt(0).toLocaleUpperCase() + group.slice(1))
+        .map(group => muscleGroupLookup.get(group)!)
+        .filter(group => group)
+        .map(
+          group =>
+            group.name.charAt(0).toLocaleUpperCase() + group.name.slice(1),
+        )
         .sort((a, b) => a.localeCompare(b));
 
       const groupName =

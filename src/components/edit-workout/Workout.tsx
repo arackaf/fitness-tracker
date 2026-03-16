@@ -7,13 +7,19 @@ import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutForm } from "@/lib/workout-form";
 
 import { WorkoutSegments } from "./WorkoutSegments";
+import type { MuscleGroup } from "@/data/types";
 
 type WorkoutProps = {
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
   form: WorkoutForm;
 };
 
-export const Workout: FC<WorkoutProps> = ({ form, exercises }) => {
+export const Workout: FC<WorkoutProps> = ({
+  form,
+  exercises,
+  muscleGroups,
+}) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
@@ -92,7 +98,11 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises }) => {
         />
       </div>
 
-      <WorkoutSegments form={form} exercises={exercises} />
+      <WorkoutSegments
+        form={form}
+        exercises={exercises}
+        muscleGroups={muscleGroups}
+      />
     </div>
   );
 };

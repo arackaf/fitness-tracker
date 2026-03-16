@@ -10,6 +10,7 @@ import {
   getExercisesServerFn,
 } from "@/server-functions/exercises";
 import { getWorkoutsWithExerciseNames } from "@/server-functions/in-class/workouts-simple";
+import { getMuscleGroupsServerFn } from "@/server-functions/muscle-groups";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
 type Workout = ArrayOf<
@@ -38,6 +39,14 @@ function RouteComponent() {
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
+
+  const { data: muscleGroups } = useQuery({
+    queryKey: ["muscleGroups"],
+    queryFn: () => getMuscleGroupsServerFn(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+  });
+
   const {
     data: workouts,
     isLoading: isWorkoutsPending,
@@ -56,7 +65,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col gap-4">
       <h1>Workouts</h1>
-      {isExercisesLoading || !exercises ? (
+      {isExercisesLoading || !exercises || !muscleGroups ? (
         <span>Loading exercises...</span>
       ) : (
         <div className="flex items-center gap-4">
@@ -64,6 +73,7 @@ function RouteComponent() {
             <ExerciseSelector
               value={selectedExerciseId}
               exercises={exercises}
+              muscleGroups={muscleGroups}
               onSelect={exerciseId => {
                 setSelectedExerciseId(exerciseId);
               }}

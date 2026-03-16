@@ -14,6 +14,8 @@ import {
   workoutTemplateByIdQueryOptions,
   updateWorkoutTemplate,
 } from "@/server-functions/workout-templates";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import type { MuscleGroup } from "@/data/types";
 
 export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
   loader: ({ context, params }) => {
@@ -30,6 +32,7 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
       workoutTemplateByIdQueryOptions(workoutTemplateId),
     );
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
   component: RouteComponent,
 });
@@ -51,6 +54,7 @@ function RouteContent() {
     workoutTemplateByIdQueryOptions(workoutTemplateId),
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
   useEffect(() => {
     if (workoutTemplate == null || workoutTemplate.id == null) {
@@ -69,6 +73,7 @@ function RouteContent() {
     <WorkoutTemplateDetailForm
       workoutTemplate={workoutTemplate}
       exercises={exercises}
+      muscleGroups={muscleGroups}
     />
   );
 }
@@ -76,11 +81,13 @@ function RouteContent() {
 type WorkoutTemplateDetailFormProps = {
   workoutTemplate: WorkoutTemplateState;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
 };
 
 const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
   workoutTemplate,
   exercises,
+  muscleGroups,
 }) => {
   const [isSaving, setIsSaving] = useState(false);
 
@@ -108,7 +115,11 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <WorkoutTemplate form={form} exercises={exercises} />
+      <WorkoutTemplate
+        form={form}
+        exercises={exercises}
+        muscleGroups={muscleGroups}
+      />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Update workout template"}

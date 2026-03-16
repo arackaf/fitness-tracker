@@ -9,10 +9,12 @@ import type { WorkoutForm } from "@/lib/workout-form";
 import { cn } from "@/lib/utils";
 
 import { Checkbox } from "../ui/checkbox";
+import type { MuscleGroup } from "@/data/types";
 
 type WorkoutSegmentExercisesProps = {
   form: WorkoutForm;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
   segmentIndex: number;
   segmentSets: number;
 };
@@ -20,6 +22,7 @@ type WorkoutSegmentExercisesProps = {
 export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
   form,
   exercises,
+  muscleGroups,
   segmentIndex,
   segmentSets,
 }) => {
@@ -49,6 +52,7 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                       <ExerciseSelector
                         value={segmentExercise.state.value ?? null}
                         exercises={exercises}
+                        muscleGroups={muscleGroups}
                         onSelect={exerciseId => {
                           segmentExercise.handleChange(exerciseId);
                         }}

@@ -10,10 +10,12 @@ import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout } from "@/server-functions/workouts";
 import { Button } from "@/components/ui/button";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
   component: RouteComponent,
 });
@@ -42,6 +44,8 @@ type WorkoutFormContentProps = {
 
 function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
+
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useWorkoutForm(async state => {
@@ -64,7 +68,7 @@ function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Workout form={form} exercises={exercises} />
+      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}

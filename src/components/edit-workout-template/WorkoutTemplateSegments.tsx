@@ -8,15 +8,18 @@ import { createDefaultSegment } from "@/data/workout-templates/workout-state";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 
 import { WorkoutTemplateSegmentExercises } from "./WorkoutTemplateSegmentExercises";
+import type { MuscleGroup } from "@/data/types";
 
 type WorkoutTemplateSegmentsProps = {
   form: WorkoutTemplateForm;
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
 };
 
 export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
   form,
   exercises,
+  muscleGroups,
 }) => {
   return (
     <form.Field
@@ -128,6 +131,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
               <WorkoutTemplateSegmentExercises
                 form={form}
                 exercises={exercises}
+                muscleGroups={muscleGroups}
                 segmentIndex={segmentIndex}
                 segmentSets={segmentsField.state.value[segmentIndex].sets}
               />

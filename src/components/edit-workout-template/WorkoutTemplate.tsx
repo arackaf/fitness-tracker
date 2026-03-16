@@ -4,15 +4,21 @@ import type { Exercise } from "@/components/ExerciseSelector";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
+import type { MuscleGroup } from "@/data/types";
 
 import { WorkoutTemplateSegments } from "./WorkoutTemplateSegments";
 
 type WorkoutTemplateProps = {
   exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
   form: WorkoutTemplateForm;
 };
 
-export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises }) => {
+export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
+  form,
+  exercises,
+  muscleGroups,
+}) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
@@ -64,7 +70,11 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises }) =
         />
       </div>
 
-      <WorkoutTemplateSegments form={form} exercises={exercises} />
+      <WorkoutTemplateSegments
+        form={form}
+        muscleGroups={muscleGroups}
+        exercises={exercises}
+      />
     </div>
   );
 };

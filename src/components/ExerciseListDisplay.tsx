@@ -3,7 +3,7 @@ type ExerciseListDisplayItem = {
   name: string | null;
   description: string | null;
   isCompound: boolean | null;
-  muscleGroups: string[] | null;
+  muscleGroups: number[] | null;
 };
 
 type ExerciseListDisplayProps = {
@@ -38,6 +38,7 @@ export function ExerciseListDisplay({ exercises }: ExerciseListDisplayProps) {
             </span>
           </div>
 
+          {/*TODO*/}
           {exercise.muscleGroups?.length ? (
             <p className="mt-3 text-xs uppercase tracking-wide text-muted-foreground dark:text-sky-200/80">
               {exercise.muscleGroups.join(" • ")}

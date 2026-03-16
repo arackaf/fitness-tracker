@@ -1,9 +1,10 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import type { MuscleGroup } from "@/data/types";
 
 type ExerciseFiltersProps = {
-  muscleGroups: string[];
-  selectedMuscleGroups: string[];
-  onToggleMuscleGroup: (muscleGroup: string, checked: boolean) => void;
+  muscleGroups: MuscleGroup[];
+  selectedMuscleGroups: number[];
+  onToggleMuscleGroup: (muscleGroup: MuscleGroup, checked: boolean) => void;
 };
 
 export function ExerciseFilters({
@@ -18,11 +19,11 @@ export function ExerciseFilters({
       </h2>
       <div className="mt-3 flex flex-wrap gap-4">
         {muscleGroups.map(muscleGroup => {
-          const isChecked = selectedMuscleGroups.includes(muscleGroup);
+          const isChecked = selectedMuscleGroups.includes(muscleGroup.id);
 
           return (
             <label
-              key={muscleGroup}
+              key={muscleGroup.id}
               className="inline-flex cursor-pointer items-center gap-2 text-sm text-foreground dark:text-slate-200/90"
             >
               <Checkbox
@@ -31,7 +32,7 @@ export function ExerciseFilters({
                   onToggleMuscleGroup(muscleGroup, checked === true)
                 }
               />
-              <span className="capitalize">{muscleGroup}</span>
+              <span className="capitalize">{muscleGroup.name}</span>
             </label>
           );
         })}
