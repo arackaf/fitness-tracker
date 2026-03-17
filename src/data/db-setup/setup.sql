@@ -117,7 +117,7 @@ CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_orde
 -- Logging
 -- ================================================================================
 
-CREATE TABLE IF NOT EXISTS workout_log (
+CREATE TABLE IF NOT EXISTS network_timing_log (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   client_start TIMESTAMPTZ,
   client_end TIMESTAMPTZ,
@@ -128,14 +128,14 @@ CREATE TABLE IF NOT EXISTS workout_log (
   CHECK (client_end IS NULL OR client_start IS NULL OR client_end >= client_start),
   CHECK (server_end IS NULL OR server_start IS NULL OR server_end >= server_start)
 );
-CREATE INDEX IF NOT EXISTS idx_workout_log_trace_id
-  ON workout_log (trace_id);
-CREATE INDEX IF NOT EXISTS idx_workout_log_operation
-  ON workout_log (operation);
-CREATE INDEX IF NOT EXISTS idx_workout_log_server_start
-  ON workout_log (server_start);
-CREATE INDEX IF NOT EXISTS idx_workout_log_client_start
-  ON workout_log (client_start);
+CREATE INDEX IF NOT EXISTS idx_network_timing_log_trace_id
+  ON network_timing_log (trace_id);
+CREATE INDEX IF NOT EXISTS idx_network_timing_log_operation
+  ON network_timing_log (operation);
+CREATE INDEX IF NOT EXISTS idx_network_timing_log_server_start
+  ON network_timing_log (server_start);
+CREATE INDEX IF NOT EXISTS idx_network_timing_log_client_start
+  ON network_timing_log (client_start);
 
 
 
