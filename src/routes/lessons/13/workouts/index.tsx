@@ -49,12 +49,9 @@ const gcTime = 1000 * 60 * 10;
 
 const workoutListQueryOptions = (page: number = 1) =>
   queryOptions({
-    queryKey: ["workouts", page],
-    queryFn: async () => {
-      return getWorkoutsWithExerciseNames({
-        data: { page },
-      });
-    },
+    ...refetchedQueryOptions(["workouts", page], getWorkoutsWithExerciseNames, {
+      data: { page },
+    }),
     placeholderData: keepPreviousData,
     staleTime,
     gcTime,
@@ -70,14 +67,11 @@ const exercisesQueryOptions = queryOptions({
 
 const singleWorkoutQueryOptions = (workoutId: number) =>
   queryOptions({
-    queryKey: ["workout", workoutId],
-    queryFn: async () => {
-      const result = await getWorkoutsWithExerciseNames({
-        data: { id: workoutId },
-      });
-
-      return result;
-    },
+    ...refetchedQueryOptions(
+      ["workout", workoutId],
+      getWorkoutsWithExerciseNames,
+      { data: { id: workoutId } },
+    ),
     select: data => data.workouts?.[0] ?? null,
     staleTime,
     gcTime,
