@@ -24,7 +24,7 @@ export const exercisesQueryOptions = () =>
     gcTime: 1000 * 60 * 5,
   });
 
-type EditExerciseInput = {
+export type EditExerciseInput = {
   id: number;
   name: string;
 };
@@ -34,9 +34,6 @@ export const editExercise = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     await new Promise(resolve => setTimeout(resolve, DELAY_MS));
     const name = data.name.trim();
-    if (!name) {
-      throw new Error("Exercise name is required.");
-    }
 
     const db = await getDb();
     await db
