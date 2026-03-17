@@ -1,7 +1,7 @@
 import { addNetworkTimingLog } from "@/server-functions/network-timing-logs";
 import { createMiddleware } from "@tanstack/react-start";
 
-export const middlewareDemo = createMiddleware({ type: "function" })
+export const basicLoggingMiddleware = createMiddleware({ type: "function" })
   .inputValidator((input: { operation: string }) => input)
   .client(async ({ next }) => {
     const result = await next({
@@ -9,6 +9,10 @@ export const middlewareDemo = createMiddleware({ type: "function" })
         clientStart: new Date(),
       },
     });
+
+    // @ts-ignore
+    const traceId = result.context.traceId;
+    console.log("tradeId from server", traceId);
 
     return result;
   })

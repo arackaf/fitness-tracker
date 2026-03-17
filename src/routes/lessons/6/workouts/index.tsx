@@ -13,7 +13,9 @@ type Exercise = Awaited<ReturnType<typeof getExercisesServerFn>>[number];
 export const Route = createFileRoute("/lessons/6/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const workouts = getInClassWorkoutHistory();
+    const workouts = getInClassWorkoutHistory({
+      data: { operation: "load-workouts" },
+    });
     const exercises = getExercisesServerFn();
 
     return {
