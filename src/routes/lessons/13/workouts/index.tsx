@@ -202,7 +202,6 @@ type EditExerciseProps = {
 const EditExercise: FC<EditExerciseProps> = props => {
   const { exercise, onSaved } = props;
   const exerciseNameInputRef = useRef<HTMLInputElement>(null);
-  const queryClient = useQueryClient();
   const { mutateAsync: editExerciseMutation, isPending } = useMutation({
     mutationFn: async (name: string) => {
       await editExercise({
