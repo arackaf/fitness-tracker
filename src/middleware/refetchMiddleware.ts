@@ -95,7 +95,7 @@ export const refetchMiddleware = createMiddleware({ type: "function" })
       allQueries.forEach(packet => {
         if (!allRefetchedKeys.has(hashKey(packet.queryKey))) {
           queryClient.invalidateQueries({
-            queryKey: key,
+            queryKey: packet.queryKey,
             exact: true,
           });
         }
