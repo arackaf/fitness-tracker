@@ -16,7 +16,9 @@ export const Route = createFileRoute("/lessons/6/workouts/")({
     const workouts = getInClassWorkoutHistory({
       data: { operation: "load-workouts" },
     });
-    const exercises = getExercisesServerFn();
+    const exercises = getExercisesServerFn({
+      data: { operation: "load-exercises" },
+    });
 
     return {
       workouts,

@@ -6,18 +6,19 @@ import { getDb } from "@/data/db";
 import { getExercises } from "@/data/exercises/get-exercises";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
+import { loggingMiddleware } from "@/middleware/logging-full";
 
-export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(
-  async () => {
+export const getExercisesServerFn = createServerFn({ method: "GET" })
+  .middleware([loggingMiddleware])
+  .handler(async () => {
     return getExercises();
-  },
-);
+  });
 
 export const exercisesQueryOptions = () =>
   queryOptions({
     queryKey: ["exercises"],
     queryFn: () => {
-      return getExercisesServerFn();
+      return getExercisesServerFn({ data: { operation: "load-exercises" } });
     },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,

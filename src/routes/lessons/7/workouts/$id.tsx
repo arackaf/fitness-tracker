@@ -15,7 +15,9 @@ export const Route = createFileRoute("/lessons/7/workouts/$id")({
     const workout = getInClassWorkoutById({
       data: { id: Number(params.id) },
     });
-    const exercises = getExercisesServerFn();
+    const exercises = getExercisesServerFn({
+      data: { operation: "load-exercises" },
+    });
 
     return {
       workout,

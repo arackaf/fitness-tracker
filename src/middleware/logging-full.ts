@@ -1,18 +1,16 @@
 import { addNetworkTimingLog } from "@/server-functions/network-timing-logs";
 import { createMiddleware } from "@tanstack/react-start";
 
-export const basicLoggingMiddleware = createMiddleware({ type: "function" })
+const loggingMiddlewareInput = createMiddleware({ type: "function" })
   .inputValidator((input: { operation: string }) => input)
   .client(async ({ next }) => {
+    const clientStart = new Date();
+
     const result = await next({
       sendContext: {
-        clientStart: new Date(),
+        clientStart,
       },
     });
-
-    // @ts-expect-error
-    const traceId = result.context.traceId;
-    console.log("tradeId from server", traceId);
 
     return result;
   })
@@ -39,6 +37,17 @@ export const basicLoggingMiddleware = createMiddleware({ type: "function" })
         serverEnd,
       },
     });
+
+    return result;
+  });
+
+export const loggingMiddleware = createMiddleware({ type: "function" })
+  .middleware([loggingMiddlewareInput])
+  .client(async ({ next }) => {
+    const result = await next();
+
+    const traceId = result.context.traceId;
+    console.log("tradeId from server", traceId);
 
     return result;
   });

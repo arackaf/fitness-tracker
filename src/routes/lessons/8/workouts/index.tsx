@@ -35,7 +35,10 @@ function RouteComponent() {
     isFetching: isExercisesFetching,
   } = useQuery({
     queryKey: ["exercises"],
-    queryFn: () => getExercisesServerFn(),
+    queryFn: () =>
+      getExercisesServerFn({
+        data: { operation: "load-exercises" },
+      }),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });

@@ -9,7 +9,9 @@ export const Route = createFileRoute("/lessons/4/workouts/")({
   loader: async () => {
     const [workoutsPayload, exercises] = await Promise.all([
       getInClassWorkoutHistory({ data: { operation: "load-workouts" } }),
-      getExercisesServerFn(),
+      getExercisesServerFn({
+        data: { operation: "load-exercises" },
+      }),
     ]);
 
     return {
