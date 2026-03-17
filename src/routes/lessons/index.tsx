@@ -4,7 +4,19 @@ export const Route = createFileRoute("/lessons/")({
   component: RouteComponent,
 });
 
-type LessonKey = "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "11";
+type LessonKey =
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "11"
+  | "12"
+  | "13";
 const lessonSummaryHeading: { [key in LessonKey]: string } = {
   2: "Loaders",
   3: "Loading data",
@@ -16,6 +28,8 @@ const lessonSummaryHeading: { [key in LessonKey]: string } = {
   9: "Integrating TanStack Query",
   10: "TanStack Query and Suspense I",
   11: "TanStack Query and Suspense II",
+  12: "Middleware",
+  13: "Advanced Middleware",
 };
 
 type PageledLessonKey = "11";
