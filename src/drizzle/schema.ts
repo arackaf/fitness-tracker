@@ -40,6 +40,45 @@ export const muscleGroup = pgTable(
   table => [unique("muscle_group_name_key").on(table.name)],
 );
 
+export const networkTimingLog = pgTable(
+  "network_timing_log",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    clientStart: timestamp("client_start", { withTimezone: true }),
+    clientEnd: timestamp("client_end", { withTimezone: true }),
+    serverStart: timestamp("server_start", { withTimezone: true }),
+    serverEnd: timestamp("server_end", { withTimezone: true }),
+    operation: varchar({ length: 150 }).notNull(),
+    traceId: varchar("trace_id", { length: 150 }),
+  },
+  table => [
+    index("idx_network_timing_log_client_start").using(
+      "btree",
+      table.clientStart.asc().nullsLast(),
+    ),
+    index("idx_network_timing_log_operation").using(
+      "btree",
+      table.operation.asc().nullsLast(),
+    ),
+    index("idx_network_timing_log_server_start").using(
+      "btree",
+      table.serverStart.asc().nullsLast(),
+    ),
+    index("idx_network_timing_log_trace_id").using(
+      "btree",
+      table.traceId.asc().nullsLast(),
+    ),
+    check(
+      "network_timing_log_check",
+      sql`((client_end IS NULL) OR (client_start IS NULL) OR (client_end >= client_start))`,
+    ),
+    check(
+      "network_timing_log_check1",
+      sql`((server_end IS NULL) OR (server_start IS NULL) OR (server_end >= server_start))`,
+    ),
+  ],
+);
+
 export const users = pgTable(
   "users",
   {
@@ -69,45 +108,6 @@ export const workout = pgTable(
     index("idx_workout_workout_date").using(
       "btree",
       table.workoutDate.asc().nullsLast(),
-    ),
-  ],
-);
-
-export const workoutLog = pgTable(
-  "workout_log",
-  {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    clientStart: timestamp("client_start", { withTimezone: true }),
-    clientEnd: timestamp("client_end", { withTimezone: true }),
-    serverStart: timestamp("server_start", { withTimezone: true }),
-    serverEnd: timestamp("server_end", { withTimezone: true }),
-    operation: varchar({ length: 150 }).notNull(),
-    traceId: varchar("trace_id", { length: 150 }),
-  },
-  table => [
-    index("idx_workout_log_client_start").using(
-      "btree",
-      table.clientStart.asc().nullsLast(),
-    ),
-    index("idx_workout_log_operation").using(
-      "btree",
-      table.operation.asc().nullsLast(),
-    ),
-    index("idx_workout_log_server_start").using(
-      "btree",
-      table.serverStart.asc().nullsLast(),
-    ),
-    index("idx_workout_log_trace_id").using(
-      "btree",
-      table.traceId.asc().nullsLast(),
-    ),
-    check(
-      "workout_log_check",
-      sql`((client_end IS NULL) OR (client_start IS NULL) OR (client_end >= client_start))`,
-    ),
-    check(
-      "workout_log_check1",
-      sql`((server_end IS NULL) OR (server_start IS NULL) OR (server_end >= server_start))`,
     ),
   ],
 );
