@@ -2,6 +2,7 @@ import { useRef, useState, type FC } from "react";
 import { eq } from "drizzle-orm";
 
 import {
+  keepPreviousData,
   queryOptions,
   useMutation,
   useQuery,
@@ -45,15 +46,18 @@ type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 const staleTime = 1000 * 60 * 10;
 const gcTime = 1000 * 60 * 10;
 
-const workoutListQueryOptions = queryOptions({
-  queryKey: ["workouts"],
-  queryFn: async () => {
-    const result = await getWorkoutsWithExerciseNames();
-    return result.workouts;
-  },
-  staleTime,
-  gcTime,
-});
+const workoutListQueryOptions = (page: number = 1) =>
+  queryOptions({
+    queryKey: ["workouts", page],
+    queryFn: async () => {
+      return getWorkoutsWithExerciseNames({
+        data: { page },
+      });
+    },
+    placeholderData: keepPreviousData,
+    staleTime,
+    gcTime,
+  });
 
 const exercisesQueryOptions = queryOptions({
   queryKey: ["exercises"],
@@ -82,16 +86,15 @@ const singleWorkoutQueryOptions = (workoutId: number) =>
 export const Route = createFileRoute("/lessons/13/workouts/")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(workoutListQueryOptions),
-      context.queryClient.ensureQueryData(exercisesQueryOptions),
-    ]);
+    context.queryClient.ensureQueryData(workoutListQueryOptions());
+    context.queryClient.ensureQueryData(exercisesQueryOptions);
   },
   gcTime: 0,
   staleTime: 0,
 });
 
 function RouteComponent() {
+  const [page, setPage] = useState(1);
   const [selectedExerciseId, setSelectedExerciseId] = useState<number | null>(
     null,
   );
@@ -110,14 +113,17 @@ function RouteComponent() {
   });
 
   const {
-    data: workouts,
-    isLoading: isWorkoutsPending,
+    data: workoutsPayload,
+    isLoading: isWorkoutsLoading,
     isFetching: isWorkoutsFetching,
-  } = useQuery(workoutListQueryOptions);
+  } = useQuery(workoutListQueryOptions(page));
 
   const selectedExercise = exercises?.find(
     exercise => exercise.id === selectedExerciseId,
   );
+
+  const isWorkoutsRefreshing = isWorkoutsFetching && !isWorkoutsLoading;
+  const isExercisesRefreshing = isExercisesFetching && !isExercisesLoading;
 
   return (
     <div className="flex flex-col gap-4">
@@ -136,9 +142,9 @@ function RouteComponent() {
               }}
             />
           </div>
-          {isExercisesFetching ? (
+          {isExercisesRefreshing ? (
             <div className="w-1/2">
-              <span className="text-blue-500">Refreshing ...</span>
+              <span className="text-blue-500">Loading ...</span>
             </div>
           ) : null}
         </div>
@@ -153,19 +159,39 @@ function RouteComponent() {
         />
       ) : null}
       <div className="border-t" />
-      {isWorkoutsPending || !workouts ? (
+      {!workoutsPayload ? (
         <span>Loading workouts...</span>
       ) : (
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl">Workouts</h1>
-            {isWorkoutsFetching ? (
-              <span className="text-blue-500">Refreshing ...</span>
+            {isWorkoutsRefreshing ? (
+              <span className="text-blue-500">Loading ...</span>
             ) : null}
           </div>
-          {workouts.map(workout => (
+          {workoutsPayload.workouts.map(workout => (
             <WorkoutRow key={workout.id} workout={workout} />
           ))}
+          <div className="flex gap-2 items-center">
+            <Button
+              type="button"
+              onClick={() => {
+                setPage(currentPage => currentPage - 1);
+              }}
+              disabled={workoutsPayload.page <= 1}
+            >
+              Previous
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setPage(currentPage => currentPage + 1);
+              }}
+              disabled={!workoutsPayload.hasNextPage}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       )}
     </div>
