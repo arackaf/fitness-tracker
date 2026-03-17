@@ -24,8 +24,10 @@ import { getMuscleGroupsServerFn } from "@/server-functions/muscle-groups";
 import { getDb } from "@/data/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 import { refetchedQueryOptions } from "@/data/util/refetch-query-options";
+import { refetchMiddleware } from "@/middleware/refetchMiddleware";
 
 export const editExercise = createServerFn({ method: "POST" })
+  .middleware([refetchMiddleware])
   .inputValidator((input: EditExerciseInput) => input)
   .handler(async ({ data }) => {
     await new Promise(resolve => setTimeout(resolve, DELAY_MS));
@@ -207,14 +209,11 @@ const EditExercise: FC<EditExerciseProps> = props => {
         data: {
           id: exercise.id,
           name,
+          refetch: [["workouts"], ["workout"], ["exercises"]],
         },
       });
     },
     onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.invalidateQueries({ queryKey: ["workouts"] });
-      queryClient.invalidateQueries({ queryKey: ["workout"], exact: false });
-
       onSaved();
     },
   });
