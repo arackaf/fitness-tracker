@@ -12,7 +12,6 @@ export const basicLoggingMiddleware = createMiddleware({ type: "function" })
 
     // @ts-expect-error
     const traceId = result.context.traceId;
-    console.log("tradeId from server", traceId);
 
     return result;
   })

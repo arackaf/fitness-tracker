@@ -47,7 +47,6 @@ export const loggingMiddleware = createMiddleware({ type: "function" })
     const result = await next();
 
     const traceId = result.context.traceId;
-    console.log("tradeId from server", traceId);
 
     return result;
   });
