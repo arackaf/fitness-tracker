@@ -84,7 +84,7 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
 export const getWorkoutsWithExerciseNames = createServerFn({
   method: "GET",
 })
-  .inputValidator((input: { id?: number; page?: number } | undefined) => input)
+  .inputValidator((input: { id?: number; page?: number }) => input)
   .handler(async ({ data }) => {
     await new Promise(resolve => setTimeout(resolve, DELAY_MS));
 

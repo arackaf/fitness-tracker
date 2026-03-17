@@ -49,15 +49,17 @@ type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 const staleTime = 1000 * 60 * 10;
 const gcTime = 1000 * 60 * 10;
 
-const workoutListQueryOptions = (page: number = 1) =>
-  queryOptions({
+const workoutListQueryOptions = (page: number = 1) => {
+  console.log("workoutListQueryOptions", page);
+  return queryOptions({
     ...refetchedQueryOptions(["workouts", page], getWorkoutsWithExerciseNames, {
-      data: { page },
+      page,
     }),
     placeholderData: keepPreviousData,
     staleTime,
     gcTime,
   });
+};
 
 const exercisesQueryOptions = queryOptions({
   ...refetchedQueryOptions(["exercises"], getExercisesServerFn, {
@@ -72,7 +74,7 @@ const singleWorkoutQueryOptions = (workoutId: number) =>
     ...refetchedQueryOptions(
       ["workout", workoutId],
       getWorkoutsWithExerciseNames,
-      { data: { id: workoutId } },
+      { id: workoutId },
     ),
     select: data => data.workouts?.[0] ?? null,
     staleTime,
@@ -82,7 +84,7 @@ const singleWorkoutQueryOptions = (workoutId: number) =>
 export const Route = createFileRoute("/lessons/13/workouts/")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    context.queryClient.ensureQueryData(workoutListQueryOptions());
+    context.queryClient.ensureQueryData(workoutListQueryOptions(1));
     context.queryClient.ensureQueryData(exercisesQueryOptions);
   },
   gcTime: 0,

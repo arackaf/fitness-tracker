@@ -57,7 +57,7 @@ function RouteComponent() {
   } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => {
-      const result = await getWorkoutsWithExerciseNames();
+      const result = await getWorkoutsWithExerciseNames({ data: { page: 1 } });
       return result.workouts;
     },
     staleTime: 1000 * 60 * 5,
