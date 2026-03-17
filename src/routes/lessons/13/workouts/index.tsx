@@ -76,7 +76,7 @@ const singleWorkoutQueryOptions = (workoutId: number) =>
         data: { id: workoutId },
       });
 
-      return result.workouts[0] ?? null;
+      return result;
     },
     staleTime,
     gcTime,
@@ -279,10 +279,12 @@ const WorkoutRow: FC<{
 const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
   const { workoutId, onDone } = props;
   const {
-    data: workout,
+    data: workoutPayload,
     isLoading,
     isFetching,
   } = useQuery(singleWorkoutQueryOptions(workoutId));
+
+  const workout = workoutPayload?.workouts?.[0] ?? null;
 
   return (
     <div className="ml-8 mt-2 flex flex-col gap-2">
