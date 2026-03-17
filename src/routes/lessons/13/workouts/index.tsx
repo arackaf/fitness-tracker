@@ -38,7 +38,7 @@ export const editExercise = createServerFn({ method: "POST" })
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
 type Workout = ArrayOf<
-  Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>
+  Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>["workouts"]
 >;
 type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 
@@ -47,7 +47,10 @@ const gcTime = 1000 * 60 * 10;
 
 const workoutListQueryOptions = queryOptions({
   queryKey: ["workouts"],
-  queryFn: () => getWorkoutsWithExerciseNames(),
+  queryFn: async () => {
+    const result = await getWorkoutsWithExerciseNames();
+    return result.workouts;
+  },
   staleTime,
   gcTime,
 });
@@ -66,11 +69,11 @@ const singleWorkoutQueryOptions = (workoutId: number) =>
   queryOptions({
     queryKey: ["workout", workoutId],
     queryFn: async () => {
-      const workouts = await getWorkoutsWithExerciseNames({
+      const result = await getWorkoutsWithExerciseNames({
         data: { id: workoutId },
       });
 
-      return workouts[0] ?? null;
+      return result.workouts[0] ?? null;
     },
     staleTime,
     gcTime,

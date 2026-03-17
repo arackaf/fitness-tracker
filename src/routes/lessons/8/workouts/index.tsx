@@ -14,7 +14,7 @@ import { getMuscleGroupsServerFn } from "@/server-functions/muscle-groups";
 
 type ArrayOf<T> = T extends Array<infer U> ? U : never;
 type Workout = ArrayOf<
-  Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>
+  Awaited<ReturnType<typeof getWorkoutsWithExerciseNames>>["workouts"]
 >;
 type Exercise = ArrayOf<Awaited<ReturnType<typeof getExercisesServerFn>>>;
 
@@ -56,7 +56,10 @@ function RouteComponent() {
     isFetching: isWorkoutsFetching,
   } = useQuery({
     queryKey: ["workouts"],
-    queryFn: () => getWorkoutsWithExerciseNames(),
+    queryFn: async () => {
+      const result = await getWorkoutsWithExerciseNames();
+      return result.workouts;
+    },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
@@ -206,11 +209,11 @@ const ViewWorkout: FC<{ workoutId: number; onDone: () => void }> = props => {
   } = useQuery({
     queryKey: ["workout", workoutId],
     queryFn: async () => {
-      const workouts = await getWorkoutsWithExerciseNames({
+      const result = await getWorkoutsWithExerciseNames({
         data: { id: workoutId },
       });
 
-      return workouts[0] ?? null;
+      return result.workouts[0] ?? null;
     },
     staleTime: 1000 * 3,
     gcTime: 1000 * 6,

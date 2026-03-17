@@ -84,11 +84,16 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
 export const getWorkoutsWithExerciseNames = createServerFn({
   method: "GET",
 })
-  .inputValidator((input: { id?: number } | undefined) => input)
+  .inputValidator((input: { id?: number; page?: number } | undefined) => input)
   .handler(async ({ data }) => {
     await new Promise(resolve => setTimeout(resolve, DELAY_MS));
 
     const db = await getDb();
+
+    const page = data?.page ?? 1;
+    const pageSize = 4;
+    const queryLimit = data?.id !== undefined ? 1 : pageSize + 1;
+    const queryOffset = data?.id !== undefined ? 0 : (page - 1) * pageSize;
 
     const workoutsBaseQuery = db
       .select({
@@ -104,13 +109,22 @@ export const getWorkoutsWithExerciseNames = createServerFn({
         : workoutsBaseQuery
     )
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
-      .limit(4);
+      .limit(queryLimit)
+      .offset(queryOffset);
 
     if (workouts.length === 0) {
-      return [];
+      return {
+        workouts: [],
+        hasNextPage: false,
+        page,
+      };
     }
 
-    const workoutIds = workouts.map(workout => workout.id);
+    const hasNextPage = data?.id === undefined && workouts.length > pageSize;
+    const currentPageWorkouts = hasNextPage
+      ? workouts.slice(0, pageSize)
+      : workouts;
+    const workoutIds = currentPageWorkouts.map(workout => workout.id);
     const workoutExerciseRows = await db
       .select({
         workoutId: workoutSegmentTable.workoutId,
@@ -140,12 +154,16 @@ export const getWorkoutsWithExerciseNames = createServerFn({
       exercisesByWorkoutId.set(row.workoutId, existing);
     }
 
-    return workouts.map(workout => {
-      return {
-        id: workout.id,
-        name: workout.name,
-        date: workout.date,
-        exercises: exercisesByWorkoutId.get(workout.id) ?? [],
-      };
-    });
+    return {
+      workouts: currentPageWorkouts.map(workout => {
+        return {
+          id: workout.id,
+          name: workout.name,
+          date: workout.date,
+          exercises: exercisesByWorkoutId.get(workout.id) ?? [],
+        };
+      }),
+      page,
+      hasNextPage,
+    };
   });
