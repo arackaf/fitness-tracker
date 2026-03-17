@@ -111,6 +111,35 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise (
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
   ON workout_segment_exercise (workout_segment_id, exercise_order);
 
+
+
+-- ================================================================================
+-- Logging
+-- ================================================================================
+
+CREATE TABLE IF NOT EXISTS workout_log (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  client_start TIMESTAMPTZ,
+  client_end TIMESTAMPTZ,
+  server_start TIMESTAMPTZ,
+  server_end TIMESTAMPTZ,
+  operation VARCHAR(150) NOT NULL,
+  trace_id VARCHAR(150),
+  CHECK (client_end IS NULL OR client_start IS NULL OR client_end >= client_start),
+  CHECK (server_end IS NULL OR server_start IS NULL OR server_end >= server_start)
+);
+CREATE INDEX IF NOT EXISTS idx_workout_log_trace_id
+  ON workout_log (trace_id);
+CREATE INDEX IF NOT EXISTS idx_workout_log_operation
+  ON workout_log (operation);
+CREATE INDEX IF NOT EXISTS idx_workout_log_server_start
+  ON workout_log (server_start);
+CREATE INDEX IF NOT EXISTS idx_workout_log_client_start
+  ON workout_log (client_start);
+
+
+
+
 -- ================================================================================
 -- Data
 -- ================================================================================
