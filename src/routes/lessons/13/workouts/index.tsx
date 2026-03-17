@@ -23,6 +23,7 @@ import { getWorkoutsWithExerciseNames } from "@/server-functions/in-class/workou
 import { getMuscleGroupsServerFn } from "@/server-functions/muscle-groups";
 import { getDb } from "@/data/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
+import { refetchedQueryOptions } from "@/data/util/refetch-query-options";
 
 export const editExercise = createServerFn({ method: "POST" })
   .inputValidator((input: EditExerciseInput) => input)
@@ -60,11 +61,9 @@ const workoutListQueryOptions = (page: number = 1) =>
   });
 
 const exercisesQueryOptions = queryOptions({
-  queryKey: ["exercises"],
-  queryFn: () =>
-    getExercisesServerFn({
-      data: { operation: "load-exercises" },
-    }),
+  ...refetchedQueryOptions(["exercises"], getExercisesServerFn, {
+    operation: "load-exercises",
+  }),
   staleTime,
   gcTime,
 });
