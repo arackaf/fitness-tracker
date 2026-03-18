@@ -21,6 +21,7 @@ type ImportWorkoutTemplateProps = {
 export const ImportWorkoutTemplate: FC<ImportWorkoutTemplateProps> = props => {
   const { onSelected } = props;
 
+  const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
   const { data, isFetching, isError } = useQuery({
     ...workoutTemplatesQueryOptions(page),
@@ -29,9 +30,13 @@ export const ImportWorkoutTemplate: FC<ImportWorkoutTemplateProps> = props => {
 
   const workoutTemplates = data?.workoutTemplates ?? [];
   const hasNextPage = data?.hasNextPage ?? false;
+  const handleTemplateSelected = (template: WorkoutTemplateState) => {
+    onSelected(template);
+    setIsOpen(false);
+  };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary">Import template</Button>
       </DialogTrigger>
@@ -67,7 +72,7 @@ export const ImportWorkoutTemplate: FC<ImportWorkoutTemplateProps> = props => {
                     "h-[unset] min-w-0 items-start rounded-md border p-3 text-sm",
                   )}
                   variant="outline"
-                  onClick={() => onSelected(template)}
+                  onClick={() => handleTemplateSelected(template)}
                 >
                   <span className="font-medium text-left">{template.name}</span>
                   {template.description ? (

@@ -1,4 +1,4 @@
-import { Fragment, useState, type FC } from "react";
+import { Fragment, useEffect, useState, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -59,23 +59,32 @@ function RouteComponent() {
         />
       }
     >
-      <RenderWorkoutForm workoutState={workoutState} />
+      <RenderWorkoutForm
+        workoutState={workoutState}
+        onReset={() => setWorkoutState(createDefaultWorkout())}
+      />
     </SuspensePageLayout>
   );
 }
 
 type RenderWorkoutFormProps = {
   workoutState: WorkoutState;
+  onReset: () => void;
 };
 const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
-  const { workoutState } = props;
+  const { workoutState, onReset } = props;
   const [formResetKey, setFormResetKey] = useState(0);
+
+  useEffect(() => {
+    setFormResetKey(key => key + 1);
+  }, [workoutState]);
 
   return (
     <Fragment key={formResetKey}>
       <WorkoutFormContent
         workoutState={workoutState}
         onSaved={() => setFormResetKey(key => key + 1)}
+        onReset={() => onReset()}
       />
     </Fragment>
   );
@@ -84,10 +93,11 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 type WorkoutFormContentProps = {
   workoutState: WorkoutState;
   onSaved: () => void;
+  onReset: () => void;
 };
 
 const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
-  const { workoutState, onSaved } = props;
+  const { workoutState, onSaved, onReset } = props;
 
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
@@ -116,9 +126,18 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
   return (
     <form onSubmit={handleSubmit}>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
-      <div className="mt-8">
+      <div className="flex mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}
+        </Button>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={isSaving}
+          className="font-semibold ml-auto"
+          onClick={onReset}
+        >
+          Reset workout
         </Button>
       </div>
     </form>
