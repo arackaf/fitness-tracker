@@ -23,23 +23,17 @@ export const Route = createFileRoute("/app/log-workout/")({
 });
 
 function RouteComponent() {
+  const [formResetKey, setFormResetKey] = useState(0);
+
   return (
     <SuspensePageLayout
       title="Log Workout"
       headerChildren={<ImportWorkoutTemplate />}
     >
-      <RouteContent />
+      <Fragment key={formResetKey}>
+        <WorkoutFormContent onSaved={() => setFormResetKey(key => key + 1)} />
+      </Fragment>
     </SuspensePageLayout>
-  );
-}
-
-function RouteContent() {
-  const [formResetKey, setFormResetKey] = useState(0);
-
-  return (
-    <Fragment key={formResetKey}>
-      <WorkoutFormContent onSaved={() => setFormResetKey(key => key + 1)} />
-    </Fragment>
   );
 }
 

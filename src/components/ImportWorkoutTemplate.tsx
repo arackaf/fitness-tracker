@@ -1,5 +1,5 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState, type FC } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { Loading } from "@/components/loading-state/Loading";
 import { Button } from "@/components/ui/button";
