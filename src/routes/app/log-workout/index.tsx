@@ -11,6 +11,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout } from "@/server-functions/workouts";
 import { Button } from "@/components/ui/button";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: ({ context }) => {
@@ -54,6 +55,7 @@ function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
     try {
       await saveWorkout({ data: state });
       onSaved();
+      toast.success("Workout created", { position: "top-center" });
     } finally {
       setIsSaving(false);
     }
