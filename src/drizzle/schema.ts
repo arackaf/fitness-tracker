@@ -1,4 +1,5 @@
 import {
+  pgEnum,
   pgTable,
   integer,
   varchar,
@@ -6,6 +7,7 @@ import {
   text,
   date,
   boolean,
+  numeric,
   index,
   foreignKey,
   primaryKey,
@@ -13,6 +15,23 @@ import {
   check,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+
+export const executionType = pgEnum("execution_type", [
+  "repetition",
+  "distance",
+  "time",
+]);
+export const durationMeasurement = pgEnum("duration_measurement", [
+  "seconds",
+  "minutes",
+  "hours",
+]);
+export const distanceMeasurement = pgEnum("distance_measurement", [
+  "feet",
+  "yards",
+  "miles",
+  "km",
+]);
 
 export const exercises = pgTable(
   "exercises",
@@ -22,6 +41,9 @@ export const exercises = pgTable(
     description: text(),
     muscleGroups: integer("muscle_groups").array().notNull(),
     isCompound: boolean("is_compound"),
+    executionType: executionType("execution_type").notNull(),
+    defaultDistanceType: distanceMeasurement("default_distance_type"),
+    defaultDurationType: durationMeasurement("default_duration_type"),
   },
   table => [
     index("idx_exercises_muscle_groups_gin").using(
@@ -144,8 +166,13 @@ export const workoutSegmentExercise = pgTable(
     exerciseId: integer("exercise_id")
       .notNull()
       .references(() => exercises.id),
-    reps: integer().array().notNull(),
-    repsToFailure: boolean("reps_to_failure").notNull(),
+    reps: integer().array(),
+    repsToFailure: boolean("reps_to_failure"),
+    executionType: executionType("execution_type"),
+    duration: numeric({ precision: 8, scale: 2 }),
+    durationUnit: durationMeasurement("duration_unit"),
+    distance: numeric({ precision: 8, scale: 2 }),
+    distanceUnit: distanceMeasurement("distance_unit"),
   },
   table => [
     index("idx_workout_segment_exercise_segment_id_exercise_order").using(
@@ -202,7 +229,12 @@ export const workoutTemplateSegmentExercise = pgTable(
       .notNull()
       .references(() => exercises.id),
     reps: integer().array(),
-    repsToFailure: boolean("reps_to_failure").notNull(),
+    repsToFailure: boolean("reps_to_failure"),
+    executionType: executionType("execution_type"),
+    duration: numeric({ precision: 8, scale: 2 }),
+    durationUnit: durationMeasurement("duration_unit"),
+    distance: numeric({ precision: 8, scale: 2 }),
+    distanceUnit: distanceMeasurement("distance_unit"),
   },
   table => [
     index(
@@ -211,10 +243,6 @@ export const workoutTemplateSegmentExercise = pgTable(
       "btree",
       table.workoutTemplateSegmentId.asc().nullsLast(),
       table.exerciseOrder.asc().nullsLast(),
-    ),
-    check(
-      "workout_template_segment_exercise_check",
-      sql`((reps_to_failure = true) OR (reps IS NOT NULL))`,
     ),
     check(
       "workout_template_segment_exercise_exercise_order_check",
