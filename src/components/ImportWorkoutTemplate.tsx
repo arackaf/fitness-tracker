@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, type FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { cn } from "@/lib/utils";
 
-export function ImportWorkoutTemplate() {
+export const ImportWorkoutTemplate: FC = () => {
   const [page, setPage] = useState(1);
   const { data, isFetching, isError } = useQuery({
     ...workoutTemplatesQueryOptions(page),
@@ -104,4 +104,4 @@ export function ImportWorkoutTemplate() {
       </DialogContent>
     </Dialog>
   );
-}
+};
