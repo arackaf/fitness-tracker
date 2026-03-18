@@ -56,11 +56,11 @@ export function ImportWorkoutTemplate() {
               {workoutTemplates.map(template => (
                 <div
                   key={template.id}
-                  className="rounded-md border p-3 text-sm flex flex-col gap-1 min-w-0"
+                  className="rounded-md border p-3 text-sm flex flex-col gap-1"
                 >
                   <p className="font-medium">{template.name}</p>
                   {template.description ? (
-                    <p className="text-muted-foreground flex min-w-0 truncate">
+                    <p className="text-muted-foreground min-w-0 truncate">
                       {template.description}
                     </p>
                   ) : null}
