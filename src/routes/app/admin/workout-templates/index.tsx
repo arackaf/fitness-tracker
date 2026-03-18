@@ -10,7 +10,7 @@ import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templat
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
   loader: ({ context }) => {
-    context.queryClient.ensureQueryData(workoutTemplatesQueryOptions({ page: 1 }));
+    context.queryClient.ensureQueryData(workoutTemplatesQueryOptions(1));
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
@@ -35,7 +35,7 @@ function RouteContent() {
   const [, startTransition] = useTransition();
   const [page, setPage] = useState(1);
   const { data: workoutTemplatesPayload } = useSuspenseQuery(
-    workoutTemplatesQueryOptions({ page }),
+    workoutTemplatesQueryOptions(page),
   );
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const workoutTemplates = workoutTemplatesPayload.workoutTemplates;

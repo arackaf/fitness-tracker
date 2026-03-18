@@ -10,10 +10,8 @@ type WorkoutTemplatesInput = {
   page?: number;
 };
 
-const normalizePage = (page?: number) => Math.max(1, Math.floor(page ?? 1));
-
-export const workoutTemplatesQueryOptions = (input?: WorkoutTemplatesInput) => {
-  const page = normalizePage(input?.page);
+export const workoutTemplatesQueryOptions = (pageInput = 1) => {
+  const page = pageInput ?? 1;
 
   return queryOptions({
     queryKey: ["workout-templates", { page }],
