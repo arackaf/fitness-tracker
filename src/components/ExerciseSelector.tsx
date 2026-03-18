@@ -23,7 +23,7 @@ type MuscleGroup = typeof muscleGroup.$inferSelect;
 
 export type Exercise = Pick<
   typeof exerciseTable.$inferSelect,
-  "id" | "name" | "muscleGroups"
+  "id" | "name" | "muscleGroups" | "executionType"
 >;
 
 type ExerciseSelectorProps = {
