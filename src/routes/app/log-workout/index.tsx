@@ -4,13 +4,14 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Workout } from "@/components/edit-workout/Workout";
+import { ImportWorkoutTemplate } from "@/components/ImportWorkoutTemplate";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout } from "@/server-functions/workouts";
-import { Button } from "@/components/ui/button";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/log-workout/")({
@@ -23,7 +24,10 @@ export const Route = createFileRoute("/app/log-workout/")({
 
 function RouteComponent() {
   return (
-    <SuspensePageLayout title="Log Workout">
+    <SuspensePageLayout
+      title="Log Workout"
+      headerChildren={<ImportWorkoutTemplate />}
+    >
       <RouteContent />
     </SuspensePageLayout>
   );
