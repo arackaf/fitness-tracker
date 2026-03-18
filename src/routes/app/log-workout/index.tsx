@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -13,6 +13,12 @@ import { saveWorkout } from "@/server-functions/workouts";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  createDefaultWorkout,
+  defaultworkoutDate,
+  type WorkoutState,
+} from "@/data/workouts/workout-state";
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: ({ context }) => {
@@ -22,26 +28,67 @@ export const Route = createFileRoute("/app/log-workout/")({
   component: RouteComponent,
 });
 
-function RouteComponent() {
-  const [formResetKey, setFormResetKey] = useState(0);
+const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
+  return {
+    ...template,
+    workoutDate: defaultworkoutDate(),
+    segments: template.segments.map(segment => {
+      return {
+        ...segment,
+        exercises: segment.exercises.map(exercise => {
+          return {
+            ...exercise,
+            reps: Array.from({ length: segment.sets }),
+          };
+        }),
+      };
+    }),
+  };
+};
 
+function RouteComponent() {
+  const [workoutState, setWorkoutState] = useState<WorkoutState>(
+    createDefaultWorkout(),
+  );
   return (
     <SuspensePageLayout
       title="Log Workout"
-      headerChildren={<ImportWorkoutTemplate />}
+      headerChildren={
+        <ImportWorkoutTemplate
+          onSelected={template => setWorkoutState(templateToWorkout(template))}
+        />
+      }
     >
-      <Fragment key={formResetKey}>
-        <WorkoutFormContent onSaved={() => setFormResetKey(key => key + 1)} />
-      </Fragment>
+      <RenderWorkoutForm workoutState={workoutState} />
     </SuspensePageLayout>
   );
 }
 
+type RenderWorkoutFormProps = {
+  workoutState: WorkoutState;
+};
+const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
+  const { workoutState } = props;
+  const [formResetKey, setFormResetKey] = useState(0);
+
+  return (
+    <Fragment key={formResetKey}>
+      <WorkoutFormContent
+        workoutState={workoutState}
+        onSaved={() => setFormResetKey(key => key + 1)}
+      />
+    </Fragment>
+  );
+};
+
 type WorkoutFormContentProps = {
+  workoutState: WorkoutState;
   onSaved: () => void;
 };
 
-function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
+const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
+  const { workoutState, onSaved } = props;
+
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
@@ -57,7 +104,7 @@ function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
     } finally {
       setIsSaving(false);
     }
-  });
+  }, workoutState);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,4 +123,4 @@ function WorkoutFormContent({ onSaved }: WorkoutFormContentProps) {
       </div>
     </form>
   );
-}
+};

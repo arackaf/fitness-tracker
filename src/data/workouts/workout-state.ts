@@ -8,12 +8,17 @@ export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
 
-export type WorkoutSegmentExerciseState = WorkoutSegmentExercise & {
+export type WorkoutSegmentExerciseState = Omit<
+  WorkoutSegmentExercise,
+  "workoutSegmentId"
+> & {
   id?: number;
+  workoutSegmentId?: number;
 };
 
-export type SegmentWithExercises = WorkoutSegment & {
+export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
   id?: number;
+  workoutId?: number;
   exercises: WorkoutSegmentExerciseState[];
 };
 
@@ -57,10 +62,14 @@ export const createDefaultSegment = () => {
   };
 };
 
+export const defaultworkoutDate = () => {
+  return new Date().toISOString().split("T")[0];
+};
+
 export const createDefaultWorkout = () => {
   return {
     name: "",
-    workoutDate: new Date().toISOString().split("T")[0] ?? "",
+    workoutDate: defaultworkoutDate(),
     description: "",
     segments: [createDefaultSegment()],
   };

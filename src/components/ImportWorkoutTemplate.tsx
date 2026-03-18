@@ -13,8 +13,14 @@ import {
 } from "@/components/ui/dialog";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { cn } from "@/lib/utils";
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
-export const ImportWorkoutTemplate: FC = () => {
+type ImportWorkoutTemplateProps = {
+  onSelected: (template: WorkoutTemplateState) => void;
+};
+export const ImportWorkoutTemplate: FC<ImportWorkoutTemplateProps> = props => {
+  const { onSelected } = props;
+
   const [page, setPage] = useState(1);
   const { data, isFetching, isError } = useQuery({
     ...workoutTemplatesQueryOptions(page),
@@ -61,6 +67,7 @@ export const ImportWorkoutTemplate: FC = () => {
                     "h-[unset] min-w-0 items-start rounded-md border p-3 text-sm",
                   )}
                   variant="outline"
+                  onClick={() => onSelected(template)}
                 >
                   <span className="font-medium text-left">{template.name}</span>
                   {template.description ? (
