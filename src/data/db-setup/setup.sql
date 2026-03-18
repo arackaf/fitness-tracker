@@ -138,8 +138,6 @@ CREATE INDEX IF NOT EXISTS idx_network_timing_log_client_start
   ON network_timing_log (client_start);
 
 
-
-
 -- ================================================================================
 -- Data
 -- ================================================================================
@@ -282,6 +280,60 @@ JOIN (
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
 WHERE wt.name = 'Chest Day';
+
+
+INSERT INTO workout_template (name, description)
+VALUES
+  ('Workout tempalte_1', 'Template workout 1 with two single-exercise segments.'),
+  ('Workout tempalte_2', 'Template workout 2 with two single-exercise segments.'),
+  ('Workout tempalte_3', 'Template workout 3 with two single-exercise segments.'),
+  ('Workout tempalte_4', 'Template workout 4 with two single-exercise segments.'),
+  ('Workout tempalte_5', 'Template workout 5 with two single-exercise segments.'),
+  ('Workout tempalte_6', 'Template workout 6 with two single-exercise segments.'),
+  ('Workout tempalte_7', 'Template workout 7 with two single-exercise segments.'),
+  ('Workout tempalte_8', 'Template workout 8 with two single-exercise segments.'),
+  ('Workout tempalte_9', 'Template workout 9 with two single-exercise segments.'),
+  ('Workout tempalte_10', 'Template workout 10 with two single-exercise segments.');
+
+INSERT INTO workout_template_segment (workout_template_id, segment_order, sets)
+SELECT wt.id, seed.segment_order, 4
+FROM workout_template wt
+JOIN (
+  VALUES
+    (1),
+    (2)
+) AS seed(segment_order) ON true
+WHERE wt.name LIKE 'Workout tempalte_%';
+
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
+SELECT wts.id, 1, seed.exercise_id, ARRAY[8, 8, 8, 8], false
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
+JOIN (
+  VALUES
+    ('Workout tempalte_1', 1, 2),
+    ('Workout tempalte_1', 2, 45),
+    ('Workout tempalte_2', 1, 11),
+    ('Workout tempalte_2', 2, 33),
+    ('Workout tempalte_3', 1, 6),
+    ('Workout tempalte_3', 2, 48),
+    ('Workout tempalte_4', 1, 19),
+    ('Workout tempalte_4', 2, 26),
+    ('Workout tempalte_5', 1, 9),
+    ('Workout tempalte_5', 2, 50),
+    ('Workout tempalte_6', 1, 14),
+    ('Workout tempalte_6', 2, 37),
+    ('Workout tempalte_7', 1, 8),
+    ('Workout tempalte_7', 2, 41),
+    ('Workout tempalte_8', 1, 5),
+    ('Workout tempalte_8', 2, 29),
+    ('Workout tempalte_9', 1, 16),
+    ('Workout tempalte_9', 2, 47),
+    ('Workout tempalte_10', 1, 3),
+    ('Workout tempalte_10', 2, 44)
+) AS seed(template_name, segment_order, exercise_id)
+  ON seed.template_name = wt.name
+ AND seed.segment_order = wts.segment_order;
 
 -- ================================================================================
 
