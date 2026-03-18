@@ -54,17 +54,21 @@ export function ImportWorkoutTemplate() {
           {workoutTemplates?.length ? (
             <div className="flex flex-col gap-2">
               {workoutTemplates.map(template => (
-                <div
+                <Button
                   key={template.id}
-                  className="rounded-md border p-3 text-sm flex flex-col gap-1"
+                  className={cn(
+                    "flex flex-col gap-1 cursor-pointer",
+                    "h-[unset] min-w-0 items-start rounded-md border p-3 text-sm",
+                  )}
+                  variant="outline"
                 >
-                  <p className="font-medium">{template.name}</p>
+                  <span className="font-medium text-left">{template.name}</span>
                   {template.description ? (
-                    <p className="text-muted-foreground min-w-0 truncate">
+                    <span className="text-muted-foreground text-left w-full truncate">
                       {template.description}
-                    </p>
+                    </span>
                   ) : null}
-                </div>
+                </Button>
               ))}
             </div>
           ) : null}
