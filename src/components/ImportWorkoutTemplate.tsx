@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { LoadingAbsolute } from "@/components/loading-state/LoadingAbsolute";
+import { Loading } from "@/components/loading-state/Loading";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,10 +12,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import { cn } from "@/lib/utils";
 
 export function ImportWorkoutTemplate() {
   const [page, setPage] = useState(1);
-  const { data, isPending, isError } = useQuery(workoutTemplatesQueryOptions(page));
+  const { data, isFetching, isError } = useQuery({
+    ...workoutTemplatesQueryOptions(page),
+    placeholderData: keepPreviousData,
+  });
 
   const workoutTemplates = data?.workoutTemplates ?? [];
   const hasNextPage = data?.hasNextPage ?? false;
@@ -32,54 +36,65 @@ export function ImportWorkoutTemplate() {
             Choose a template to start from.
           </DialogDescription>
         </DialogHeader>
-        <div className="relative mt-2 flex min-h-48 flex-col gap-4">
-          {isPending ? (
-            <LoadingAbsolute />
-          ) : isError ? (
+        <div className="relative mt-2 flex min-h-48 flex-col gap-4 min-w-0">
+          {isFetching ? <Loading placement="local" fadeIn /> : null}
+
+          {isError ? (
             <p className="text-sm text-destructive">
               Failed to load templates. Please try again.
             </p>
-          ) : workoutTemplates.length === 0 ? (
+          ) : null}
+
+          {workoutTemplates?.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No workout templates found.
             </p>
-          ) : (
-            <div className="space-y-2">
+          ) : null}
+
+          {workoutTemplates?.length ? (
+            <div className="flex flex-col gap-2">
               {workoutTemplates.map(template => (
                 <div
                   key={template.id}
-                  className="rounded-md border p-3 text-sm"
+                  className="rounded-md border p-3 text-sm flex flex-col gap-1 min-w-0"
                 >
                   <p className="font-medium">{template.name}</p>
                   {template.description ? (
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground flex min-w-0 truncate">
                       {template.description}
                     </p>
                   ) : null}
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
 
           <div className="flex gap-2">
-            {page > 1 ? (
-              <Button
-                onClick={() => setPage(currentPage => Math.max(1, currentPage - 1))}
-                variant="outline"
-                className="self-start"
-              >
-                Previous Page
-              </Button>
-            ) : null}
-            {hasNextPage ? (
-              <Button
-                onClick={() => setPage(currentPage => currentPage + 1)}
-                variant="outline"
-                className="self-start"
-              >
-                Next Page
-              </Button>
-            ) : null}
+            <Button
+              onClick={() =>
+                setPage(currentPage => Math.max(1, currentPage - 1))
+              }
+              variant="outline"
+              disabled={page === 1}
+              className={cn(
+                "self-start",
+                page === 1 ? "cursor-not-allowed" : "cursor-pointer",
+              )}
+            >
+              Previous Page
+            </Button>
+
+            <Button
+              onClick={() => setPage(currentPage => currentPage + 1)}
+              variant="outline"
+              disabled={!hasNextPage}
+              className={cn(
+                "self-start",
+                !hasNextPage ? "cursor-not-allowed" : "cursor-pointer",
+              )}
+            >
+              Next Page
+            </Button>
           </div>
         </div>
       </DialogContent>

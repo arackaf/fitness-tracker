@@ -15,7 +15,7 @@ export const SuspensePageLayout: FC<
   return (
     <section>
       <Header title={title} children={headerChildren} />
-      <Suspense fallback={<Loading />}>{children}</Suspense>
+      <Suspense fallback={<Loading placement="page" />}>{children}</Suspense>
     </section>
   );
 };

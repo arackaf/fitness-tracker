@@ -58,7 +58,7 @@ const RouteContent: FC = () => {
 
   return (
     <div>
-      {pending ? <Loading fadeIn /> : null}
+      {pending ? <Loading placement="page" fadeIn /> : null}
 
       {workouts.length === 0 ? (
         <p className="text-muted-foreground">
