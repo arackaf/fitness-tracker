@@ -10,7 +10,6 @@ export const SuspensePageLayout: FC<
   PropsWithChildren<SuspensePageLayoutProps>
 > = props => {
   const { title, children, headerChildren } = props;
-  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <section>
