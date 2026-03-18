@@ -1,10 +1,4 @@
-import {
-  useDeferredValue,
-  useMemo,
-  useState,
-  useTransition,
-  type FC,
-} from "react";
+import { useDeferredValue, useMemo, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -14,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
-import { FadeInLoading } from "@/components/loading-state/FadeInLoading";
+import { Loading } from "@/components/loading-state/Loading";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: ({ context }) => {
@@ -64,7 +58,7 @@ const RouteContent: FC = () => {
 
   return (
     <div>
-      {pending ? <FadeInLoading /> : null}
+      {pending ? <Loading fadeIn /> : null}
 
       {workouts.length === 0 ? (
         <p className="text-muted-foreground">

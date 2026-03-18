@@ -2,11 +2,19 @@ import type { FC } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export const Loading: FC<{ className?: string }> = ({ className }) => {
+type LoadingProps = {
+  className?: string;
+  fadeIn?: boolean;
+};
+export const Loading: FC<LoadingProps> = props => {
+  const { className, fadeIn = false } = props;
+
   return (
     <div
       className={cn(
         "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+        fadeIn &&
+          "animate-in fade-in duration-200 delay-50 fill-mode-[backwards]",
         className,
       )}
       role="status"
