@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
+import { LoadingAbsolute } from "@/components/loading-state/LoadingAbsolute";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,9 +32,9 @@ export function ImportWorkoutTemplate() {
             Choose a template to start from.
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-2 flex flex-col gap-4">
+        <div className="relative mt-2 flex min-h-48 flex-col gap-4">
           {isPending ? (
-            <p className="text-sm text-muted-foreground">Loading templates...</p>
+            <LoadingAbsolute />
           ) : isError ? (
             <p className="text-sm text-destructive">
               Failed to load templates. Please try again.
