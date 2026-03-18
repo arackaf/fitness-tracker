@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getWorkoutTemplates } from "@/data/workout-templates/get-workout-templates";
@@ -16,6 +16,9 @@ export const workoutTemplatesQueryOptions = (pageInput = 1) => {
   return queryOptions({
     queryKey: ["workout-templates", { page }],
     queryFn: () => getWorkoutTemplatesServerFn({ data: { page } }),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
   });
 };
 
