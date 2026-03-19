@@ -78,18 +78,15 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
   workout_template_segment_id INT NOT NULL REFERENCES workout_template_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  reps INT[],
-  reps_to_failure BOOL,
-  execution_type execution_type,
-  duration NUMERIC(8, 2),
-  duration_unit duration_unit,
-  distance NUMERIC(8, 2),
-  distance_unit distance_unit
+  execution_type execution_type
 );
 CREATE INDEX IF NOT EXISTS idx_workout_template_segment_exercise_segment_id_exercise_order
   ON workout_template_segment_exercise (workout_template_segment_id, exercise_order);
 
-CREATE TYPE template_repetition_measurement as (
+CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  workout_template_segment_exercise_id INT NOT NULL REFERENCES workout_template_segment_exercise(id) ON DELETE CASCADE,
+  set_order INT NOT NULL CHECK (set_order > 0),
   reps INT,
   reps_to_failure BOOL,
   duration NUMERIC(8, 2),
@@ -97,6 +94,7 @@ CREATE TYPE template_repetition_measurement as (
   distance NUMERIC(8, 2),
   distance_unit distance_unit
 );
+
 
 
 -- ================================================================================
@@ -298,8 +296,8 @@ JOIN (
 ) AS seed(segment_order, sets) ON true
 WHERE wt.name = 'Chest Day';
 
-INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-SELECT wts.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id)
+SELECT wts.id, seed.exercise_order, seed.exercise_id
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -310,6 +308,35 @@ JOIN (
     (3, 1, 4, NULL, true)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
+WHERE wt.name = 'Chest Day';
+
+INSERT INTO workout_template_segment_exercise_measurement (
+  workout_template_segment_exercise_id,
+  set_order,
+  reps,
+  reps_to_failure
+)
+SELECT
+  wtse.id,
+  COALESCE(rep_values.ord::INT, 1) AS set_order,
+  rep_values.rep,
+  seed.reps_to_failure
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
+JOIN (
+  VALUES
+    (1, 1, 1, ARRAY[8, 8, 8, 8], false),
+    (1, 2, 5, ARRAY[12, 12, 12, 12], false),
+    (2, 1, 7, ARRAY[8, 8, 8, 8], false),
+    (3, 1, 4, NULL, true)
+) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
+  ON seed.segment_order = wts.segment_order
+JOIN workout_template_segment_exercise wtse
+  ON wtse.workout_template_segment_id = wts.id
+ AND wtse.exercise_order = seed.exercise_order
+ AND wtse.exercise_id = seed.exercise_id
+LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
+  ON seed.reps IS NOT NULL
 WHERE wt.name = 'Chest Day';
 
 
@@ -336,8 +363,8 @@ JOIN (
 ) AS seed(segment_order) ON true
 WHERE wt.name LIKE 'Workout tempalte_%';
 
-INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-SELECT wts.id, 1, seed.exercise_id, ARRAY[8, 8, 8, 8], false
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id)
+SELECT wts.id, 1, seed.exercise_id
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -366,6 +393,51 @@ JOIN (
   ON seed.template_name = wt.name
  AND seed.segment_order = wts.segment_order;
 
+INSERT INTO workout_template_segment_exercise_measurement (
+  workout_template_segment_exercise_id,
+  set_order,
+  reps,
+  reps_to_failure
+)
+SELECT
+  wtse.id,
+  reps_seed.ord::INT,
+  reps_seed.rep,
+  false
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
+JOIN (
+  VALUES
+    ('Workout tempalte_1', 1, 2),
+    ('Workout tempalte_1', 2, 45),
+    ('Workout tempalte_2', 1, 11),
+    ('Workout tempalte_2', 2, 33),
+    ('Workout tempalte_3', 1, 6),
+    ('Workout tempalte_3', 2, 48),
+    ('Workout tempalte_4', 1, 19),
+    ('Workout tempalte_4', 2, 26),
+    ('Workout tempalte_5', 1, 9),
+    ('Workout tempalte_5', 2, 50),
+    ('Workout tempalte_6', 1, 14),
+    ('Workout tempalte_6', 2, 37),
+    ('Workout tempalte_7', 1, 8),
+    ('Workout tempalte_7', 2, 41),
+    ('Workout tempalte_8', 1, 5),
+    ('Workout tempalte_8', 2, 29),
+    ('Workout tempalte_9', 1, 16),
+    ('Workout tempalte_9', 2, 47),
+    ('Workout tempalte_10', 1, 3),
+    ('Workout tempalte_10', 2, 44)
+) AS seed(template_name, segment_order, exercise_id)
+  ON seed.template_name = wt.name
+ AND seed.segment_order = wts.segment_order
+JOIN workout_template_segment_exercise wtse
+  ON wtse.workout_template_segment_id = wts.id
+ AND wtse.exercise_order = 1
+ AND wtse.exercise_id = seed.exercise_id
+JOIN LATERAL unnest(ARRAY[8, 8, 8, 8]) WITH ORDINALITY AS reps_seed(rep, ord)
+  ON true;
+
 -- ================================================================================
 
 INSERT INTO workout_template (name, description)
@@ -383,8 +455,8 @@ JOIN (
 ) AS seed(segment_order, sets) ON true
 WHERE wt.name = 'Back Day';
 
-INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-SELECT wts.id, seed.exercise_order, seed.exercise_id, seed.reps, seed.reps_to_failure
+INSERT INTO workout_template_segment_exercise (workout_template_segment_id, exercise_order, exercise_id)
+SELECT wts.id, seed.exercise_order, seed.exercise_id
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -396,6 +468,36 @@ JOIN (
     (4, 1, 48, ARRAY[12, 12, 12, 12], false)
 ) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
   ON seed.segment_order = wts.segment_order
+WHERE wt.name = 'Back Day';
+
+INSERT INTO workout_template_segment_exercise_measurement (
+  workout_template_segment_exercise_id,
+  set_order,
+  reps,
+  reps_to_failure
+)
+SELECT
+  wtse.id,
+  COALESCE(rep_values.ord::INT, 1) AS set_order,
+  rep_values.rep,
+  seed.reps_to_failure
+FROM workout_template wt
+JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
+JOIN (
+  VALUES
+    (1, 1, 46, NULL, true),
+    (1, 2, 49, ARRAY[8, 8, 8, 8], false),
+    (2, 1, 50, ARRAY[8, 8, 8, 8], false),
+    (3, 1, 51, ARRAY[12, 12, 12, 12], false),
+    (4, 1, 48, ARRAY[12, 12, 12, 12], false)
+) AS seed(segment_order, exercise_order, exercise_id, reps, reps_to_failure)
+  ON seed.segment_order = wts.segment_order
+JOIN workout_template_segment_exercise wtse
+  ON wtse.workout_template_segment_id = wts.id
+ AND wtse.exercise_order = seed.exercise_order
+ AND wtse.exercise_id = seed.exercise_id
+LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
+  ON seed.reps IS NOT NULL
 WHERE wt.name = 'Back Day';
 
 -- ================================================================================
