@@ -64,10 +64,19 @@ export const getWorkoutTemplates = async (
       exerciseRowId: workoutTemplateSegmentExerciseTable.id,
       exerciseOrder: workoutTemplateSegmentExerciseTable.exerciseOrder,
       exerciseExerciseId: workoutTemplateSegmentExerciseTable.exerciseId,
-      exerciseSetOrder: workoutTemplateSegmentExerciseMeasurementTable.setOrder,
-      exerciseReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
-      exerciseRepsToFailure:
+      exerciseExecutionType: workoutTemplateSegmentExerciseTable.executionType,
+      measurementSetOrder: workoutTemplateSegmentExerciseMeasurementTable.setOrder,
+      measurementReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
+      measurementRepsToFailure:
         workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
+      measurementExerciseWeightUnit:
+        workoutTemplateSegmentExerciseMeasurementTable.exerciseWeightUnit,
+      measurementDuration: workoutTemplateSegmentExerciseMeasurementTable.duration,
+      measurementDurationUnit:
+        workoutTemplateSegmentExerciseMeasurementTable.durationUnit,
+      measurementDistance: workoutTemplateSegmentExerciseMeasurementTable.distance,
+      measurementDistanceUnit:
+        workoutTemplateSegmentExerciseMeasurementTable.distanceUnit,
     })
     .from(workoutTemplateTable)
     .innerJoin(
@@ -110,13 +119,13 @@ export const getWorkoutTemplates = async (
   >();
   const exercisesBySegment = new Map<
     number,
-    Map<
-      number,
-      {
-        exercise: WorkoutTemplateState["segments"][number]["exercises"][number];
-        repsBySetOrder: Map<number, number>;
-      }
-    >
+    Array<{
+      exercise: WorkoutTemplateState["segments"][number]["exercises"][number];
+      measurementsBySetOrder: Map<
+        number,
+        WorkoutTemplateState["segments"][number]["exercises"][number]["measurements"][number]
+      >;
+    }>
   >();
 
   for (const row of rows) {
@@ -154,7 +163,7 @@ export const getWorkoutTemplates = async (
       };
 
       templateSegments.set(row.segmentRowId, segment);
-      exercisesBySegment.set(row.segmentRowId, new Map());
+      exercisesBySegment.set(row.segmentRowId, []);
       workoutTemplate.segments.push(segment);
     }
 
@@ -167,7 +176,9 @@ export const getWorkoutTemplates = async (
     }
 
     const segmentExercises = exercisesBySegment.get(row.segmentRowId)!;
-    let exercisePayload = segmentExercises.get(row.exerciseRowId);
+    let exercisePayload = segmentExercises.find(
+      payload => payload.exercise.id === row.exerciseRowId,
+    );
 
     if (!exercisePayload) {
       const exercise = {
@@ -175,38 +186,39 @@ export const getWorkoutTemplates = async (
         workoutTemplateSegmentId: row.segmentRowId,
         exerciseOrder: row.exerciseOrder,
         exerciseId: row.exerciseExerciseId,
-        reps: [],
-        repsToFailure: false,
+        executionType: row.exerciseExecutionType ?? null,
+        measurements: [],
       };
 
       exercisePayload = {
         exercise,
-        repsBySetOrder: new Map(),
+        measurementsBySetOrder: new Map(),
       };
 
-      segmentExercises.set(row.exerciseRowId, exercisePayload);
+      segmentExercises.push(exercisePayload);
       segment.exercises.push(exercise);
     }
 
-    if (row.exerciseRepsToFailure != null) {
-      exercisePayload.exercise.repsToFailure = row.exerciseRepsToFailure;
-    }
-
-    if (row.exerciseSetOrder != null && row.exerciseReps != null) {
-      exercisePayload.repsBySetOrder.set(
-        row.exerciseSetOrder,
-        row.exerciseReps,
-      );
+    if (row.measurementSetOrder != null) {
+      exercisePayload.measurementsBySetOrder.set(row.measurementSetOrder, {
+        workoutTemplateSegmentExerciseId: row.exerciseRowId,
+        setOrder: row.measurementSetOrder,
+        reps: row.measurementReps,
+        repsToFailure: row.measurementRepsToFailure,
+        exerciseWeightUnit: row.measurementExerciseWeightUnit,
+        duration: row.measurementDuration,
+        durationUnit: row.measurementDurationUnit,
+        distance: row.measurementDistance,
+        distanceUnit: row.measurementDistanceUnit,
+      });
     }
   }
 
   for (const segmentExercises of exercisesBySegment.values()) {
-    for (const { exercise, repsBySetOrder } of segmentExercises.values()) {
-      const orderedReps = Array.from(repsBySetOrder.entries())
+    for (const { exercise, measurementsBySetOrder } of segmentExercises) {
+      exercise.measurements = Array.from(measurementsBySetOrder.entries())
         .sort((a, b) => a[0] - b[0])
-        .map(([, reps]) => reps);
-
-      exercise.reps = orderedReps.length > 0 ? orderedReps : null;
+        .map(([, measurement]) => measurement);
     }
   }
 
