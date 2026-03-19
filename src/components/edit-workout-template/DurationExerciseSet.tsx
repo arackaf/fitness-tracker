@@ -77,11 +77,8 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
             }}
             children={durationUnitField => (
               <Select
-                value={
-                  durationUnitField.state.value ??
-                  defaultDurationUnit ??
-                  undefined
-                }
+                defaultValue={defaultDurationUnit ?? undefined}
+                value={durationUnitField.state.value ?? undefined}
                 onValueChange={value => {
                   durationUnitField.handleChange(value as never);
                 }}

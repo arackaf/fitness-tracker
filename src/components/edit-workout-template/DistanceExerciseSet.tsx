@@ -77,11 +77,8 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
             }}
             children={distanceUnitField => (
               <Select
-                value={
-                  distanceUnitField.state.value ??
-                  defaultDistanceUnit ??
-                  undefined
-                }
+                defaultValue={defaultDistanceUnit ?? undefined}
+                value={distanceUnitField.state.value ?? undefined}
                 onValueChange={value => {
                   distanceUnitField.handleChange(value as never);
                 }}
