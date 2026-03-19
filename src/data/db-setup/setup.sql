@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS muscle_group (
 CREATE TYPE execution_type AS ENUM ('repetition', 'distance', 'time');
 CREATE TYPE duration_unit AS ENUM ('seconds', 'minutes', 'hours');
 CREATE TYPE distance_unit AS ENUM ('feet', 'yards', 'miles', 'km');
+CREATE TYPE exercise_weight_unit AS ENUM ('lbs', 'kg');
 
 INSERT INTO muscle_group (id, name)
 OVERRIDING SYSTEM VALUE
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS exercises (
   description TEXT,
   muscle_groups INT[] NOT NULL,
   is_compound BOOL,
+  is_bodyweight BOOL,
   execution_type execution_type NOT NULL,
   default_distance_type distance_unit,
   default_duration_type duration_unit
@@ -89,6 +91,7 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
   set_order INT NOT NULL CHECK (set_order > 0),
   reps INT,
   reps_to_failure BOOL,
+  exercise_weight_unit exercise_weight_unit,
   duration NUMERIC(8, 2),
   duration_unit duration_unit,
   distance NUMERIC(8, 2),
@@ -252,7 +255,7 @@ WITH exercise_seed AS (
   ) AS seed(id, name, description, muscle_groups, is_compound, execution_type, default_distance_type, default_duration_type)
 ),
 inserted_exercises AS (
-  INSERT INTO exercises (id, name, description, muscle_groups, is_compound, execution_type, default_distance_type, default_duration_type)
+  INSERT INTO exercises (id, name, description, muscle_groups, is_compound, is_bodyweight, execution_type, default_distance_type, default_duration_type)
   OVERRIDING SYSTEM VALUE
   SELECT
     seed.id,
@@ -265,6 +268,21 @@ inserted_exercises AS (
       ORDER BY seed_mg.ord
     )::INT[],
     seed.is_compound,
+    CASE
+      WHEN seed.name IN (
+        'Push-Up',
+        'Chest Dips',
+        'Pistol Squat',
+        'Glute Bridge',
+        'Nordic Hamstring Curl',
+        'Pull-Up',
+        'Chin-Up',
+        'Inverted Row',
+        'Triceps Dip',
+        'Bench Dip'
+      ) THEN true
+      ELSE false
+    END AS is_bodyweight,
     seed.execution_type::execution_type,
     seed.default_distance_type::distance_unit,
     seed.default_duration_type::duration_unit
@@ -314,13 +332,18 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  exercise_weight_unit
 )
 SELECT
   wtse.id,
   COALESCE(rep_values.ord::INT, 1) AS set_order,
   rep_values.rep,
-  seed.reps_to_failure
+  seed.reps_to_failure,
+  CASE
+    WHEN NOT ex.is_bodyweight AND ex.execution_type = 'repetition' THEN 'lbs'::exercise_weight_unit
+    ELSE NULL
+  END
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -335,6 +358,7 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = seed.exercise_order
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = wtse.exercise_id
 LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
   ON seed.reps IS NOT NULL
 WHERE wt.name = 'Chest Day';
@@ -397,13 +421,18 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  exercise_weight_unit
 )
 SELECT
   wtse.id,
   reps_seed.ord::INT,
   reps_seed.rep,
-  false
+  false,
+  CASE
+    WHEN NOT ex.is_bodyweight AND ex.execution_type = 'repetition' THEN 'lbs'::exercise_weight_unit
+    ELSE NULL
+  END
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -435,6 +464,7 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = 1
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = wtse.exercise_id
 JOIN LATERAL unnest(ARRAY[8, 8, 8, 8]) WITH ORDINALITY AS reps_seed(rep, ord)
   ON true;
 
@@ -474,13 +504,18 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  exercise_weight_unit
 )
 SELECT
   wtse.id,
   COALESCE(rep_values.ord::INT, 1) AS set_order,
   rep_values.rep,
-  seed.reps_to_failure
+  seed.reps_to_failure,
+  CASE
+    WHEN NOT ex.is_bodyweight AND ex.execution_type = 'repetition' THEN 'lbs'::exercise_weight_unit
+    ELSE NULL
+  END
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -496,6 +531,7 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = seed.exercise_order
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = wtse.exercise_id
 LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
   ON seed.reps IS NOT NULL
 WHERE wt.name = 'Back Day';
