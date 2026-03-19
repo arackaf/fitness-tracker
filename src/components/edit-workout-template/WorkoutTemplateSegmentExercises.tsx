@@ -1,15 +1,12 @@
 import { useState, type FC } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
+import {
+  ExecutionTypeSelect,
+  type ExecutionType,
+} from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { createDefaultExercise } from "@/data/workout-templates/workout-state";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import type { MuscleGroup } from "@/data/types";
@@ -23,7 +20,6 @@ type WorkoutTemplateSegmentExercisesProps = {
   segmentSets: number;
 };
 
-type ExecutionType = "repetition" | "distance" | "time";
 const DEFAULT_EXECUTION_TYPE: ExecutionType = "repetition";
 
 const getExerciseExecutionType = (
@@ -100,7 +96,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                       </label>
                       {segmentExercise.state.value != null &&
                       segmentExercise.state.value > 0 ? (
-                        <Select
+                        <ExecutionTypeSelect
                           value={
                             executionTypeByRow[exerciseIndex] ??
                             getExerciseExecutionType(
@@ -113,21 +109,10 @@ export const WorkoutTemplateSegmentExercises: FC<
                           onValueChange={value => {
                             setExecutionTypeByRow(previous => ({
                               ...previous,
-                              [exerciseIndex]: value as ExecutionType,
+                              [exerciseIndex]: value,
                             }));
                           }}
-                        >
-                          <SelectTrigger className="w-52">
-                            <SelectValue placeholder="Execution type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="repetition">
-                              Repetition
-                            </SelectItem>
-                            <SelectItem value="distance">Distance</SelectItem>
-                            <SelectItem value="time">Time</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        />
                       ) : null}
                     </>
                   )}
