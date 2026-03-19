@@ -36,4 +36,15 @@ export const relations = defineRelations(schema, r => ({
   workoutTemplate: {
     workoutTemplateSegments: r.many.workoutTemplateSegment(),
   },
+  workoutTemplateSegmentExerciseMeasurement: {
+    workoutTemplateSegmentExercise: r.one.workoutTemplateSegmentExercise({
+      from: r.workoutTemplateSegmentExerciseMeasurement
+        .workoutTemplateSegmentExerciseId,
+      to: r.workoutTemplateSegmentExercise.id,
+    }),
+  },
+  workoutTemplateSegmentExercise: {
+    workoutTemplateSegmentExerciseMeasurements:
+      r.many.workoutTemplateSegmentExerciseMeasurement(),
+  },
 }));

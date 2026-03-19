@@ -21,17 +21,18 @@ export const executionType = pgEnum("execution_type", [
   "distance",
   "time",
 ]);
-export const durationMeasurement = pgEnum("duration_measurement", [
+export const durationUnit = pgEnum("duration_unit", [
   "seconds",
   "minutes",
   "hours",
 ]);
-export const distanceMeasurement = pgEnum("distance_measurement", [
+export const distanceUnit = pgEnum("distance_unit", [
   "feet",
   "yards",
   "miles",
   "km",
 ]);
+export const exerciseWeightUnit = pgEnum("exercise_weight_unit", ["lbs", "kg"]);
 
 export const exercises = pgTable(
   "exercises",
@@ -41,9 +42,10 @@ export const exercises = pgTable(
     description: text(),
     muscleGroups: integer("muscle_groups").array().notNull(),
     isCompound: boolean("is_compound"),
+    isBodyweight: boolean("is_bodyweight"),
     executionType: executionType("execution_type").notNull(),
-    defaultDistanceType: distanceMeasurement("default_distance_type"),
-    defaultDurationType: durationMeasurement("default_duration_type"),
+    defaultDistanceType: distanceUnit("default_distance_type"),
+    defaultDurationType: durationUnit("default_duration_type"),
   },
   table => [
     index("idx_exercises_muscle_groups_gin").using(
@@ -170,9 +172,9 @@ export const workoutSegmentExercise = pgTable(
     repsToFailure: boolean("reps_to_failure"),
     executionType: executionType("execution_type"),
     duration: numeric({ precision: 8, scale: 2 }),
-    durationUnit: durationMeasurement("duration_unit"),
+    durationUnit: durationUnit("duration_unit"),
     distance: numeric({ precision: 8, scale: 2 }),
-    distanceUnit: distanceMeasurement("distance_unit"),
+    distanceUnit: distanceUnit("distance_unit"),
   },
   table => [
     index("idx_workout_segment_exercise_segment_id_exercise_order").using(
@@ -228,13 +230,7 @@ export const workoutTemplateSegmentExercise = pgTable(
     exerciseId: integer("exercise_id")
       .notNull()
       .references(() => exercises.id),
-    reps: integer().array(),
-    repsToFailure: boolean("reps_to_failure"),
     executionType: executionType("execution_type"),
-    duration: numeric({ precision: 8, scale: 2 }),
-    durationUnit: durationMeasurement("duration_unit"),
-    distance: numeric({ precision: 8, scale: 2 }),
-    distanceUnit: distanceMeasurement("distance_unit"),
   },
   table => [
     index(
@@ -247,6 +243,34 @@ export const workoutTemplateSegmentExercise = pgTable(
     check(
       "workout_template_segment_exercise_exercise_order_check",
       sql`(exercise_order > 0)`,
+    ),
+  ],
+);
+
+export const workoutTemplateSegmentExerciseMeasurement = pgTable(
+  "workout_template_segment_exercise_measurement",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    workoutTemplateSegmentExerciseId: integer(
+      "workout_template_segment_exercise_id",
+    )
+      .notNull()
+      .references(() => workoutTemplateSegmentExercise.id, {
+        onDelete: "cascade",
+      }),
+    setOrder: integer("set_order").notNull(),
+    reps: integer(),
+    repsToFailure: boolean("reps_to_failure"),
+    exerciseWeightUnit: exerciseWeightUnit("exercise_weight_unit"),
+    duration: numeric({ precision: 8, scale: 2 }),
+    durationUnit: durationUnit("duration_unit"),
+    distance: numeric({ precision: 8, scale: 2 }),
+    distanceUnit: distanceUnit("distance_unit"),
+  },
+  table => [
+    check(
+      "workout_template_segment_exercise_measurement_set_order_check",
+      sql`(set_order > 0)`,
     ),
   ],
 );
