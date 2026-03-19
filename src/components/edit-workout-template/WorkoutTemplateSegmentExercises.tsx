@@ -89,6 +89,11 @@ export const WorkoutTemplateSegmentExercises: FC<
                               const selectedExercise = exercises.find(
                                 exercise => exercise.id === exerciseId,
                               );
+
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
+                                selectedExercise?.defaultDistanceType,
+                              );
                               setExecutionTypeByRow(previous => ({
                                 ...previous,
                                 [exerciseIndex]:
