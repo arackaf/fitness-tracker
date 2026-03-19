@@ -153,12 +153,14 @@ export const WorkoutTemplateSegmentExercises: FC<
                     form={form}
                     segmentIndex={segmentIndex}
                     exerciseIndex={exerciseIndex}
+                    defaultDistanceUnit={selectedExercise?.defaultDistanceType}
                   />
                 ) : (
                   <DurationExerciseSet
                     form={form}
                     segmentIndex={segmentIndex}
                     exerciseIndex={exerciseIndex}
+                    defaultDurationUnit={selectedExercise?.defaultDurationType}
                   />
                 )}
               </div>
