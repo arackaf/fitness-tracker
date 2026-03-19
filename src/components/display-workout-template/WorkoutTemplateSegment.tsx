@@ -13,6 +13,10 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({
   segment,
   exerciseNameById,
 }) => {
+  const hasRepsToFailure = (
+    measurements: TemplateSegmentWithExercises["exercises"][number]["measurements"],
+  ) => measurements.some(measurement => measurement.repsToFailure);
+
   return (
     <section className="rounded-lg border border-border/80 bg-background/70 p-3">
       <p className="text-sm font-medium">{segment.sets} sets</p>
@@ -23,7 +27,7 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({
           >
             {exerciseNameById.get(exercise.exerciseId) ??
               `Exercise #${exercise.exerciseId}`}
-            {exercise.repsToFailure ? (
+            {hasRepsToFailure(exercise.measurements) ? (
               <span className="ml-1 text-xs">(to failure)</span>
             ) : null}
             {exerciseIndex < segment.exercises.length - 1 ? ", " : null}

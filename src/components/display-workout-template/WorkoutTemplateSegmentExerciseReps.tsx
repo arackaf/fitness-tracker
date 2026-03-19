@@ -7,17 +7,20 @@ type WorkoutTemplateSegmentRepsProps = {
 };
 
 const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
-  const repsByExercise = segment.exercises.map(exercise => exercise.reps ?? []);
+  const repsByExercise = segment.exercises.map(exercise =>
+    exercise.measurements.map(measurement => measurement.reps ?? null),
+  );
+  const maxSetCount = Math.max(...repsByExercise.map(reps => reps.length), 0);
 
   if (segment.exercises.length <= 1) {
-    return (
-      repsByExercise[0]?.map(rep => (rep ?? "_").toString()).join(", ") ?? ""
-    );
+    return Array.from({ length: maxSetCount }, (_, index) => {
+      return (repsByExercise[0]?.[index] ?? "_").toString();
+    }).join(", ");
   }
 
   return Array.from(
     {
-      length: Math.max(...repsByExercise.map(reps => reps.length), 0),
+      length: maxSetCount,
     },
     (_, repIndex) => {
       const repsForSet = repsByExercise.map(reps => reps[repIndex] ?? null);
