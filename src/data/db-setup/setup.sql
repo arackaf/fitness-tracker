@@ -98,8 +98,6 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
   distance_unit distance_unit
 );
 
-
-
 -- ================================================================================
 -- Workouts
 -- ================================================================================
