@@ -7,6 +7,7 @@ import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
+  workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
 type GetWorkoutTemplatesParams = {
@@ -62,8 +63,10 @@ export const getWorkoutTemplates = async (
       exerciseRowId: workoutTemplateSegmentExerciseTable.id,
       exerciseOrder: workoutTemplateSegmentExerciseTable.exerciseOrder,
       exerciseExerciseId: workoutTemplateSegmentExerciseTable.exerciseId,
-      exerciseReps: workoutTemplateSegmentExerciseTable.reps,
-      exerciseRepsToFailure: workoutTemplateSegmentExerciseTable.repsToFailure,
+      exerciseSetOrder: workoutTemplateSegmentExerciseMeasurementTable.setOrder,
+      exerciseReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
+      exerciseRepsToFailure:
+        workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
     })
     .from(workoutTemplateTable)
     .innerJoin(
@@ -84,17 +87,35 @@ export const getWorkoutTemplates = async (
         workoutTemplateSegmentTable.id,
       ),
     )
+    .leftJoin(
+      workoutTemplateSegmentExerciseMeasurementTable,
+      eq(
+        workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
+        workoutTemplateSegmentExerciseTable.id,
+      ),
+    )
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(
       desc(workoutTemplateTable.id),
       asc(workoutTemplateSegmentTable.segmentOrder),
       asc(workoutTemplateSegmentExerciseTable.exerciseOrder),
+      asc(workoutTemplateSegmentExerciseMeasurementTable.setOrder),
     );
 
   const workoutTemplates = new Map<number, WorkoutTemplateState>();
   const segmentsByTemplate = new Map<
     number,
     Map<number, WorkoutTemplateState["segments"][number]>
+  >();
+  const exercisesBySegment = new Map<
+    number,
+    Map<
+      number,
+      {
+        exercise: WorkoutTemplateState["segments"][number]["exercises"][number];
+        repsBySetOrder: Map<number, number>;
+      }
+    >
   >();
 
   for (const row of rows) {
@@ -132,26 +153,57 @@ export const getWorkoutTemplates = async (
       };
 
       templateSegments.set(row.segmentRowId, segment);
+      exercisesBySegment.set(row.segmentRowId, new Map());
       workoutTemplate.segments.push(segment);
     }
 
     if (
       row.exerciseRowId == null ||
       row.exerciseOrder == null ||
-      row.exerciseExerciseId == null ||
-      row.exerciseRepsToFailure == null
+      row.exerciseExerciseId == null
     ) {
       continue;
     }
 
-    segment.exercises.push({
-      id: row.exerciseRowId,
-      workoutTemplateSegmentId: row.segmentRowId,
-      exerciseOrder: row.exerciseOrder,
-      exerciseId: row.exerciseExerciseId,
-      reps: row.exerciseReps,
-      repsToFailure: row.exerciseRepsToFailure,
-    });
+    const segmentExercises = exercisesBySegment.get(row.segmentRowId)!;
+    let exercisePayload = segmentExercises.get(row.exerciseRowId);
+
+    if (!exercisePayload) {
+      const exercise = {
+        id: row.exerciseRowId,
+        workoutTemplateSegmentId: row.segmentRowId,
+        exerciseOrder: row.exerciseOrder,
+        exerciseId: row.exerciseExerciseId,
+        reps: [],
+        repsToFailure: false,
+      };
+
+      exercisePayload = {
+        exercise,
+        repsBySetOrder: new Map(),
+      };
+
+      segmentExercises.set(row.exerciseRowId, exercisePayload);
+      segment.exercises.push(exercise);
+    }
+
+    if (row.exerciseRepsToFailure != null) {
+      exercisePayload.exercise.repsToFailure = row.exerciseRepsToFailure;
+    }
+
+    if (row.exerciseSetOrder != null && row.exerciseReps != null) {
+      exercisePayload.repsBySetOrder.set(row.exerciseSetOrder, row.exerciseReps);
+    }
+  }
+
+  for (const segmentExercises of exercisesBySegment.values()) {
+    for (const { exercise, repsBySetOrder } of segmentExercises.values()) {
+      const orderedReps = Array.from(repsBySetOrder.entries())
+        .sort((a, b) => a[0] - b[0])
+        .map(([, reps]) => reps);
+
+      exercise.reps = orderedReps.length > 0 ? orderedReps : null;
+    }
   }
 
   const templates = Array.from(workoutTemplates.values());
