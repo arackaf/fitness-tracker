@@ -31,7 +31,8 @@ FROM (
     (6, 'hamstrings'),
     (7, 'calves'),
     (8, 'lats'),
-    (9, 'back')
+    (9, 'back'),
+    (10, 'cardio')
 ) AS seed(id, name)
 WHERE NOT EXISTS (
   SELECT 1
@@ -239,7 +240,7 @@ WITH exercise_seed AS (
       (68, 'Rope Triceps Pushdown', 'Push the rope down and spread the ends apart at the bottom.', ARRAY['triceps'], false, 'repetition', NULL, NULL),
       (69, 'Bench Dip', 'Place hands on a bench, lower your body, and press up to straight elbows.', ARRAY['triceps', 'shoulders'], false, 'repetition', NULL, NULL),
       (70, 'Kickback', 'Hinge forward, keep upper arm still, and extend your elbow to move the weight back.', ARRAY['triceps'], false, 'repetition', NULL, NULL),
-      (71, 'Running', 'Run at a sustainable pace over a measured distance.', ARRAY['quadriceps', 'hamstrings', 'calves'], true, 'distance', 'miles', NULL),
+      (71, 'Running', 'Run at a sustainable pace over a measured distance.', ARRAY['cardio'], true, 'distance', 'miles', NULL),
       (72, 'Rowing', 'Row continuously with controlled strokes for a set duration.', ARRAY['back', 'lats', 'biceps'], true, 'time', NULL, 'minutes')
   ) AS seed(id, name, description, muscle_groups, is_compound, execution_type, default_distance_type, default_duration_type)
 ),
