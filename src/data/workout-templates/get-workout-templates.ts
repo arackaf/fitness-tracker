@@ -41,8 +41,9 @@ export const getWorkoutTemplates = async (
   const templateIds = db.$with("valid_workout_templates").as(
     db
       .select({
-        workout_template_id:
-          sql<number>`${workoutTemplateTable.id}`.as("workout_template_id"),
+        workout_template_id: sql<number>`${workoutTemplateTable.id}`.as(
+          "workout_template_id",
+        ),
       })
       .from(workoutTemplateTable)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -192,7 +193,10 @@ export const getWorkoutTemplates = async (
     }
 
     if (row.exerciseSetOrder != null && row.exerciseReps != null) {
-      exercisePayload.repsBySetOrder.set(row.exerciseSetOrder, row.exerciseReps);
+      exercisePayload.repsBySetOrder.set(
+        row.exerciseSetOrder,
+        row.exerciseReps,
+      );
     }
   }
 

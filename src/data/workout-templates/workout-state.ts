@@ -2,35 +2,37 @@ import {
   workoutTemplate,
   workoutTemplateSegment,
   workoutTemplateSegmentExercise,
+  workoutTemplateSegmentExerciseMeasurement,
 } from "@/drizzle/schema";
 
 export type WorkoutTemplate = typeof workoutTemplate.$inferInsert;
 export type WorkoutTemplateSegment = typeof workoutTemplateSegment.$inferInsert;
 export type WorkoutTemplateSegmentExercise =
   typeof workoutTemplateSegmentExercise.$inferInsert;
-
-export type WorkoutTemplateSegmentExerciseState =
-  WorkoutTemplateSegmentExercise & {
-    id?: number;
-  };
-
-export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
-  id?: number;
-  exercises: WorkoutTemplateSegmentExerciseState[];
-};
+export type WorkoutTemplateSegmentExerciseMeasurement =
+  typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
 
 export type WorkoutTemplateState = WorkoutTemplate & {
   id?: number;
   segments: TemplateSegmentWithExercises[];
 };
 
+export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
+  id?: number;
+  exercises: WorkoutTemplateSegmentExerciseState[];
+};
+
+export type WorkoutTemplateSegmentExerciseState =
+  WorkoutTemplateSegmentExercise & {
+    id?: number;
+    measurements: WorkoutTemplateSegmentExerciseMeasurement[];
+  };
+
 const DEFAULT_SET_COUNT = 4;
 
 const defaultExercise: WorkoutTemplateSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
-  repsToFailure: false,
-  reps: Array.from({ length: DEFAULT_SET_COUNT }, () => 8),
   workoutTemplateSegmentId: 0,
 };
 
