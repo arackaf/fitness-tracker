@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS muscle_group (
 );
 
 CREATE TYPE execution_type AS ENUM ('repetition', 'distance', 'time');
-CREATE TYPE duration_measurement AS ENUM ('seconds', 'minutes', 'hours');
-CREATE TYPE distance_measurement AS ENUM ('feet', 'yards', 'miles', 'km');
+CREATE TYPE duration_unit AS ENUM ('seconds', 'minutes', 'hours');
+CREATE TYPE distance_unit AS ENUM ('feet', 'yards', 'miles', 'km');
 
 INSERT INTO muscle_group (id, name)
 OVERRIDING SYSTEM VALUE
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS exercises (
   muscle_groups INT[] NOT NULL,
   is_compound BOOL,
   execution_type execution_type NOT NULL,
-  default_distance_type distance_measurement,
-  default_duration_type duration_measurement
+  default_distance_type distance_unit,
+  default_duration_type duration_unit
 );
 CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
   ON exercises
@@ -82,12 +82,21 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
   reps_to_failure BOOL,
   execution_type execution_type,
   duration NUMERIC(8, 2),
-  duration_unit duration_measurement,
+  duration_unit duration_unit,
   distance NUMERIC(8, 2),
-  distance_unit distance_measurement
+  distance_unit distance_unit
 );
 CREATE INDEX IF NOT EXISTS idx_workout_template_segment_exercise_segment_id_exercise_order
   ON workout_template_segment_exercise (workout_template_segment_id, exercise_order);
+
+CREATE TYPE template_repetition_measurement as (
+  reps INT,
+  reps_to_failure BOOL,
+  duration NUMERIC(8, 2),
+  duration_unit duration_unit,
+  distance NUMERIC(8, 2),
+  distance_unit distance_unit
+);
 
 
 -- ================================================================================
@@ -121,9 +130,9 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise (
   reps_to_failure BOOL,
   execution_type execution_type,
   duration NUMERIC(8, 2),
-  duration_unit duration_measurement,
+  duration_unit duration_unit,
   distance NUMERIC(8, 2),
-  distance_unit distance_measurement
+  distance_unit distance_unit
 );
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
   ON workout_segment_exercise (workout_segment_id, exercise_order);
@@ -259,8 +268,8 @@ inserted_exercises AS (
     )::INT[],
     seed.is_compound,
     seed.execution_type::execution_type,
-    seed.default_distance_type::distance_measurement,
-    seed.default_duration_type::duration_measurement
+    seed.default_distance_type::distance_unit,
+    seed.default_duration_type::duration_unit
   FROM exercise_seed seed
   WHERE NOT EXISTS (
     SELECT 1
