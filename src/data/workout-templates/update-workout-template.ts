@@ -15,9 +15,7 @@ type TemplateExerciseInput =
     reps?: Array<number | null> | null;
     repsToFailure?: boolean | null;
     duration?: string | number | null;
-    durationUnit?: "seconds" | "minutes" | "hours" | null;
     distance?: string | number | null;
-    distanceUnit?: "feet" | "yards" | "miles" | "km" | null;
   };
 
 const toNumericString = (value: string | number | null | undefined) => {
@@ -36,7 +34,6 @@ const createExerciseMeasurements = (
       {
         setOrder: 1,
         distance: toNumericString(exercise.distance),
-        distanceUnit: exercise.distanceUnit ?? null,
       },
     ];
   }
@@ -46,7 +43,6 @@ const createExerciseMeasurements = (
       {
         setOrder: 1,
         duration: toNumericString(exercise.duration),
-        durationUnit: exercise.durationUnit ?? null,
       },
     ];
   }
@@ -175,6 +171,8 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
               exerciseOrder: exerciseIndex + 1,
               exerciseId: exerciseInput.exerciseId,
               executionType: exerciseInput.executionType ?? null,
+              durationUnit: exerciseInput.durationUnit ?? null,
+              distanceUnit: exerciseInput.distanceUnit ?? null,
             })
             .where(
               and(
@@ -201,6 +199,8 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
               exerciseOrder: exerciseIndex + 1,
               exerciseId: exerciseInput.exerciseId,
               executionType: exerciseInput.executionType ?? null,
+              durationUnit: exerciseInput.durationUnit ?? null,
+              distanceUnit: exerciseInput.distanceUnit ?? null,
             })
             .returning({ id: workoutTemplateSegmentExerciseTable.id });
 

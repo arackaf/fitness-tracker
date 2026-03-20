@@ -20,13 +20,21 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
     <div className="flex gap-2 min-h-7">
       <div className="h-7 flex items-center">
         <form.Field
-          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].repsToFailure`}
-          children={segmentExercise => (
+          mode="array"
+          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`}
+          children={measurementsField => (
             <label className="inline-flex items-center gap-2 text-xs text-muted-foreground text-nowrap">
               <Checkbox
-                checked={segmentExercise.state.value ?? false}
+                checked={measurementsField.state.value.some(
+                  measurement => measurement.repsToFailure,
+                )}
                 onCheckedChange={checked => {
-                  segmentExercise.handleChange(checked === true);
+                  measurementsField.handleChange(
+                    measurementsField.state.value.map(measurement => ({
+                      ...measurement,
+                      repsToFailure: checked === true,
+                    })),
+                  );
                 }}
               />
               Reps to failure
@@ -42,23 +50,23 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
         <div className="flex flex-wrap gap-2">
           <form.Field
             mode="array"
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps`}
+            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`}
             children={field => {
-              return field.state.value?.map((_, repsIndex) => {
-                const setNumber = repsIndex + 1;
+              return field.state.value?.map((_, measurementIndex) => {
+                const setNumber = measurementIndex + 1;
                 return (
                   <div
                     key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
                     className="flex flex-wrap gap-2"
                   >
                     <form.Field
-                      name={`segments[${segmentIndex}].exercises[${exerciseIndex}].reps[${repsIndex}]`}
+                      name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
                       validators={{
                         onChange: ({ value }) => {
                           const repsToFailure =
                             form.state.values.segments[segmentIndex]?.exercises[
                               exerciseIndex
-                            ]?.repsToFailure;
+                            ]?.measurements[measurementIndex]?.repsToFailure;
 
                           if (!repsToFailure && value == null) {
                             return "Required";

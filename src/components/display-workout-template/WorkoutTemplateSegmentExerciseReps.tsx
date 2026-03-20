@@ -15,11 +15,11 @@ const getDisplayMeasurement = (
   measurement: Measurement,
 ) => {
   if (exercise.executionType === "distance") {
-    return `${(measurement.distance ?? "_").toString()}${measurement.distanceUnit ?? ""}`;
+    return `${(measurement.distance ?? "_").toString()}${exercise.distanceUnit ?? ""}`;
   }
 
   if (exercise.executionType === "time") {
-    return `${(measurement.duration ?? "_").toString()}${measurement.durationUnit ?? ""}`;
+    return `${(measurement.duration ?? "_").toString()}${exercise.durationUnit ?? ""}`;
   }
 
   return (measurement.reps ?? "_").toString();

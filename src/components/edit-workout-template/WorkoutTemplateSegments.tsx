@@ -68,29 +68,56 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                             segmentsField.state.value[
                               segmentIndex
                             ].exercises.forEach((exercise, idx) => {
-                              if (exercise.repsToFailure) {
+                              if (
+                                exercise.executionType != null &&
+                                exercise.executionType !== "repetition"
+                              ) {
                                 return;
                               }
-                              const currentReps = exercise.reps ?? [];
-                              const repsFieldName =
-                                `segments[${segmentIndex}].exercises[${idx}].reps` as const;
+                              const currentMeasurements =
+                                exercise.measurements ?? [];
+                              const measurementsFieldName =
+                                `segments[${segmentIndex}].exercises[${idx}].measurements` as const;
 
-                              if (newSetsValue > currentReps.length) {
-                                const lastRep = currentReps.at(-1)!;
-                                const additionalReps = Array.from(
-                                  { length: newSetsValue - currentReps.length },
-                                  () => lastRep,
+                              if (newSetsValue > currentMeasurements.length) {
+                                const lastMeasurement =
+                                  currentMeasurements.at(-1) ?? {
+                                    workoutTemplateSegmentExerciseId:
+                                      exercise.id ?? 0,
+                                    setOrder: 1,
+                                    reps: 8,
+                                    repsToFailure: false,
+                                  };
+
+                                const additionalMeasurements = Array.from(
+                                  {
+                                    length:
+                                      newSetsValue - currentMeasurements.length,
+                                  },
+                                  (_, additionalIndex) => ({
+                                    ...lastMeasurement,
+                                    setOrder:
+                                      currentMeasurements.length +
+                                      additionalIndex +
+                                      1,
+                                  }),
                                 );
-                                form.setFieldValue(repsFieldName, [
-                                  ...currentReps,
-                                  ...additionalReps,
+
+                                form.setFieldValue(measurementsFieldName, [
+                                  ...currentMeasurements,
+                                  ...additionalMeasurements,
                                 ]);
                               }
 
-                              if (newSetsValue < currentReps.length) {
+                              if (newSetsValue < currentMeasurements.length) {
                                 form.setFieldValue(
-                                  repsFieldName,
-                                  currentReps.slice(0, newSetsValue),
+                                  measurementsFieldName,
+                                  currentMeasurements
+                                    .slice(0, newSetsValue)
+                                    .map((measurement, measurementIndex) => ({
+                                      ...measurement,
+                                      setOrder: measurementIndex + 1,
+                                    })),
                                 );
                               }
                             });

@@ -231,6 +231,8 @@ export const workoutTemplateSegmentExercise = pgTable(
       .notNull()
       .references(() => exercises.id),
     executionType: executionType("execution_type"),
+    durationUnit: durationUnit("duration_unit"),
+    distanceUnit: distanceUnit("distance_unit"),
   },
   table => [
     index(
@@ -263,9 +265,7 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
     repsToFailure: boolean("reps_to_failure"),
     exerciseWeightUnit: exerciseWeightUnit("exercise_weight_unit"),
     duration: numeric({ precision: 8, scale: 2 }),
-    durationUnit: durationUnit("duration_unit"),
     distance: numeric({ precision: 8, scale: 2 }),
-    distanceUnit: distanceUnit("distance_unit"),
   },
   table => [
     check(

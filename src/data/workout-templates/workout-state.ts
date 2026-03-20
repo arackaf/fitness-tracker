@@ -41,9 +41,17 @@ const defaultExercise: WorkoutTemplateSegmentExercise = {
 };
 
 export const createDefaultExercise = (sets?: number) => {
+  const measurementCount = sets ?? DEFAULT_SET_COUNT;
+
   return {
     ...defaultExercise,
-    reps: Array.from({ length: sets ?? DEFAULT_SET_COUNT }, () => 8),
+    executionType: "repetition" as const,
+    measurements: Array.from({ length: measurementCount }, (_, index) => ({
+      workoutTemplateSegmentExerciseId: 0,
+      setOrder: index + 1,
+      reps: 8,
+      repsToFailure: false,
+    })),
   };
 };
 

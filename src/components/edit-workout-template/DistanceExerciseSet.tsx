@@ -30,7 +30,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form.Field
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distance`}
+            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[0].distance`}
             validators={{
               onChange: ({ value }) => {
                 if (value == null || value === "") {
@@ -67,7 +67,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                 const distance =
                   form.state.values.segments[segmentIndex]?.exercises[
                     exerciseIndex
-                  ]?.distance;
+                  ]?.measurements[0]?.distance;
                 if (distance != null && distance !== "" && value == null) {
                   return "Required";
                 }

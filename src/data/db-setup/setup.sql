@@ -80,7 +80,9 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise (
   workout_template_segment_id INT NOT NULL REFERENCES workout_template_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  execution_type execution_type
+  execution_type execution_type,
+  duration_unit duration_unit,
+  distance_unit distance_unit
 );
 CREATE INDEX IF NOT EXISTS idx_workout_template_segment_exercise_segment_id_exercise_order
   ON workout_template_segment_exercise (workout_template_segment_id, exercise_order);
@@ -93,9 +95,7 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
   reps_to_failure BOOL,
   exercise_weight_unit exercise_weight_unit,
   duration NUMERIC(8, 2),
-  duration_unit duration_unit,
-  distance NUMERIC(8, 2),
-  distance_unit distance_unit
+  distance NUMERIC(8, 2)
 );
 
 -- ================================================================================

@@ -60,6 +60,7 @@ export const WorkoutTemplateSegmentExercises: FC<
             );
             const rowExecutionType =
               executionTypeByRow[exerciseIndex] ??
+              segmentExercisesField.state.value[exerciseIndex]?.executionType ??
               getExerciseExecutionType(selectedExercise);
 
             return (
@@ -94,6 +95,14 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
                                 selectedExercise?.defaultDistanceType,
                               );
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
+                                selectedExercise?.defaultDurationType,
+                              );
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                                getExerciseExecutionType(selectedExercise),
+                              );
                               setExecutionTypeByRow(previous => ({
                                 ...previous,
                                 [exerciseIndex]:
@@ -117,6 +126,10 @@ export const WorkoutTemplateSegmentExercises: FC<
                           <ExecutionTypeSelect
                             value={rowExecutionType}
                             onValueChange={value => {
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                                value,
+                              );
                               setExecutionTypeByRow(previous => ({
                                 ...previous,
                                 [exerciseIndex]: value,

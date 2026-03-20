@@ -65,6 +65,8 @@ export const getWorkoutTemplates = async (
       exerciseOrder: workoutTemplateSegmentExerciseTable.exerciseOrder,
       exerciseExerciseId: workoutTemplateSegmentExerciseTable.exerciseId,
       exerciseExecutionType: workoutTemplateSegmentExerciseTable.executionType,
+      exerciseDurationUnit: workoutTemplateSegmentExerciseTable.durationUnit,
+      exerciseDistanceUnit: workoutTemplateSegmentExerciseTable.distanceUnit,
       measurementSetOrder:
         workoutTemplateSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
@@ -74,12 +76,8 @@ export const getWorkoutTemplates = async (
         workoutTemplateSegmentExerciseMeasurementTable.exerciseWeightUnit,
       measurementDuration:
         workoutTemplateSegmentExerciseMeasurementTable.duration,
-      measurementDurationUnit:
-        workoutTemplateSegmentExerciseMeasurementTable.durationUnit,
       measurementDistance:
         workoutTemplateSegmentExerciseMeasurementTable.distance,
-      measurementDistanceUnit:
-        workoutTemplateSegmentExerciseMeasurementTable.distanceUnit,
     })
     .from(workoutTemplateTable)
     .innerJoin(
@@ -186,6 +184,8 @@ export const getWorkoutTemplates = async (
         exerciseOrder: row.exerciseOrder,
         exerciseId: row.exerciseExerciseId,
         executionType: row.exerciseExecutionType ?? null,
+        durationUnit: row.exerciseDurationUnit ?? null,
+        distanceUnit: row.exerciseDistanceUnit ?? null,
         measurements: [],
       };
 
@@ -201,9 +201,7 @@ export const getWorkoutTemplates = async (
         repsToFailure: row.measurementRepsToFailure,
         exerciseWeightUnit: row.measurementExerciseWeightUnit,
         duration: row.measurementDuration,
-        durationUnit: row.measurementDurationUnit,
         distance: row.measurementDistance,
-        distanceUnit: row.measurementDistanceUnit,
       });
     }
   }
