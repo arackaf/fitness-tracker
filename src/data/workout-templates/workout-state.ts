@@ -61,17 +61,16 @@ const defaultSegment: WorkoutTemplateSegment = {
   workoutTemplateId: 0,
 };
 
-export const createDefaultSegment = () => {
+export const createDefaultSegment = (): TemplateSegmentWithExercises => {
   return {
     ...defaultSegment,
     exercises: [createDefaultExercise()],
   };
 };
 
-export const createDefaultWorkout = () => {
+export const createDefaultWorkout = (): WorkoutTemplateState => {
   return {
     name: "",
-    workoutDate: new Date().toISOString().split("T")[0] ?? "",
     description: "",
     segments: [createDefaultSegment()],
   };
