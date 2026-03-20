@@ -11,6 +11,10 @@ export type WorkoutTemplateSegmentExercise =
   typeof workoutTemplateSegmentExercise.$inferInsert;
 export type WorkoutTemplateSegmentExerciseMeasurement =
   typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
+export type WorkoutTemplateSegmentExerciseMeasurementState =
+  WorkoutTemplateSegmentExerciseMeasurement & {
+    id?: number;
+  };
 
 export type WorkoutTemplateState = WorkoutTemplate & {
   id?: number;
@@ -25,7 +29,7 @@ export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
 export type WorkoutTemplateSegmentExerciseState =
   WorkoutTemplateSegmentExercise & {
     id?: number;
-    measurements: WorkoutTemplateSegmentExerciseMeasurement[];
+    measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
   };
 
 export type Exercise = TemplateSegmentWithExercises["exercises"][number];

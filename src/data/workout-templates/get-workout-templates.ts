@@ -68,6 +68,7 @@ export const getWorkoutTemplates = async (
       exerciseDurationUnit: workoutTemplateSegmentExerciseTable.durationUnit,
       exerciseDistanceUnit: workoutTemplateSegmentExerciseTable.distanceUnit,
       exerciseWeightUnit: workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
+      measurementId: workoutTemplateSegmentExerciseMeasurementTable.id,
       measurementSetOrder:
         workoutTemplateSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
@@ -197,6 +198,7 @@ export const getWorkoutTemplates = async (
 
     if (row.measurementSetOrder != null) {
       exercise.measurements.push({
+        id: row.measurementId ?? undefined,
         workoutTemplateSegmentExerciseId: row.exerciseRowId,
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
