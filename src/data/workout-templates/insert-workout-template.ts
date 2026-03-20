@@ -40,6 +40,7 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
     setOrder: index + 1,
     reps: measurement.reps ?? null,
     repsToFailure: measurement.repsToFailure ?? false,
+    weightUsed: toNumericString(measurement.weightUsed),
   }));
 };
 

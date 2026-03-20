@@ -248,6 +248,9 @@ export const WorkoutTemplateSegmentExercise: FC<
           form={form}
           segmentIndex={segmentIndex}
           exerciseIndex={exerciseIndex}
+          showWeightUsed={Boolean(
+            selectedExercise && selectedExercise.isBodyweight !== true,
+          )}
         />
       ) : rowExecutionType === "distance" ? (
         <DistanceExerciseSet

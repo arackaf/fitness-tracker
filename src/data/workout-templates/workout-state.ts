@@ -51,6 +51,7 @@ export const createDefaultExercise = (sets?: number) => {
       setOrder: index + 1,
       reps: 8,
       repsToFailure: false,
+      weightUsed: null,
     })),
   };
 };

@@ -21,15 +21,7 @@ import { exercises as exerciseTable, muscleGroup } from "@/drizzle/schema";
 
 type MuscleGroup = typeof muscleGroup.$inferSelect;
 
-export type Exercise = Pick<
-  typeof exerciseTable.$inferSelect,
-  | "id"
-  | "name"
-  | "muscleGroups"
-  | "executionType"
-  | "defaultDistanceType"
-  | "defaultDurationType"
->;
+export type Exercise = typeof exerciseTable.$inferSelect;
 
 type ExerciseSelectorProps = {
   value: number | null;

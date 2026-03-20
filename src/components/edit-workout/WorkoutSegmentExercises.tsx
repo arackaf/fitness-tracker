@@ -133,7 +133,7 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
                                   <Input
                                     min={0}
                                     type="number"
-                                    value={repsField.state.value}
+                                    value={repsField.state.value ?? 0}
                                     onChange={event => {
                                       const value = event.target.value;
                                       repsField.handleChange(

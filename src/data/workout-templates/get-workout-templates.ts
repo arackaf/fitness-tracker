@@ -74,6 +74,8 @@ export const getWorkoutTemplates = async (
         workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
       measurementExerciseWeightUnit:
         workoutTemplateSegmentExerciseMeasurementTable.exerciseWeightUnit,
+      measurementWeightUsed:
+        workoutTemplateSegmentExerciseMeasurementTable.weightUsed,
       measurementDuration:
         workoutTemplateSegmentExerciseMeasurementTable.duration,
       measurementDistance:
@@ -200,6 +202,7 @@ export const getWorkoutTemplates = async (
         reps: row.measurementReps,
         repsToFailure: row.measurementRepsToFailure,
         exerciseWeightUnit: row.measurementExerciseWeightUnit,
+        weightUsed: row.measurementWeightUsed,
         duration: row.measurementDuration,
         distance: row.measurementDistance,
       });

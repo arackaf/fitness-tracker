@@ -81,6 +81,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                                     setOrder: 1,
                                     reps: 8,
                                     repsToFailure: false,
+                                    weightUsed: null,
                                   };
 
                                 const additionalMeasurements = Array.from(
