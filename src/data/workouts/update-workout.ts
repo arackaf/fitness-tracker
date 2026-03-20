@@ -13,6 +13,9 @@ import {
 type WorkoutExerciseInput =
   WorkoutState["segments"][number]["exercises"][number];
 
+const isPersistedId = (id: number | null | undefined): id is number =>
+  id != null && Number.isInteger(id) && id > 0;
+
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
     return null;
@@ -118,7 +121,7 @@ export const updateWorkout = async (input: WorkoutState) => {
 
     const incomingSegmentIds = input.segments
       .map(segment => segment.id)
-      .filter((id): id is number => Boolean(id));
+      .filter(isPersistedId);
 
     await tx
       .delete(workoutSegmentTable)
@@ -132,7 +135,7 @@ export const updateWorkout = async (input: WorkoutState) => {
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
 
-      if (segmentId) {
+      if (isPersistedId(segmentId)) {
         const [updatedSegment] = await tx
           .update(workoutSegmentTable)
           .set({
@@ -166,7 +169,7 @@ export const updateWorkout = async (input: WorkoutState) => {
 
       const incomingExerciseIds = segment.exercises
         .map(exercise => exercise.id)
-        .filter((id): id is number => Boolean(id));
+        .filter(isPersistedId);
 
       await tx
         .delete(workoutSegmentExerciseTable)
@@ -181,7 +184,7 @@ export const updateWorkout = async (input: WorkoutState) => {
         const exerciseUnitValues = createExerciseUnitValues(exercise);
         let segmentExerciseId = exercise.id;
 
-        if (exercise.id) {
+        if (isPersistedId(exercise.id)) {
           const [updatedSegmentExercise] = await tx
             .update(workoutSegmentExerciseTable)
             .set({

@@ -57,11 +57,13 @@ const defaultExercise: WorkoutSegmentExercise = {
   workoutSegmentId: 0,
 };
 
+let newExerciseId = -1;
 export const createDefaultExercise = (sets?: number) => {
   const measurementCount = sets ?? DEFAULT_SET_COUNT;
 
   return {
     ...defaultExercise,
+    id: newExerciseId--,
     executionType: "repetition" as const,
     repsToFailure: false,
     reps: Array.from({ length: measurementCount }, () => 8),
@@ -81,9 +83,11 @@ const defaultSegment: WorkoutSegment = {
   workoutId: 0,
 };
 
+let newSegmentId = -1;
 export const createDefaultSegment = (): SegmentWithExercises => {
   return {
     ...defaultSegment,
+    id: newSegmentId--,
     exercises: [createDefaultExercise()],
   };
 };

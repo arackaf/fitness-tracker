@@ -63,9 +63,9 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
       name="segments"
       children={segmentsField => (
         <div className="flex flex-col gap-4">
-          {segmentsField.state.value.map((_, segmentIndex) => (
+          {segmentsField.state.value.map((segment, segmentIndex) => (
             <div
-              key={`segment-${segmentIndex + 1}`}
+              key={`segment-${segment.id}`}
               className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55"
             >
               <div className="flex items-end gap-3">
