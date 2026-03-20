@@ -9,12 +9,7 @@ import {
 } from "@/drizzle/schema";
 
 type TemplateExerciseInput =
-  WorkoutTemplateState["segments"][number]["exercises"][number] & {
-    reps?: Array<number | null> | null;
-    repsToFailure?: boolean | null;
-    duration?: string | number | null;
-    distance?: string | number | null;
-  };
+  WorkoutTemplateState["segments"][number]["exercises"][number];
 
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
@@ -24,41 +19,44 @@ const toNumericString = (value: string | number | null | undefined) => {
   return String(value);
 };
 
-const createExerciseMeasurements = (
-  exercise: TemplateExerciseInput,
-) => {
+const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
+  const measurements = exercise.measurements ?? [];
+
   if (exercise.executionType === "distance") {
-    return [
-      {
-        setOrder: 1,
-        distance: toNumericString(exercise.distance),
-      },
-    ];
+    if (measurements.length === 0) {
+      return [{ setOrder: 1, distance: null }];
+    }
+
+    return measurements.map((measurement, index) => ({
+      setOrder: index + 1,
+      distance: toNumericString(measurement.distance),
+    }));
   }
 
   if (exercise.executionType === "time") {
+    if (measurements.length === 0) {
+      return [{ setOrder: 1, duration: null }];
+    }
+
+    return measurements.map((measurement, index) => ({
+      setOrder: index + 1,
+      duration: toNumericString(measurement.duration),
+    }));
+  }
+
+  if (measurements.length === 0) {
     return [
       {
         setOrder: 1,
-        duration: toNumericString(exercise.duration),
+        repsToFailure: false,
       },
     ];
   }
 
-  const reps = exercise.reps ?? [];
-  if (reps.length === 0) {
-    return [
-      {
-        setOrder: 1,
-        repsToFailure: exercise.repsToFailure ?? false,
-      },
-    ];
-  }
-
-  return reps.map((rep: number | null, index: number) => ({
+  return measurements.map((measurement, index) => ({
     setOrder: index + 1,
-    reps: rep ?? null,
-    repsToFailure: exercise.repsToFailure ?? false,
+    reps: measurement.reps ?? null,
+    repsToFailure: measurement.repsToFailure ?? false,
   }));
 };
 
@@ -105,10 +103,12 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
           await tx
             .insert(workoutTemplateSegmentExerciseMeasurementTable)
             .values(
-              exerciseMeasurements.map((measurement: (typeof exerciseMeasurements)[number]) => ({
-                workoutTemplateSegmentExerciseId: insertedExercise.id,
-                ...measurement,
-              })),
+              exerciseMeasurements.map(
+                (measurement: (typeof exerciseMeasurements)[number]) => ({
+                  workoutTemplateSegmentExerciseId: insertedExercise.id,
+                  ...measurement,
+                }),
+              ),
             );
         }
       }
