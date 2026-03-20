@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import { Trash2 } from "lucide-react";
 
 import {
@@ -72,10 +72,6 @@ export const WorkoutTemplateSegmentExercise: FC<
   const [rowExercise, setRowExercise] = useState<Exercise | undefined>(
     selectedExercise,
   );
-
-  useEffect(() => {
-    setRowExercise(selectedExercise);
-  }, [selectedExerciseId, selectedExercise]);
 
   const rowExecutionType =
     form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]

@@ -25,22 +25,24 @@ export const WorkoutTemplateSegmentExercises: FC<
       name={`segments[${segmentIndex}].exercises`}
       children={segmentExercisesField => (
         <>
-          {segmentExercisesField.state.value.map((_, exerciseIndex) => (
-            <WorkoutTemplateSegmentExercise
-              key={`segment-${segmentIndex}-exercise-${exerciseIndex}`}
-              form={form}
-              exercises={exercises}
-              muscleGroups={muscleGroups}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-              canRemove={segmentExercisesField.state.value.length > 1}
-              onRemove={() =>
-                segmentExercisesField.removeValue(exerciseIndex, {
-                  dontValidate: true,
-                })
-              }
-            />
-          ))}
+          {segmentExercisesField.state.value.map(
+            (segmentExercise, exerciseIndex) => (
+              <WorkoutTemplateSegmentExercise
+                key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
+                form={form}
+                exercises={exercises}
+                muscleGroups={muscleGroups}
+                segmentIndex={segmentIndex}
+                exerciseIndex={exerciseIndex}
+                canRemove={segmentExercisesField.state.value.length > 1}
+                onRemove={() =>
+                  segmentExercisesField.removeValue(exerciseIndex, {
+                    dontValidate: true,
+                  })
+                }
+              />
+            ),
+          )}
 
           <div className="flex items-center">
             <Button
