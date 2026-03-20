@@ -75,14 +75,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
 
                               if (newSetsValue > currentMeasurements.length) {
                                 const lastMeasurement =
-                                  currentMeasurements.at(-1) ?? {
-                                    workoutTemplateSegmentExerciseId:
-                                      exercise.id ?? 0,
-                                    setOrder: 1,
-                                    reps: 8,
-                                    repsToFailure: false,
-                                    weightUsed: null,
-                                  };
+                                  currentMeasurements.at(-1)!;
 
                                 const additionalMeasurements = Array.from(
                                   {
@@ -107,12 +100,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                               if (newSetsValue < currentMeasurements.length) {
                                 form.setFieldValue(
                                   measurementsFieldName,
-                                  currentMeasurements
-                                    .slice(0, newSetsValue)
-                                    .map((measurement, measurementIndex) => ({
-                                      ...measurement,
-                                      setOrder: measurementIndex + 1,
-                                    })),
+                                  currentMeasurements.slice(0, newSetsValue),
                                 );
                               }
                             });
