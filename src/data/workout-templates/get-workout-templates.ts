@@ -67,13 +67,12 @@ export const getWorkoutTemplates = async (
       exerciseExecutionType: workoutTemplateSegmentExerciseTable.executionType,
       exerciseDurationUnit: workoutTemplateSegmentExerciseTable.durationUnit,
       exerciseDistanceUnit: workoutTemplateSegmentExerciseTable.distanceUnit,
+      exerciseWeightUnit: workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
       measurementSetOrder:
         workoutTemplateSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
       measurementRepsToFailure:
         workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
-      measurementExerciseWeightUnit:
-        workoutTemplateSegmentExerciseMeasurementTable.exerciseWeightUnit,
       measurementWeightUsed:
         workoutTemplateSegmentExerciseMeasurementTable.weightUsed,
       measurementDuration:
@@ -186,6 +185,7 @@ export const getWorkoutTemplates = async (
         exerciseOrder: row.exerciseOrder,
         exerciseId: row.exerciseExerciseId,
         executionType: row.exerciseExecutionType ?? null,
+        exerciseWeightUnit: row.exerciseWeightUnit ?? null,
         durationUnit: row.exerciseDurationUnit ?? null,
         distanceUnit: row.exerciseDistanceUnit ?? null,
         measurements: [],
@@ -201,7 +201,6 @@ export const getWorkoutTemplates = async (
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
         repsToFailure: row.measurementRepsToFailure,
-        exerciseWeightUnit: row.measurementExerciseWeightUnit,
         weightUsed: row.measurementWeightUsed,
         duration: row.measurementDuration,
         distance: row.measurementDistance,

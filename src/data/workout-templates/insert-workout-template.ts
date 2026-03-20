@@ -77,6 +77,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
             exerciseOrder: exerciseIndex + 1,
             exerciseId: exerciseInput.exerciseId,
             executionType: exerciseInput.executionType ?? null,
+            exerciseWeightUnit: exerciseInput.exerciseWeightUnit ?? null,
             durationUnit: exerciseInput.durationUnit ?? null,
             distanceUnit: exerciseInput.distanceUnit ?? null,
           })
