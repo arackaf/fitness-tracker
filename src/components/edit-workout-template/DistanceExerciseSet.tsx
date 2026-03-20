@@ -49,7 +49,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                           <span>{setNumber}:</span>
                           <Input
                             min={0}
-                            step="0.01"
+                            step="1"
                             type="number"
                             value={distanceField.state.value ?? ""}
                             onChange={event => {

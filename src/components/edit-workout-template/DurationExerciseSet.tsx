@@ -49,7 +49,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                           <span>{setNumber}:</span>
                           <Input
                             min={0}
-                            step="0.01"
+                            step="1"
                             type="number"
                             value={durationField.state.value ?? ""}
                             onChange={event => {
