@@ -31,7 +31,10 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                 const setNumber = measurementIndex + 1;
 
                 return (
-                  <div key={`distance-${setNumber}`} className="flex flex-col gap-1.5">
+                  <div
+                    key={`distance-${setNumber}`}
+                    className="flex flex-col gap-1.5"
+                  >
                     <form.Field
                       name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].distance`}
                       validators={{
@@ -75,13 +78,16 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                           const measurementFieldName =
                             `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                           const measurements = field.state.value;
-                          const sourceMeasurement = measurements[measurementIndex];
+                          const sourceMeasurement =
+                            measurements[measurementIndex];
 
                           form.setFieldValue(
                             measurementFieldName,
                             measurements.map(
                               (measurement, targetMeasurementIndex) => {
-                                if (targetMeasurementIndex === measurementIndex) {
+                                if (
+                                  targetMeasurementIndex === measurementIndex
+                                ) {
                                   return measurement;
                                 }
 
