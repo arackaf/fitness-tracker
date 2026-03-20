@@ -77,30 +77,16 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                                 const lastMeasurement =
                                   currentMeasurements.at(-1)!;
 
-                                const additionalMeasurements = Array.from(
-                                  {
-                                    length:
-                                      newSetsValue - currentMeasurements.length,
-                                  },
-                                  (_, additionalIndex) => ({
-                                    ...lastMeasurement,
-                                    setOrder:
-                                      currentMeasurements.length +
-                                      additionalIndex +
-                                      1,
-                                  }),
-                                );
-
-                                form.setFieldValue(measurementsFieldName, [
-                                  ...currentMeasurements,
-                                  ...additionalMeasurements,
-                                ]);
+                                form.pushFieldValue(measurementsFieldName, {
+                                  ...lastMeasurement,
+                                  setOrder: newSetsValue,
+                                });
                               }
 
                               if (newSetsValue < currentMeasurements.length) {
-                                form.setFieldValue(
+                                form.removeFieldValue(
                                   measurementsFieldName,
-                                  currentMeasurements.slice(0, newSetsValue),
+                                  currentMeasurements.length - 1,
                                 );
                               }
                             });
