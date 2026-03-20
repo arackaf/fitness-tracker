@@ -164,9 +164,13 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 }}
                                 children={distanceUnitField => (
                                   <Select
-                                    value={distanceUnitField.state.value ?? undefined}
+                                    value={
+                                      distanceUnitField.state.value ?? undefined
+                                    }
                                     onValueChange={value => {
-                                      distanceUnitField.handleChange(value as never);
+                                      distanceUnitField.handleChange(
+                                        value as never,
+                                      );
                                     }}
                                   >
                                     <SelectTrigger className="w-28">
@@ -174,8 +178,12 @@ export const WorkoutTemplateSegmentExercises: FC<
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectItem value="feet">Feet</SelectItem>
-                                      <SelectItem value="yards">Yards</SelectItem>
-                                      <SelectItem value="miles">Miles</SelectItem>
+                                      <SelectItem value="yards">
+                                        Yards
+                                      </SelectItem>
+                                      <SelectItem value="miles">
+                                        Miles
+                                      </SelectItem>
                                       <SelectItem value="km">Km</SelectItem>
                                     </SelectContent>
                                   </Select>
@@ -202,18 +210,28 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 }}
                                 children={durationUnitField => (
                                   <Select
-                                    value={durationUnitField.state.value ?? undefined}
+                                    value={
+                                      durationUnitField.state.value ?? undefined
+                                    }
                                     onValueChange={value => {
-                                      durationUnitField.handleChange(value as never);
+                                      durationUnitField.handleChange(
+                                        value as never,
+                                      );
                                     }}
                                   >
                                     <SelectTrigger className="w-28">
                                       <SelectValue placeholder="Unit" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                      <SelectItem value="seconds">Seconds</SelectItem>
-                                      <SelectItem value="minutes">Minutes</SelectItem>
-                                      <SelectItem value="hours">Hours</SelectItem>
+                                      <SelectItem value="seconds">
+                                        Seconds
+                                      </SelectItem>
+                                      <SelectItem value="minutes">
+                                        Minutes
+                                      </SelectItem>
+                                      <SelectItem value="hours">
+                                        Hours
+                                      </SelectItem>
                                     </SelectContent>
                                   </Select>
                                 )}
