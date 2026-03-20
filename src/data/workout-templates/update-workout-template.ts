@@ -46,6 +46,38 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   }));
 };
 
+const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
+  if (exercise.executionType === "distance") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: null,
+      distanceUnit: exercise.distanceUnit ?? null,
+    };
+  }
+
+  if (exercise.executionType === "time") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: exercise.durationUnit ?? null,
+      distanceUnit: null,
+    };
+  }
+
+  if (exercise.executionType === "repetition") {
+    return {
+      exerciseWeightUnit: exercise.exerciseWeightUnit ?? null,
+      durationUnit: null,
+      distanceUnit: null,
+    };
+  }
+
+  return {
+    exerciseWeightUnit: null,
+    durationUnit: null,
+    distanceUnit: null,
+  };
+};
+
 export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
   if (input.id == null) {
     throw new Error("Workout template ID is required for update.");
@@ -144,6 +176,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
 
       for (const [exerciseIndex, exercise] of segment.exercises.entries()) {
         const exerciseInput = exercise as TemplateExerciseInput;
+        const exerciseUnitValues = createExerciseUnitValues(exerciseInput);
         let exerciseId = exercise.id;
 
         if (exercise.id) {
@@ -153,9 +186,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
               exerciseOrder: exerciseIndex + 1,
               exerciseId: exerciseInput.exerciseId,
               executionType: exerciseInput.executionType ?? null,
-              exerciseWeightUnit: exerciseInput.exerciseWeightUnit ?? null,
-              durationUnit: exerciseInput.durationUnit ?? null,
-              distanceUnit: exerciseInput.distanceUnit ?? null,
+              ...exerciseUnitValues,
             })
             .where(
               and(
@@ -182,9 +213,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
               exerciseOrder: exerciseIndex + 1,
               exerciseId: exerciseInput.exerciseId,
               executionType: exerciseInput.executionType ?? null,
-              exerciseWeightUnit: exerciseInput.exerciseWeightUnit ?? null,
-              durationUnit: exerciseInput.durationUnit ?? null,
-              distanceUnit: exerciseInput.distanceUnit ?? null,
+              ...exerciseUnitValues,
             })
             .returning({ id: workoutTemplateSegmentExerciseTable.id });
 

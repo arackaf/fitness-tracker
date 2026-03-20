@@ -44,6 +44,38 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   }));
 };
 
+const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
+  if (exercise.executionType === "distance") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: null,
+      distanceUnit: exercise.distanceUnit ?? null,
+    };
+  }
+
+  if (exercise.executionType === "time") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: exercise.durationUnit ?? null,
+      distanceUnit: null,
+    };
+  }
+
+  if (exercise.executionType === "repetition") {
+    return {
+      exerciseWeightUnit: exercise.exerciseWeightUnit ?? null,
+      durationUnit: null,
+      distanceUnit: null,
+    };
+  }
+
+  return {
+    exerciseWeightUnit: null,
+    durationUnit: null,
+    distanceUnit: null,
+  };
+};
+
 export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
@@ -69,6 +101,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
 
       for (const [exerciseIndex, exercise] of segment.exercises.entries()) {
         const exerciseInput = exercise as TemplateExerciseInput;
+        const exerciseUnitValues = createExerciseUnitValues(exerciseInput);
 
         const [insertedExercise] = await tx
           .insert(workoutTemplateSegmentExerciseTable)
@@ -77,9 +110,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
             exerciseOrder: exerciseIndex + 1,
             exerciseId: exerciseInput.exerciseId,
             executionType: exerciseInput.executionType ?? null,
-            exerciseWeightUnit: exerciseInput.exerciseWeightUnit ?? null,
-            durationUnit: exerciseInput.durationUnit ?? null,
-            distanceUnit: exerciseInput.distanceUnit ?? null,
+            ...exerciseUnitValues,
           })
           .returning({ id: workoutTemplateSegmentExerciseTable.id });
 
