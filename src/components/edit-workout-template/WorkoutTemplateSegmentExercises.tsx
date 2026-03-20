@@ -132,7 +132,6 @@ export const WorkoutTemplateSegmentExercises: FC<
                         {selectedExerciseId > 0 ? (
                           <div className="flex items-center gap-2">
                             <ExecutionTypeSelect
-                              className="w-28"
                               value={rowExecutionType}
                               onValueChange={value => {
                                 form.setFieldValue(
