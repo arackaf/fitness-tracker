@@ -8,6 +8,7 @@ import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
   workoutSegmentExercise as workoutSegmentExerciseTable,
+  workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
 const WORKOUT_HISTORY_LIMIT = 3;
@@ -66,8 +67,18 @@ export const getWorkouts = async (
       exerciseRowId: workoutSegmentExerciseTable.id,
       exerciseOrder: workoutSegmentExerciseTable.exerciseOrder,
       exerciseExerciseId: workoutSegmentExerciseTable.exerciseId,
-      exerciseReps: workoutSegmentExerciseTable.reps,
-      exerciseRepsToFailure: workoutSegmentExerciseTable.repsToFailure,
+      exerciseExecutionType: workoutSegmentExerciseTable.executionType,
+      exerciseDurationUnit: workoutSegmentExerciseTable.durationUnit,
+      exerciseDistanceUnit: workoutSegmentExerciseTable.distanceUnit,
+      exerciseWeightUnit: workoutSegmentExerciseTable.exerciseWeightUnit,
+      measurementId: workoutSegmentExerciseMeasurementTable.id,
+      measurementSetOrder: workoutSegmentExerciseMeasurementTable.setOrder,
+      measurementReps: workoutSegmentExerciseMeasurementTable.reps,
+      measurementRepsToFailure:
+        workoutSegmentExerciseMeasurementTable.repsToFailure,
+      measurementWeightUsed: workoutSegmentExerciseMeasurementTable.weightUsed,
+      measurementDuration: workoutSegmentExerciseMeasurementTable.duration,
+      measurementDistance: workoutSegmentExerciseMeasurementTable.distance,
     })
     .from(workoutTable)
     .innerJoin(workoutIds, eq(workoutTable.id, workoutIds.workout_id))
@@ -79,18 +90,31 @@ export const getWorkouts = async (
       workoutSegmentExerciseTable,
       eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
     )
+    .leftJoin(
+      workoutSegmentExerciseMeasurementTable,
+      eq(
+        workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
+        workoutSegmentExerciseTable.id,
+      ),
+    )
     .orderBy(
       desc(workoutTable.workoutDate),
       desc(workoutTable.id),
       asc(workoutSegmentTable.segmentOrder),
       asc(workoutSegmentExerciseTable.exerciseOrder),
+      asc(workoutSegmentExerciseMeasurementTable.setOrder),
     );
 
-  const workouts: ExistingWorkoutState[] = [];
+  const workouts = new Map<number, ExistingWorkoutState>();
+  const segmentsByWorkout = new Map<number, ExistingWorkoutState["segments"]>();
+  const exercisesBySegment = new Map<
+    number,
+    ExistingWorkoutState["segments"][number]["exercises"]
+  >();
 
   for (const row of rows) {
-    let workout = workouts.at(-1);
-    if (!workout || workout.id !== row.workoutId) {
+    let workout = workouts.get(row.workoutId);
+    if (!workout) {
       workout = {
         id: row.workoutId,
         name: row.workoutName,
@@ -99,7 +123,8 @@ export const getWorkouts = async (
         segments: [],
       };
 
-      workouts.push(workout);
+      workouts.set(row.workoutId, workout);
+      segmentsByWorkout.set(row.workoutId, []);
     }
 
     if (
@@ -110,8 +135,11 @@ export const getWorkouts = async (
       continue;
     }
 
-    let segment = workout.segments.at(-1);
-    if (!segment || segment.id !== row.segmentRowId) {
+    const workoutSegments = segmentsByWorkout.get(row.workoutId)!;
+    const latestSegment = workoutSegments.at(-1);
+    let segment =
+      latestSegment?.id === row.segmentRowId ? latestSegment : undefined;
+    if (!segment) {
       segment = {
         id: row.segmentRowId,
         workoutId: row.workoutId,
@@ -120,33 +148,66 @@ export const getWorkouts = async (
         exercises: [],
       };
 
+      workoutSegments.push(segment);
+      exercisesBySegment.set(row.segmentRowId, []);
       workout.segments.push(segment);
     }
 
     if (
       row.exerciseRowId == null ||
       row.exerciseOrder == null ||
-      row.exerciseExerciseId == null ||
-      row.exerciseReps == null ||
-      row.exerciseRepsToFailure == null
+      row.exerciseExerciseId == null
     ) {
       continue;
     }
 
-    segment.exercises.push({
-      id: row.exerciseRowId,
-      workoutSegmentId: row.segmentRowId,
-      exerciseOrder: row.exerciseOrder,
-      exerciseId: row.exerciseExerciseId,
-      reps: row.exerciseReps,
-      repsToFailure: row.exerciseRepsToFailure,
-    });
+    const segmentExercises = exercisesBySegment.get(row.segmentRowId)!;
+    const latestExercise = segmentExercises.at(-1);
+    let exercise =
+      latestExercise?.id === row.exerciseRowId ? latestExercise : undefined;
+    if (!exercise) {
+      exercise = {
+        id: row.exerciseRowId,
+        workoutSegmentId: row.segmentRowId,
+        exerciseOrder: row.exerciseOrder,
+        exerciseId: row.exerciseExerciseId,
+        executionType: row.exerciseExecutionType ?? null,
+        exerciseWeightUnit: row.exerciseWeightUnit ?? null,
+        durationUnit: row.exerciseDurationUnit ?? null,
+        distanceUnit: row.exerciseDistanceUnit ?? null,
+        repsToFailure: false,
+        reps: [],
+        measurements: [],
+      };
+
+      segmentExercises.push(exercise);
+      segment.exercises.push(exercise);
+    }
+
+    if (row.measurementSetOrder != null) {
+      if (row.measurementRepsToFailure) {
+        exercise.repsToFailure = true;
+      }
+
+      exercise.reps?.push(row.measurementReps ?? null);
+      exercise.measurements.push({
+        id: row.measurementId ?? undefined,
+        workoutSegmentExerciseId: row.exerciseRowId,
+        setOrder: row.measurementSetOrder,
+        reps: row.measurementReps,
+        repsToFailure: row.measurementRepsToFailure,
+        weightUsed: row.measurementWeightUsed,
+        duration: row.measurementDuration,
+        distance: row.measurementDistance,
+      });
+    }
   }
 
-  const hasNextPage = workouts.length > WORKOUT_HISTORY_LIMIT;
+  const workoutList = Array.from(workouts.values());
+  const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
   const currentPageWorkouts = hasNextPage
-    ? workouts.slice(0, WORKOUT_HISTORY_LIMIT)
-    : workouts;
+    ? workoutList.slice(0, WORKOUT_HISTORY_LIMIT)
+    : workoutList;
 
   return {
     workouts: currentPageWorkouts,

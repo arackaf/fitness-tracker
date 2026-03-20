@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 
-import { DisplayReps } from "@/components/display-workout/DisplayReps";
+import { WorkoutSegment } from "@/components/display-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 
 type DisplayWorkoutProps = {
@@ -39,13 +39,11 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({
 
       <div className="flex flex-col gap-3">
         {workout.segments.map((segment, segmentIndex) => (
-          <section
+          <WorkoutSegment
             key={`${segment.segmentOrder}-${segmentIndex}`}
-            className="rounded-lg border border-border/80 bg-background/70 p-3"
-          >
-            <p className="text-sm font-medium">{segment.sets} sets</p>
-            <DisplayReps segment={segment} exerciseLookup={exerciseNameById} />
-          </section>
+            segment={segment}
+            exerciseNameById={exerciseNameById}
+          />
         ))}
       </div>
     </article>

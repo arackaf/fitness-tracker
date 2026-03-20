@@ -2,11 +2,21 @@ import {
   workout,
   workoutSegment,
   workoutSegmentExercise,
+  workoutSegmentExerciseMeasurement,
 } from "@/drizzle/schema";
 
 export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
+export type WorkoutSegmentExerciseMeasurement =
+  typeof workoutSegmentExerciseMeasurement.$inferInsert;
+export type WorkoutSegmentExerciseMeasurementState = Omit<
+  WorkoutSegmentExerciseMeasurement,
+  "workoutSegmentExerciseId"
+> & {
+  id?: number;
+  workoutSegmentExerciseId?: number;
+};
 
 export type WorkoutSegmentExerciseState = Omit<
   WorkoutSegmentExercise,
@@ -14,6 +24,9 @@ export type WorkoutSegmentExerciseState = Omit<
 > & {
   id?: number;
   workoutSegmentId?: number;
+  reps?: Array<number | null>;
+  repsToFailure?: boolean;
+  measurements: WorkoutSegmentExerciseMeasurementState[];
 };
 
 export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
@@ -32,20 +45,33 @@ export type ExistingWorkoutState = Workout & {
   segments: SegmentWithExercises[];
 };
 
+export type Exercise = SegmentWithExercises["exercises"][number];
+export type Measurement =
+  SegmentWithExercises["exercises"][number]["measurements"][number];
+
 const DEFAULT_SET_COUNT = 4;
 
 const defaultExercise: WorkoutSegmentExercise = {
   exerciseId: 0,
   exerciseOrder: 1,
-  repsToFailure: false,
-  reps: Array.from({ length: DEFAULT_SET_COUNT }, () => 8),
   workoutSegmentId: 0,
 };
 
 export const createDefaultExercise = (sets?: number) => {
+  const measurementCount = sets ?? DEFAULT_SET_COUNT;
+
   return {
     ...defaultExercise,
-    reps: Array.from({ length: sets ?? DEFAULT_SET_COUNT }, () => 8),
+    executionType: "repetition" as const,
+    repsToFailure: false,
+    reps: Array.from({ length: measurementCount }, () => 8),
+    measurements: Array.from({ length: measurementCount }, (_, index) => ({
+      workoutSegmentExerciseId: 0,
+      setOrder: index + 1,
+      reps: 8,
+      repsToFailure: false,
+      weightUsed: null,
+    })),
   };
 };
 
@@ -55,7 +81,7 @@ const defaultSegment: WorkoutSegment = {
   workoutId: 0,
 };
 
-export const createDefaultSegment = () => {
+export const createDefaultSegment = (): SegmentWithExercises => {
   return {
     ...defaultSegment,
     exercises: [createDefaultExercise()],
@@ -66,7 +92,7 @@ export const defaultworkoutDate = () => {
   return new Date().toISOString().split("T")[0];
 };
 
-export const createDefaultWorkout = () => {
+export const createDefaultWorkout = (): WorkoutState => {
   return {
     name: "",
     workoutDate: defaultworkoutDate(),
