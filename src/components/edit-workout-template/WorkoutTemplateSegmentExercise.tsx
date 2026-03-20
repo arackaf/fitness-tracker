@@ -19,6 +19,7 @@ import { DurationExerciseSet } from "@/components/edit-workout-template/Duration
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import type { DurationUnit, MuscleGroup } from "@/data/types";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
+import { defaultDistanceUnit, defaultDurationUnit } from "@/data/constants";
 
 type WorkoutTemplateSegmentExerciseProps = {
   form: WorkoutTemplateForm;
@@ -103,11 +104,11 @@ export const WorkoutTemplateSegmentExercise: FC<
 
                     form.setFieldValue(
                       `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
-                      nextSelectedExercise?.defaultDistanceType,
+                      defaultDistanceUnit,
                     );
                     form.setFieldValue(
                       `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
-                      nextSelectedExercise?.defaultDurationType,
+                      defaultDurationUnit,
                     );
                     form.setFieldValue(
                       `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
