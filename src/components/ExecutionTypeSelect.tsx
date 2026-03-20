@@ -26,7 +26,7 @@ export const ExecutionTypeSelect: FC<ExecutionTypeSelectProps> = ({
         onValueChange(selectedValue as ExecutionType);
       }}
     >
-      <SelectTrigger className="w-52">
+      <SelectTrigger className="w-28">
         <SelectValue placeholder="Execution type" />
       </SelectTrigger>
       <SelectContent>
