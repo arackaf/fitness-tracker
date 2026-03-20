@@ -49,8 +49,8 @@ const getExerciseExecutionType = (
 export const WorkoutTemplateSegmentExercises: FC<
   WorkoutTemplateSegmentExercisesProps
 > = ({ form, exercises, muscleGroups, segmentIndex, segmentSets }) => {
-  const [executionTypeByRow, setExecutionTypeByRow] = useState<
-    Record<number, ExecutionType>
+  const [exerciseByRow, setExerciseByRow] = useState<
+    Record<number, Exercise | undefined>
   >({});
 
   return (
@@ -65,10 +65,10 @@ export const WorkoutTemplateSegmentExercises: FC<
             const selectedExercise = exercises.find(
               exercise => exercise.id === selectedExerciseId,
             );
+            const rowExercise = exerciseByRow[exerciseIndex] ?? selectedExercise;
             const rowExecutionType =
-              executionTypeByRow[exerciseIndex] ??
               segmentExercisesField.state.value[exerciseIndex]?.executionType ??
-              getExerciseExecutionType(selectedExercise);
+              getExerciseExecutionType(rowExercise);
 
             return (
               <div
@@ -110,10 +110,9 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
                                 getExerciseExecutionType(selectedExercise),
                               );
-                              setExecutionTypeByRow(previous => ({
+                              setExerciseByRow(previous => ({
                                 ...previous,
-                                [exerciseIndex]:
-                                  getExerciseExecutionType(selectedExercise),
+                                [exerciseIndex]: selectedExercise,
                               }));
                             }}
                           />
@@ -138,10 +137,21 @@ export const WorkoutTemplateSegmentExercises: FC<
                                   `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
                                   value,
                                 );
-                                setExecutionTypeByRow(previous => ({
-                                  ...previous,
-                                  [exerciseIndex]: value,
-                                }));
+                                setExerciseByRow(previous => {
+                                  const baseExercise =
+                                    previous[exerciseIndex] ?? selectedExercise;
+                                  if (!baseExercise) {
+                                    return previous;
+                                  }
+
+                                  return {
+                                    ...previous,
+                                    [exerciseIndex]: {
+                                      ...baseExercise,
+                                      executionType: value,
+                                    },
+                                  };
+                                });
                               }}
                             />
                             {rowExecutionType === "distance" ? (
