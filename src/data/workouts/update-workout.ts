@@ -7,7 +7,89 @@ import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
   workoutSegmentExercise as workoutSegmentExerciseTable,
+  workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
+
+type WorkoutExerciseInput =
+  WorkoutState["segments"][number]["exercises"][number];
+
+const toNumericString = (value: string | number | null | undefined) => {
+  if (value == null || value === "") {
+    return null;
+  }
+
+  return String(value);
+};
+
+const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
+  const measurements = exercise.measurements ?? [];
+
+  if (exercise.executionType === "distance") {
+    return measurements.map((measurement, index) => ({
+      id: measurement.id,
+      setOrder: index + 1,
+      reps: null,
+      repsToFailure: null,
+      weightUsed: null,
+      duration: null,
+      distance: toNumericString(measurement.distance),
+    }));
+  }
+
+  if (exercise.executionType === "time") {
+    return measurements.map((measurement, index) => ({
+      id: measurement.id,
+      setOrder: index + 1,
+      reps: null,
+      repsToFailure: null,
+      weightUsed: null,
+      duration: toNumericString(measurement.duration),
+      distance: null,
+    }));
+  }
+
+  return measurements.map((measurement, index) => ({
+    id: measurement.id,
+    setOrder: index + 1,
+    reps: measurement.reps ?? null,
+    repsToFailure: measurement.repsToFailure ?? false,
+    weightUsed: toNumericString(measurement.weightUsed),
+    duration: null,
+    distance: null,
+  }));
+};
+
+const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
+  if (exercise.executionType === "distance") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: null,
+      distanceUnit: exercise.distanceUnit ?? null,
+    };
+  }
+
+  if (exercise.executionType === "time") {
+    return {
+      exerciseWeightUnit: null,
+      durationUnit: exercise.durationUnit ?? null,
+      distanceUnit: null,
+    };
+  }
+
+  if (exercise.executionType === "repetition") {
+    return {
+      exerciseWeightUnit: exercise.exerciseWeightUnit ?? null,
+      durationUnit: null,
+      distanceUnit: null,
+    };
+  }
+
+  return {
+    exerciseWeightUnit: null,
+    durationUnit: null,
+    distanceUnit: null,
+  };
+};
 
 export const updateWorkout = async (input: WorkoutState) => {
   if (input.id == null) {
@@ -96,29 +178,93 @@ export const updateWorkout = async (input: WorkoutState) => {
         );
 
       for (const [exerciseIndex, exercise] of segment.exercises.entries()) {
+        const exerciseUnitValues = createExerciseUnitValues(exercise);
+        let segmentExerciseId = exercise.id;
+
         if (exercise.id) {
-          await tx
+          const [updatedSegmentExercise] = await tx
             .update(workoutSegmentExerciseTable)
             .set({
               exerciseOrder: exerciseIndex + 1,
               exerciseId: exercise.exerciseId,
-              reps: exercise.reps,
-              repsToFailure: exercise.repsToFailure,
+              executionType: exercise.executionType ?? null,
+              ...exerciseUnitValues,
             })
             .where(
               and(
                 eq(workoutSegmentExerciseTable.id, exercise.id),
                 eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId),
               ),
-            );
+            )
+            .returning({ id: workoutSegmentExerciseTable.id });
+
+          if (!updatedSegmentExercise) {
+            continue;
+          }
+
+          segmentExerciseId = updatedSegmentExercise.id;
         } else {
-          await tx.insert(workoutSegmentExerciseTable).values({
-            workoutSegmentId: segmentId,
-            exerciseOrder: exerciseIndex + 1,
-            exerciseId: exercise.exerciseId,
-            reps: exercise.reps,
-            repsToFailure: exercise.repsToFailure,
-          });
+          const [insertedSegmentExercise] = await tx
+            .insert(workoutSegmentExerciseTable)
+            .values({
+              workoutSegmentId: segmentId,
+              exerciseOrder: exerciseIndex + 1,
+              exerciseId: exercise.exerciseId,
+              executionType: exercise.executionType ?? null,
+              ...exerciseUnitValues,
+            })
+            .returning({ id: workoutSegmentExerciseTable.id });
+
+          segmentExerciseId = insertedSegmentExercise.id;
+        }
+
+        const exerciseMeasurements = createExerciseMeasurements(exercise);
+        const incomingSetOrders = exerciseMeasurements.map(
+          measurement => measurement.setOrder,
+        );
+
+        await tx
+          .delete(workoutSegmentExerciseMeasurementTable)
+          .where(
+            and(
+              eq(
+                workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
+                segmentExerciseId,
+              ),
+              not(
+                inArray(
+                  workoutSegmentExerciseMeasurementTable.setOrder,
+                  incomingSetOrders,
+                ),
+              ),
+            ),
+          );
+
+        for (const measurement of exerciseMeasurements) {
+          const { id: _measurementId, ...measurementValues } = measurement;
+          const [updatedMeasurement] = await tx
+            .update(workoutSegmentExerciseMeasurementTable)
+            .set(measurementValues)
+            .where(
+              and(
+                eq(
+                  workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
+                  segmentExerciseId,
+                ),
+                eq(
+                  workoutSegmentExerciseMeasurementTable.setOrder,
+                  measurement.setOrder,
+                ),
+              ),
+            )
+            .returning({ id: workoutSegmentExerciseMeasurementTable.id });
+
+          if (!updatedMeasurement) {
+            await tx.insert(workoutSegmentExerciseMeasurementTable).values({
+              workoutSegmentExerciseId: segmentExerciseId,
+              ...measurementValues,
+            });
+          }
         }
       }
     }

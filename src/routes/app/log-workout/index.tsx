@@ -36,9 +36,22 @@ const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
       return {
         ...segment,
         exercises: segment.exercises.map(exercise => {
+          const nextMeasurements = exercise.measurements.map(
+            (measurement, measurementIndex) => ({
+              ...measurement,
+              workoutSegmentExerciseId: 0,
+              setOrder: measurementIndex + 1,
+            }),
+          );
+
           return {
             ...exercise,
-            reps: Array.from({ length: segment.sets }),
+            workoutSegmentId: 0,
+            reps: nextMeasurements.map(measurement => measurement.reps ?? null),
+            repsToFailure: nextMeasurements.some(
+              measurement => measurement.repsToFailure === true,
+            ),
+            measurements: nextMeasurements,
           };
         }),
       };

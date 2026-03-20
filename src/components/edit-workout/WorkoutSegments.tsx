@@ -16,6 +16,42 @@ type WorkoutSegmentsProps = {
   muscleGroups: MuscleGroup[];
 };
 
+const syncExerciseMeasurementsToSetCount = (
+  form: WorkoutForm,
+  segmentIndex: number,
+  exerciseIndex: number,
+  newSetCount: number,
+) => {
+  const measurements =
+    form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]
+      ?.measurements ?? [];
+
+  const sourceMeasurement = measurements.at(-1) ?? {
+    setOrder: 1,
+    reps: 8,
+    repsToFailure: false,
+    weightUsed: null,
+    duration: null,
+    distance: null,
+  };
+
+  const nextMeasurements = Array.from({ length: Math.max(newSetCount, 1) }).map(
+    (_, index) => {
+      const existingMeasurement = measurements[index];
+      return {
+        ...sourceMeasurement,
+        ...existingMeasurement,
+        setOrder: index + 1,
+      };
+    },
+  );
+
+  form.setFieldValue(
+    `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
+    nextMeasurements,
+  );
+};
+
 export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
   form,
   exercises,
@@ -67,22 +103,21 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
 
                             segmentsField.state.value[
                               segmentIndex
-                            ].exercises.forEach((exercise, idx) => {
-                              if (!exercise.reps?.length) {
+                            ].exercises.forEach((_, idx) => {
+                              if (
+                                newSetsValue == null ||
+                                Number.isNaN(newSetsValue) ||
+                                newSetsValue < 1
+                              ) {
                                 return;
                               }
-                              if (newSetsValue > exercise.reps.length) {
-                                form.pushFieldValue(
-                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                  exercise.reps.at(-1)!,
-                                );
-                              }
-                              if (newSetsValue < exercise.reps.length) {
-                                form.removeFieldValue(
-                                  `segments[${segmentIndex}].exercises[${idx}].reps`,
-                                  exercise.reps.length - 1,
-                                );
-                              }
+
+                              syncExerciseMeasurementsToSetCount(
+                                form,
+                                segmentIndex,
+                                idx,
+                                newSetsValue,
+                              );
                             });
                           }}
                           onBlur={setsField.handleBlur}
