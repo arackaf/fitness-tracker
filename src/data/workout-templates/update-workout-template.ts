@@ -237,9 +237,9 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
         }
 
         const exerciseMeasurements = createExerciseMeasurements(exerciseInput);
-        const incomingMeasurementIds = exerciseMeasurements
-          .map(measurement => measurement.id)
-          .filter((id): id is number => Boolean(id));
+        const incomingSetOrders = exerciseMeasurements.map(
+          measurement => measurement.setOrder,
+        );
 
         await tx
           .delete(workoutTemplateSegmentExerciseMeasurementTable)
@@ -251,36 +251,35 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
               ),
               not(
                 inArray(
-                  workoutTemplateSegmentExerciseMeasurementTable.id,
-                  incomingMeasurementIds,
+                  workoutTemplateSegmentExerciseMeasurementTable.setOrder,
+                  incomingSetOrders,
                 ),
               ),
             ),
           );
 
         for (const measurement of exerciseMeasurements) {
-          const { id: measurementId, ...measurementValues } = measurement;
-
-          if (measurementId) {
-            await tx
-              .update(workoutTemplateSegmentExerciseMeasurementTable)
-              .set(measurementValues)
-              .where(
-                and(
-                  eq(
-                    workoutTemplateSegmentExerciseMeasurementTable.id,
-                    measurementId,
-                  ),
-                  eq(
-                    workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
-                    segmentExerciseId,
-                  ),
+          const { id: _measurementId, ...measurementValues } = measurement;
+          const [updatedMeasurement] = await tx
+            .update(workoutTemplateSegmentExerciseMeasurementTable)
+            .set(measurementValues)
+            .where(
+              and(
+                eq(
+                  workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
+                  segmentExerciseId,
                 ),
-              )
-              .returning({
-                id: workoutTemplateSegmentExerciseMeasurementTable.id,
-              });
-          } else {
+                eq(
+                  workoutTemplateSegmentExerciseMeasurementTable.setOrder,
+                  measurement.setOrder,
+                ),
+              ),
+            )
+            .returning({
+              id: workoutTemplateSegmentExerciseMeasurementTable.id,
+            });
+
+          if (!updatedMeasurement) {
             await tx
               .insert(workoutTemplateSegmentExerciseMeasurementTable)
               .values({
