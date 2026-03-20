@@ -79,156 +79,158 @@ export const WorkoutTemplateSegmentExercise: FC<
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-4">
-      <div className="flex gap-3 items-center">
-        <form.Field
-          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
-          validators={{
-            onChange: ({ value }) => {
-              if (!value) {
-                return "Required";
-              }
-            },
-          }}
-          children={segmentExercise => (
-            <>
-              <label className="flex flex-col gap-2 text-sm">
-                <ExerciseSelector
-                  value={segmentExercise.state.value ?? null}
-                  exercises={exercises}
-                  muscleGroups={muscleGroups}
-                  onSelect={exerciseId => {
-                    segmentExercise.handleChange(exerciseId);
-                    const nextSelectedExercise = exercises.find(
-                      exercise => exercise.id === exerciseId,
-                    );
+      <div className="flex items-start">
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+          <form.Field
+            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) {
+                  return "Required";
+                }
+              },
+            }}
+            children={segmentExercise => (
+              <>
+                <label className="flex flex-col gap-2 text-sm">
+                  <ExerciseSelector
+                    value={segmentExercise.state.value ?? null}
+                    exercises={exercises}
+                    muscleGroups={muscleGroups}
+                    onSelect={exerciseId => {
+                      segmentExercise.handleChange(exerciseId);
+                      const nextSelectedExercise = exercises.find(
+                        exercise => exercise.id === exerciseId,
+                      );
 
-                    form.setFieldValue(
-                      `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
-                      defaultDistanceUnit,
-                    );
-                    form.setFieldValue(
-                      `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
-                      defaultDurationUnit,
-                    );
-                    form.setFieldValue(
-                      `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                      getExerciseExecutionType(nextSelectedExercise),
-                    );
-                    setRowExercise(nextSelectedExercise);
-                  }}
-                />
-                {!segmentExercise.state.meta.isValid &&
-                  segmentExercise.state.meta.errors.map((error, idx) => (
-                    <span key={`error-${idx}`} className="text-red-500 text-xs">
-                      {error}
-                    </span>
-                  ))}
-              </label>
-              {selectedExerciseId > 0 ? (
-                <div className="flex items-center gap-2">
-                  <ExecutionTypeSelect
-                    value={rowExecutionType}
-                    onValueChange={value => {
+                      form.setFieldValue(
+                        `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
+                        defaultDistanceUnit,
+                      );
+                      form.setFieldValue(
+                        `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
+                        defaultDurationUnit,
+                      );
                       form.setFieldValue(
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                        value,
+                        getExerciseExecutionType(nextSelectedExercise),
                       );
-                      setRowExercise(previous => {
-                        const baseExercise = previous ?? selectedExercise;
-                        if (!baseExercise) {
-                          return previous;
-                        }
-
-                        return {
-                          ...baseExercise,
-                          executionType: value,
-                        };
-                      });
+                      setRowExercise(nextSelectedExercise);
                     }}
                   />
-                  {rowExecutionType === "distance" ? (
-                    <form.Field
-                      name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
-                      validators={{
-                        onChange: ({ value }) => {
-                          const measurements =
-                            form.state.values.segments[segmentIndex]?.exercises[
-                              exerciseIndex
-                            ]?.measurements;
-                          const hasDistanceValue = measurements?.some(
-                            measurement =>
-                              measurement.distance != null &&
-                              measurement.distance !== "",
-                          );
-                          if (hasDistanceValue && value == null) {
-                            return "Required";
+                  {!segmentExercise.state.meta.isValid &&
+                    segmentExercise.state.meta.errors.map((error, idx) => (
+                      <span
+                        key={`error-${idx}`}
+                        className="text-red-500 text-xs"
+                      >
+                        {error}
+                      </span>
+                    ))}
+                </label>
+                {selectedExerciseId > 0 ? (
+                  <>
+                    <ExecutionTypeSelect
+                      value={rowExecutionType}
+                      onValueChange={value => {
+                        form.setFieldValue(
+                          `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                          value,
+                        );
+                        setRowExercise(previous => {
+                          const baseExercise = previous ?? selectedExercise;
+                          if (!baseExercise) {
+                            return previous;
                           }
-                        },
-                      }}
-                      children={distanceUnitField => (
-                        <Select
-                          value={distanceUnitField.state.value ?? undefined}
-                          onValueChange={value => {
-                            distanceUnitField.handleChange(value as any);
-                          }}
-                        >
-                          <SelectTrigger className="w-28">
-                            <SelectValue placeholder="Unit" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="feet">Feet</SelectItem>
-                            <SelectItem value="yards">Yards</SelectItem>
-                            <SelectItem value="miles">Miles</SelectItem>
-                            <SelectItem value="km">Km</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                  ) : null}
-                  {rowExecutionType === "time" ? (
-                    <form.Field
-                      name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
-                      validators={{
-                        onChange: ({ value }) => {
-                          const measurements =
-                            form.state.values.segments[segmentIndex]?.exercises[
-                              exerciseIndex
-                            ]?.measurements;
-                          const hasDurationValue = measurements?.some(
-                            measurement =>
-                              measurement.duration != null &&
-                              measurement.duration !== "",
-                          );
-                          if (hasDurationValue && value == null) {
-                            return "Required";
-                          }
-                        },
-                      }}
-                      children={durationUnitField => (
-                        <Select
-                          value={durationUnitField.state.value ?? undefined}
-                          onValueChange={(value: DurationUnit) => {
-                            durationUnitField.handleChange(value);
-                          }}
-                        >
-                          <SelectTrigger className="w-28">
-                            <SelectValue placeholder="Unit" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="seconds">Seconds</SelectItem>
-                            <SelectItem value="minutes">Minutes</SelectItem>
-                            <SelectItem value="hours">Hours</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                  ) : null}
-                </div>
-              ) : null}
-            </>
-          )}
-        />
 
+                          return {
+                            ...baseExercise,
+                            executionType: value,
+                          };
+                        });
+                      }}
+                    />
+                    {rowExecutionType === "distance" ? (
+                      <form.Field
+                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
+                        validators={{
+                          onChange: ({ value }) => {
+                            const measurements =
+                              form.state.values.segments[segmentIndex]
+                                ?.exercises[exerciseIndex]?.measurements;
+                            const hasDistanceValue = measurements?.some(
+                              measurement =>
+                                measurement.distance != null &&
+                                measurement.distance !== "",
+                            );
+                            if (hasDistanceValue && value == null) {
+                              return "Required";
+                            }
+                          },
+                        }}
+                        children={distanceUnitField => (
+                          <Select
+                            value={distanceUnitField.state.value ?? undefined}
+                            onValueChange={value => {
+                              distanceUnitField.handleChange(value as any);
+                            }}
+                          >
+                            <SelectTrigger className="w-28">
+                              <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="feet">Feet</SelectItem>
+                              <SelectItem value="yards">Yards</SelectItem>
+                              <SelectItem value="miles">Miles</SelectItem>
+                              <SelectItem value="km">Km</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    ) : null}
+                    {rowExecutionType === "time" ? (
+                      <form.Field
+                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
+                        validators={{
+                          onChange: ({ value }) => {
+                            const measurements =
+                              form.state.values.segments[segmentIndex]
+                                ?.exercises[exerciseIndex]?.measurements;
+                            const hasDurationValue = measurements?.some(
+                              measurement =>
+                                measurement.duration != null &&
+                                measurement.duration !== "",
+                            );
+                            if (hasDurationValue && value == null) {
+                              return "Required";
+                            }
+                          },
+                        }}
+                        children={durationUnitField => (
+                          <Select
+                            value={durationUnitField.state.value ?? undefined}
+                            onValueChange={(value: DurationUnit) => {
+                              durationUnitField.handleChange(value);
+                            }}
+                          >
+                            <SelectTrigger className="w-28">
+                              <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="seconds">Seconds</SelectItem>
+                              <SelectItem value="minutes">Minutes</SelectItem>
+                              <SelectItem value="hours">Hours</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    ) : null}
+                  </>
+                ) : null}
+              </>
+            )}
+          />
+        </div>
         <div className="flex items-end ml-auto">
           <Button
             type="button"
