@@ -360,7 +360,8 @@ JOIN (
 ) AS seed(template_name, segment_order, exercise_id)
   ON seed.template_name = wt.name
  AND seed.segment_order = wts.segment_order
-JOIN exercises ex ON ex.id = seed.exercise_id;
+JOIN exercises ex ON ex.id = seed.exercise_id
+WHERE NOT ex.is_bodyweight;
 
 INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
