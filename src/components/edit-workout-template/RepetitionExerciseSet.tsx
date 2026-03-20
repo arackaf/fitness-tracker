@@ -1,5 +1,6 @@
 import type { FC } from "react";
 
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
@@ -34,69 +35,46 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                 return (
                   <div
                     key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
-                    className="flex flex-col gap-1"
+                    className="flex gap-1"
                   >
-                    <div className="flex flex-wrap gap-2">
-                      <form.Field
-                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
-                        validators={{
-                          onChange: ({ value }) => {
-                            const repsToFailure =
-                              form.state.values.segments[segmentIndex]
-                                ?.exercises[exerciseIndex]?.measurements[
-                                measurementIndex
-                              ]?.repsToFailure;
-
-                            if (!repsToFailure && value == null) {
-                              return "Required";
-                            }
-                          },
-                        }}
-                        children={repsField => (
-                          <label
-                            key={`reps-${setNumber}`}
-                            className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
-                          >
-                            <span>{setNumber}:</span>
-                            <Input
-                              min={0}
-                              type="number"
-                              value={repsField.state.value ?? ""}
-                              onChange={event => {
-                                const value = event.target.value;
-                                repsField.handleChange(
-                                  value === "" ? null : parseInt(value, 10),
-                                );
-                              }}
-                              className={cn(
-                                "h-7 w-16 px-2 py-1",
-                                !repsField.state.meta.isValid
-                                  ? "border-red-500"
-                                  : "",
-                              )}
-                            />
-                          </label>
-                        )}
-                      />
-                      {showWeightUsed ? (
+                    <span className="h-7 inline-flex items-center">
+                      {setNumber}:
+                    </span>
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex flex-wrap gap-2">
                         <form.Field
-                          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
-                          children={weightUsedField => (
-                            <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
+                          validators={{
+                            onChange: ({ value }) => {
+                              const repsToFailure =
+                                form.state.values.segments[segmentIndex]
+                                  ?.exercises[exerciseIndex]?.measurements[
+                                  measurementIndex
+                                ]?.repsToFailure;
+
+                              if (!repsToFailure && value == null) {
+                                return "Required";
+                              }
+                            },
+                          }}
+                          children={repsField => (
+                            <label
+                              key={`reps-${setNumber}`}
+                              className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
+                            >
                               <Input
                                 min={0}
-                                step="0.01"
                                 type="number"
-                                value={weightUsedField.state.value ?? ""}
+                                value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
-                                  weightUsedField.handleChange(
-                                    value === "" ? null : value,
+                                  repsField.handleChange(
+                                    value === "" ? null : parseInt(value, 10),
                                   );
                                 }}
                                 className={cn(
-                                  "h-7 w-24 px-2 py-1",
-                                  !weightUsedField.state.meta.isValid
+                                  "h-7 w-16 px-2 py-1",
+                                  !repsField.state.meta.isValid
                                     ? "border-red-500"
                                     : "",
                                 )}
@@ -104,22 +82,83 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                             </label>
                           )}
                         />
+                        {showWeightUsed ? (
+                          <form.Field
+                            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
+                            children={weightUsedField => (
+                              <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                <Input
+                                  min={0}
+                                  type="number"
+                                  value={weightUsedField.state.value ?? ""}
+                                  onChange={event => {
+                                    const value = event.target.value;
+                                    weightUsedField.handleChange(
+                                      value === "" ? null : value,
+                                    );
+                                  }}
+                                  className={cn("h-7 w-24 px-2 py-1")}
+                                />
+                              </label>
+                            )}
+                          />
+                        ) : null}
+                      </div>
+                      <form.Field
+                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].repsToFailure`}
+                        children={repsToFailureField => (
+                          <label className="inline-flex items-center gap-0.5 text-xs text-muted-foreground">
+                            <Checkbox
+                              checked={repsToFailureField.state.value ?? false}
+                              onCheckedChange={checked => {
+                                repsToFailureField.handleChange(
+                                  checked === true,
+                                );
+                              }}
+                            />
+                            To failure
+                          </label>
+                        )}
+                      />
+                      {measurementIndex === 0 ? (
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          className="w-fit h-5 cursor-pointer"
+                          onClick={() => {
+                            const measurementFieldName =
+                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
+                            const measurements = field.state.value;
+                            const sourceMeasurement =
+                              measurements[measurementIndex];
+
+                            form.setFieldValue(
+                              measurementFieldName,
+                              measurements.map(
+                                (measurement, targetMeasurementIndex) => {
+                                  if (
+                                    targetMeasurementIndex === measurementIndex
+                                  ) {
+                                    return measurement;
+                                  }
+
+                                  return {
+                                    ...measurement,
+                                    reps: sourceMeasurement.reps,
+                                    repsToFailure:
+                                      sourceMeasurement.repsToFailure,
+                                    weightUsed: sourceMeasurement.weightUsed,
+                                  };
+                                },
+                              ),
+                            );
+                          }}
+                        >
+                          Fill
+                        </Button>
                       ) : null}
                     </div>
-                    <form.Field
-                      name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].repsToFailure`}
-                      children={repsToFailureField => (
-                        <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-                          <Checkbox
-                            checked={repsToFailureField.state.value ?? false}
-                            onCheckedChange={checked => {
-                              repsToFailureField.handleChange(checked === true);
-                            }}
-                          />
-                          To failure
-                        </label>
-                      )}
-                    />
                   </div>
                 );
               });
