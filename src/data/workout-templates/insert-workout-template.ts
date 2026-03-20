@@ -23,10 +23,6 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   const measurements = exercise.measurements ?? [];
 
   if (exercise.executionType === "distance") {
-    if (measurements.length === 0) {
-      return [{ setOrder: 1, distance: null }];
-    }
-
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
       distance: toNumericString(measurement.distance),
@@ -34,23 +30,10 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   }
 
   if (exercise.executionType === "time") {
-    if (measurements.length === 0) {
-      return [{ setOrder: 1, duration: null }];
-    }
-
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
       duration: toNumericString(measurement.duration),
     }));
-  }
-
-  if (measurements.length === 0) {
-    return [
-      {
-        setOrder: 1,
-        repsToFailure: false,
-      },
-    ];
   }
 
   return measurements.map((measurement, index) => ({
