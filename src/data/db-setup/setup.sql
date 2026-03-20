@@ -124,16 +124,26 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise (
   workout_segment_id INT NOT NULL REFERENCES workout_segment(id) ON DELETE CASCADE,
   exercise_order INT NOT NULL CHECK (exercise_order > 0),
   exercise_id INT NOT NULL REFERENCES exercises(id),
-  reps INT[],
-  reps_to_failure BOOL,
   execution_type execution_type,
-  duration NUMERIC(8, 2),
+  exercise_weight_unit exercise_weight_unit,
   duration_unit duration_unit,
-  distance NUMERIC(8, 2),
   distance_unit distance_unit
 );
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_segment_id_exercise_order
   ON workout_segment_exercise (workout_segment_id, exercise_order);
+
+CREATE TABLE IF NOT EXISTS workout_segment_exercise_measurement (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  workout_segment_exercise_id INT NOT NULL REFERENCES workout_segment_exercise(id) ON DELETE CASCADE,
+  set_order INT NOT NULL CHECK (set_order > 0),
+  reps INT,
+  reps_to_failure BOOL,
+  weight_used NUMERIC(8, 2),
+  duration NUMERIC(8, 2),
+  distance NUMERIC(8, 2)
+);
+CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_measurement_exercise_id_set_order
+  ON workout_segment_exercise_measurement (workout_segment_exercise_id, set_order);
 
 
 
@@ -431,33 +441,108 @@ VALUES
   (9, 'Workout 2', '', CURRENT_DATE - INTERVAL '8 day'),
   (10, 'Workout 1', '', CURRENT_DATE - INTERVAL '9 day');
 
-INSERT INTO workout_segment (id, workout_id, segment_order, sets)
-OVERRIDING SYSTEM VALUE
-VALUES
-  (1, 1, 1, 4),
-  (2, 2, 1, 4),
-  (3, 3, 1, 4),
-  (4, 4, 1, 4),
-  (5, 5, 1, 4),
-  (6, 6, 1, 4),
-  (7, 7, 1, 4),
-  (8, 8, 1, 4),
-  (9, 9, 1, 4),
-  (10, 10, 1, 4);
+INSERT INTO workout_segment (workout_id, segment_order, sets)
+SELECT w.id, seed.segment_order, 4
+FROM workout w
+JOIN (
+  VALUES
+    (1),
+    (2)
+) AS seed(segment_order) ON true;
 
-INSERT INTO workout_segment_exercise (id, workout_segment_id, exercise_order, exercise_id, reps, reps_to_failure)
-OVERRIDING SYSTEM VALUE
-VALUES
-  (1, 1, 1, 1, ARRAY[8, 8, 8, 8], false),   -- Bench Press
-  (2, 2, 1, 2, ARRAY[8, 8, 8, 8], false),   -- Incline Dumbbell Press
-  (3, 3, 1, 3, ARRAY[8, 8, 8, 8], false),   -- Decline Bench Press
-  (4, 4, 1, 4, ARRAY[8, 8, 8, 8], false),   -- Push-Up
-  (5, 5, 1, 5, ARRAY[8, 8, 8, 8], false),   -- Dumbbell Fly
-  (6, 6, 1, 6, ARRAY[8, 8, 8, 8], false),   -- Cable Fly
-  (7, 7, 1, 7, ARRAY[8, 8, 8, 8], false),   -- Chest Dips
-  (8, 8, 1, 8, ARRAY[8, 8, 8, 8], false),   -- Machine Chest Press
-  (9, 9, 1, 9, ARRAY[8, 8, 8, 8], false),   -- Pec Deck
-  (10, 10, 1, 10, ARRAY[8, 8, 8, 8], false); -- Dumbell Bench Press
+INSERT INTO workout_segment_exercise (
+  workout_segment_id,
+  exercise_order,
+  exercise_id,
+  execution_type,
+  exercise_weight_unit,
+  duration_unit,
+  distance_unit
+)
+SELECT
+  ws.id,
+  1,
+  seed.exercise_id,
+  ex.execution_type,
+  CASE
+    WHEN ex.execution_type = 'repetition' AND NOT ex.is_bodyweight THEN 'lbs'::exercise_weight_unit
+    ELSE NULL
+  END,
+  CASE
+    WHEN ex.execution_type = 'time' THEN 'minutes'::duration_unit
+    ELSE NULL
+  END,
+  CASE
+    WHEN ex.execution_type = 'distance' THEN 'miles'::distance_unit
+    ELSE NULL
+  END
+FROM workout w
+JOIN workout_segment ws ON ws.workout_id = w.id
+JOIN (
+  VALUES
+    (1, 1, 2),
+    (1, 2, 45),
+    (2, 1, 11),
+    (2, 2, 33),
+    (3, 1, 6),
+    (3, 2, 48),
+    (4, 1, 19),
+    (4, 2, 26),
+    (5, 1, 9),
+    (5, 2, 50),
+    (6, 1, 14),
+    (6, 2, 37),
+    (7, 1, 8),
+    (7, 2, 41),
+    (8, 1, 5),
+    (8, 2, 29),
+    (9, 1, 16),
+    (9, 2, 47),
+    (10, 1, 3),
+    (10, 2, 44)
+) AS seed(workout_id, segment_order, exercise_id)
+  ON seed.workout_id = w.id
+ AND seed.segment_order = ws.segment_order
+JOIN exercises ex ON ex.id = seed.exercise_id;
+
+INSERT INTO workout_segment_exercise_measurement (
+  workout_segment_exercise_id,
+  set_order,
+  reps,
+  reps_to_failure,
+  weight_used,
+  duration,
+  distance
+)
+SELECT
+  wse.id,
+  set_seed.set_order,
+  CASE
+    WHEN ex.execution_type = 'repetition' THEN 8
+    ELSE NULL
+  END AS reps,
+  CASE
+    WHEN ex.execution_type = 'repetition' THEN false
+    ELSE NULL
+  END AS reps_to_failure,
+  CASE
+    WHEN ex.execution_type = 'repetition' AND NOT ex.is_bodyweight THEN 135
+    ELSE NULL
+  END AS weight_used,
+  CASE
+    WHEN ex.execution_type = 'time' THEN 5
+    ELSE NULL
+  END AS duration,
+  CASE
+    WHEN ex.execution_type = 'distance' THEN 1
+    ELSE NULL
+  END AS distance
+FROM workout_segment_exercise wse
+JOIN exercises ex ON ex.id = wse.exercise_id
+JOIN LATERAL (
+  SELECT gs::INT AS set_order
+  FROM generate_series(1, 4) AS gs
+) AS set_seed ON true;
 
 -- ================================================================================
 -- Sequence Sync (for explicit id seed inserts)
@@ -490,5 +575,11 @@ SELECT setval(
 SELECT setval(
   pg_get_serial_sequence('workout_segment_exercise', 'id'),
   COALESCE((SELECT MAX(id) FROM workout_segment_exercise), 0) + 1,
+  false
+);
+
+SELECT setval(
+  pg_get_serial_sequence('workout_segment_exercise_measurement', 'id'),
+  COALESCE((SELECT MAX(id) FROM workout_segment_exercise_measurement), 0) + 1,
   false
 );
