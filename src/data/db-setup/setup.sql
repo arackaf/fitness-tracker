@@ -48,9 +48,7 @@ CREATE TABLE IF NOT EXISTS exercises (
   muscle_groups INT[] NOT NULL,
   is_compound BOOL,
   is_bodyweight BOOL,
-  execution_type execution_type NOT NULL,
-  default_distance_type distance_unit,
-  default_duration_type duration_unit
+  execution_type execution_type NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
   ON exercises
@@ -251,10 +249,10 @@ WITH exercise_seed AS (
       (70, 'Kickback', 'Hinge forward, keep upper arm still, and extend your elbow to move the weight back.', ARRAY['triceps'], false, 'repetition', NULL, NULL),
       (71, 'Running', 'Run at a sustainable pace over a measured distance.', ARRAY['cardio'], true, 'distance', 'miles', NULL),
       (72, 'Rowing', 'Row continuously with controlled strokes for a set duration.', ARRAY['back', 'lats', 'biceps'], true, 'time', NULL, 'minutes')
-  ) AS seed(id, name, description, muscle_groups, is_compound, execution_type, default_distance_type, default_duration_type)
+  ) AS seed(id, name, description, muscle_groups, is_compound, execution_type, seed_distance_unit, seed_duration_unit)
 ),
 inserted_exercises AS (
-  INSERT INTO exercises (id, name, description, muscle_groups, is_compound, is_bodyweight, execution_type, default_distance_type, default_duration_type)
+  INSERT INTO exercises (id, name, description, muscle_groups, is_compound, is_bodyweight, execution_type)
   OVERRIDING SYSTEM VALUE
   SELECT
     seed.id,
@@ -282,9 +280,7 @@ inserted_exercises AS (
       ) THEN true
       ELSE false
     END AS is_bodyweight,
-    seed.execution_type::execution_type,
-    seed.default_distance_type::distance_unit,
-    seed.default_duration_type::duration_unit
+    seed.execution_type::execution_type
   FROM exercise_seed seed
   WHERE NOT EXISTS (
     SELECT 1

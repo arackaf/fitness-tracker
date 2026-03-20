@@ -44,8 +44,6 @@ export const exercises = pgTable(
     isCompound: boolean("is_compound"),
     isBodyweight: boolean("is_bodyweight"),
     executionType: executionType("execution_type").notNull(),
-    defaultDistanceType: distanceUnit("default_distance_type"),
-    defaultDurationType: durationUnit("default_duration_type"),
   },
   table => [
     index("idx_exercises_muscle_groups_gin").using(
