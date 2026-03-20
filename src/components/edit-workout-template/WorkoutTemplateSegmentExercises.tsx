@@ -7,6 +7,13 @@ import {
 } from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DistanceExerciseSet } from "@/components/edit-workout-template/DistanceExerciseSet";
 import { DurationExerciseSet } from "@/components/edit-workout-template/DurationExerciseSet";
 import { createDefaultExercise } from "@/data/workout-templates/workout-state";
@@ -123,19 +130,96 @@ export const WorkoutTemplateSegmentExercises: FC<
                             )}
                         </label>
                         {selectedExerciseId > 0 ? (
-                          <ExecutionTypeSelect
-                            value={rowExecutionType}
-                            onValueChange={value => {
-                              form.setFieldValue(
-                                `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                                value,
-                              );
-                              setExecutionTypeByRow(previous => ({
-                                ...previous,
-                                [exerciseIndex]: value,
-                              }));
-                            }}
-                          />
+                          <div className="flex items-center gap-2">
+                            <ExecutionTypeSelect
+                              value={rowExecutionType}
+                              onValueChange={value => {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                                  value,
+                                );
+                                setExecutionTypeByRow(previous => ({
+                                  ...previous,
+                                  [exerciseIndex]: value,
+                                }));
+                              }}
+                            />
+                            {rowExecutionType === "distance" ? (
+                              <form.Field
+                                name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
+                                validators={{
+                                  onChange: ({ value }) => {
+                                    const distance =
+                                      form.state.values.segments[segmentIndex]
+                                        ?.exercises[exerciseIndex]
+                                        ?.measurements[0]?.distance;
+                                    if (
+                                      distance != null &&
+                                      distance !== "" &&
+                                      value == null
+                                    ) {
+                                      return "Required";
+                                    }
+                                  },
+                                }}
+                                children={distanceUnitField => (
+                                  <Select
+                                    value={distanceUnitField.state.value ?? undefined}
+                                    onValueChange={value => {
+                                      distanceUnitField.handleChange(value as never);
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-28">
+                                      <SelectValue placeholder="Unit" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="feet">Feet</SelectItem>
+                                      <SelectItem value="yards">Yards</SelectItem>
+                                      <SelectItem value="miles">Miles</SelectItem>
+                                      <SelectItem value="km">Km</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                            ) : null}
+                            {rowExecutionType === "time" ? (
+                              <form.Field
+                                name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
+                                validators={{
+                                  onChange: ({ value }) => {
+                                    const duration =
+                                      form.state.values.segments[segmentIndex]
+                                        ?.exercises[exerciseIndex]
+                                        ?.measurements[0]?.duration;
+                                    if (
+                                      duration != null &&
+                                      duration !== "" &&
+                                      value == null
+                                    ) {
+                                      return "Required";
+                                    }
+                                  },
+                                }}
+                                children={durationUnitField => (
+                                  <Select
+                                    value={durationUnitField.state.value ?? undefined}
+                                    onValueChange={value => {
+                                      durationUnitField.handleChange(value as never);
+                                    }}
+                                  >
+                                    <SelectTrigger className="w-28">
+                                      <SelectValue placeholder="Unit" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="seconds">Seconds</SelectItem>
+                                      <SelectItem value="minutes">Minutes</SelectItem>
+                                      <SelectItem value="hours">Hours</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                            ) : null}
+                          </div>
                         ) : null}
                       </>
                     )}

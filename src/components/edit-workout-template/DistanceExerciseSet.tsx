@@ -1,13 +1,6 @@
 import type { FC } from "react";
 
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import { cn } from "@/lib/utils";
 
@@ -57,39 +50,6 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                   )}
                 />
               </label>
-            )}
-          />
-
-          <form.Field
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
-            validators={{
-              onChange: ({ value }) => {
-                const distance =
-                  form.state.values.segments[segmentIndex]?.exercises[
-                    exerciseIndex
-                  ]?.measurements[0]?.distance;
-                if (distance != null && distance !== "" && value == null) {
-                  return "Required";
-                }
-              },
-            }}
-            children={distanceUnitField => (
-              <Select
-                value={distanceUnitField.state.value ?? undefined}
-                onValueChange={value => {
-                  distanceUnitField.handleChange(value as never);
-                }}
-              >
-                <SelectTrigger className="h-7 w-28">
-                  <SelectValue placeholder="Unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="feet">Feet</SelectItem>
-                  <SelectItem value="yards">Yards</SelectItem>
-                  <SelectItem value="miles">Miles</SelectItem>
-                  <SelectItem value="km">Km</SelectItem>
-                </SelectContent>
-              </Select>
             )}
           />
         </div>

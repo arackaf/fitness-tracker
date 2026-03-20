@@ -1,13 +1,6 @@
 import type { FC } from "react";
 
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import { cn } from "@/lib/utils";
 
@@ -57,38 +50,6 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                   )}
                 />
               </label>
-            )}
-          />
-
-          <form.Field
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
-            validators={{
-              onChange: ({ value }) => {
-                const duration =
-                  form.state.values.segments[segmentIndex]?.exercises[
-                    exerciseIndex
-                  ]?.measurements[0]?.duration;
-                if (duration != null && duration !== "" && value == null) {
-                  return "Required";
-                }
-              },
-            }}
-            children={durationUnitField => (
-              <Select
-                value={durationUnitField.state.value ?? undefined}
-                onValueChange={value => {
-                  durationUnitField.handleChange(value as never);
-                }}
-              >
-                <SelectTrigger className="h-7 w-28">
-                  <SelectValue placeholder="Unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="seconds">Seconds</SelectItem>
-                  <SelectItem value="minutes">Minutes</SelectItem>
-                  <SelectItem value="hours">Hours</SelectItem>
-                </SelectContent>
-              </Select>
             )}
           />
         </div>
