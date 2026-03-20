@@ -19,7 +19,11 @@ import { DurationExerciseSet } from "@/components/edit-workout-template/Duration
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import type { DurationUnit, MuscleGroup } from "@/data/types";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
-import { defaultDistanceUnit, defaultDurationUnit } from "@/data/constants";
+import {
+  defaultDistanceUnit,
+  defaultDurationUnit,
+  defaultExerciseWeightUnit,
+} from "@/data/constants";
 
 type WorkoutTemplateSegmentExerciseProps = {
   form: WorkoutTemplateForm;
@@ -115,6 +119,10 @@ export const WorkoutTemplateSegmentExercise: FC<
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
                         getExerciseExecutionType(nextSelectedExercise),
                       );
+                      form.setFieldValue(
+                        `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`,
+                        defaultExerciseWeightUnit,
+                      );
                       setRowExercise(nextSelectedExercise);
                     }}
                   />
@@ -150,6 +158,47 @@ export const WorkoutTemplateSegmentExercise: FC<
                         });
                       }}
                     />
+                    {rowExecutionType === "repetition" &&
+                    selectedExercise?.isBodyweight !== true ? (
+                      <form.Field
+                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
+                        validators={{
+                          onChange: ({ value }) => {
+                            const measurements =
+                              form.state.values.segments[segmentIndex]
+                                ?.exercises[exerciseIndex]?.measurements;
+                            const hasWeightValue = measurements?.some(
+                              measurement =>
+                                measurement.weightUsed != null &&
+                                measurement.weightUsed !== "",
+                            );
+                            if (hasWeightValue && value == null) {
+                              return "Required";
+                            }
+                          },
+                        }}
+                        children={exerciseWeightUnitField => (
+                          <Select
+                            value={
+                              exerciseWeightUnitField.state.value ?? undefined
+                            }
+                            onValueChange={value => {
+                              exerciseWeightUnitField.handleChange(
+                                value as any,
+                              );
+                            }}
+                          >
+                            <SelectTrigger className="w-28">
+                              <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="lbs">lbs</SelectItem>
+                              <SelectItem value="kg">kg</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                    ) : null}
                     {rowExecutionType === "distance" ? (
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
