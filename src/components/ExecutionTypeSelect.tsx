@@ -30,7 +30,7 @@ export const ExecutionTypeSelect: FC<ExecutionTypeSelectProps> = ({
         <SelectValue placeholder="Execution type" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="repetition">Repetition</SelectItem>
+        <SelectItem value="repetition">Reps</SelectItem>
         <SelectItem value="distance">Distance</SelectItem>
         <SelectItem value="time">Time</SelectItem>
       </SelectContent>
