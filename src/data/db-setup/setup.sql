@@ -340,13 +340,15 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  weight_used
 )
 SELECT
   wtse.id,
   COALESCE(rep_values.ord::INT, 1) AS set_order,
   rep_values.rep,
-  seed.reps_to_failure
+  seed.reps_to_failure,
+  135
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -361,9 +363,12 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = seed.exercise_order
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = seed.exercise_id
 LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
   ON seed.reps IS NOT NULL
-WHERE wt.name = 'Chest Day';
+WHERE wt.name = 'Chest Day'
+  AND NOT ex.is_bodyweight
+  AND ex.execution_type = 'repetition';
 
 
 INSERT INTO workout_template (name, description)
@@ -436,13 +441,15 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  weight_used
 )
 SELECT
   wtse.id,
   reps_seed.ord::INT,
   reps_seed.rep,
-  false
+  false,
+  135
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -474,8 +481,11 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = 1
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = seed.exercise_id
 JOIN LATERAL unnest(ARRAY[8, 8, 8, 8]) WITH ORDINALITY AS reps_seed(rep, ord)
-  ON true;
+  ON true
+WHERE NOT ex.is_bodyweight
+  AND ex.execution_type = 'repetition';
 
 -- ================================================================================
 
@@ -526,13 +536,15 @@ INSERT INTO workout_template_segment_exercise_measurement (
   workout_template_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure
+  reps_to_failure,
+  weight_used
 )
 SELECT
   wtse.id,
   COALESCE(rep_values.ord::INT, 1) AS set_order,
   rep_values.rep,
-  seed.reps_to_failure
+  seed.reps_to_failure,
+  135
 FROM workout_template wt
 JOIN workout_template_segment wts ON wts.workout_template_id = wt.id
 JOIN (
@@ -548,9 +560,12 @@ JOIN workout_template_segment_exercise wtse
   ON wtse.workout_template_segment_id = wts.id
  AND wtse.exercise_order = seed.exercise_order
  AND wtse.exercise_id = seed.exercise_id
+JOIN exercises ex ON ex.id = seed.exercise_id
 LEFT JOIN LATERAL unnest(seed.reps) WITH ORDINALITY AS rep_values(rep, ord)
   ON seed.reps IS NOT NULL
-WHERE wt.name = 'Back Day';
+WHERE wt.name = 'Back Day'
+  AND NOT ex.is_bodyweight
+  AND ex.execution_type = 'repetition';
 
 -- ================================================================================
 -- Workout Data
