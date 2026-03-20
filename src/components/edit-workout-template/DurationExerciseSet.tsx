@@ -23,34 +23,50 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <form.Field
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[0].duration`}
-            validators={{
-              onChange: ({ value }) => {
-                if (value == null || value === "") {
-                  return "Required";
-                }
-              },
+            mode="array"
+            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`}
+            children={field => {
+              return field.state.value?.map((_, measurementIndex) => {
+                const setNumber = measurementIndex + 1;
+
+                return (
+                  <form.Field
+                    key={`duration-${setNumber}`}
+                    name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].duration`}
+                    validators={{
+                      onChange: ({ value }) => {
+                        if (value == null || value === "") {
+                          return "Required";
+                        }
+                      },
+                    }}
+                    children={durationField => (
+                      <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <span>{setNumber}:</span>
+                        <Input
+                          min={0}
+                          step="0.01"
+                          type="number"
+                          value={durationField.state.value ?? ""}
+                          onChange={event => {
+                            const value = event.target.value;
+                            durationField.handleChange(
+                              (value === "" ? null : value) as never,
+                            );
+                          }}
+                          className={cn(
+                            "h-7 w-24 px-2 py-1",
+                            !durationField.state.meta.isValid
+                              ? "border-red-500"
+                              : "",
+                          )}
+                        />
+                      </label>
+                    )}
+                  />
+                );
+              });
             }}
-            children={durationField => (
-              <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <Input
-                  min={0}
-                  step="0.01"
-                  type="number"
-                  value={durationField.state.value ?? ""}
-                  onChange={event => {
-                    const value = event.target.value;
-                    durationField.handleChange(
-                      (value === "" ? null : value) as never,
-                    );
-                  }}
-                  className={cn(
-                    "h-7 w-24 px-2 py-1",
-                    !durationField.state.meta.isValid ? "border-red-500" : "",
-                  )}
-                />
-              </label>
-            )}
           />
         </div>
       </div>

@@ -68,12 +68,6 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                             segmentsField.state.value[
                               segmentIndex
                             ].exercises.forEach((exercise, idx) => {
-                              if (
-                                exercise.executionType != null &&
-                                exercise.executionType !== "repetition"
-                              ) {
-                                return;
-                              }
                               const currentMeasurements =
                                 exercise.measurements ?? [];
                               const measurementsFieldName =

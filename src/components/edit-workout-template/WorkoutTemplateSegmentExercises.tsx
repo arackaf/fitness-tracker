@@ -132,6 +132,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                         {selectedExerciseId > 0 ? (
                           <div className="flex items-center gap-2">
                             <ExecutionTypeSelect
+                              className="w-28"
                               value={rowExecutionType}
                               onValueChange={value => {
                                 form.setFieldValue(
@@ -149,13 +150,17 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
                                 validators={{
                                   onChange: ({ value }) => {
-                                    const distance =
+                                    const measurements =
                                       form.state.values.segments[segmentIndex]
                                         ?.exercises[exerciseIndex]
-                                        ?.measurements[0]?.distance;
+                                        ?.measurements;
+                                    const hasDistanceValue = measurements?.some(
+                                      measurement =>
+                                        measurement.distance != null &&
+                                        measurement.distance !== "",
+                                    );
                                     if (
-                                      distance != null &&
-                                      distance !== "" &&
+                                      hasDistanceValue &&
                                       value == null
                                     ) {
                                       return "Required";
@@ -195,13 +200,17 @@ export const WorkoutTemplateSegmentExercises: FC<
                                 name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
                                 validators={{
                                   onChange: ({ value }) => {
-                                    const duration =
+                                    const measurements =
                                       form.state.values.segments[segmentIndex]
                                         ?.exercises[exerciseIndex]
-                                        ?.measurements[0]?.duration;
+                                        ?.measurements;
+                                    const hasDurationValue = measurements?.some(
+                                      measurement =>
+                                        measurement.duration != null &&
+                                        measurement.duration !== "",
+                                    );
                                     if (
-                                      duration != null &&
-                                      duration !== "" &&
+                                      hasDurationValue &&
                                       value == null
                                     ) {
                                       return "Required";
