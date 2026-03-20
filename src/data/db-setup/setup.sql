@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
   reps INT,
   reps_to_failure BOOL,
   exercise_weight_unit exercise_weight_unit,
+  weight_used NUMERIC(8, 2),
   duration NUMERIC(8, 2),
   distance NUMERIC(8, 2)
 );

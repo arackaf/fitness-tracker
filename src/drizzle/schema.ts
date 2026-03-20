@@ -264,6 +264,7 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
     reps: integer(),
     repsToFailure: boolean("reps_to_failure"),
     exerciseWeightUnit: exerciseWeightUnit("exercise_weight_unit"),
+    weightUsed: numeric("weight_used", { precision: 8, scale: 2 }),
     duration: numeric({ precision: 8, scale: 2 }),
     distance: numeric({ precision: 8, scale: 2 }),
   },
