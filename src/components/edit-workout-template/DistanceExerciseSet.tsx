@@ -51,7 +51,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                           onChange={event => {
                             const value = event.target.value;
                             distanceField.handleChange(
-                              (value === "" ? null : value) as never,
+                              value === "" ? null : value,
                             );
                           }}
                           className={cn(

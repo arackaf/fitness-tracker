@@ -51,7 +51,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                           onChange={event => {
                             const value = event.target.value;
                             durationField.handleChange(
-                              (value === "" ? null : value) as never,
+                              value === "" ? null : value,
                             );
                           }}
                           className={cn(

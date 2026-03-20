@@ -18,7 +18,7 @@ import { DistanceExerciseSet } from "@/components/edit-workout-template/Distance
 import { DurationExerciseSet } from "@/components/edit-workout-template/DurationExerciseSet";
 import { createDefaultExercise } from "@/data/workout-templates/workout-state";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
-import type { MuscleGroup } from "@/data/types";
+import type { DurationUnit, MuscleGroup } from "@/data/types";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
 
 type WorkoutTemplateSegmentExercisesProps = {
@@ -159,10 +159,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                                         measurement.distance != null &&
                                         measurement.distance !== "",
                                     );
-                                    if (
-                                      hasDistanceValue &&
-                                      value == null
-                                    ) {
+                                    if (hasDistanceValue && value == null) {
                                       return "Required";
                                     }
                                   },
@@ -174,7 +171,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                                     }
                                     onValueChange={value => {
                                       distanceUnitField.handleChange(
-                                        value as never,
+                                        value as any,
                                       );
                                     }}
                                   >
@@ -209,10 +206,7 @@ export const WorkoutTemplateSegmentExercises: FC<
                                         measurement.duration != null &&
                                         measurement.duration !== "",
                                     );
-                                    if (
-                                      hasDurationValue &&
-                                      value == null
-                                    ) {
+                                    if (hasDurationValue && value == null) {
                                       return "Required";
                                     }
                                   },
@@ -222,10 +216,8 @@ export const WorkoutTemplateSegmentExercises: FC<
                                     value={
                                       durationUnitField.state.value ?? undefined
                                     }
-                                    onValueChange={value => {
-                                      durationUnitField.handleChange(
-                                        value as never,
-                                      );
+                                    onValueChange={(value: DurationUnit) => {
+                                      durationUnitField.handleChange(value);
                                     }}
                                   >
                                     <SelectTrigger className="w-28">
