@@ -1,20 +1,45 @@
 import type { FC } from "react";
 
-import type { TemplateSegmentWithExercises } from "@/data/workout-templates/workout-state";
+import type {
+  TemplateSegmentWithExercises,
+  Exercise,
+  Measurement,
+} from "@/data/workout-templates/workout-state";
 
 type WorkoutTemplateSegmentRepsProps = {
   segment: TemplateSegmentWithExercises;
 };
 
+const getDisplayMeasurement = (
+  exercise: Exercise,
+  measurement: Measurement,
+) => {
+  if (exercise.executionType === "distance") {
+    return `${(measurement.distance ?? "_").toString()}${measurement.distanceUnit ?? ""}`;
+  }
+
+  if (exercise.executionType === "time") {
+    return `${(measurement.duration ?? "_").toString()}${measurement.durationUnit ?? ""}`;
+  }
+
+  return (measurement.reps ?? "_").toString();
+};
+
 const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
-  const repsByExercise = segment.exercises.map(exercise =>
-    exercise.measurements.map(measurement => measurement.reps ?? null),
+  const measurementDisplayByExercise = segment.exercises.map(exercise =>
+    exercise.measurements.map(measurement =>
+      getDisplayMeasurement(exercise, measurement),
+    ),
   );
-  const maxSetCount = Math.max(...repsByExercise.map(reps => reps.length), 0);
+
+  const maxSetCount = Math.max(
+    ...measurementDisplayByExercise.map(values => values.length),
+    0,
+  );
 
   if (segment.exercises.length <= 1) {
     return Array.from({ length: maxSetCount }, (_, index) => {
-      return (repsByExercise[0]?.[index] ?? "_").toString();
+      return measurementDisplayByExercise[0]?.[index] ?? "_";
     }).join(", ");
   }
 
@@ -23,14 +48,18 @@ const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
       length: maxSetCount,
     },
     (_, repIndex) => {
-      const repsForSet = repsByExercise.map(reps => reps[repIndex] ?? null);
-      const hasAnyRepValue = repsForSet.some(rep => rep !== null);
+      const measurementsForSet = measurementDisplayByExercise.map(
+        values => values[repIndex] ?? null,
+      );
+      const hasAnyMeasurementValue = measurementsForSet.some(
+        value => value !== null,
+      );
 
-      if (!hasAnyRepValue) {
+      if (!hasAnyMeasurementValue) {
         return "";
       }
 
-      return `(${repsForSet.map(rep => (rep ?? "_").toString()).join(", ")})`;
+      return `(${measurementsForSet.map(value => value ?? "_").join(", ")})`;
     },
   )
     .filter(Boolean)

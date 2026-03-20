@@ -28,6 +28,10 @@ export type WorkoutTemplateSegmentExerciseState =
     measurements: WorkoutTemplateSegmentExerciseMeasurement[];
   };
 
+export type Exercise = TemplateSegmentWithExercises["exercises"][number];
+export type Measurement =
+  TemplateSegmentWithExercises["exercises"][number]["measurements"][number];
+
 const DEFAULT_SET_COUNT = 4;
 
 const defaultExercise: WorkoutTemplateSegmentExercise = {
