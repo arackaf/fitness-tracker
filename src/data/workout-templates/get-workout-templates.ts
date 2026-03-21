@@ -9,6 +9,7 @@ import {
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
   workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
+import { formatNumericForDisplay } from "../util/format-numeric";
 
 type GetWorkoutTemplatesParams = {
   id?: number;
@@ -67,7 +68,8 @@ export const getWorkoutTemplates = async (
       exerciseExecutionType: workoutTemplateSegmentExerciseTable.executionType,
       exerciseDurationUnit: workoutTemplateSegmentExerciseTable.durationUnit,
       exerciseDistanceUnit: workoutTemplateSegmentExerciseTable.distanceUnit,
-      exerciseWeightUnit: workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
+      exerciseWeightUnit:
+        workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
       measurementId: workoutTemplateSegmentExerciseMeasurementTable.id,
       measurementSetOrder:
         workoutTemplateSegmentExerciseMeasurementTable.setOrder,
@@ -203,7 +205,7 @@ export const getWorkoutTemplates = async (
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
         repsToFailure: row.measurementRepsToFailure,
-        weightUsed: row.measurementWeightUsed,
+        weightUsed: formatNumericForDisplay(row.measurementWeightUsed),
         duration: row.measurementDuration,
         distance: row.measurementDistance,
       });
