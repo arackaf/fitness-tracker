@@ -1,18 +1,22 @@
-import { Fragment, useEffect, useState, type FC } from "react";
+import { Fragment, useEffect, useRef, useState, type FC } from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Workout } from "@/components/edit-workout/Workout";
 import { ImportWorkoutTemplate } from "@/components/ImportWorkoutTemplate";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 
+import { toast } from "sonner";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { saveWorkout } from "@/server-functions/workouts";
+import {
+  saveWorkout,
+  workoutHistoryQueryOptions,
+} from "@/server-functions/workouts";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   createDefaultWorkout,
   defaultworkoutDate,
@@ -87,6 +91,8 @@ type RenderWorkoutFormProps = {
 const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
   const { workoutState, onReset } = props;
   const [formResetKey, setFormResetKey] = useState(0);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setFormResetKey(key => key + 1);
@@ -96,7 +102,16 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
     <Fragment key={formResetKey}>
       <WorkoutFormContent
         workoutState={workoutState}
-        onSaved={() => setFormResetKey(key => key + 1)}
+        onSaved={addAnother => {
+          if (addAnother) {
+            onReset();
+          } else {
+            queryClient.invalidateQueries({
+              queryKey: workoutHistoryQueryOptions({ page: 1 }).queryKey,
+            });
+            navigate({ to: "/app/workouts", search: { page: 1 } });
+          }
+        }}
         onReset={() => onReset()}
       />
     </Fragment>
@@ -105,7 +120,7 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 
 type WorkoutFormContentProps = {
   workoutState: WorkoutState;
-  onSaved: () => void;
+  onSaved: (addAnother: boolean) => void;
   onReset: () => void;
 };
 
@@ -116,13 +131,14 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
   const [isSaving, setIsSaving] = useState(false);
+  const addAnotherRef = useRef(false);
 
   const form = useWorkoutForm(async state => {
     setIsSaving(true);
 
     try {
       await saveWorkout({ data: state });
-      onSaved();
+      onSaved(addAnotherRef.current);
       toast.success("Workout created", { position: "top-center" });
     } finally {
       setIsSaving(false);
@@ -143,6 +159,13 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}
         </Button>
+        <label className="flex items-center gap-2 ml-4">
+          <Checkbox
+            onCheckedChange={checked => (addAnotherRef.current = !!checked)}
+            disabled={isSaving}
+          />
+          <span className="text-sm">Add another</span>
+        </label>
         <Button
           type="button"
           variant="secondary"
