@@ -18,6 +18,9 @@ CREATE TYPE execution_type AS ENUM ('repetition', 'distance', 'time');
 CREATE TYPE duration_unit AS ENUM ('seconds', 'minutes', 'hours');
 CREATE TYPE distance_unit AS ENUM ('feet', 'yards', 'miles', 'km');
 CREATE TYPE exercise_weight_unit AS ENUM ('lbs', 'kg');
+CREATE TYPE body_composition_measurement_type AS ENUM ('length', 'weight', 'percentage');
+CREATE TYPE body_composition_length_unit AS ENUM ('inches', 'cm');
+CREATE TYPE body_composition_weight_unit AS ENUM ('lbs', 'kg');
 
 INSERT INTO muscle_group (id, name)
 OVERRIDING SYSTEM VALUE
@@ -146,6 +149,25 @@ CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_measurement_exercise_id_
   ON workout_segment_exercise_measurement (workout_segment_exercise_id, set_order);
 
 
+
+-- ================================================================================
+-- Body Composition
+-- ================================================================================
+
+CREATE TABLE IF NOT EXISTS body_composition_metric (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  measurement_type body_composition_measurement_type NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS body_composition_measurement (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  body_composition_metric_id INT NOT NULL REFERENCES body_composition_metric(id),
+  measurement_date TIMESTAMP NOT NULL,
+  value NUMERIC(8, 2) NOT NULL,
+  length_unit body_composition_length_unit,
+  weight_unit body_composition_weight_unit
+);
 
 -- ================================================================================
 -- Logging
