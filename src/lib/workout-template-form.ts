@@ -1,12 +1,12 @@
 import {
-  createDefaultWorkout,
+  createDefaultWorkoutTemplate,
   type WorkoutTemplateState,
 } from "@/data/workout-templates/workout-state";
 import { useForm } from "@tanstack/react-form";
 
 export const useWorkoutTemplateForm = (
   submitValue: (value: WorkoutTemplateState) => void | Promise<void>,
-  defaultValues: WorkoutTemplateState = createDefaultWorkout(),
+  defaultValues: WorkoutTemplateState = createDefaultWorkoutTemplate(),
 ) => {
   return useForm({
     defaultValues,

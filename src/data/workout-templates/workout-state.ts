@@ -77,7 +77,7 @@ export const createDefaultSegment = (): TemplateSegmentWithExercises => {
   };
 };
 
-export const createDefaultWorkout = (): WorkoutTemplateState => {
+export const createDefaultWorkoutTemplate = (): WorkoutTemplateState => {
   return {
     name: "",
     description: "",
