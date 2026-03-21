@@ -313,6 +313,15 @@ inserted_exercises AS (
 )
 SELECT 1;
 
+INSERT INTO body_composition_metric (name, measurement_type)
+SELECT seed.name, seed.measurement_type::body_composition_measurement_type
+FROM (
+  VALUES
+    ('Waist', 'length'),
+    ('Bodyweight', 'weight'),
+    ('Bodyfat %', 'percentage')
+) AS seed(name, measurement_type);
+
 -- ================================================================================
 -- Workout Template Data
 -- ================================================================================
