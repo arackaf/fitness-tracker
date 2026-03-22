@@ -14,6 +14,11 @@ import {
   type InClassWorkout,
 } from "@/server-functions/in-class/workouts-simple";
 
+type InClassExercise = {
+  id: number;
+  name: string;
+};
+
 export const Route = createFileRoute("/lessons/5/workouts/")({
   component: RouteComponent,
   loader: async () => {
@@ -58,6 +63,8 @@ function RouteComponent() {
           exerciseLookup={exerciseLookup}
         />
       ))}
+      <hr className="my-4" />
+      <ExerciseList workouts={workouts} exercises={exercises} />
     </div>
   );
 }
@@ -120,6 +127,50 @@ const RenderWorkout: FC<{
           Update name
         </Button>
       </div>
+    </div>
+  );
+};
+
+const ExerciseList: FC<{
+  workouts: InClassWorkout[];
+  exercises: InClassExercise[];
+}> = props => {
+  const { workouts, exercises } = props;
+
+  const exercisesToRender = useMemo(() => {
+    const exerciseIds = new Set(workouts.flatMap(workout => workout.exercises));
+
+    return exercises.filter(exercise => exerciseIds.has(exercise.id));
+  }, [workouts, exercises]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      {exercisesToRender.map(exercise => (
+        <Exercise key={exercise.id} exercise={exercise} />
+      ))}
+    </div>
+  );
+};
+
+const Exercise: FC<{
+  exercise: InClassExercise;
+}> = props => {
+  const { exercise } = props;
+  const exerciseNameInputRef = useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
+
+  return (
+    <div className="flex items-center gap-2">
+      <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />
+      <Button
+        type="button"
+        onClick={() => {
+          // TODO: implement exercise update
+        }}
+      >
+        Update exercise
+      </Button>
     </div>
   );
 };
