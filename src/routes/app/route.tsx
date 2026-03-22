@@ -160,7 +160,7 @@ function RouteComponent() {
           </Sheet>
         </div>
       </header>
-      <div className="mx-auto w-full max-w-4xl px-6 py-10 md:px-8">
+      <div className="mx-auto w-full max-w-4xl px-6 py-6 md:py-10 md:px-8">
         <Outlet />
       </div>
     </main>
