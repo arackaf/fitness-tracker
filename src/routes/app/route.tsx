@@ -1,18 +1,23 @@
-import {
-  ClipboardPen,
-  History,
-  PencilRuler,
-  Ruler,
-  Shield,
-} from "lucide-react";
+import { ClipboardPen, History, Menu, PencilRuler, Shield } from "lucide-react";
+import { useState } from "react";
 
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const navLinkClassName =
     "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
 
@@ -28,7 +33,7 @@ function RouteComponent() {
   return (
     <main className="min-h-screen bg-background text-foreground dark:bg-slate-900 dark:text-slate-100">
       <header className="border-b border-border bg-card/60 px-6 py-4 backdrop-blur-md md:px-8">
-        <nav className="mx-auto flex w-full max-w-4xl flex-wrap items-center gap-2 px-6">
+        <nav className="mx-auto hidden w-full max-w-4xl flex-wrap items-center gap-2 px-6 md:flex">
           <Link
             to="/app/log-workout"
             className={navLinkClassName}
@@ -78,6 +83,82 @@ function RouteComponent() {
             Admin
           </Link>
         </nav>
+        <div className="mx-auto w-full max-w-4xl px-6 md:hidden">
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="size-5" aria-hidden="true" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72 p-0">
+              <SheetHeader className="border-b">
+                <SheetTitle>Navigation</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-1 p-4">
+                <Link
+                  to="/app/log-workout"
+                  className={`${navLinkClassName} w-full justify-start`}
+                  activeProps={activeNavLinkProps}
+                  inactiveProps={inactiveNavLinkProps}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <ClipboardPen className="size-4" aria-hidden="true" />
+                  Workout
+                </Link>
+                <Link
+                  to="/app/log-body-composition"
+                  className={`${navLinkClassName} w-full justify-start`}
+                  activeProps={activeNavLinkProps}
+                  inactiveProps={inactiveNavLinkProps}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <PencilRuler className="size-4" aria-hidden="true" />
+                  Measure
+                </Link>
+                <Link
+                  to="/app/workouts"
+                  className={`${navLinkClassName} w-full justify-start`}
+                  activeProps={activeNavLinkProps}
+                  inactiveProps={inactiveNavLinkProps}
+                  activeOptions={{ exact: false, includeSearch: false }}
+                  search={{ page: 1 }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <History className="size-4" aria-hidden="true" />
+                  Workouts
+                </Link>
+                <Link
+                  to="/app/measurements"
+                  className={`${navLinkClassName} w-full justify-start`}
+                  activeProps={activeNavLinkProps}
+                  inactiveProps={inactiveNavLinkProps}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <History className="size-4" aria-hidden="true" />
+                  Measurements
+                </Link>
+                <div
+                  className="my-1 h-px w-full bg-border"
+                  aria-hidden="true"
+                />
+                <Link
+                  to="/app/admin"
+                  className={`${navLinkClassName} w-full justify-start`}
+                  activeProps={activeNavLinkProps}
+                  inactiveProps={inactiveNavLinkProps}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Shield className="size-4" aria-hidden="true" />
+                  Admin
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </header>
       <div className="mx-auto w-full max-w-4xl px-6 py-10 md:px-8">
         <Outlet />
