@@ -106,3 +106,5 @@ Step 2: Create a drizzle.config.js
 Step 3: npx drizzle-kit generate
 Step 4: Set up your connection
 Step 5: Profit
+
+If you ever choose to update the database, you can sync the Drizzle schema and relations files with `npx drizzle-kit pull`

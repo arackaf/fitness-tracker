@@ -16,6 +16,8 @@ type Exercise = {
 export const Route = createFileRoute("/lessons/2/workouts/$id")({
   component: RouteComponent,
   loader: ({ params }) => {
+    console.log("\n\nI'm in the $id loader!\n\n");
+
     const workout: Workout = {
       id: Number(params.id),
       name: "My Workout",
@@ -46,7 +48,7 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
-        <Link className="ml-auto" to="/lessons/2/workouts">
+        <Link className="ml-auto" to="/lessons/2/workouts" preload={false}>
           Back
         </Link>
       </div>

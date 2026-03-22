@@ -5,6 +5,7 @@ export const Route = createFileRoute("/lessons/")({
 });
 
 type LessonKey =
+  | "1"
   | "2"
   | "3"
   | "4"
@@ -18,6 +19,7 @@ type LessonKey =
   | "12"
   | "13";
 const lessonSummaryHeading: { [key in LessonKey]: string } = {
+  1: "Routing",
   2: "Loaders",
   3: "Loading data",
   4: "Route caching",

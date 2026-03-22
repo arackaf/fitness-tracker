@@ -22,7 +22,7 @@ You do
 
 app.workouts.edit.$id.tsx
 
-I mush prefer directory organization for files, but either are fine, and you can even mix and match!
+I much prefer directory organization for files, but either are fine, and you can even mix and match!
 
 ## Directory routing
 
