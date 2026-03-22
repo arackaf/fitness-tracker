@@ -49,6 +49,7 @@ function RouteComponent() {
               search={{ page: 1 }}
               preload={false}
               className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-400 dark:hover:bg-slate-800"
+              key={idx}
             >
               Lesson {idx} - {desc}
             </Link>
@@ -57,6 +58,7 @@ function RouteComponent() {
               to={`/lessons/${idx as PagelessLessonKey}/workouts`}
               preload={false}
               className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-400 dark:hover:bg-slate-800"
+              key={idx}
             >
               Lesson {idx} - {desc}
             </Link>
