@@ -83,11 +83,11 @@ function RouteComponent() {
             Admin
           </Link>
         </nav>
-        <div className="mx-auto w-full max-w-4xl px-6 md:hidden">
+        <div className="mx-auto w-full max-w-4xl px-0 md:hidden">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 aria-label="Open navigation menu"
               >
