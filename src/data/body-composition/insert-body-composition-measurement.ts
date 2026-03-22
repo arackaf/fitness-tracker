@@ -17,11 +17,6 @@ export const insertBodyCompositionMeasurement = async (
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 
-  const metricId = input.bodyCompositionMetricId;
-  if (metricId == null) {
-    throw new Error("Body composition metric ID is required.");
-  }
-
   const numericValue = toNumericString(input.value);
   if (numericValue == null) {
     throw new Error("Measurement value is required.");
@@ -30,7 +25,7 @@ export const insertBodyCompositionMeasurement = async (
   const [insertedMeasurement] = await db
     .insert(bodyCompositionMeasurement)
     .values({
-      bodyCompositionMetricId: metricId,
+      bodyCompositionMetricId: input.bodyCompositionMetricId,
       measurementDate: input.measurementDate,
       value: numericValue,
       lengthUnit: input.lengthUnit ?? null,
