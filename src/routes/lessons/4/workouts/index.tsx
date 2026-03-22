@@ -1,5 +1,5 @@
 import { useRef, type FC } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,22 +11,12 @@ import {
 
 export const Route = createFileRoute("/lessons/4/workouts/")({
   component: RouteComponent,
-  validateSearch: (input: Record<string, string>) => {
-    return {
-      page: input.page ? Number(input.page) || 1 : 1,
-    };
-  },
-  loaderDeps: ({ search }) => {
-    return { page: search.page };
-  },
-  loader: async ({ deps }) => {
+  loader: async () => {
     const workoutsPayload = await getInClassWorkoutHistory({
-      data: { operation: "load-workouts", page: deps.page },
+      data: { operation: "load-workouts" },
     });
 
     return {
-      page: workoutsPayload.page,
-      hasNextPage: workoutsPayload.hasNextPage,
       workouts: workoutsPayload.workouts,
     };
   },
@@ -37,9 +27,7 @@ export const Route = createFileRoute("/lessons/4/workouts/")({
 });
 
 function RouteComponent() {
-  const { workouts, hasNextPage } = Route.useLoaderData();
-  const { page } = Route.useSearch();
-  const navigate = useNavigate();
+  const { workouts } = Route.useLoaderData();
 
   const { isFetching } = Route.useMatch();
 
@@ -54,36 +42,6 @@ function RouteComponent() {
       {workouts.map(workout => (
         <RenderWorkout key={workout.id} workout={workout} />
       ))}
-      <div className="flex gap-2 items-center">
-        <Button
-          type="button"
-          onClick={() => {
-            navigate({
-              to: "/lessons/4/workouts",
-              search: {
-                page: page - 1,
-              },
-            });
-          }}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        <Button
-          type="button"
-          onClick={() => {
-            navigate({
-              to: "/lessons/4/workouts",
-              search: {
-                page: page + 1,
-              },
-            });
-          }}
-          disabled={!hasNextPage}
-        >
-          Next
-        </Button>
-      </div>
       <Link to="/lessons/4/workouts/other-path">Other path</Link>
     </div>
   );
