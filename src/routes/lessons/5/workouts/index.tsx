@@ -1,6 +1,7 @@
 import { useMemo, useRef, type FC } from "react";
 import {
   createFileRoute,
+  getRouteApi,
   Link,
   useLoaderData,
   useRouter,
@@ -8,6 +9,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { editExercise } from "@/server-functions/exercises";
 import { mutateWorkoutName } from "@/server-functions/in-class/mutate-workout-name";
 import {
   getInClassWorkoutHistory,
@@ -40,6 +42,9 @@ function RouteComponent() {
   const { workouts } = Route.useLoaderData();
   const { isFetching } = Route.useMatch();
 
+  const layoutRoute = getRouteApi("/lessons/5/workouts");
+  const { isFetching: isLayoutFetching } = layoutRoute.useMatch();
+
   const { exercises } = useLoaderData({
     from: "/lessons/5/workouts",
   });
@@ -54,6 +59,9 @@ function RouteComponent() {
         <h1>Workouts</h1>
         {isFetching ? (
           <span className="text-sm text-pink-500">Reloading...</span>
+        ) : null}
+        {isLayoutFetching ? (
+          <span className="text-sm text-purple-500">Layout Reloading...</span>
         ) : null}
       </div>
       {workouts.map(workout => (
@@ -165,8 +173,17 @@ const Exercise: FC<{
       <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />
       <Button
         type="button"
-        onClick={() => {
-          // TODO: implement exercise update
+        onClick={async () => {
+          const name = exerciseNameInputRef.current?.value ?? "";
+          await editExercise({
+            data: {
+              id: exercise.id,
+              name,
+            },
+          });
+          await router.invalidate({
+            filter: route => route.routeId === "/lessons/5/workouts",
+          });
         }}
       >
         Update exercise
