@@ -1,9 +1,10 @@
-# Layouts (continued)
+# Layouts
 
 ## Objectives
 
 - Create a layout
 - Load data in it (yes you can do that)
+- Revalidate our layout
 
 ## Layouts are not special
 

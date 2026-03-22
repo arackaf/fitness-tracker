@@ -1,10 +1,12 @@
-# Layouts (continued)
+# Route Caching
 
 ## Objectives
 
 - Cache route pages
+- Observe stale content with background refreshing
+- Mutate data and revalidate routes
 
-## Caching out pages
+## Caching pages
 
 The options object we pass to `createFileRoute("/path")` takes _a lot_ of options. Some of them relate to caching, which is what we'll look at here
 
