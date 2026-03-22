@@ -82,7 +82,12 @@ const RenderWorkout: FC<{
                 newName,
               },
             });
-            await router.invalidate();
+            await router.invalidate({
+              filter: route =>
+                route.routeId === "/lessons/4/workouts/" ||
+                (route.routeId === "/lessons/4/workouts/$id" &&
+                  route.params.id === String(workout.id)),
+            });
           }}
         >
           Update name
