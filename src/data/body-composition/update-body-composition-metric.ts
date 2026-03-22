@@ -15,18 +15,11 @@ export const updateBodyCompositionMetric = async (
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 
-  const [updatedMetric] = await db
+  await db
     .update(bodyCompositionMetric)
     .set({
       name: input.name.trim(),
       measurementType: input.measurementType,
     })
-    .where(eq(bodyCompositionMetric.id, input.id))
-    .returning({ id: bodyCompositionMetric.id });
-
-  if (!updatedMetric) {
-    throw new Error(`Body composition metric ${input.id} was not found.`);
-  }
-
-  return updatedMetric.id;
+    .where(eq(bodyCompositionMetric.id, input.id));
 };
