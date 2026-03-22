@@ -1,4 +1,10 @@
-import { ClipboardPen, History, Shield } from "lucide-react";
+import {
+  ClipboardPen,
+  History,
+  PencilRuler,
+  Ruler,
+  Shield,
+} from "lucide-react";
 
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
@@ -38,8 +44,8 @@ function RouteComponent() {
             activeProps={activeNavLinkProps}
             inactiveProps={inactiveNavLinkProps}
           >
-            <ClipboardPen className="size-4" aria-hidden="true" />
-            Log Body Composition
+            <PencilRuler className="size-4" aria-hidden="true" />
+            Enter Measurement
           </Link>
           <Link
             to="/app/workouts"
@@ -59,7 +65,7 @@ function RouteComponent() {
             inactiveProps={inactiveNavLinkProps}
           >
             <History className="size-4" aria-hidden="true" />
-            Body Composition Measurements
+            Measurements
           </Link>
           <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link
