@@ -23,7 +23,7 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
 
     if (Number.isNaN(workoutTemplateId)) {
       throw redirect({
-        to: "/app/admin/workout-templates",
+        to: "/app/admin/workout-templates/edit/invalid",
         replace: true,
       });
     }
@@ -59,7 +59,7 @@ function RouteContent() {
   useEffect(() => {
     if (workoutTemplate == null || workoutTemplate.id == null) {
       void navigate({
-        to: "/app/admin/workout-templates/not-found",
+        to: "/app/admin/workout-templates/edit/not-found",
         replace: true,
       });
     }

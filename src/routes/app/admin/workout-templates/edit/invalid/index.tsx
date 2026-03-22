@@ -2,18 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Header } from "@/components/Header";
 
-export const Route = createFileRoute("/app/admin/workout-templates/not-found/")(
-  {
-    component: RouteComponent,
-  },
-);
+export const Route = createFileRoute(
+  "/app/admin/workout-templates/edit/invalid/",
+)({
+  component: RouteComponent,
+});
 
 function RouteComponent() {
   return (
     <section>
       <Header title="Workout Template Not Found" />
       <p className="text-muted-foreground">
-        Could not find this workout template
+        Workout template id is invalid.
       </p>
     </section>
   );
