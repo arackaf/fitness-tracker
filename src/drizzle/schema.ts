@@ -6,8 +6,8 @@ import {
   timestamp,
   text,
   date,
-  boolean,
   numeric,
+  boolean,
   index,
   foreignKey,
   primaryKey,
@@ -33,6 +33,38 @@ export const distanceUnit = pgEnum("distance_unit", [
   "km",
 ]);
 export const exerciseWeightUnit = pgEnum("exercise_weight_unit", ["lbs", "kg"]);
+export const bodyCompositionMeasurementType = pgEnum(
+  "body_composition_measurement_type",
+  ["length", "weight", "percentage"],
+);
+export const bodyCompositionLengthUnit = pgEnum(
+  "body_composition_length_unit",
+  ["inches", "cm"],
+);
+export const bodyCompositionWeightUnit = pgEnum(
+  "body_composition_weight_unit",
+  ["lbs", "kg"],
+);
+
+export const bodyCompositionMeasurement = pgTable(
+  "body_composition_measurement",
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    bodyCompositionMetricId: integer("body_composition_metric_id")
+      .notNull()
+      .references(() => bodyCompositionMetric.id),
+    measurementDate: timestamp("measurement_date").notNull(),
+    value: numeric({ precision: 8, scale: 2 }).notNull(),
+    lengthUnit: bodyCompositionLengthUnit("length_unit"),
+    weightUnit: bodyCompositionWeightUnit("weight_unit"),
+  },
+);
+
+export const bodyCompositionMetric = pgTable("body_composition_metric", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  name: varchar({ length: 50 }).notNull(),
+  measurementType: bodyCompositionMeasurementType("measurement_type").notNull(),
+});
 
 export const exercises = pgTable(
   "exercises",
@@ -99,23 +131,6 @@ export const networkTimingLog = pgTable(
       sql`((server_end IS NULL) OR (server_start IS NULL) OR (server_end >= server_start))`,
     ),
   ],
-);
-
-export const users = pgTable(
-  "users",
-  {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    username: varchar({ length: 250 }).notNull(),
-    password: varchar({ length: 250 }).notNull(),
-    displayName: varchar("display_name", { length: 250 }).notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`now()`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .default(sql`now()`)
-      .notNull(),
-  },
-  table => [unique("users_username_key").on(table.username)],
 );
 
 export const workout = pgTable(

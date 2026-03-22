@@ -2,6 +2,15 @@ import { defineRelations } from "drizzle-orm";
 import * as schema from "./schema";
 
 export const relations = defineRelations(schema, r => ({
+  bodyCompositionMeasurement: {
+    bodyCompositionMetric: r.one.bodyCompositionMetric({
+      from: r.bodyCompositionMeasurement.bodyCompositionMetricId,
+      to: r.bodyCompositionMetric.id,
+    }),
+  },
+  bodyCompositionMetric: {
+    bodyCompositionMeasurements: r.many.bodyCompositionMeasurement(),
+  },
   workoutSegment: {
     workout: r.one.workout({
       from: r.workoutSegment.workoutId,
