@@ -40,16 +40,12 @@ export const getBodyCompositionMetricsServerFn = createServerFn({
 export const bodyCompositionMetricByIdQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ["body-composition-metric", id],
-    queryFn: () => getBodyCompositionMetricById({ data: { id } }),
+    queryFn: async () => {
+      const metrics = await getBodyCompositionMetricsServerFn({ data: { id } });
+      return metrics[0] ?? null;
+    },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
-  });
-
-export const getBodyCompositionMetricById = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: number }) => input)
-  .handler(async ({ data }) => {
-    const metrics = await getBodyCompositionMetrics({ id: data.id });
-    return metrics[0] ?? null;
   });
 
 export const bodyCompositionMeasurementsQueryOptions = (
