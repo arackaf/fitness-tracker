@@ -28,6 +28,10 @@ export const workoutHistoryQueryOptions = (page: number = 1) => {
   });
 };
 
+export type InClassWorkout = Awaited<
+  ReturnType<typeof getInClassWorkoutHistory>
+>["workouts"][number];
+
 export const getInClassWorkoutHistory = createServerFn({
   method: "GET",
 })
