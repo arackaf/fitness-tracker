@@ -29,14 +29,6 @@ export const bodyCompositionMetricsQueryOptions = () =>
     gcTime: 1000 * 60 * 5,
   });
 
-export const getBodyCompositionMetricsServerFn = createServerFn({
-  method: "GET",
-})
-  .inputValidator((input: BodyCompositionMetricsInput) => input)
-  .handler(async ({ data }) => {
-    return getBodyCompositionMetrics({ id: data.id });
-  });
-
 export const bodyCompositionMetricByIdQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ["body-composition-metric", id],
@@ -48,18 +40,27 @@ export const bodyCompositionMetricByIdQueryOptions = (id: number) =>
     gcTime: 1000 * 60 * 5,
   });
 
+export const getBodyCompositionMetricsServerFn = createServerFn({
+  method: "GET",
+})
+  .inputValidator((input: BodyCompositionMetricsInput) => input)
+  .handler(async ({ data }) => {
+    return getBodyCompositionMetrics({ id: data.id });
+  });
+
 export const bodyCompositionMeasurementsQueryOptions = (
   input: Pick<BodyCompositionMeasurementsInput, "bodyCompositionMetricId"> = {},
 ) =>
   queryOptions({
     queryKey: [
       "body-composition-measurements",
-      { bodyCompositionMetricId: input.bodyCompositionMetricId ?? null },
+      input.bodyCompositionMetricId ?? null,
     ],
-    queryFn: () =>
-      getBodyCompositionMeasurementsServerFn({
+    queryFn: () => {
+      return getBodyCompositionMeasurementsServerFn({
         data: { bodyCompositionMetricId: input.bodyCompositionMetricId },
-      }),
+      });
+    },
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
   });
