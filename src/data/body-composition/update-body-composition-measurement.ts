@@ -28,7 +28,7 @@ export const updateBodyCompositionMeasurement = async (
     throw new Error("Measurement value is required.");
   }
 
-  const [updatedMeasurement] = await db
+  await db
     .update(bodyCompositionMeasurement)
     .set({
       bodyCompositionMetricId: input.bodyCompositionMetricId,
@@ -37,12 +37,5 @@ export const updateBodyCompositionMeasurement = async (
       lengthUnit: input.lengthUnit ?? null,
       weightUnit: input.weightUnit ?? null,
     })
-    .where(eq(bodyCompositionMeasurement.id, input.id))
-    .returning({ id: bodyCompositionMeasurement.id });
-
-  if (!updatedMeasurement) {
-    throw new Error(`Body composition measurement ${input.id} was not found.`);
-  }
-
-  return updatedMeasurement.id;
+    .where(eq(bodyCompositionMeasurement.id, input.id));
 };
