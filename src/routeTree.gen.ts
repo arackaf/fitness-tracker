@@ -34,8 +34,6 @@ import { Route as Lessons13WorkoutsIndexRouteImport } from './routes/lessons/13/
 import { Route as Lessons12WorkoutsIndexRouteImport } from './routes/lessons/12/workouts/index'
 import { Route as Lessons11WorkoutsIndexRouteImport } from './routes/lessons/11/workouts/index'
 import { Route as Lessons10WorkoutsIndexRouteImport } from './routes/lessons/10/workouts/index'
-import { Route as AppWorkoutsNotFoundIndexRouteImport } from './routes/app/workouts/not-found/index'
-import { Route as AppWorkoutsInvalidIndexRouteImport } from './routes/app/workouts/invalid/index'
 import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from './routes/app/admin/workout-templates/index'
 import { Route as Lessons9WorkoutsIdRouteImport } from './routes/lessons/9/workouts/$id'
 import { Route as Lessons7WorkoutsIdRouteImport } from './routes/lessons/7/workouts/$id'
@@ -47,6 +45,8 @@ import { Route as Lessons3WorkoutsIdRouteImport } from './routes/lessons/3/worko
 import { Route as Lessons2WorkoutsIdRouteImport } from './routes/lessons/2/workouts/$id'
 import { Route as Lessons11WorkoutsIdRouteImport } from './routes/lessons/11/workouts/$id'
 import { Route as Lessons10WorkoutsIdRouteImport } from './routes/lessons/10/workouts/$id'
+import { Route as AppWorkoutsEditNotFoundIndexRouteImport } from './routes/app/workouts/edit/not-found/index'
+import { Route as AppWorkoutsEditInvalidIndexRouteImport } from './routes/app/workouts/edit/invalid/index'
 import { Route as AppWorkoutsEditIdIndexRouteImport } from './routes/app/workouts/edit/$id/index'
 import { Route as AppAdminWorkoutTemplatesNotFoundIndexRouteImport } from './routes/app/admin/workout-templates/not-found/index'
 import { Route as AppAdminWorkoutTemplatesCreateIndexRouteImport } from './routes/app/admin/workout-templates/create/index'
@@ -178,17 +178,6 @@ const Lessons10WorkoutsIndexRoute = Lessons10WorkoutsIndexRouteImport.update({
   path: '/10/workouts/',
   getParentRoute: () => LessonsRouteRoute,
 } as any)
-const AppWorkoutsNotFoundIndexRoute =
-  AppWorkoutsNotFoundIndexRouteImport.update({
-    id: '/workouts/not-found/',
-    path: '/workouts/not-found/',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
-const AppWorkoutsInvalidIndexRoute = AppWorkoutsInvalidIndexRouteImport.update({
-  id: '/workouts/invalid/',
-  path: '/workouts/invalid/',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppAdminWorkoutTemplatesIndexRoute =
   AppAdminWorkoutTemplatesIndexRouteImport.update({
     id: '/workout-templates/',
@@ -246,6 +235,18 @@ const Lessons10WorkoutsIdRoute = Lessons10WorkoutsIdRouteImport.update({
   path: '/10/workouts/$id',
   getParentRoute: () => LessonsRouteRoute,
 } as any)
+const AppWorkoutsEditNotFoundIndexRoute =
+  AppWorkoutsEditNotFoundIndexRouteImport.update({
+    id: '/workouts/edit/not-found/',
+    path: '/workouts/edit/not-found/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
+const AppWorkoutsEditInvalidIndexRoute =
+  AppWorkoutsEditInvalidIndexRouteImport.update({
+    id: '/workouts/edit/invalid/',
+    path: '/workouts/edit/invalid/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AppWorkoutsEditIdIndexRoute = AppWorkoutsEditIdIndexRouteImport.update({
   id: '/workouts/edit/$id/',
   path: '/workouts/edit/$id/',
@@ -295,8 +296,6 @@ export interface FileRoutesByFullPath {
   '/lessons/7/workouts/$id': typeof Lessons7WorkoutsIdRoute
   '/lessons/9/workouts/$id': typeof Lessons9WorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
-  '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/10/workouts/': typeof Lessons10WorkoutsIndexRoute
   '/lessons/11/workouts/': typeof Lessons11WorkoutsIndexRoute
   '/lessons/12/workouts/': typeof Lessons12WorkoutsIndexRoute
@@ -312,6 +311,8 @@ export interface FileRoutesByFullPath {
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
+  '/app/workouts/edit/invalid/': typeof AppWorkoutsEditInvalidIndexRoute
+  '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -336,8 +337,6 @@ export interface FileRoutesByTo {
   '/lessons/7/workouts/$id': typeof Lessons7WorkoutsIdRoute
   '/lessons/9/workouts/$id': typeof Lessons9WorkoutsIdRoute
   '/app/admin/workout-templates': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/workouts/invalid': typeof AppWorkoutsInvalidIndexRoute
-  '/app/workouts/not-found': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/10/workouts': typeof Lessons10WorkoutsIndexRoute
   '/lessons/11/workouts': typeof Lessons11WorkoutsIndexRoute
   '/lessons/12/workouts': typeof Lessons12WorkoutsIndexRoute
@@ -353,6 +352,8 @@ export interface FileRoutesByTo {
   '/app/admin/workout-templates/create': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id': typeof AppWorkoutsEditIdIndexRoute
+  '/app/workouts/edit/invalid': typeof AppWorkoutsEditInvalidIndexRoute
+  '/app/workouts/edit/not-found': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/edit/$id': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRoutesById {
@@ -381,8 +382,6 @@ export interface FileRoutesById {
   '/lessons/7/workouts/$id': typeof Lessons7WorkoutsIdRoute
   '/lessons/9/workouts/$id': typeof Lessons9WorkoutsIdRoute
   '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/workouts/invalid/': typeof AppWorkoutsInvalidIndexRoute
-  '/app/workouts/not-found/': typeof AppWorkoutsNotFoundIndexRoute
   '/lessons/10/workouts/': typeof Lessons10WorkoutsIndexRoute
   '/lessons/11/workouts/': typeof Lessons11WorkoutsIndexRoute
   '/lessons/12/workouts/': typeof Lessons12WorkoutsIndexRoute
@@ -398,6 +397,8 @@ export interface FileRoutesById {
   '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
   '/app/admin/workout-templates/not-found/': typeof AppAdminWorkoutTemplatesNotFoundIndexRoute
   '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
+  '/app/workouts/edit/invalid/': typeof AppWorkoutsEditInvalidIndexRoute
+  '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -427,8 +428,6 @@ export interface FileRouteTypes {
     | '/lessons/7/workouts/$id'
     | '/lessons/9/workouts/$id'
     | '/app/admin/workout-templates/'
-    | '/app/workouts/invalid/'
-    | '/app/workouts/not-found/'
     | '/lessons/10/workouts/'
     | '/lessons/11/workouts/'
     | '/lessons/12/workouts/'
@@ -444,6 +443,8 @@ export interface FileRouteTypes {
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
+    | '/app/workouts/edit/invalid/'
+    | '/app/workouts/edit/not-found/'
     | '/app/admin/workout-templates/edit/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -468,8 +469,6 @@ export interface FileRouteTypes {
     | '/lessons/7/workouts/$id'
     | '/lessons/9/workouts/$id'
     | '/app/admin/workout-templates'
-    | '/app/workouts/invalid'
-    | '/app/workouts/not-found'
     | '/lessons/10/workouts'
     | '/lessons/11/workouts'
     | '/lessons/12/workouts'
@@ -485,6 +484,8 @@ export interface FileRouteTypes {
     | '/app/admin/workout-templates/create'
     | '/app/admin/workout-templates/not-found'
     | '/app/workouts/edit/$id'
+    | '/app/workouts/edit/invalid'
+    | '/app/workouts/edit/not-found'
     | '/app/admin/workout-templates/edit/$id'
   id:
     | '__root__'
@@ -512,8 +513,6 @@ export interface FileRouteTypes {
     | '/lessons/7/workouts/$id'
     | '/lessons/9/workouts/$id'
     | '/app/admin/workout-templates/'
-    | '/app/workouts/invalid/'
-    | '/app/workouts/not-found/'
     | '/lessons/10/workouts/'
     | '/lessons/11/workouts/'
     | '/lessons/12/workouts/'
@@ -529,6 +528,8 @@ export interface FileRouteTypes {
     | '/app/admin/workout-templates/create/'
     | '/app/admin/workout-templates/not-found/'
     | '/app/workouts/edit/$id/'
+    | '/app/workouts/edit/invalid/'
+    | '/app/workouts/edit/not-found/'
     | '/app/admin/workout-templates/edit/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -715,20 +716,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Lessons10WorkoutsIndexRouteImport
       parentRoute: typeof LessonsRouteRoute
     }
-    '/app/workouts/not-found/': {
-      id: '/app/workouts/not-found/'
-      path: '/workouts/not-found'
-      fullPath: '/app/workouts/not-found/'
-      preLoaderRoute: typeof AppWorkoutsNotFoundIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/workouts/invalid/': {
-      id: '/app/workouts/invalid/'
-      path: '/workouts/invalid'
-      fullPath: '/app/workouts/invalid/'
-      preLoaderRoute: typeof AppWorkoutsInvalidIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/app/admin/workout-templates/': {
       id: '/app/admin/workout-templates/'
       path: '/workout-templates'
@@ -806,6 +793,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Lessons10WorkoutsIdRouteImport
       parentRoute: typeof LessonsRouteRoute
     }
+    '/app/workouts/edit/not-found/': {
+      id: '/app/workouts/edit/not-found/'
+      path: '/workouts/edit/not-found'
+      fullPath: '/app/workouts/edit/not-found/'
+      preLoaderRoute: typeof AppWorkoutsEditNotFoundIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/workouts/edit/invalid/': {
+      id: '/app/workouts/edit/invalid/'
+      path: '/workouts/edit/invalid'
+      fullPath: '/app/workouts/edit/invalid/'
+      preLoaderRoute: typeof AppWorkoutsEditInvalidIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/workouts/edit/$id/': {
       id: '/app/workouts/edit/$id/'
       path: '/workouts/edit/$id'
@@ -870,9 +871,9 @@ interface AppRouteRouteChildren {
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
   AppWorkoutsIndexRoute: typeof AppWorkoutsIndexRoute
-  AppWorkoutsInvalidIndexRoute: typeof AppWorkoutsInvalidIndexRoute
-  AppWorkoutsNotFoundIndexRoute: typeof AppWorkoutsNotFoundIndexRoute
   AppWorkoutsEditIdIndexRoute: typeof AppWorkoutsEditIdIndexRoute
+  AppWorkoutsEditInvalidIndexRoute: typeof AppWorkoutsEditInvalidIndexRoute
+  AppWorkoutsEditNotFoundIndexRoute: typeof AppWorkoutsEditNotFoundIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -881,9 +882,9 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppMeasurementsIndexRoute: AppMeasurementsIndexRoute,
   AppWorkoutsIndexRoute: AppWorkoutsIndexRoute,
-  AppWorkoutsInvalidIndexRoute: AppWorkoutsInvalidIndexRoute,
-  AppWorkoutsNotFoundIndexRoute: AppWorkoutsNotFoundIndexRoute,
   AppWorkoutsEditIdIndexRoute: AppWorkoutsEditIdIndexRoute,
+  AppWorkoutsEditInvalidIndexRoute: AppWorkoutsEditInvalidIndexRoute,
+  AppWorkoutsEditNotFoundIndexRoute: AppWorkoutsEditNotFoundIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

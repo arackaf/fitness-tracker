@@ -23,7 +23,7 @@ export const Route = createFileRoute("/app/workouts/edit/$id/")({
 
     if (Number.isNaN(workoutId)) {
       throw redirect({
-        to: "/app/workouts/invalid",
+        to: "/app/workouts/edit/invalid",
         replace: true,
       });
     }
@@ -69,7 +69,7 @@ function RouteContent() {
   useEffect(() => {
     if (workout == null || workout.id == null) {
       void navigate({
-        to: "/app/workouts/not-found",
+        to: "/app/workouts/edit/not-found",
         replace: true,
       });
     }
