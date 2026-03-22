@@ -59,7 +59,7 @@ function RouteComponent() {
             Workouts
           </Link>
           <Link
-            to="/app/body-composition-measurements"
+            to="/app/measurements"
             className={navLinkClassName}
             activeProps={activeNavLinkProps}
             inactiveProps={inactiveNavLinkProps}
