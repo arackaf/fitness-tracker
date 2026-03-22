@@ -38,6 +38,14 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
+      <span
+        className={cn(
+          "text-sm text-pink-500 -my-2 ml-auto",
+          !isFetching && "invisible",
+        )}
+      >
+        Reloading...
+      </span>
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
         <Link to="/lessons/4/workouts" className="ml-auto" preload={false}>
@@ -53,14 +61,6 @@ function RouteComponent() {
           .join(", ")}
       </span>
       <Link to="/lessons/4/workouts/other-path">Other path</Link>
-      <span
-        className={cn(
-          "text-sm text-pink-500 -my-2 ml-auto",
-          !isFetching && "invisible",
-        )}
-      >
-        Reloading...
-      </span>
     </div>
   );
 }

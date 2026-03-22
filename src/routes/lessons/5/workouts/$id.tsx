@@ -2,6 +2,7 @@ import { createFileRoute, getRouteApi, Link } from "@tanstack/react-router";
 
 import { getInClassWorkoutById } from "@/server-functions/in-class/workouts-simple";
 import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/lessons/5/workouts/$id")({
   component: RouteComponent,
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/lessons/5/workouts/$id")({
 
 function RouteComponent() {
   const { workout } = Route.useLoaderData();
+  const { isFetching } = Route.useMatch();
 
   const routeApi = getRouteApi("/lessons/5/workouts");
   const { exercises } = routeApi.useLoaderData();
@@ -32,6 +34,14 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4">
+      <span
+        className={cn(
+          "text-sm text-pink-500 -my-2 ml-auto",
+          !isFetching && "invisible",
+        )}
+      >
+        Reloading...
+      </span>
       <div className="flex">
         <h1 className="text-lg">{workout.name}</h1>
         <Link to="/lessons/5/workouts" className="ml-auto" preload={false}>

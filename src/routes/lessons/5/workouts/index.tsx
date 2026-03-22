@@ -33,6 +33,7 @@ export const Route = createFileRoute("/lessons/5/workouts/")({
 
 function RouteComponent() {
   const { workouts } = Route.useLoaderData();
+  const { isFetching } = Route.useMatch();
 
   const { exercises } = useLoaderData({
     from: "/lessons/5/workouts",
@@ -46,6 +47,9 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
         <h1>Workouts</h1>
+        {isFetching ? (
+          <span className="text-sm text-pink-500">Reloading...</span>
+        ) : null}
       </div>
       {workouts.map(workout => (
         <RenderWorkout
