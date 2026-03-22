@@ -1,5 +1,5 @@
 import { useRef, type FC } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +52,7 @@ const RenderWorkout: FC<{
 }> = props => {
   const { workout } = props;
   const workoutNameInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   return (
     <div className="flex flex-col gap-2">
@@ -81,6 +82,7 @@ const RenderWorkout: FC<{
                 newName,
               },
             });
+            await router.invalidate();
           }}
         >
           Update name
