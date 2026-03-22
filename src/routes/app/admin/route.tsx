@@ -37,6 +37,14 @@ function RouteComponent() {
         >
           Workout templates
         </Link>
+        <Link
+          to="/app/admin/body-composition"
+          className={navLinkClassName}
+          activeProps={activeNavLinkProps}
+          inactiveProps={inactiveNavLinkProps}
+        >
+          Body composition
+        </Link>
       </nav>
       <Outlet />
     </div>

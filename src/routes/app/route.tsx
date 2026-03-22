@@ -33,6 +33,15 @@ function RouteComponent() {
             Log Workout
           </Link>
           <Link
+            to="/app/log-body-composition"
+            className={navLinkClassName}
+            activeProps={activeNavLinkProps}
+            inactiveProps={inactiveNavLinkProps}
+          >
+            <ClipboardPen className="size-4" aria-hidden="true" />
+            Log Body Composition
+          </Link>
+          <Link
             to="/app/workouts"
             className={navLinkClassName}
             activeProps={activeNavLinkProps}
@@ -42,6 +51,15 @@ function RouteComponent() {
           >
             <History className="size-4" aria-hidden="true" />
             Workouts
+          </Link>
+          <Link
+            to="/app/body-composition-measurements"
+            className={navLinkClassName}
+            activeProps={activeNavLinkProps}
+            inactiveProps={inactiveNavLinkProps}
+          >
+            <History className="size-4" aria-hidden="true" />
+            Body Composition Measurements
           </Link>
           <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link
