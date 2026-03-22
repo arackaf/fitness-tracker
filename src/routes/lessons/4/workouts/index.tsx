@@ -1,9 +1,8 @@
-import { useMemo, useRef, type FC } from "react";
+import { useRef, type FC } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getExercisesServerFn } from "@/server-functions/exercises";
 import { mutateWorkoutName } from "@/server-functions/in-class/mutate-workout-name";
 import {
   getInClassWorkoutHistory,
