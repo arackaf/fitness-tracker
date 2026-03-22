@@ -36,7 +36,7 @@ function RouteComponent() {
             inactiveProps={inactiveNavLinkProps}
           >
             <ClipboardPen className="size-4" aria-hidden="true" />
-            Log Workout
+            Workout
           </Link>
           <Link
             to="/app/log-body-composition"
@@ -45,7 +45,7 @@ function RouteComponent() {
             inactiveProps={inactiveNavLinkProps}
           >
             <PencilRuler className="size-4" aria-hidden="true" />
-            Enter Measurement
+            Measure
           </Link>
           <Link
             to="/app/workouts"
