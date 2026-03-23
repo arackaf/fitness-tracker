@@ -6,23 +6,20 @@
 
 ## The one tradeoff with ssr
 
-```ts
-// admin/route.tsx
-export const Route = createFileRoute("/app/admin")({
-  component: RouteComponent,
-});
-```
+We talked about the SPA tradeoff. It sucked when the user browsed to our app and saw this
 
-This is a layout, but it looks just like any other, "normal" route, because it is.
+<img alt="SPA Flow" src="./img/1_img1.png" width="500" />
 
-It takes the same loader argument, if you want. Data fetched in a layout are merged, and available (and statically typed!) in any pages underneath the layout.
+This happened before our initial render only, essentially, rendered a shell for our app with a loading spinner.
 
-## Demo
+It rendered this quickly, for sure, but the requests for data did not happen until that initial response was received, and our browser parsed, and executed our javascript. Only then did our requests for data fire.
 
-Now let's see it in action
+SSR is cool because instead of a loading spinner, our browser renders full content from that initial response.
 
-I'll briefly add a layout atop the /blog and /blog/$post routes from before, load some user data for it, and then integrate into both routes
+<img alt="SSR Flow" src="./img/1_img3.png" width="500" />
 
-## Exercise
+## What are we assuming though?
 
-Hope fully the demo went well. Your turn:
+<img alt="Browser waiting" src="./img/6_img1.png" width="500" />
+
+<img alt="Browser waiting" src="./img/6_img2.png" width="500" />

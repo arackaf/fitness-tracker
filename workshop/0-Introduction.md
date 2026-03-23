@@ -46,11 +46,11 @@ If you truly don't care about SSR, and you truly just want a 100% client-driven 
 
 ### Why SSR
 
-With a normal SPA, the browser renders an empty application shell, likely with a loading spinner. That means, when the server responds to the url the user put into their browser, they see this
+We talked about the SPA tradeoff. It sucked when the user browsed to our app and saw this
 
 <img alt="SPA Flow" src="./img/1_img1.png" width="500" />
 
-What happens then?
+##
 
 <img alt="Loading Spinner" src="./img/1_img2.png" width="500" />
 
