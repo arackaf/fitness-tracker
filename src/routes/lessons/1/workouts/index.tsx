@@ -5,9 +5,9 @@ import { useRef } from "react";
 
 export const Route = createFileRoute("/lessons/1/workouts/")({
   component: RouteComponent,
-  validateSearch: (search: Record<string, string>) => {
+  validateSearch: (searchParams: Record<string, string>) => {
     return {
-      search: search.search || undefined,
+      search: searchParams.search || undefined,
     };
   },
 });
