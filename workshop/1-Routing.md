@@ -40,6 +40,17 @@ routes/workouts/index.tsx
 routes/workouts/$id.tsx
 ```
 
+## We'll be using
+
+... directory routes. Hope you agree!
+
+## Route structure
+
+- Use $xyz for path params
+- Use route.tsx for a layout
+- Escape route names with `[]`
+  - So [route].tsx if you literally want a /route route
+
 ## Search params
 
 You have to declare them!
@@ -51,13 +62,6 @@ validateSearch: (searchParams: Record<string, string>) => {
   };
 },
 ```
-
-## Route structure
-
-- Use $xyz for path params
-- Use route.tsx for a layout
-- Escape route names with `[]`
-  - So [route].tsx if you literally want a /route route
 
 ## This list is incomplete, paltry, even
 
