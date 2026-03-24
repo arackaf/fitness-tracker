@@ -34,6 +34,18 @@ routes/workouts/index.tsx
 // For the /workouts/6
 routes/workouts/$id.tsx
 
+## Search params
+
+You have to declare them!
+
+```ts
+validateSearch: (searchParams: Record<string, string>) => {
+  return {
+    // take what you need
+  };
+},
+```
+
 ## Route structure
 
 - Use $xyz for path params
