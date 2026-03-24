@@ -33,6 +33,8 @@ export const Route = createFileRoute("/lessons/2/workouts/")({
       exercises,
     };
   },
+  staleTime: 0,
+  gcTime: 0,
 });
 
 function RouteComponent() {
