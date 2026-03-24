@@ -50,7 +50,7 @@ function RouteComponent() {
 
             <Link
               className="ml-auto"
-              to={`/lessons/2/workouts/$id`}
+              to={`/lessons/1/workouts/$id`}
               params={{ id: String(workout.id) }}
               preload={false}
             >
