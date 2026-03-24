@@ -6,9 +6,9 @@ Docs: [https://tanstack.com/router/latest/docs/routing/file-based-routing#direct
 
 - Create a route
 - Create a route with a path param (ie /blog/posts/:slug)
-- Look at our first loader
+- Look at search params
 
-TanStack supports directory routes, or flat routes. We'll be using directory routes, here, but they're functionally equivalent; it's just a matter of taste. Directory routes are cleaner and clearer in my opinion, and most importantly will be simpler to demo in this workshop.
+TanStack supports directory routes, or flat routes.
 
 ## Flat (file) routes
 
@@ -43,6 +43,8 @@ routes/workouts/$id.tsx
 ## We'll be using
 
 ... directory routes. Hope you agree!
+
+Directory routes are cleaner and clearer in my opinion, and most importantly will be simpler to demo in this workshop.
 
 ## Route structure
 
