@@ -42,6 +42,22 @@ routes/workouts/$id.tsx
 
 Directory routes are cleaner and clearer in my opinion, and most importantly will be simpler to demo in this workshop.
 
+## Your first route
+
+```ts
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/lessons/1/workouts/foo')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return <div>Hello "/lessons/1/workouts/foo"!</div>
+}
+```
+
+Seems like a lot of boilerplate, but stay tuned (and the boilerplate serves a purpose).
+
 ## Route structure
 
 - Use $xyz for path params
