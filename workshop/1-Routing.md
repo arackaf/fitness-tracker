@@ -12,17 +12,13 @@ TanStack supports directory routes, or flat routes.
 
 ## Flat (file) routes
 
-The [docs](https://tanstack.com/router/latest/docs/routing/file-based-routing#flat-routes) are here but we won't cover this in class.
-
-The tl;dr is that, instead of (with directories)
+Instead of (with directories)
 
 app/workouts/edit/$id.tsx
 
 You do
 
 app.workouts.edit.$id.tsx
-
-I much prefer directory organization for files, but either are fine, and you can even mix and match!
 
 ## Directory routing
 
