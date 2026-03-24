@@ -29,10 +29,16 @@ I much prefer directory organization for files, but either are fine, and you can
 Just put them under the right folder, and name accordingly.
 
 // For the /workouts route
+
+```
 routes/workouts/index.tsx
+```
 
 // For the /workouts/6
+
+```
 routes/workouts/$id.tsx
+```
 
 ## Search params
 
