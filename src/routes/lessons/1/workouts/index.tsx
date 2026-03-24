@@ -13,8 +13,8 @@ export const Route = createFileRoute("/lessons/1/workouts/")({
 });
 
 function RouteComponent() {
+  const { search } = Route.useSearch();
   const searchRef = useRef<HTMLInputElement>(null);
-
   const navigate = useNavigate();
 
   const workouts = [
@@ -27,6 +27,7 @@ function RouteComponent() {
     <div className="flex flex-col gap-4">
       <h1>Workouts</h1>
 
+      <div>Current search term: {search}</div>
       <div className="flex gap-2">
         <Input ref={searchRef} type="text" />
         <Button
