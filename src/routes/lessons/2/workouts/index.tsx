@@ -12,19 +12,28 @@ type Exercise = {
   name: string;
 };
 
+function getWorkoutsAndExercises() {
+  const workouts: Workout[] = [
+    { id: 1, name: "Workout 1", exercises: [1, 2, 3] },
+    { id: 2, name: "Workout 2", exercises: [1, 2, 3] },
+    { id: 3, name: "Workout 3", exercises: [1, 2, 3] },
+  ];
+  const exercises: Exercise[] = [
+    { id: 1, name: "Pull-ups" },
+    { id: 2, name: "Push-ups" },
+    { id: 3, name: "Bench Press" },
+  ];
+
+  return {
+    workouts,
+    exercises,
+  };
+}
+
 export const Route = createFileRoute("/lessons/2/workouts/")({
   component: RouteComponent,
   loader: async () => {
-    const workouts: Workout[] = [
-      { id: 1, name: "Workout 1", exercises: [1, 2, 3] },
-      { id: 2, name: "Workout 2", exercises: [1, 2, 3] },
-      { id: 3, name: "Workout 3", exercises: [1, 2, 3] },
-    ];
-    const exercises: Exercise[] = [
-      { id: 1, name: "Pull-ups" },
-      { id: 2, name: "Push-ups" },
-      { id: 3, name: "Bench Press" },
-    ];
+    const { workouts, exercises } = getWorkoutsAndExercises();
 
     return {
       workouts,
