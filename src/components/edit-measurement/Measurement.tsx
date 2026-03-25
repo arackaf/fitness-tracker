@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { useState, type FC } from "react";
 
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,8 @@ type MeasurementProps = {
 };
 
 export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
-  const selectedMetric = metrics.find(
-    metric => metric.id === form.state.values.bodyCompositionMetricId,
-  );
+  const [selectedMetric, setSelectedMetric] =
+    useState<BodyCompositionMetric | null>(null);
 
   return (
     <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
@@ -51,20 +50,17 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                 const nextMetric = metrics.find(
                   metric => metric.id === nextMetricId,
                 );
+                setSelectedMetric(nextMetric ?? null);
                 metricField.handleChange(nextMetricId);
 
                 if (nextMetric?.measurementType === "length") {
                   form.setFieldValue("weightUnit", null);
-                  return;
-                }
-
-                if (nextMetric?.measurementType === "weight") {
+                } else if (nextMetric?.measurementType === "weight") {
                   form.setFieldValue("lengthUnit", null);
-                  return;
+                } else {
+                  form.setFieldValue("lengthUnit", null);
+                  form.setFieldValue("weightUnit", null);
                 }
-
-                form.setFieldValue("lengthUnit", null);
-                form.setFieldValue("weightUnit", null);
               }}
             >
               <SelectTrigger>
@@ -130,7 +126,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
               <Input
                 type="number"
                 min={0}
-                step="0.01"
+                step="1"
                 value={String(valueField.state.value ?? "")}
                 onBlur={valueField.handleBlur}
                 onChange={event => valueField.handleChange(event.target.value)}
@@ -168,7 +164,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a length unit" />
+                  <SelectValue placeholder="Unit" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="inches">Inches</SelectItem>
@@ -207,7 +203,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a weight unit" />
+                  <SelectValue placeholder="Unit" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="lbs">Lbs</SelectItem>
