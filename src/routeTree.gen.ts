@@ -19,7 +19,7 @@ import { Route as Lessons15IndexRouteImport } from './routes/lessons/15/index'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
 import { Route as AppMeasurementsIndexRouteImport } from './routes/app/measurements/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
-import { Route as AppLogBodyCompositionIndexRouteImport } from './routes/app/log-body-composition/index'
+import { Route as AppLogMeasurementIndexRouteImport } from './routes/app/log-measurement/index'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
 import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
@@ -111,12 +111,11 @@ const AppLogWorkoutIndexRoute = AppLogWorkoutIndexRouteImport.update({
   path: '/log-workout/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppLogBodyCompositionIndexRoute =
-  AppLogBodyCompositionIndexRouteImport.update({
-    id: '/log-body-composition/',
-    path: '/log-body-composition/',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
+const AppLogMeasurementIndexRoute = AppLogMeasurementIndexRouteImport.update({
+  id: '/log-measurement/',
+  path: '/log-measurement/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -340,7 +339,7 @@ export interface FileRoutesByFullPath {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
-  '/app/log-body-composition/': typeof AppLogBodyCompositionIndexRoute
+  '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/measurements/': typeof AppMeasurementsIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
@@ -389,7 +388,7 @@ export interface FileRoutesByTo {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin': typeof AppAdminIndexRoute
-  '/app/log-body-composition': typeof AppLogBodyCompositionIndexRoute
+  '/app/log-measurement': typeof AppLogMeasurementIndexRoute
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
   '/app/measurements': typeof AppMeasurementsIndexRoute
   '/app/workouts': typeof AppWorkoutsIndexRoute
@@ -443,7 +442,7 @@ export interface FileRoutesById {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
-  '/app/log-body-composition/': typeof AppLogBodyCompositionIndexRoute
+  '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/measurements/': typeof AppMeasurementsIndexRoute
   '/app/workouts/': typeof AppWorkoutsIndexRoute
@@ -498,7 +497,7 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
-    | '/app/log-body-composition/'
+    | '/app/log-measurement/'
     | '/app/log-workout/'
     | '/app/measurements/'
     | '/app/workouts/'
@@ -547,7 +546,7 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin'
-    | '/app/log-body-composition'
+    | '/app/log-measurement'
     | '/app/log-workout'
     | '/app/measurements'
     | '/app/workouts'
@@ -600,7 +599,7 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
-    | '/app/log-body-composition/'
+    | '/app/log-measurement/'
     | '/app/log-workout/'
     | '/app/measurements/'
     | '/app/workouts/'
@@ -721,11 +720,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLogWorkoutIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/log-body-composition/': {
-      id: '/app/log-body-composition/'
-      path: '/log-body-composition'
-      fullPath: '/app/log-body-composition/'
-      preLoaderRoute: typeof AppLogBodyCompositionIndexRouteImport
+    '/app/log-measurement/': {
+      id: '/app/log-measurement/'
+      path: '/log-measurement'
+      fullPath: '/app/log-measurement/'
+      preLoaderRoute: typeof AppLogMeasurementIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/admin/': {
@@ -1044,7 +1043,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppLogBodyCompositionIndexRoute: typeof AppLogBodyCompositionIndexRoute
+  AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
   AppWorkoutsIndexRoute: typeof AppWorkoutsIndexRoute
@@ -1056,7 +1055,7 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppLogBodyCompositionIndexRoute: AppLogBodyCompositionIndexRoute,
+  AppLogMeasurementIndexRoute: AppLogMeasurementIndexRoute,
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppMeasurementsIndexRoute: AppMeasurementsIndexRoute,
   AppWorkoutsIndexRoute: AppWorkoutsIndexRoute,
