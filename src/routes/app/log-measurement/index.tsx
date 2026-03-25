@@ -6,7 +6,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Measurement } from "@/components/edit-measurement/Measurement";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
-import { useBodyCompositionMeasurementForm } from "@/lib/body-composition-measurement-form";
+import { useBodyCompositionMeasurementForm } from "@/lib/body-composition-form";
 import {
   bodyCompositionMetricsQueryOptions,
   saveBodyCompositionMeasurement,

@@ -14,7 +14,7 @@ import type {
   BodyCompositionMetric,
   BodyCompositionWeightUnit,
 } from "@/data/body-composition/body-composition-state";
-import type { BodyCompositionMeasurementForm } from "@/lib/body-composition-measurement-form";
+import type { BodyCompositionMeasurementForm } from "@/lib/body-composition-form";
 
 type MeasurementProps = {
   form: BodyCompositionMeasurementForm;
