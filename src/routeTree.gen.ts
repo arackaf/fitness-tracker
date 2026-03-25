@@ -13,6 +13,7 @@ import { Route as LessonsRouteRouteImport } from './routes/lessons/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonsIndexRouteImport } from './routes/lessons/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
 import { Route as Lessons15IndexRouteImport } from './routes/lessons/15/index'
 import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
@@ -79,6 +80,11 @@ const LessonsIndexRoute = LessonsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => LessonsRouteRoute,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
@@ -328,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/app/': typeof AppIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/lessons/5/workouts': typeof Lessons5WorkoutsRouteRouteWithChildren
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
@@ -377,7 +384,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRouteRouteWithChildren
+  '/app': typeof AppIndexRoute
   '/lessons': typeof LessonsIndexRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
@@ -430,6 +437,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/lessons': typeof LessonsRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
+  '/app/': typeof AppIndexRoute
   '/lessons/': typeof LessonsIndexRoute
   '/lessons/5/workouts': typeof Lessons5WorkoutsRouteRouteWithChildren
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
@@ -484,6 +492,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/lessons'
     | '/app/admin'
+    | '/app/'
     | '/lessons/'
     | '/lessons/5/workouts'
     | '/app/admin/body-composition'
@@ -585,6 +594,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/lessons'
     | '/app/admin'
+    | '/app/'
     | '/lessons/'
     | '/lessons/5/workouts'
     | '/app/admin/body-composition'
@@ -668,6 +678,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/lessons/'
       preLoaderRoute: typeof LessonsIndexRouteImport
       parentRoute: typeof LessonsRouteRoute
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/app/admin': {
       id: '/app/admin'
@@ -1026,6 +1043,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
   AppLogBodyCompositionIndexRoute: typeof AppLogBodyCompositionIndexRoute
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
@@ -1037,6 +1055,7 @@ interface AppRouteRouteChildren {
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
   AppLogBodyCompositionIndexRoute: AppLogBodyCompositionIndexRoute,
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppMeasurementsIndexRoute: AppMeasurementsIndexRoute,
