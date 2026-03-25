@@ -59,7 +59,7 @@ function RouteContent() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <Measurement form={form} metrics={metrics} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
