@@ -49,8 +49,12 @@ export const getInClassWorkoutHistory = createServerFn({
           id: workout.id,
           name: workout.name,
           date: workout.workoutDate,
-          exercises: workout.segments.flatMap(segment =>
-            segment.exercises.map(exercise => exercise.exerciseId),
+          exercises: Array.from(
+            new Set(
+              workout.segments.flatMap(segment =>
+                segment.exercises.map(exercise => exercise.exerciseId),
+              ),
+            ),
           ),
         };
       }),
@@ -76,8 +80,12 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
         id: workout.id,
         name: workout.name,
         date: workout.workoutDate,
-        exercises: workout.segments.flatMap(segment =>
-          segment.exercises.map(exercise => exercise.exerciseId),
+        exercises: Array.from(
+          new Set(
+            workout.segments.flatMap(segment =>
+              segment.exercises.map(exercise => exercise.exerciseId),
+            ),
+          ),
         ),
       };
     }
