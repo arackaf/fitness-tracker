@@ -7,7 +7,6 @@ import { getInClassWorkoutHistoryServerFn } from "@/server-functions/in-class/wo
 type WorkoutHistoryPayload = Awaited<
   ReturnType<typeof getInClassWorkoutHistoryServerFn>
 >;
-type Workout = WorkoutHistoryPayload["workouts"][number];
 type Exercise = Awaited<ReturnType<typeof getExercisesServerFn>>[number];
 
 export const Route = createFileRoute("/lessons/7/workouts/")({
