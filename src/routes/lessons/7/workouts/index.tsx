@@ -45,10 +45,13 @@ function RouteComponent() {
   );
 }
 
-const RouteContents: FC<{
+type RouteContentsProps = {
   workoutsPromise: Promise<WorkoutHistoryPayload>;
   exercisesPromise: Promise<Exercise[]>;
-}> = ({ workoutsPromise, exercisesPromise }) => {
+};
+const RouteContents: FC<RouteContentsProps> = props => {
+  const { workoutsPromise, exercisesPromise } = props;
+
   const workoutsPayload = use(workoutsPromise);
   const exercises = use(exercisesPromise);
 
