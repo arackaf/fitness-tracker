@@ -1,4 +1,4 @@
-import { useMemo, useRef, type FC } from "react";
+import { useMemo, useRef, useState, type FC } from "react";
 import {
   createFileRoute,
   getRouteApi,
@@ -164,6 +164,7 @@ const Exercise: FC<{
   exercise: InClassExercise;
 }> = props => {
   const { exercise } = props;
+  const [saving, setSaving] = useState(false);
   const exerciseNameInputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
@@ -173,14 +174,19 @@ const Exercise: FC<{
       <Input ref={exerciseNameInputRef} defaultValue={exercise.name} />
       <Button
         type="button"
+        disabled={saving}
         onClick={async () => {
           const name = exerciseNameInputRef.current?.value ?? "";
+
+          setSaving(true);
           await editExercise({
             data: {
               id: exercise.id,
               name,
             },
           });
+          setSaving(false);
+
           await router.invalidate({
             filter: route => route.routeId === "/lessons/5/workouts",
           });
