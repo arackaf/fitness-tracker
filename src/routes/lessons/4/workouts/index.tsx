@@ -12,6 +12,8 @@ import {
 export const Route = createFileRoute("/lessons/4/workouts/")({
   component: RouteComponent,
   loader: async () => {
+    console.log("\nLoading workouts\n");
+
     const workoutsPayload = await getInClassWorkoutHistory({
       data: { operation: "load-workouts" },
     });
