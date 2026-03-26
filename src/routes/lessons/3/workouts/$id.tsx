@@ -30,12 +30,11 @@ const getWorkout = createServerFn({
       .from(workoutTable)
       .where(eq(workoutTable.id, data.id));
 
-    return workouts.map(workout => {
-      return {
-        ...workout,
-        exercises: [1, 2],
-      };
-    });
+    const workout = workouts[0];
+    return {
+      ...workout,
+      exercises: [1, 2],
+    };
   });
 
 export const Route = createFileRoute("/lessons/3/workouts/$id")({
@@ -47,7 +46,7 @@ export const Route = createFileRoute("/lessons/3/workouts/$id")({
     ]);
 
     return {
-      workout: workout[0],
+      workout,
       exercises,
     };
   },
