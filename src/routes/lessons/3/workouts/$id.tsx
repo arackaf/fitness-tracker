@@ -11,7 +11,7 @@ import {
   exercises as exercisesTable,
 } from "@/drizzle/schema";
 
-export const getExercises = createServerFn({
+const getExercises = createServerFn({
   method: "GET",
 }).handler(async () => {
   const db = await getDb();
@@ -19,7 +19,7 @@ export const getExercises = createServerFn({
   return db.select().from(exercisesTable).orderBy(asc(exercisesTable.name));
 });
 
-export const getWorkout = createServerFn({
+const getWorkout = createServerFn({
   method: "GET",
 })
   .inputValidator((input: { id: number }) => input)
@@ -28,9 +28,7 @@ export const getWorkout = createServerFn({
     const workouts = await db
       .select()
       .from(workoutTable)
-      .where(eq(workoutTable.id, data.id))
-      .orderBy(desc(workoutTable.workoutDate))
-      .limit(3);
+      .where(eq(workoutTable.id, data.id));
 
     return workouts.map(workout => {
       return {
