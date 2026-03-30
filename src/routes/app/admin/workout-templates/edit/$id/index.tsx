@@ -65,7 +65,7 @@ function RouteContent() {
 
   useEffect(() => {
     if (workoutTemplate == null || workoutTemplate.id == null) {
-      throw notFound();
+      throw notFound({ routeId: "/app/admin/workout-templates/edit/$id/" });
     }
   }, [navigate, workoutTemplate]);
 
