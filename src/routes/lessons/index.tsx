@@ -27,7 +27,7 @@ const lessonSummaryHeading: { [key in LessonKey]: string } = {
   3: "Loading data",
   4: "Route caching",
   5: "Data in layouts",
-  6: "Streaming I",
+  6: "Streaming",
   7: "Streaming and Suspense",
   8: "Introducing TanStack Query",
   9: "Integrating TanStack Query",
@@ -37,7 +37,7 @@ const lessonSummaryHeading: { [key in LessonKey]: string } = {
   13: "Advanced Middleware",
   14: "API Routes",
   15: "Selective Hydration",
-  16: "Static Pre-rendering",
+  16: "Not Found Errors",
 };
 
 type PageledLessonKey = "11";
