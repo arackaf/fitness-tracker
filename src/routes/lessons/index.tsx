@@ -7,6 +7,7 @@ export const Route = createFileRoute("/lessons/")({
 type LessonKey =
   | "1"
   | "2"
+  | "2A"
   | "3"
   | "4"
   | "5"
@@ -19,11 +20,11 @@ type LessonKey =
   | "12"
   | "13"
   | "14"
-  | "15"
-  | "16";
+  | "15";
 const lessonSummaryHeading: { [key in LessonKey]: string } = {
   1: "Routing",
   2: "Loaders",
+  "2A": "Not Found Errors",
   3: "Loading data",
   4: "Route caching",
   5: "Data in layouts",
@@ -37,7 +38,6 @@ const lessonSummaryHeading: { [key in LessonKey]: string } = {
   13: "Advanced Middleware",
   14: "API Routes",
   15: "Selective Hydration",
-  16: "Not Found Errors",
 };
 
 type PageledLessonKey = "11";
