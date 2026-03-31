@@ -25,6 +25,14 @@ Running the project with a persistent database:
 - Open a NEW terminal and run `npm run dev`
 - Browse to localhost:3000
 
+## Let's take a quick tour of the app
+
+It's still a wip - be gentle :)
+
+## Our backend is intentionally throttled
+
+To help show loading state
+
 ## What is TanStack Start ... and Router
 
 TanStack Router - [docs](https://tanstack.com/router/latest/docs/overview)

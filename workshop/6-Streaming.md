@@ -38,6 +38,18 @@ When the data finish loading, the server _pushes_ it down.
 
 Best of all worlds.
 
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
 <img alt="Browser waiting" src="./img/6_img2.png" width="500" />
 
 This is your feature to use. Use it as much, or as little as you want.
