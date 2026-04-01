@@ -46,13 +46,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                           name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
                           validators={{
                             onChange: ({ value }) => {
-                              const repsToFailure =
-                                form.state.values.segments[segmentIndex]
-                                  ?.exercises[exerciseIndex]?.measurements[
-                                  measurementIndex
-                                ]?.repsToFailure;
-
-                              if (!repsToFailure && value == null) {
+                              if (value == null) {
                                 return "Required";
                               }
                             },
@@ -104,22 +98,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                           />
                         ) : null}
                       </div>
-                      <form.Field
-                        name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].repsToFailure`}
-                        children={repsToFailureField => (
-                          <label className="inline-flex items-center gap-0.5 text-xs text-muted-foreground">
-                            <Checkbox
-                              checked={repsToFailureField.state.value ?? false}
-                              onCheckedChange={checked => {
-                                repsToFailureField.handleChange(
-                                  checked === true,
-                                );
-                              }}
-                            />
-                            To failure
-                          </label>
-                        )}
-                      />
+
                       {measurementIndex === 0 ? (
                         <Button
                           type="button"
@@ -146,8 +125,6 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                   return {
                                     ...measurement,
                                     reps: sourceMeasurement.reps,
-                                    repsToFailure:
-                                      sourceMeasurement.repsToFailure,
                                     weightUsed: sourceMeasurement.weightUsed,
                                   };
                                 },

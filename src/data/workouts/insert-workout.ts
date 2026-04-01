@@ -39,7 +39,6 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
   return measurements.map((measurement, index) => ({
     setOrder: index + 1,
     reps: measurement.reps ?? null,
-    repsToFailure: measurement.repsToFailure ?? false,
     weightUsed: toNumericString(measurement.weightUsed),
   }));
 };

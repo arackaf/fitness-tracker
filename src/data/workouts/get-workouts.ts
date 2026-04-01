@@ -75,8 +75,6 @@ export const getWorkouts = async (
       measurementId: workoutSegmentExerciseMeasurementTable.id,
       measurementSetOrder: workoutSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutSegmentExerciseMeasurementTable.reps,
-      measurementRepsToFailure:
-        workoutSegmentExerciseMeasurementTable.repsToFailure,
       measurementWeightUsed: workoutSegmentExerciseMeasurementTable.weightUsed,
       measurementDuration: workoutSegmentExerciseMeasurementTable.duration,
       measurementDistance: workoutSegmentExerciseMeasurementTable.distance,
@@ -186,17 +184,12 @@ export const getWorkouts = async (
     }
 
     if (row.measurementSetOrder != null) {
-      if (row.measurementRepsToFailure) {
-        exercise.repsToFailure = true;
-      }
-
       exercise.reps?.push(row.measurementReps ?? null);
       exercise.measurements.push({
         id: row.measurementId ?? undefined,
         workoutSegmentExerciseId: row.exerciseRowId,
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
-        repsToFailure: row.measurementRepsToFailure,
         weightUsed: formatNumericForDisplay(row.measurementWeightUsed),
         duration: row.measurementDuration,
         distance: row.measurementDistance,
