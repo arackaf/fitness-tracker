@@ -55,7 +55,6 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
     id: measurement.id,
     setOrder: index + 1,
     reps: measurement.reps ?? null,
-    repsToFailure: measurement.repsToFailure ?? false,
     weightUsed: toNumericString(measurement.weightUsed),
     duration: null,
     distance: null,

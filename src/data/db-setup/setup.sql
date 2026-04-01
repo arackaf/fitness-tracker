@@ -130,7 +130,6 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise_measurement (
   workout_segment_exercise_id INT NOT NULL REFERENCES workout_segment_exercise(id) ON DELETE CASCADE,
   set_order INT NOT NULL CHECK (set_order > 0),
   reps INT,
-  reps_to_failure BOOL,
   weight_used NUMERIC(8, 2),
   duration NUMERIC(8, 2),
   distance NUMERIC(8, 2)
@@ -597,7 +596,6 @@ INSERT INTO workout_segment_exercise_measurement (
   workout_segment_exercise_id,
   set_order,
   reps,
-  reps_to_failure,
   weight_used,
   duration,
   distance
@@ -609,10 +607,6 @@ SELECT
     WHEN ex.execution_type = 'repetition' THEN 8
     ELSE NULL
   END AS reps,
-  CASE
-    WHEN ex.execution_type = 'repetition' THEN false
-    ELSE NULL
-  END AS reps_to_failure,
   CASE
     WHEN ex.execution_type = 'repetition' AND NOT ex.is_bodyweight THEN 135
     ELSE NULL
