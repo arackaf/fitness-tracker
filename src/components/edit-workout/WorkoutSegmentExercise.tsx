@@ -318,6 +318,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
           const isBodyweight = selectedExercise?.isBodyweight ?? false;
 
           return {
+            hasExercise: selectedExerciseId != null && selectedExerciseId > 0,
             selectedExerciseId,
             executionType,
             isBodyweight,
@@ -331,7 +332,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
               form={form}
               segmentIndex={segmentIndex}
               exerciseIndex={exerciseIndex}
-              showWeightUsed={formState.isBodyweight}
+              showWeightUsed={formState.hasExercise && !formState.isBodyweight}
             />
           ) : formState.executionType === "distance" ? (
             <DistanceExerciseSet
