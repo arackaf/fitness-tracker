@@ -34,17 +34,17 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
             (segmentExercise, exerciseIndex) => (
               <WorkoutSegmentExercise
                 key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
-              form={form}
-              exercises={exercises}
-              muscleGroups={muscleGroups}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-              canRemove={segmentExercisesField.state.value.length > 1}
-              onRemove={() =>
-                segmentExercisesField.removeValue(exerciseIndex, {
-                  dontValidate: true,
-                })
-              }
+                form={form}
+                exercises={exercises}
+                muscleGroups={muscleGroups}
+                segmentIndex={segmentIndex}
+                exerciseIndex={exerciseIndex}
+                canRemove={segmentExercisesField.state.value.length > 1}
+                onRemove={() =>
+                  segmentExercisesField.removeValue(exerciseIndex, {
+                    dontValidate: true,
+                  })
+                }
               />
             ),
           )}
