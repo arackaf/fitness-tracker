@@ -9,12 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { BodyCompositionMetric } from "@/data/body-composition/body-composition-state";
+import type { BodyCompositionMeasurementForm } from "@/lib/body-composition-form";
 import type {
   BodyCompositionLengthUnit,
-  BodyCompositionMetric,
   BodyCompositionWeightUnit,
-} from "@/data/body-composition/body-composition-state";
-import type { BodyCompositionMeasurementForm } from "@/lib/body-composition-form";
+} from "@/data/types";
 
 type MeasurementProps = {
   form: BodyCompositionMeasurementForm;
