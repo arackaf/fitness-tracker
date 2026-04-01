@@ -15,6 +15,10 @@ import type {
   BodyCompositionLengthUnit,
   BodyCompositionWeightUnit,
 } from "@/data/types";
+import {
+  defaultBodyCompositionLengthUnit,
+  defaultBodyCompositionWeightUnit,
+} from "@/data/constants";
 
 type MeasurementProps = {
   form: BodyCompositionMeasurementForm;
@@ -55,8 +59,16 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
 
                 if (nextMetric?.measurementType === "length") {
                   form.setFieldValue("weightUnit", null);
+                  form.setFieldValue(
+                    "lengthUnit",
+                    defaultBodyCompositionLengthUnit,
+                  );
                 } else if (nextMetric?.measurementType === "weight") {
                   form.setFieldValue("lengthUnit", null);
+                  form.setFieldValue(
+                    "weightUnit",
+                    defaultBodyCompositionWeightUnit,
+                  );
                 } else {
                   form.setFieldValue("lengthUnit", null);
                   form.setFieldValue("weightUnit", null);
