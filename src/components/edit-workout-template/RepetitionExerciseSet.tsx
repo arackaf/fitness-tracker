@@ -97,7 +97,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                       value === "" ? null : value,
                                     );
                                   }}
-                                  className={cn("h-7 w-24 px-2 py-1")}
+                                  className={cn("h-7 w-18 px-2 py-1")}
                                 />
                               </label>
                             )}

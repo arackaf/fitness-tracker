@@ -17,7 +17,6 @@ type GetWorkoutTemplatesParams = {
 };
 
 const WORKOUT_TEMPLATE_LIST_LIMIT = 3;
-const WORKOUT_TEMPLATE_LIST_QUERY_LIMIT = WORKOUT_TEMPLATE_LIST_LIMIT + 1;
 
 type WorkoutTemplatesPayload = {
   workoutTemplates: WorkoutTemplateState[];
@@ -49,7 +48,7 @@ export const getWorkoutTemplates = async (
       .from(workoutTemplateTable)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(desc(workoutTemplateTable.id))
-      .limit(WORKOUT_TEMPLATE_LIST_QUERY_LIMIT)
+      .limit(WORKOUT_TEMPLATE_LIST_LIMIT + 1)
       .offset(offset),
   );
 
@@ -111,7 +110,7 @@ export const getWorkoutTemplates = async (
     )
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(
-      asc(workoutTemplateTable.id),
+      desc(workoutTemplateTable.id),
       asc(workoutTemplateSegmentTable.segmentOrder),
       asc(workoutTemplateSegmentExerciseTable.exerciseOrder),
       asc(workoutTemplateSegmentExerciseMeasurementTable.setOrder),
