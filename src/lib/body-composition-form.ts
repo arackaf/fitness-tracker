@@ -1,6 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 
 import type { BodyCompositionMeasurementState } from "@/data/body-composition/body-composition-state";
+import { bodyCompositionMeasurementType } from "@/drizzle/schema";
 
 const defaultMeasurementDate = () => {
   return new Date();
@@ -14,6 +15,7 @@ export const createDefaultBodyCompositionMeasurement =
       value: "",
       lengthUnit: null,
       weightUnit: null,
+      bodyCompositionMeasurementType: null,
     };
   };
 
