@@ -109,24 +109,16 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                             const sourceMeasurement =
                               measurements[measurementIndex];
 
-                            form.setFieldValue(
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
-                              measurements.map(
-                                (measurement, targetMeasurementIndex) => {
-                                  if (
-                                    targetMeasurementIndex === measurementIndex
-                                  ) {
-                                    return measurement;
-                                  }
-
-                                  return {
-                                    ...measurement,
-                                    reps: sourceMeasurement.reps,
-                                    weightUsed: sourceMeasurement.weightUsed,
-                                  };
-                                },
-                              ),
-                            );
+                            for (let i = 1; i < measurements.length; i++) {
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
+                                sourceMeasurement.reps,
+                              );
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
+                                sourceMeasurement.weightUsed,
+                              );
+                            }
                           }}
                         >
                           Fill
