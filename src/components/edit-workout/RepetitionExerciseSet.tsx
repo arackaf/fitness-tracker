@@ -106,14 +106,12 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                           size="sm"
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
-                            const measurementFieldName =
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
                             const sourceMeasurement =
                               measurements[measurementIndex];
 
                             form.setFieldValue(
-                              measurementFieldName,
+                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
                               measurements.map(
                                 (measurement, targetMeasurementIndex) => {
                                   if (
