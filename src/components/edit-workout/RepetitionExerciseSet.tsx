@@ -1,7 +1,6 @@
 import type { FC } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import type { WorkoutForm } from "@/lib/workout-form";
 import { cn } from "@/lib/utils";
