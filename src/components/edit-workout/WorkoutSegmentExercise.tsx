@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { Trash2 } from "lucide-react";
 
 import {
@@ -63,19 +63,6 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 }) => {
   const idx = segmentIndex;
   const exIdx = exerciseIndex;
-  const selectedExerciseId =
-    form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]
-      ?.exerciseId ?? 0;
-  const selectedExercise = exercises.find(
-    exercise => exercise.id === selectedExerciseId,
-  );
-  const [rowExercise, setRowExercise] = useState<Exercise | undefined>(
-    selectedExercise,
-  );
-
-  const rowExecutionType =
-    form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]
-      ?.executionType ?? getExerciseExecutionType(rowExercise);
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-4">
@@ -123,7 +110,6 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`,
                         defaultExerciseWeightUnit,
                       );
-                      setRowExercise(nextSelectedExercise);
                     }}
                   />
                   {!segmentExercise.state.meta.isValid &&
@@ -137,35 +123,39 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                     ))}
                 </label>
                 <form.Subscribe
-                  selector={state =>
-                    state.values.segments[idx].exercises[exIdx].id
-                  }
+                  selector={state => {
+                    const exerciseId =
+                      state.values.segments[idx].exercises[exIdx].id;
+
+                    const selectedExercise = exercises.find(
+                      exercise => exercise.id === exerciseId,
+                    );
+
+                    const executionType =
+                      state.values.segments[idx].exercises[exIdx].executionType;
+
+                    return {
+                      exerciseId,
+                      hasExercise: exerciseId != null && exerciseId > 0,
+                      selectedExercise,
+                      executionType,
+                    };
+                  }}
                 >
-                  {value =>
-                    value != null && value > 0 ? (
+                  {formState =>
+                    formState.hasExercise ? (
                       <>
                         <ExecutionTypeSelect
-                          value={rowExecutionType}
+                          value={formState.executionType ?? "repetition"}
                           onValueChange={value => {
                             form.setFieldValue(
                               `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
                               value,
                             );
-                            setRowExercise(previous => {
-                              const baseExercise = previous ?? selectedExercise;
-                              if (!baseExercise) {
-                                return previous;
-                              }
-
-                              return {
-                                ...baseExercise,
-                                executionType: value,
-                              };
-                            });
                           }}
                         />
-                        {rowExecutionType === "repetition" &&
-                        selectedExercise?.isBodyweight !== true ? (
+                        {formState.executionType === "repetition" &&
+                        formState.selectedExercise?.isBodyweight !== true ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             validators={{
@@ -207,7 +197,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             )}
                           />
                         ) : null}
-                        {rowExecutionType === "distance" ? (
+                        {formState.executionType === "distance" ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
                             validators={{
@@ -248,7 +238,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             )}
                           />
                         ) : null}
-                        {rowExecutionType === "time" ? (
+                        {formState.executionType === "time" ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
                             validators={{
@@ -315,28 +305,49 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
         </div>
       </div>
 
-      {!selectedExerciseId || rowExecutionType === "repetition" ? (
-        <RepetitionExerciseSet
-          form={form}
-          segmentIndex={segmentIndex}
-          exerciseIndex={exerciseIndex}
-          showWeightUsed={Boolean(
-            selectedExercise && selectedExercise.isBodyweight !== true,
-          )}
-        />
-      ) : rowExecutionType === "distance" ? (
-        <DistanceExerciseSet
-          form={form}
-          segmentIndex={segmentIndex}
-          exerciseIndex={exerciseIndex}
-        />
-      ) : (
-        <DurationExerciseSet
-          form={form}
-          segmentIndex={segmentIndex}
-          exerciseIndex={exerciseIndex}
-        />
-      )}
+      <form.Subscribe
+        selector={state => {
+          const selectedExerciseId =
+            state.values.segments[idx].exercises[exIdx].id;
+          const executionType =
+            state.values.segments[idx].exercises[exIdx].executionType;
+
+          const selectedExercise = exercises.find(
+            exercise => exercise.id === selectedExerciseId,
+          );
+          const isBodyweight = selectedExercise?.isBodyweight ?? false;
+
+          return {
+            selectedExerciseId,
+            executionType,
+            isBodyweight,
+          };
+        }}
+      >
+        {formState =>
+          !formState.selectedExerciseId ||
+          formState.executionType === "repetition" ? (
+            <RepetitionExerciseSet
+              form={form}
+              segmentIndex={segmentIndex}
+              exerciseIndex={exerciseIndex}
+              showWeightUsed={formState.isBodyweight}
+            />
+          ) : formState.executionType === "distance" ? (
+            <DistanceExerciseSet
+              form={form}
+              segmentIndex={segmentIndex}
+              exerciseIndex={exerciseIndex}
+            />
+          ) : (
+            <DurationExerciseSet
+              form={form}
+              segmentIndex={segmentIndex}
+              exerciseIndex={exerciseIndex}
+            />
+          )
+        }
+      </form.Subscribe>
     </div>
   );
 };
