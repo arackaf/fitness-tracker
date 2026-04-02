@@ -40,7 +40,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].distance`}
                         validators={{
-                          onChange: ({ value }) => {
+                          onSubmit: ({ value }) => {
                             if (value == null || value === "") {
                               return "Required";
                             }

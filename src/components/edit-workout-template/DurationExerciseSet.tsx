@@ -40,7 +40,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].duration`}
                         validators={{
-                          onChange: ({ value }) => {
+                          onSubmit: ({ value }) => {
                             if (value == null || value === "") {
                               return "Required";
                             }

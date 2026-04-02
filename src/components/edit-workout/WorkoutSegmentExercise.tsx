@@ -71,7 +71,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
           <form.Field
             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
             validators={{
-              onChange: ({ value }) => {
+              onSubmit: ({ value }) => {
                 if (!value) {
                   return "Required";
                 }
@@ -159,7 +159,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             validators={{
-                              onChange: ({ value }) => {
+                              onSubmit: ({ value }) => {
                                 const measurements =
                                   form.state.values.segments[segmentIndex]
                                     ?.exercises[exerciseIndex]?.measurements;
@@ -201,7 +201,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
                             validators={{
-                              onChange: ({ value }) => {
+                              onSubmit: ({ value }) => {
                                 const measurements =
                                   form.state.values.segments[segmentIndex]
                                     ?.exercises[exerciseIndex]?.measurements;
@@ -242,7 +242,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
                             validators={{
-                              onChange: ({ value }) => {
+                              onSubmit: ({ value }) => {
                                 const measurements =
                                   form.state.values.segments[segmentIndex]
                                     ?.exercises[exerciseIndex]?.measurements;

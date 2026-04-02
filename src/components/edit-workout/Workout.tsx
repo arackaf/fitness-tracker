@@ -26,7 +26,7 @@ export const Workout: FC<WorkoutProps> = ({
         <form.Field
           name="name"
           validators={{
-            onChange: ({ value }) => {
+            onSubmit: ({ value }) => {
               if (!value) {
                 return "Required";
               }
@@ -55,7 +55,7 @@ export const Workout: FC<WorkoutProps> = ({
         <form.Field
           name="workoutDate"
           validators={{
-            onChange: ({ value }) => {
+            onSubmit: ({ value }) => {
               if (!value) {
                 return "Required";
               }
