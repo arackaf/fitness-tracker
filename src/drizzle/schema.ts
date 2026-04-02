@@ -208,9 +208,13 @@ export const workoutSegmentExerciseMeasurement = pgTable(
       .references(() => workoutSegmentExercise.id, { onDelete: "cascade" }),
     setOrder: integer("set_order").notNull(),
     reps: integer(),
-    weightUsed: numeric("weight_used", { precision: 8, scale: 2 }),
-    duration: numeric({ precision: 8, scale: 2 }),
-    distance: numeric({ precision: 8, scale: 2 }),
+    weightUsed: numeric("weight_used", {
+      precision: 8,
+      scale: 2,
+      mode: "number",
+    }),
+    duration: numeric({ precision: 8, scale: 2, mode: "number" }),
+    distance: numeric({ precision: 8, scale: 2, mode: "number" }),
   },
   table => [
     index(
@@ -302,9 +306,13 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
     setOrder: integer("set_order").notNull(),
     reps: integer(),
     repsToFailure: boolean("reps_to_failure"),
-    weightUsed: numeric("weight_used", { precision: 8, scale: 2 }),
-    duration: numeric({ precision: 8, scale: 2 }),
-    distance: numeric({ precision: 8, scale: 2 }),
+    weightUsed: numeric("weight_used", {
+      precision: 8,
+      scale: 2,
+      mode: "number",
+    }),
+    duration: numeric({ precision: 8, scale: 2, mode: "number" }),
+    distance: numeric({ precision: 8, scale: 2, mode: "number" }),
   },
   table => [
     check(
