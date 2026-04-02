@@ -53,7 +53,6 @@ function RouteComponent() {
 
 function RouteContent() {
   const { id } = Route.useParams();
-  const navigate = Route.useNavigate();
   const workoutTemplateId = Number(id);
 
   const { data: workoutTemplate } = useSuspenseQuery(
