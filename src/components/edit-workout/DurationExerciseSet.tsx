@@ -73,29 +73,21 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                           size="sm"
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
-                            const measurementFieldName =
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
                             const sourceMeasurement =
                               measurements[measurementIndex];
 
-                            form.setFieldValue(
-                              measurementFieldName,
-                              measurements.map(
-                                (measurement, targetMeasurementIndex) => {
-                                  if (
-                                    targetMeasurementIndex === measurementIndex
-                                  ) {
-                                    return measurement;
-                                  }
-
-                                  return {
-                                    ...measurement,
-                                    duration: sourceMeasurement.duration,
-                                  };
-                                },
-                              ),
-                            );
+                            if (
+                              sourceMeasurement.duration ||
+                              sourceMeasurement.duration === "0"
+                            ) {
+                              for (let i = 1; i < measurements.length; i++) {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].duration`,
+                                  sourceMeasurement.duration,
+                                );
+                              }
+                            }
                           }}
                         >
                           Fill

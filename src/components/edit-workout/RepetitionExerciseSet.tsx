@@ -125,14 +125,24 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                               measurements[measurementIndex];
 
                             for (let i = 1; i < measurements.length; i++) {
-                              form.setFieldValue(
-                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
-                                sourceMeasurement.reps,
-                              );
-                              form.setFieldValue(
-                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
-                                sourceMeasurement.weightUsed,
-                              );
+                              if (
+                                sourceMeasurement.reps ||
+                                sourceMeasurement.reps === 0
+                              ) {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
+                                  sourceMeasurement.reps,
+                                );
+                              }
+                              if (
+                                sourceMeasurement.weightUsed ||
+                                sourceMeasurement.weightUsed === "0"
+                              ) {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
+                                  sourceMeasurement.weightUsed,
+                                );
+                              }
                             }
                           }}
                         >
