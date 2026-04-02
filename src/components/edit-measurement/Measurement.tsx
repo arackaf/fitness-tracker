@@ -31,7 +31,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
       <form.Field
         name="bodyCompositionMetricId"
         validators={{
-          onChange: ({ value }) => {
+          onSubmit: ({ value }) => {
             if (!value) {
               return "Required";
             }
@@ -100,7 +100,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
       <form.Field
         name="measurementDate"
         validators={{
-          onChange: ({ value }) => {
+          onSubmit: ({ value }) => {
             if (!value) {
               return "Required";
             }
@@ -127,7 +127,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
       <form.Field
         name="value"
         validators={{
-          onChange: ({ value }) => {
+          onSubmit: ({ value }) => {
             if (value == null || value === "") {
               return "Required";
             }
