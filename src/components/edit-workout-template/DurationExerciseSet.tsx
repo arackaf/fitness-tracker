@@ -39,13 +39,6 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                     >
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].duration`}
-                        validators={{
-                          onSubmit: ({ value }) => {
-                            if (value == null || value === "") {
-                              return "Required";
-                            }
-                          },
-                        }}
                         children={durationField => (
                           <label className="h-7 inline-flex items-start gap-1 text-xs text-muted-foreground">
                             <Input

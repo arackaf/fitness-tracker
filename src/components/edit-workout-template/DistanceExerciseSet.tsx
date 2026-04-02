@@ -39,13 +39,6 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                     >
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].distance`}
-                        validators={{
-                          onSubmit: ({ value }) => {
-                            if (value == null || value === "") {
-                              return "Required";
-                            }
-                          },
-                        }}
                         children={distanceField => (
                           <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                             <Input

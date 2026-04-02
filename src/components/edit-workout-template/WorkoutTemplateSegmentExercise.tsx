@@ -160,21 +160,6 @@ export const WorkoutTemplateSegmentExercise: FC<
                         formState.selectedExercise?.isBodyweight !== true ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
-                            validators={{
-                              onSubmit: ({ value }) => {
-                                const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
-                                const hasWeightValue = measurements?.some(
-                                  measurement =>
-                                    measurement.weightUsed != null &&
-                                    measurement.weightUsed !== "",
-                                );
-                                if (hasWeightValue && value == null) {
-                                  return "Required";
-                                }
-                              },
-                            }}
                             children={exerciseWeightUnitField => (
                               <Select
                                 value={
@@ -201,21 +186,6 @@ export const WorkoutTemplateSegmentExercise: FC<
                         {formState.executionType === "distance" ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
-                            validators={{
-                              onSubmit: ({ value }) => {
-                                const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
-                                const hasDistanceValue = measurements?.some(
-                                  measurement =>
-                                    measurement.distance != null &&
-                                    measurement.distance !== "",
-                                );
-                                if (hasDistanceValue && value == null) {
-                                  return "Required";
-                                }
-                              },
-                            }}
                             children={distanceUnitField => (
                               <Select
                                 value={
@@ -241,21 +211,6 @@ export const WorkoutTemplateSegmentExercise: FC<
                         {formState.executionType === "time" ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
-                            validators={{
-                              onSubmit: ({ value }) => {
-                                const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
-                                const hasDurationValue = measurements?.some(
-                                  measurement =>
-                                    measurement.duration != null &&
-                                    measurement.duration !== "",
-                                );
-                                if (hasDurationValue && value == null) {
-                                  return "Required";
-                                }
-                              },
-                            }}
                             children={durationUnitField => (
                               <Select
                                 value={
