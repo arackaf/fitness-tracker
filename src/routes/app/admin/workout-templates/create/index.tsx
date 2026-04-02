@@ -73,24 +73,20 @@ const RouteContent: FC<RouteContentProps> = props => {
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [formResetKey, setFormResetKey] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const addAnotherRef = useRef(false);
   const form = useWorkoutTemplateForm(async state => {
     setIsSaving(true);
 
-    try {
-      await saveWorkoutTemplate({ data: state });
-      if (addAnotherRef.current) {
-        onReset();
-      } else {
-        queryClient.invalidateQueries({
-          queryKey: workoutTemplatesQueryOptions(1).queryKey,
-        });
-        navigate({ to: "/app/admin/workout-templates" });
-      }
-    } finally {
+    await saveWorkoutTemplate({ data: state });
+    if (addAnotherRef.current) {
+      onReset();
       setIsSaving(false);
+    } else {
+      queryClient.invalidateQueries({
+        queryKey: workoutTemplatesQueryOptions(1).queryKey,
+      });
+      navigate({ to: "/app/admin/workout-templates" });
     }
   }, workoutTemplateState);
 
@@ -102,35 +98,33 @@ const RouteContent: FC<RouteContentProps> = props => {
   };
 
   return (
-    <Fragment key={formResetKey}>
-      <form onSubmit={handleSubmit}>
-        <WorkoutTemplate
-          form={form}
-          exercises={exercises}
-          muscleGroups={muscleGroups}
-        />
-        <div className="mt-8 flex items-center gap-4">
-          <Button type="submit" disabled={isSaving} className="font-semibold">
-            {isSaving ? "Saving..." : "Create workout template"}
-          </Button>
-          <label className="flex items-center gap-2">
-            <Checkbox
-              onCheckedChange={checked => (addAnotherRef.current = !!checked)}
-              disabled={isSaving}
-            />
-            <span className="text-sm">Add another</span>
-          </label>
-          <Button
-            type="button"
-            variant="secondary"
+    <form onSubmit={handleSubmit}>
+      <WorkoutTemplate
+        form={form}
+        exercises={exercises}
+        muscleGroups={muscleGroups}
+      />
+      <div className="mt-8 flex items-center gap-4">
+        <Button type="submit" disabled={isSaving} className="font-semibold">
+          {isSaving ? "Saving..." : "Create workout template"}
+        </Button>
+        <label className="flex items-center gap-2">
+          <Checkbox
+            onCheckedChange={checked => (addAnotherRef.current = !!checked)}
             disabled={isSaving}
-            className="font-semibold ml-auto"
-            onClick={onReset}
-          >
-            Reset workout template
-          </Button>
-        </div>
-      </form>
-    </Fragment>
+          />
+          <span className="text-sm">Add another</span>
+        </label>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={isSaving}
+          className="font-semibold ml-auto"
+          onClick={onReset}
+        >
+          Reset workout template
+        </Button>
+      </div>
+    </form>
   );
 };
