@@ -38,7 +38,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].duration`}
                         validators={{
                           onSubmit: ({ value }) => {
-                            if (value == null || value === "") {
+                            if (!value && value !== 0) {
                               return "Required";
                             }
                           },
@@ -53,7 +53,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
                               onChange={event => {
                                 const value = event.target.value;
                                 durationField.handleChange(
-                                  value === "" ? null : value,
+                                  value === "" ? null : Number(value),
                                 );
                               }}
                               className={cn(
@@ -79,7 +79,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({
 
                             if (
                               sourceMeasurement.duration ||
-                              sourceMeasurement.duration === "0"
+                              sourceMeasurement.duration === 0
                             ) {
                               for (let i = 1; i < measurements.length; i++) {
                                 form.setFieldValue(

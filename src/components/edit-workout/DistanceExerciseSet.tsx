@@ -38,7 +38,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].distance`}
                         validators={{
                           onSubmit: ({ value }) => {
-                            if (value == null || value === "") {
+                            if (!value && value !== 0) {
                               return "Required";
                             }
                           },
@@ -53,7 +53,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                               onChange={event => {
                                 const value = event.target.value;
                                 distanceField.handleChange(
-                                  value === "" ? null : value,
+                                  value === "" ? null : Number(value),
                                 );
                               }}
                               className={cn(
@@ -79,7 +79,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
 
                             if (
                               sourceMeasurement.distance ||
-                              sourceMeasurement.distance === "0"
+                              sourceMeasurement.distance === 0
                             ) {
                               for (let i = 1; i < measurements.length; i++) {
                                 form.setFieldValue(
