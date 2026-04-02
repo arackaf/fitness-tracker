@@ -149,11 +149,12 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
     event.preventDefault();
     event.stopPropagation();
 
+    await form.validateAllFields("submit");
     await form.handleSubmit();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="flex mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
