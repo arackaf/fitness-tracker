@@ -44,7 +44,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                         <form.Field
                           name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
                           validators={{
-                            onChange: ({ value }) => {
+                            onSubmit: ({ value }) => {
                               if (value == null) {
                                 return "Required";
                               }
@@ -78,6 +78,16 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                         {showWeightUsed ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
+                            validators={{
+                              onSubmit: ({ value }) => {
+                                if (
+                                  value == null ||
+                                  value?.toString()?.includes("e")
+                                ) {
+                                  return "Required";
+                                }
+                              },
+                            }}
                             children={weightUsedField => (
                               <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <Input
@@ -90,7 +100,12 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                       value === "" ? null : value,
                                     );
                                   }}
-                                  className={cn("h-7 w-18 px-2 py-1")}
+                                  className={cn(
+                                    "h-7 w-18 px-2 py-1",
+                                    !weightUsedField.state.meta.isValid
+                                      ? "border-red-500"
+                                      : "",
+                                  )}
                                 />
                               </label>
                             )}
