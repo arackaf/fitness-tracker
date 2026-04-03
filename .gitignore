@@ -10,3 +10,4 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+.env
