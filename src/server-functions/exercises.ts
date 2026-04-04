@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import { getExercises } from "@/data/exercises/get-exercises";
 import { exercises as exercisesTable } from "@/drizzle/schema";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
@@ -35,6 +35,5 @@ export const editExercise = createServerFn({ method: "POST" })
     await new Promise(resolve => setTimeout(resolve, DELAY_MS));
     const name = data.name.trim();
 
-    const db = await getDb();
     await db.update(exercisesTable).set({ name }).where(eq(exercisesTable.id, data.id));
   });

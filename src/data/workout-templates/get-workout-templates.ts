@@ -2,7 +2,7 @@ import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -26,7 +26,6 @@ type WorkoutTemplatesPayload = {
 
 export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams = {}): Promise<WorkoutTemplatesPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  const db = await getDb();
   const page = Math.max(1, Math.floor(params.page ?? 1));
   const offset = (page - 1) * WORKOUT_TEMPLATE_LIST_LIMIT;
 

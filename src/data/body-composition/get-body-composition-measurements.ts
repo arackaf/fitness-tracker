@@ -2,7 +2,7 @@ import { and, desc, eq, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingBodyCompositionMeasurement } from "@/data/body-composition/body-composition-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import { bodyCompositionMeasurement } from "@/drizzle/schema";
 
 type GetBodyCompositionMeasurementsOptions = {
@@ -14,8 +14,6 @@ export const getBodyCompositionMeasurements = async (
   options: GetBodyCompositionMeasurementsOptions = {},
 ): Promise<ExistingBodyCompositionMeasurement[]> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  const db = await getDb();
-
   const conditions: SQLWrapper[] = [];
   if (options.id != null) {
     conditions.push(eq(bodyCompositionMeasurement.id, options.id));
