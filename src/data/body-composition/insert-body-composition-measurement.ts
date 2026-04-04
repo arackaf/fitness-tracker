@@ -2,18 +2,11 @@ import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMeasurementState } from "@/data/body-composition/body-composition-state";
 import { db } from "@/data/db";
 import { bodyCompositionMeasurement } from "@/drizzle/schema";
-
-const toNumericString = (value: string | number | null | undefined) => {
-  if (value == null || value === "") {
-    return null;
-  }
-
-  return String(value);
-};
+import { toNumericValue } from "@/lib/toNumericValue";
 
 export const insertBodyCompositionMeasurement = async (input: BodyCompositionMeasurementState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  const numericValue = toNumericString(input.value);
+  const numericValue = toNumericValue(input.value);
   if (numericValue == null) {
     throw new Error("Measurement value is required.");
   }

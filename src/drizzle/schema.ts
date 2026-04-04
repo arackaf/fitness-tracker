@@ -55,7 +55,7 @@ export const bodyCompositionMeasurement = pgTable("body_composition_measurement"
     .notNull()
     .references(() => bodyCompositionMetric.id),
   measurementDate: timestamp("measurement_date").notNull(),
-  value: numeric({ precision: 8, scale: 2 }).notNull(),
+  value: numeric({ precision: 8, scale: 2, mode: "number" }).notNull(),
   lengthUnit: bodyCompositionLengthUnit("length_unit"),
   weightUnit: bodyCompositionWeightUnit("weight_unit"),
 });
@@ -217,9 +217,9 @@ export const workoutSegmentExerciseMeasurement = pgTable(
       .references(() => workoutSegmentExercise.id, { onDelete: "cascade" }),
     setOrder: integer("set_order").notNull(),
     reps: integer(),
-    weightUsed: numeric("weight_used", { precision: 8, scale: 2 }),
-    duration: numeric({ precision: 8, scale: 2 }),
-    distance: numeric({ precision: 8, scale: 2 }),
+    weightUsed: numeric("weight_used", { precision: 8, scale: 2, mode: "number" }),
+    duration: numeric({ precision: 8, scale: 2, mode: "number" }),
+    distance: numeric({ precision: 8, scale: 2, mode: "number" }),
   },
   table => [
     index("idx_workout_segment_exercise_measurement_exercise_id_set_order").using(
@@ -295,9 +295,9 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
     setOrder: integer("set_order").notNull(),
     reps: integer(),
     repsToFailure: boolean("reps_to_failure"),
-    weightUsed: numeric("weight_used", { precision: 8, scale: 2 }),
-    duration: numeric({ precision: 8, scale: 2 }),
-    distance: numeric({ precision: 8, scale: 2 }),
+    weightUsed: numeric("weight_used", { precision: 8, scale: 2, mode: "number" }),
+    duration: numeric({ precision: 8, scale: 2, mode: "number" }),
+    distance: numeric({ precision: 8, scale: 2, mode: "number" }),
   },
   table => [check("workout_template_segment_exercise_measurement_set_order_check", sql`(set_order > 0)`)],
 );

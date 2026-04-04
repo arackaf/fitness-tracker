@@ -7,16 +7,9 @@ import {
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
   workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
+import { toNumericValue } from "@/lib/toNumericValue";
 
 type TemplateExerciseInput = WorkoutTemplateState["segments"][number]["exercises"][number];
-
-const toNumericString = (value: string | number | null | undefined) => {
-  if (value == null || value === "") {
-    return null;
-  }
-
-  return String(value);
-};
 
 const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   const measurements = exercise.measurements ?? [];
@@ -24,14 +17,14 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
   if (exercise.executionType === "distance") {
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
-      distance: toNumericString(measurement.distance),
+      distance: toNumericValue(measurement.distance),
     }));
   }
 
   if (exercise.executionType === "time") {
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
-      duration: toNumericString(measurement.duration),
+      duration: toNumericValue(measurement.duration),
     }));
   }
 
@@ -39,7 +32,7 @@ const createExerciseMeasurements = (exercise: TemplateExerciseInput) => {
     setOrder: index + 1,
     reps: measurement.reps ?? null,
     repsToFailure: measurement.repsToFailure ?? false,
-    weightUsed: toNumericString(measurement.weightUsed),
+    weightUsed: toNumericValue(measurement.weightUsed),
   }));
 };
 

@@ -94,7 +94,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
         name="value"
         validators={{
           onSubmit: ({ value }) => {
-            if (value == null || value === "") {
+            if (!value && value !== 0) {
               return "Required";
             }
           },
@@ -109,7 +109,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                 step="1"
                 value={String(valueField.state.value ?? "")}
                 onBlur={valueField.handleBlur}
-                onChange={event => valueField.handleChange(event.target.value)}
+                onChange={event => valueField.handleChange(Number(event.target.value))}
                 placeholder="0.00"
               />
             </label>

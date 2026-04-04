@@ -11,7 +11,7 @@ export const createDefaultBodyCompositionMeasurement = (): BodyCompositionMeasur
   return {
     bodyCompositionMetricId: 0,
     measurementDate: defaultMeasurementDate(),
-    value: "",
+    value: null as unknown as number,
     lengthUnit: null,
     weightUnit: null,
     bodyCompositionMeasurementType: null,

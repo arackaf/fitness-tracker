@@ -14,12 +14,15 @@ type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number
 
 const isPersistedId = (id: number | null | undefined): id is number => id != null && Number.isInteger(id) && id > 0;
 
-const toNumericString = (value: string | number | null | undefined) => {
+const toNumericValue = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
     return null;
   }
+  if (typeof value === "string") {
+    return Number(value);
+  }
 
-  return String(value);
+  return value;
 };
 
 const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
@@ -33,7 +36,7 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
       repsToFailure: null,
       weightUsed: null,
       duration: null,
-      distance: toNumericString(measurement.distance),
+      distance: toNumericValue(measurement.distance),
     }));
   }
 
@@ -44,7 +47,7 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
       reps: null,
       repsToFailure: null,
       weightUsed: null,
-      duration: toNumericString(measurement.duration),
+      duration: toNumericValue(measurement.duration),
       distance: null,
     }));
   }
@@ -53,7 +56,7 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
     id: measurement.id,
     setOrder: index + 1,
     reps: measurement.reps ?? null,
-    weightUsed: toNumericString(measurement.weightUsed),
+    weightUsed: toNumericValue(measurement.weightUsed),
     duration: null,
     distance: null,
   }));

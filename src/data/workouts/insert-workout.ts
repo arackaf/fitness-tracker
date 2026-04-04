@@ -7,16 +7,9 @@ import {
   workoutSegmentExercise as workoutSegmentExerciseTable,
   workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
+import { toNumericValue } from "@/lib/toNumericValue";
 
 type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
-
-const toNumericString = (value: string | number | null | undefined) => {
-  if (value == null || value === "") {
-    return null;
-  }
-
-  return String(value);
-};
 
 const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
   const measurements = exercise.measurements ?? [];
@@ -24,21 +17,21 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
   if (exercise.executionType === "distance") {
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
-      distance: toNumericString(measurement.distance),
+      distance: toNumericValue(measurement.distance),
     }));
   }
 
   if (exercise.executionType === "time") {
     return measurements.map((measurement, index) => ({
       setOrder: index + 1,
-      duration: toNumericString(measurement.duration),
+      duration: toNumericValue(measurement.duration),
     }));
   }
 
   return measurements.map((measurement, index) => ({
     setOrder: index + 1,
     reps: measurement.reps ?? null,
-    weightUsed: toNumericString(measurement.weightUsed),
+    weightUsed: toNumericValue(measurement.weightUsed),
   }));
 };
 
