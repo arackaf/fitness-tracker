@@ -11,9 +11,7 @@ const toNumericString = (value: string | number | null | undefined) => {
   return String(value);
 };
 
-export const insertBodyCompositionMeasurement = async (
-  input: BodyCompositionMeasurementState,
-) => {
+export const insertBodyCompositionMeasurement = async (input: BodyCompositionMeasurementState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
 

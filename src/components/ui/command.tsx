@@ -4,26 +4,17 @@ import { Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-function Command({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive>) {
+function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
   return (
     <CommandPrimitive
       data-slot="command"
-      className={cn(
-        "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
-        className,
-      )}
+      className={cn("flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground", className)}
       {...props}
     />
   );
 }
 
-function CommandInput({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+function CommandInput({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div className="flex items-center border-b border-border px-3" cmdk-input-wrapper="">
       <Search className="mr-2 size-4 shrink-0 opacity-50" />
@@ -39,10 +30,7 @@ function CommandInput({
   );
 }
 
-function CommandList({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
   return (
     <CommandPrimitive.List
       data-slot="command-list"
@@ -52,22 +40,11 @@ function CommandList({
   );
 }
 
-function CommandEmpty({
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
-  return (
-    <CommandPrimitive.Empty
-      data-slot="command-empty"
-      className="py-6 text-center text-sm"
-      {...props}
-    />
-  );
+function CommandEmpty({ ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+  return <CommandPrimitive.Empty data-slot="command-empty" className="py-6 text-center text-sm" {...props} />;
 }
 
-function CommandGroup({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Group>) {
+function CommandGroup({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Group>) {
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
@@ -77,10 +54,7 @@ function CommandGroup({
   );
 }
 
-function CommandItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Item>) {
+function CommandItem({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Item>) {
   return (
     <CommandPrimitive.Item
       data-slot="command-item"
@@ -93,11 +67,4 @@ function CommandItem({
   );
 }
 
-export {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-};
+export { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList };

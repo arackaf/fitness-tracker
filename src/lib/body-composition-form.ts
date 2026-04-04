@@ -7,17 +7,16 @@ const defaultMeasurementDate = () => {
   return new Date();
 };
 
-export const createDefaultBodyCompositionMeasurement =
-  (): BodyCompositionMeasurementState => {
-    return {
-      bodyCompositionMetricId: 0,
-      measurementDate: defaultMeasurementDate(),
-      value: "",
-      lengthUnit: null,
-      weightUnit: null,
-      bodyCompositionMeasurementType: null,
-    };
+export const createDefaultBodyCompositionMeasurement = (): BodyCompositionMeasurementState => {
+  return {
+    bodyCompositionMetricId: 0,
+    measurementDate: defaultMeasurementDate(),
+    value: "",
+    lengthUnit: null,
+    weightUnit: null,
+    bodyCompositionMeasurementType: null,
   };
+};
 
 export const useBodyCompositionMeasurementForm = (
   submitValue: (value: BodyCompositionMeasurementState) => void | Promise<void>,
@@ -32,6 +31,4 @@ export const useBodyCompositionMeasurementForm = (
   });
 };
 
-export type BodyCompositionMeasurementForm = ReturnType<
-  typeof useBodyCompositionMeasurementForm
->;
+export type BodyCompositionMeasurementForm = ReturnType<typeof useBodyCompositionMeasurementForm>;

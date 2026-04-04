@@ -10,11 +10,9 @@ import {
   workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
-type WorkoutExerciseInput =
-  WorkoutState["segments"][number]["exercises"][number];
+type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
 
-const isPersistedId = (id: number | null | undefined): id is number =>
-  id != null && Number.isInteger(id) && id > 0;
+const isPersistedId = (id: number | null | undefined): id is number => id != null && Number.isInteger(id) && id > 0;
 
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
@@ -118,18 +116,11 @@ export const updateWorkout = async (input: WorkoutState) => {
       throw new Error(`Workout ${workoutId} was not found.`);
     }
 
-    const incomingSegmentIds = input.segments
-      .map(segment => segment.id)
-      .filter(isPersistedId);
+    const incomingSegmentIds = input.segments.map(segment => segment.id).filter(isPersistedId);
 
     await tx
       .delete(workoutSegmentTable)
-      .where(
-        and(
-          eq(workoutSegmentTable.workoutId, workoutId),
-          not(inArray(workoutSegmentTable.id, incomingSegmentIds)),
-        ),
-      );
+      .where(and(eq(workoutSegmentTable.workoutId, workoutId), not(inArray(workoutSegmentTable.id, incomingSegmentIds))));
 
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
@@ -141,12 +132,7 @@ export const updateWorkout = async (input: WorkoutState) => {
             segmentOrder: segmentIndex + 1,
             sets: segment.sets,
           })
-          .where(
-            and(
-              eq(workoutSegmentTable.id, segmentId),
-              eq(workoutSegmentTable.workoutId, workoutId),
-            ),
-          )
+          .where(and(eq(workoutSegmentTable.id, segmentId), eq(workoutSegmentTable.workoutId, workoutId)))
           .returning({ id: workoutSegmentTable.id });
 
         if (!updatedSegment) {
@@ -166,9 +152,7 @@ export const updateWorkout = async (input: WorkoutState) => {
         segmentId = insertedSegment.id;
       }
 
-      const incomingExerciseIds = segment.exercises
-        .map(exercise => exercise.id)
-        .filter(isPersistedId);
+      const incomingExerciseIds = segment.exercises.map(exercise => exercise.id).filter(isPersistedId);
 
       await tx
         .delete(workoutSegmentExerciseTable)
@@ -193,10 +177,7 @@ export const updateWorkout = async (input: WorkoutState) => {
               ...exerciseUnitValues,
             })
             .where(
-              and(
-                eq(workoutSegmentExerciseTable.id, exercise.id),
-                eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId),
-              ),
+              and(eq(workoutSegmentExerciseTable.id, exercise.id), eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId)),
             )
             .returning({ id: workoutSegmentExerciseTable.id });
 
@@ -221,24 +202,14 @@ export const updateWorkout = async (input: WorkoutState) => {
         }
 
         const exerciseMeasurements = createExerciseMeasurements(exercise);
-        const incomingSetOrders = exerciseMeasurements.map(
-          measurement => measurement.setOrder,
-        );
+        const incomingSetOrders = exerciseMeasurements.map(measurement => measurement.setOrder);
 
         await tx
           .delete(workoutSegmentExerciseMeasurementTable)
           .where(
             and(
-              eq(
-                workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
-                segmentExerciseId,
-              ),
-              not(
-                inArray(
-                  workoutSegmentExerciseMeasurementTable.setOrder,
-                  incomingSetOrders,
-                ),
-              ),
+              eq(workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId, segmentExerciseId),
+              not(inArray(workoutSegmentExerciseMeasurementTable.setOrder, incomingSetOrders)),
             ),
           );
 
@@ -249,14 +220,8 @@ export const updateWorkout = async (input: WorkoutState) => {
             .set(measurementValues)
             .where(
               and(
-                eq(
-                  workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
-                  segmentExerciseId,
-                ),
-                eq(
-                  workoutSegmentExerciseMeasurementTable.setOrder,
-                  measurement.setOrder,
-                ),
+                eq(workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId, segmentExerciseId),
+                eq(workoutSegmentExerciseMeasurementTable.setOrder, measurement.setOrder),
               ),
             )
             .returning({ id: workoutSegmentExerciseMeasurementTable.id });

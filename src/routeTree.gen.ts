@@ -8,366 +8,361 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteRouteImport } from './routes/app/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppIndexRouteImport } from './routes/app/index'
-import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
-import { Route as AppWorkoutsIndexRouteImport } from './routes/app/workouts/index'
-import { Route as AppMeasurementsIndexRouteImport } from './routes/app/measurements/index'
-import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
-import { Route as AppLogMeasurementIndexRouteImport } from './routes/app/log-measurement/index'
-import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
-import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
-import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
-import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from './routes/app/admin/workout-templates/index'
-import { Route as AppWorkoutsEditNotFoundIndexRouteImport } from './routes/app/workouts/edit/not-found/index'
-import { Route as AppWorkoutsEditInvalidIndexRouteImport } from './routes/app/workouts/edit/invalid/index'
-import { Route as AppWorkoutsEditIdIndexRouteImport } from './routes/app/workouts/edit/$id/index'
-import { Route as AppAdminWorkoutTemplatesCreateIndexRouteImport } from './routes/app/admin/workout-templates/create/index'
-import { Route as AppAdminWorkoutTemplatesEditIdIndexRouteImport } from './routes/app/admin/workout-templates/edit/$id/index'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AppRouteRouteImport } from "./routes/app/route";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as AppIndexRouteImport } from "./routes/app/index";
+import { Route as AppAdminRouteRouteImport } from "./routes/app/admin/route";
+import { Route as AppWorkoutsIndexRouteImport } from "./routes/app/workouts/index";
+import { Route as AppMeasurementsIndexRouteImport } from "./routes/app/measurements/index";
+import { Route as AppLogWorkoutIndexRouteImport } from "./routes/app/log-workout/index";
+import { Route as AppLogMeasurementIndexRouteImport } from "./routes/app/log-measurement/index";
+import { Route as AppAdminIndexRouteImport } from "./routes/app/admin/index";
+import { Route as AppAdminExercisesRouteImport } from "./routes/app/admin/exercises";
+import { Route as AppAdminBodyCompositionRouteImport } from "./routes/app/admin/body-composition";
+import { Route as AppAdminWorkoutTemplatesIndexRouteImport } from "./routes/app/admin/workout-templates/index";
+import { Route as AppWorkoutsEditNotFoundIndexRouteImport } from "./routes/app/workouts/edit/not-found/index";
+import { Route as AppWorkoutsEditInvalidIndexRouteImport } from "./routes/app/workouts/edit/invalid/index";
+import { Route as AppWorkoutsEditIdIndexRouteImport } from "./routes/app/workouts/edit/$id/index";
+import { Route as AppAdminWorkoutTemplatesCreateIndexRouteImport } from "./routes/app/admin/workout-templates/create/index";
+import { Route as AppAdminWorkoutTemplatesEditIdIndexRouteImport } from "./routes/app/admin/workout-templates/edit/$id/index";
 
 const AppRouteRoute = AppRouteRouteImport.update({
-  id: '/app',
-  path: '/app',
+  id: "/app",
+  path: "/app",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AppIndexRoute = AppIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+  id: "/admin",
+  path: "/admin",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppWorkoutsIndexRoute = AppWorkoutsIndexRouteImport.update({
-  id: '/workouts/',
-  path: '/workouts/',
+  id: "/workouts/",
+  path: "/workouts/",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppMeasurementsIndexRoute = AppMeasurementsIndexRouteImport.update({
-  id: '/measurements/',
-  path: '/measurements/',
+  id: "/measurements/",
+  path: "/measurements/",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppLogWorkoutIndexRoute = AppLogWorkoutIndexRouteImport.update({
-  id: '/log-workout/',
-  path: '/log-workout/',
+  id: "/log-workout/",
+  path: "/log-workout/",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppLogMeasurementIndexRoute = AppLogMeasurementIndexRouteImport.update({
-  id: '/log-measurement/',
-  path: '/log-measurement/',
+  id: "/log-measurement/",
+  path: "/log-measurement/",
   getParentRoute: () => AppRouteRoute,
-} as any)
+} as any);
 const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => AppAdminRouteRoute,
-} as any)
+} as any);
 const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
-  id: '/exercises',
-  path: '/exercises',
+  id: "/exercises",
+  path: "/exercises",
   getParentRoute: () => AppAdminRouteRoute,
-} as any)
+} as any);
 const AppAdminBodyCompositionRoute = AppAdminBodyCompositionRouteImport.update({
-  id: '/body-composition',
-  path: '/body-composition',
+  id: "/body-composition",
+  path: "/body-composition",
   getParentRoute: () => AppAdminRouteRoute,
-} as any)
-const AppAdminWorkoutTemplatesIndexRoute =
-  AppAdminWorkoutTemplatesIndexRouteImport.update({
-    id: '/workout-templates/',
-    path: '/workout-templates/',
-    getParentRoute: () => AppAdminRouteRoute,
-  } as any)
-const AppWorkoutsEditNotFoundIndexRoute =
-  AppWorkoutsEditNotFoundIndexRouteImport.update({
-    id: '/workouts/edit/not-found/',
-    path: '/workouts/edit/not-found/',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
-const AppWorkoutsEditInvalidIndexRoute =
-  AppWorkoutsEditInvalidIndexRouteImport.update({
-    id: '/workouts/edit/invalid/',
-    path: '/workouts/edit/invalid/',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
-const AppWorkoutsEditIdIndexRoute = AppWorkoutsEditIdIndexRouteImport.update({
-  id: '/workouts/edit/$id/',
-  path: '/workouts/edit/$id/',
+} as any);
+const AppAdminWorkoutTemplatesIndexRoute = AppAdminWorkoutTemplatesIndexRouteImport.update({
+  id: "/workout-templates/",
+  path: "/workout-templates/",
+  getParentRoute: () => AppAdminRouteRoute,
+} as any);
+const AppWorkoutsEditNotFoundIndexRoute = AppWorkoutsEditNotFoundIndexRouteImport.update({
+  id: "/workouts/edit/not-found/",
+  path: "/workouts/edit/not-found/",
   getParentRoute: () => AppRouteRoute,
-} as any)
-const AppAdminWorkoutTemplatesCreateIndexRoute =
-  AppAdminWorkoutTemplatesCreateIndexRouteImport.update({
-    id: '/workout-templates/create/',
-    path: '/workout-templates/create/',
-    getParentRoute: () => AppAdminRouteRoute,
-  } as any)
-const AppAdminWorkoutTemplatesEditIdIndexRoute =
-  AppAdminWorkoutTemplatesEditIdIndexRouteImport.update({
-    id: '/workout-templates/edit/$id/',
-    path: '/workout-templates/edit/$id/',
-    getParentRoute: () => AppAdminRouteRoute,
-  } as any)
+} as any);
+const AppWorkoutsEditInvalidIndexRoute = AppWorkoutsEditInvalidIndexRouteImport.update({
+  id: "/workouts/edit/invalid/",
+  path: "/workouts/edit/invalid/",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppWorkoutsEditIdIndexRoute = AppWorkoutsEditIdIndexRouteImport.update({
+  id: "/workouts/edit/$id/",
+  path: "/workouts/edit/$id/",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppAdminWorkoutTemplatesCreateIndexRoute = AppAdminWorkoutTemplatesCreateIndexRouteImport.update({
+  id: "/workout-templates/create/",
+  path: "/workout-templates/create/",
+  getParentRoute: () => AppAdminRouteRoute,
+} as any);
+const AppAdminWorkoutTemplatesEditIdIndexRoute = AppAdminWorkoutTemplatesEditIdIndexRouteImport.update({
+  id: "/workout-templates/edit/$id/",
+  path: "/workout-templates/edit/$id/",
+  getParentRoute: () => AppAdminRouteRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/app': typeof AppRouteRouteWithChildren
-  '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/app/': typeof AppIndexRoute
-  '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
-  '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/admin/': typeof AppAdminIndexRoute
-  '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
-  '/app/log-workout/': typeof AppLogWorkoutIndexRoute
-  '/app/measurements/': typeof AppMeasurementsIndexRoute
-  '/app/workouts/': typeof AppWorkoutsIndexRoute
-  '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
-  '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
-  '/app/workouts/edit/invalid/': typeof AppWorkoutsEditInvalidIndexRoute
-  '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
-  '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
+  "/": typeof IndexRoute;
+  "/app": typeof AppRouteRouteWithChildren;
+  "/app/admin": typeof AppAdminRouteRouteWithChildren;
+  "/app/": typeof AppIndexRoute;
+  "/app/admin/body-composition": typeof AppAdminBodyCompositionRoute;
+  "/app/admin/exercises": typeof AppAdminExercisesRoute;
+  "/app/admin/": typeof AppAdminIndexRoute;
+  "/app/log-measurement/": typeof AppLogMeasurementIndexRoute;
+  "/app/log-workout/": typeof AppLogWorkoutIndexRoute;
+  "/app/measurements/": typeof AppMeasurementsIndexRoute;
+  "/app/workouts/": typeof AppWorkoutsIndexRoute;
+  "/app/admin/workout-templates/": typeof AppAdminWorkoutTemplatesIndexRoute;
+  "/app/admin/workout-templates/create/": typeof AppAdminWorkoutTemplatesCreateIndexRoute;
+  "/app/workouts/edit/$id/": typeof AppWorkoutsEditIdIndexRoute;
+  "/app/workouts/edit/invalid/": typeof AppWorkoutsEditInvalidIndexRoute;
+  "/app/workouts/edit/not-found/": typeof AppWorkoutsEditNotFoundIndexRoute;
+  "/app/admin/workout-templates/edit/$id/": typeof AppAdminWorkoutTemplatesEditIdIndexRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/app': typeof AppIndexRoute
-  '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
-  '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/admin': typeof AppAdminIndexRoute
-  '/app/log-measurement': typeof AppLogMeasurementIndexRoute
-  '/app/log-workout': typeof AppLogWorkoutIndexRoute
-  '/app/measurements': typeof AppMeasurementsIndexRoute
-  '/app/workouts': typeof AppWorkoutsIndexRoute
-  '/app/admin/workout-templates': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/admin/workout-templates/create': typeof AppAdminWorkoutTemplatesCreateIndexRoute
-  '/app/workouts/edit/$id': typeof AppWorkoutsEditIdIndexRoute
-  '/app/workouts/edit/invalid': typeof AppWorkoutsEditInvalidIndexRoute
-  '/app/workouts/edit/not-found': typeof AppWorkoutsEditNotFoundIndexRoute
-  '/app/admin/workout-templates/edit/$id': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
+  "/": typeof IndexRoute;
+  "/app": typeof AppIndexRoute;
+  "/app/admin/body-composition": typeof AppAdminBodyCompositionRoute;
+  "/app/admin/exercises": typeof AppAdminExercisesRoute;
+  "/app/admin": typeof AppAdminIndexRoute;
+  "/app/log-measurement": typeof AppLogMeasurementIndexRoute;
+  "/app/log-workout": typeof AppLogWorkoutIndexRoute;
+  "/app/measurements": typeof AppMeasurementsIndexRoute;
+  "/app/workouts": typeof AppWorkoutsIndexRoute;
+  "/app/admin/workout-templates": typeof AppAdminWorkoutTemplatesIndexRoute;
+  "/app/admin/workout-templates/create": typeof AppAdminWorkoutTemplatesCreateIndexRoute;
+  "/app/workouts/edit/$id": typeof AppWorkoutsEditIdIndexRoute;
+  "/app/workouts/edit/invalid": typeof AppWorkoutsEditInvalidIndexRoute;
+  "/app/workouts/edit/not-found": typeof AppWorkoutsEditNotFoundIndexRoute;
+  "/app/admin/workout-templates/edit/$id": typeof AppAdminWorkoutTemplatesEditIdIndexRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/app': typeof AppRouteRouteWithChildren
-  '/app/admin': typeof AppAdminRouteRouteWithChildren
-  '/app/': typeof AppIndexRoute
-  '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
-  '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/admin/': typeof AppAdminIndexRoute
-  '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
-  '/app/log-workout/': typeof AppLogWorkoutIndexRoute
-  '/app/measurements/': typeof AppMeasurementsIndexRoute
-  '/app/workouts/': typeof AppWorkoutsIndexRoute
-  '/app/admin/workout-templates/': typeof AppAdminWorkoutTemplatesIndexRoute
-  '/app/admin/workout-templates/create/': typeof AppAdminWorkoutTemplatesCreateIndexRoute
-  '/app/workouts/edit/$id/': typeof AppWorkoutsEditIdIndexRoute
-  '/app/workouts/edit/invalid/': typeof AppWorkoutsEditInvalidIndexRoute
-  '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
-  '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/app": typeof AppRouteRouteWithChildren;
+  "/app/admin": typeof AppAdminRouteRouteWithChildren;
+  "/app/": typeof AppIndexRoute;
+  "/app/admin/body-composition": typeof AppAdminBodyCompositionRoute;
+  "/app/admin/exercises": typeof AppAdminExercisesRoute;
+  "/app/admin/": typeof AppAdminIndexRoute;
+  "/app/log-measurement/": typeof AppLogMeasurementIndexRoute;
+  "/app/log-workout/": typeof AppLogWorkoutIndexRoute;
+  "/app/measurements/": typeof AppMeasurementsIndexRoute;
+  "/app/workouts/": typeof AppWorkoutsIndexRoute;
+  "/app/admin/workout-templates/": typeof AppAdminWorkoutTemplatesIndexRoute;
+  "/app/admin/workout-templates/create/": typeof AppAdminWorkoutTemplatesCreateIndexRoute;
+  "/app/workouts/edit/$id/": typeof AppWorkoutsEditIdIndexRoute;
+  "/app/workouts/edit/invalid/": typeof AppWorkoutsEditInvalidIndexRoute;
+  "/app/workouts/edit/not-found/": typeof AppWorkoutsEditNotFoundIndexRoute;
+  "/app/admin/workout-templates/edit/$id/": typeof AppAdminWorkoutTemplatesEditIdIndexRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/app'
-    | '/app/admin'
-    | '/app/'
-    | '/app/admin/body-composition'
-    | '/app/admin/exercises'
-    | '/app/admin/'
-    | '/app/log-measurement/'
-    | '/app/log-workout/'
-    | '/app/measurements/'
-    | '/app/workouts/'
-    | '/app/admin/workout-templates/'
-    | '/app/admin/workout-templates/create/'
-    | '/app/workouts/edit/$id/'
-    | '/app/workouts/edit/invalid/'
-    | '/app/workouts/edit/not-found/'
-    | '/app/admin/workout-templates/edit/$id/'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/app"
+    | "/app/admin"
+    | "/app/"
+    | "/app/admin/body-composition"
+    | "/app/admin/exercises"
+    | "/app/admin/"
+    | "/app/log-measurement/"
+    | "/app/log-workout/"
+    | "/app/measurements/"
+    | "/app/workouts/"
+    | "/app/admin/workout-templates/"
+    | "/app/admin/workout-templates/create/"
+    | "/app/workouts/edit/$id/"
+    | "/app/workouts/edit/invalid/"
+    | "/app/workouts/edit/not-found/"
+    | "/app/admin/workout-templates/edit/$id/";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/app'
-    | '/app/admin/body-composition'
-    | '/app/admin/exercises'
-    | '/app/admin'
-    | '/app/log-measurement'
-    | '/app/log-workout'
-    | '/app/measurements'
-    | '/app/workouts'
-    | '/app/admin/workout-templates'
-    | '/app/admin/workout-templates/create'
-    | '/app/workouts/edit/$id'
-    | '/app/workouts/edit/invalid'
-    | '/app/workouts/edit/not-found'
-    | '/app/admin/workout-templates/edit/$id'
+    | "/"
+    | "/app"
+    | "/app/admin/body-composition"
+    | "/app/admin/exercises"
+    | "/app/admin"
+    | "/app/log-measurement"
+    | "/app/log-workout"
+    | "/app/measurements"
+    | "/app/workouts"
+    | "/app/admin/workout-templates"
+    | "/app/admin/workout-templates/create"
+    | "/app/workouts/edit/$id"
+    | "/app/workouts/edit/invalid"
+    | "/app/workouts/edit/not-found"
+    | "/app/admin/workout-templates/edit/$id";
   id:
-    | '__root__'
-    | '/'
-    | '/app'
-    | '/app/admin'
-    | '/app/'
-    | '/app/admin/body-composition'
-    | '/app/admin/exercises'
-    | '/app/admin/'
-    | '/app/log-measurement/'
-    | '/app/log-workout/'
-    | '/app/measurements/'
-    | '/app/workouts/'
-    | '/app/admin/workout-templates/'
-    | '/app/admin/workout-templates/create/'
-    | '/app/workouts/edit/$id/'
-    | '/app/workouts/edit/invalid/'
-    | '/app/workouts/edit/not-found/'
-    | '/app/admin/workout-templates/edit/$id/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/app"
+    | "/app/admin"
+    | "/app/"
+    | "/app/admin/body-composition"
+    | "/app/admin/exercises"
+    | "/app/admin/"
+    | "/app/log-measurement/"
+    | "/app/log-workout/"
+    | "/app/measurements/"
+    | "/app/workouts/"
+    | "/app/admin/workout-templates/"
+    | "/app/admin/workout-templates/create/"
+    | "/app/workouts/edit/$id/"
+    | "/app/workouts/edit/invalid/"
+    | "/app/workouts/edit/not-found/"
+    | "/app/admin/workout-templates/edit/$id/";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AppRouteRoute: typeof AppRouteRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  AppRouteRoute: typeof AppRouteRouteWithChildren;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/': {
-      id: '/app/'
-      path: '/'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/admin': {
-      id: '/app/admin'
-      path: '/admin'
-      fullPath: '/app/admin'
-      preLoaderRoute: typeof AppAdminRouteRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/workouts/': {
-      id: '/app/workouts/'
-      path: '/workouts'
-      fullPath: '/app/workouts/'
-      preLoaderRoute: typeof AppWorkoutsIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/measurements/': {
-      id: '/app/measurements/'
-      path: '/measurements'
-      fullPath: '/app/measurements/'
-      preLoaderRoute: typeof AppMeasurementsIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/log-workout/': {
-      id: '/app/log-workout/'
-      path: '/log-workout'
-      fullPath: '/app/log-workout/'
-      preLoaderRoute: typeof AppLogWorkoutIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/log-measurement/': {
-      id: '/app/log-measurement/'
-      path: '/log-measurement'
-      fullPath: '/app/log-measurement/'
-      preLoaderRoute: typeof AppLogMeasurementIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/admin/': {
-      id: '/app/admin/'
-      path: '/'
-      fullPath: '/app/admin/'
-      preLoaderRoute: typeof AppAdminIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/admin/exercises': {
-      id: '/app/admin/exercises'
-      path: '/exercises'
-      fullPath: '/app/admin/exercises'
-      preLoaderRoute: typeof AppAdminExercisesRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/admin/body-composition': {
-      id: '/app/admin/body-composition'
-      path: '/body-composition'
-      fullPath: '/app/admin/body-composition'
-      preLoaderRoute: typeof AppAdminBodyCompositionRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/admin/workout-templates/': {
-      id: '/app/admin/workout-templates/'
-      path: '/workout-templates'
-      fullPath: '/app/admin/workout-templates/'
-      preLoaderRoute: typeof AppAdminWorkoutTemplatesIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/workouts/edit/not-found/': {
-      id: '/app/workouts/edit/not-found/'
-      path: '/workouts/edit/not-found'
-      fullPath: '/app/workouts/edit/not-found/'
-      preLoaderRoute: typeof AppWorkoutsEditNotFoundIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/workouts/edit/invalid/': {
-      id: '/app/workouts/edit/invalid/'
-      path: '/workouts/edit/invalid'
-      fullPath: '/app/workouts/edit/invalid/'
-      preLoaderRoute: typeof AppWorkoutsEditInvalidIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/workouts/edit/$id/': {
-      id: '/app/workouts/edit/$id/'
-      path: '/workouts/edit/$id'
-      fullPath: '/app/workouts/edit/$id/'
-      preLoaderRoute: typeof AppWorkoutsEditIdIndexRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/admin/workout-templates/create/': {
-      id: '/app/admin/workout-templates/create/'
-      path: '/workout-templates/create'
-      fullPath: '/app/admin/workout-templates/create/'
-      preLoaderRoute: typeof AppAdminWorkoutTemplatesCreateIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/admin/workout-templates/edit/$id/': {
-      id: '/app/admin/workout-templates/edit/$id/'
-      path: '/workout-templates/edit/$id'
-      fullPath: '/app/admin/workout-templates/edit/$id/'
-      preLoaderRoute: typeof AppAdminWorkoutTemplatesEditIdIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
+    "/app": {
+      id: "/app";
+      path: "/app";
+      fullPath: "/app";
+      preLoaderRoute: typeof AppRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/app/": {
+      id: "/app/";
+      path: "/";
+      fullPath: "/app/";
+      preLoaderRoute: typeof AppIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/admin": {
+      id: "/app/admin";
+      path: "/admin";
+      fullPath: "/app/admin";
+      preLoaderRoute: typeof AppAdminRouteRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/workouts/": {
+      id: "/app/workouts/";
+      path: "/workouts";
+      fullPath: "/app/workouts/";
+      preLoaderRoute: typeof AppWorkoutsIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/measurements/": {
+      id: "/app/measurements/";
+      path: "/measurements";
+      fullPath: "/app/measurements/";
+      preLoaderRoute: typeof AppMeasurementsIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/log-workout/": {
+      id: "/app/log-workout/";
+      path: "/log-workout";
+      fullPath: "/app/log-workout/";
+      preLoaderRoute: typeof AppLogWorkoutIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/log-measurement/": {
+      id: "/app/log-measurement/";
+      path: "/log-measurement";
+      fullPath: "/app/log-measurement/";
+      preLoaderRoute: typeof AppLogMeasurementIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/admin/": {
+      id: "/app/admin/";
+      path: "/";
+      fullPath: "/app/admin/";
+      preLoaderRoute: typeof AppAdminIndexRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
+    "/app/admin/exercises": {
+      id: "/app/admin/exercises";
+      path: "/exercises";
+      fullPath: "/app/admin/exercises";
+      preLoaderRoute: typeof AppAdminExercisesRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
+    "/app/admin/body-composition": {
+      id: "/app/admin/body-composition";
+      path: "/body-composition";
+      fullPath: "/app/admin/body-composition";
+      preLoaderRoute: typeof AppAdminBodyCompositionRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
+    "/app/admin/workout-templates/": {
+      id: "/app/admin/workout-templates/";
+      path: "/workout-templates";
+      fullPath: "/app/admin/workout-templates/";
+      preLoaderRoute: typeof AppAdminWorkoutTemplatesIndexRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
+    "/app/workouts/edit/not-found/": {
+      id: "/app/workouts/edit/not-found/";
+      path: "/workouts/edit/not-found";
+      fullPath: "/app/workouts/edit/not-found/";
+      preLoaderRoute: typeof AppWorkoutsEditNotFoundIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/workouts/edit/invalid/": {
+      id: "/app/workouts/edit/invalid/";
+      path: "/workouts/edit/invalid";
+      fullPath: "/app/workouts/edit/invalid/";
+      preLoaderRoute: typeof AppWorkoutsEditInvalidIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/workouts/edit/$id/": {
+      id: "/app/workouts/edit/$id/";
+      path: "/workouts/edit/$id";
+      fullPath: "/app/workouts/edit/$id/";
+      preLoaderRoute: typeof AppWorkoutsEditIdIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/app/admin/workout-templates/create/": {
+      id: "/app/admin/workout-templates/create/";
+      path: "/workout-templates/create";
+      fullPath: "/app/admin/workout-templates/create/";
+      preLoaderRoute: typeof AppAdminWorkoutTemplatesCreateIndexRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
+    "/app/admin/workout-templates/edit/$id/": {
+      id: "/app/admin/workout-templates/edit/$id/";
+      path: "/workout-templates/edit/$id";
+      fullPath: "/app/admin/workout-templates/edit/$id/";
+      preLoaderRoute: typeof AppAdminWorkoutTemplatesEditIdIndexRouteImport;
+      parentRoute: typeof AppAdminRouteRoute;
+    };
   }
 }
 
 interface AppAdminRouteRouteChildren {
-  AppAdminBodyCompositionRoute: typeof AppAdminBodyCompositionRoute
-  AppAdminExercisesRoute: typeof AppAdminExercisesRoute
-  AppAdminIndexRoute: typeof AppAdminIndexRoute
-  AppAdminWorkoutTemplatesIndexRoute: typeof AppAdminWorkoutTemplatesIndexRoute
-  AppAdminWorkoutTemplatesCreateIndexRoute: typeof AppAdminWorkoutTemplatesCreateIndexRoute
-  AppAdminWorkoutTemplatesEditIdIndexRoute: typeof AppAdminWorkoutTemplatesEditIdIndexRoute
+  AppAdminBodyCompositionRoute: typeof AppAdminBodyCompositionRoute;
+  AppAdminExercisesRoute: typeof AppAdminExercisesRoute;
+  AppAdminIndexRoute: typeof AppAdminIndexRoute;
+  AppAdminWorkoutTemplatesIndexRoute: typeof AppAdminWorkoutTemplatesIndexRoute;
+  AppAdminWorkoutTemplatesCreateIndexRoute: typeof AppAdminWorkoutTemplatesCreateIndexRoute;
+  AppAdminWorkoutTemplatesEditIdIndexRoute: typeof AppAdminWorkoutTemplatesEditIdIndexRoute;
 }
 
 const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
@@ -375,26 +370,22 @@ const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
   AppAdminExercisesRoute: AppAdminExercisesRoute,
   AppAdminIndexRoute: AppAdminIndexRoute,
   AppAdminWorkoutTemplatesIndexRoute: AppAdminWorkoutTemplatesIndexRoute,
-  AppAdminWorkoutTemplatesCreateIndexRoute:
-    AppAdminWorkoutTemplatesCreateIndexRoute,
-  AppAdminWorkoutTemplatesEditIdIndexRoute:
-    AppAdminWorkoutTemplatesEditIdIndexRoute,
-}
+  AppAdminWorkoutTemplatesCreateIndexRoute: AppAdminWorkoutTemplatesCreateIndexRoute,
+  AppAdminWorkoutTemplatesEditIdIndexRoute: AppAdminWorkoutTemplatesEditIdIndexRoute,
+};
 
-const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
-  AppAdminRouteRouteChildren,
-)
+const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(AppAdminRouteRouteChildren);
 
 interface AppRouteRouteChildren {
-  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
-  AppIndexRoute: typeof AppIndexRoute
-  AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute
-  AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
-  AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
-  AppWorkoutsIndexRoute: typeof AppWorkoutsIndexRoute
-  AppWorkoutsEditIdIndexRoute: typeof AppWorkoutsEditIdIndexRoute
-  AppWorkoutsEditInvalidIndexRoute: typeof AppWorkoutsEditInvalidIndexRoute
-  AppWorkoutsEditNotFoundIndexRoute: typeof AppWorkoutsEditNotFoundIndexRoute
+  AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren;
+  AppIndexRoute: typeof AppIndexRoute;
+  AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute;
+  AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute;
+  AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute;
+  AppWorkoutsIndexRoute: typeof AppWorkoutsIndexRoute;
+  AppWorkoutsEditIdIndexRoute: typeof AppWorkoutsEditIdIndexRoute;
+  AppWorkoutsEditInvalidIndexRoute: typeof AppWorkoutsEditInvalidIndexRoute;
+  AppWorkoutsEditNotFoundIndexRoute: typeof AppWorkoutsEditNotFoundIndexRoute;
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -407,25 +398,21 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppWorkoutsEditIdIndexRoute: AppWorkoutsEditIdIndexRoute,
   AppWorkoutsEditInvalidIndexRoute: AppWorkoutsEditInvalidIndexRoute,
   AppWorkoutsEditNotFoundIndexRoute: AppWorkoutsEditNotFoundIndexRoute,
-}
+};
 
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
-)
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(AppRouteRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
-}
-export const routeTree = rootRouteImport
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+};
+export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

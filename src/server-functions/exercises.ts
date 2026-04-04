@@ -36,8 +36,5 @@ export const editExercise = createServerFn({ method: "POST" })
     const name = data.name.trim();
 
     const db = await getDb();
-    await db
-      .update(exercisesTable)
-      .set({ name })
-      .where(eq(exercisesTable.id, data.id));
+    await db.update(exercisesTable).set({ name }).where(eq(exercisesTable.id, data.id));
   });

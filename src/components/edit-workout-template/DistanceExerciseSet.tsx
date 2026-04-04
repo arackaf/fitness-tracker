@@ -11,11 +11,7 @@ type DistanceExerciseSetProps = {
   exerciseIndex: number;
 };
 
-export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
-  form,
-  segmentIndex,
-  exerciseIndex,
-}) => {
+export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmentIndex, exerciseIndex }) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex text-sm items-start gap-2">
@@ -33,10 +29,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                 return (
                   <div className="flex gap-1">
                     <span className="flex items-center h-7">{setNumber}:</span>
-                    <div
-                      key={`distance-${setNumber}`}
-                      className="flex flex-col gap-1.5"
-                    >
+                    <div key={`distance-${setNumber}`} className="flex flex-col gap-1.5">
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].distance`}
                         children={distanceField => (
@@ -48,16 +41,9 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                               value={distanceField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;
-                                distanceField.handleChange(
-                                  value === "" ? null : value,
-                                );
+                                distanceField.handleChange(value === "" ? null : value);
                               }}
-                              className={cn(
-                                "h-7 w-24 px-2 py-1",
-                                !distanceField.state.meta.isValid
-                                  ? "border-red-500"
-                                  : "",
-                              )}
+                              className={cn("h-7 w-24 px-2 py-1", !distanceField.state.meta.isValid ? "border-red-500" : "")}
                             />
                           </label>
                         )}
@@ -72,25 +58,20 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                             const measurementFieldName =
                               `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
-                            const sourceMeasurement =
-                              measurements[measurementIndex];
+                            const sourceMeasurement = measurements[measurementIndex];
 
                             form.setFieldValue(
                               measurementFieldName,
-                              measurements.map(
-                                (measurement, targetMeasurementIndex) => {
-                                  if (
-                                    targetMeasurementIndex === measurementIndex
-                                  ) {
-                                    return measurement;
-                                  }
+                              measurements.map((measurement, targetMeasurementIndex) => {
+                                if (targetMeasurementIndex === measurementIndex) {
+                                  return measurement;
+                                }
 
-                                  return {
-                                    ...measurement,
-                                    distance: sourceMeasurement.distance,
-                                  };
-                                },
-                              ),
+                                return {
+                                  ...measurement,
+                                  distance: sourceMeasurement.distance,
+                                };
+                              }),
                             );
                           }}
                         >

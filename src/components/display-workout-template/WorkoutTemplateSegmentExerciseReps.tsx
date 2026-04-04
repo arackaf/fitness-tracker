@@ -1,19 +1,12 @@
 import type { FC } from "react";
 
-import type {
-  TemplateSegmentWithExercises,
-  Exercise,
-  Measurement,
-} from "@/data/workout-templates/workout-state";
+import type { TemplateSegmentWithExercises, Exercise, Measurement } from "@/data/workout-templates/workout-state";
 
 type WorkoutTemplateSegmentRepsProps = {
   segment: TemplateSegmentWithExercises;
 };
 
-const getDisplayMeasurement = (
-  exercise: Exercise,
-  measurement: Measurement,
-) => {
+const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
     return `${(measurement.distance ?? "_").toString()}${exercise.distanceUnit ?? ""}`;
   }
@@ -27,15 +20,10 @@ const getDisplayMeasurement = (
 
 const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
-    exercise.measurements.map(measurement =>
-      getDisplayMeasurement(exercise, measurement),
-    ),
+    exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
 
-  const maxSetCount = Math.max(
-    ...measurementDisplayByExercise.map(values => values.length),
-    0,
-  );
+  const maxSetCount = Math.max(...measurementDisplayByExercise.map(values => values.length), 0);
 
   if (segment.exercises.length <= 1) {
     return Array.from({ length: maxSetCount }, (_, index) => {
@@ -48,12 +36,8 @@ const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
       length: maxSetCount,
     },
     (_, repIndex) => {
-      const measurementsForSet = measurementDisplayByExercise.map(
-        values => values[repIndex] ?? null,
-      );
-      const hasAnyMeasurementValue = measurementsForSet.some(
-        value => value !== null,
-      );
+      const measurementsForSet = measurementDisplayByExercise.map(values => values[repIndex] ?? null);
+      const hasAnyMeasurementValue = measurementsForSet.some(value => value !== null);
 
       if (!hasAnyMeasurementValue) {
         return "";
@@ -66,12 +50,6 @@ const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
     .join(", ");
 };
 
-export const WorkoutTemplateSegmentExerciseReps: FC<
-  WorkoutTemplateSegmentRepsProps
-> = ({ segment }) => {
-  return (
-    <p className="ml-4 text-sm text-muted-foreground">
-      {getDisplayReps(segment)}
-    </p>
-  );
+export const WorkoutTemplateSegmentExerciseReps: FC<WorkoutTemplateSegmentRepsProps> = ({ segment }) => {
+  return <p className="ml-4 text-sm text-muted-foreground">{getDisplayReps(segment)}</p>;
 };

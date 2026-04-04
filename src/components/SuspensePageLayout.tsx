@@ -6,9 +6,7 @@ type SuspensePageLayoutProps = HeaderProps & {
   headerChildren?: React.ReactNode;
 };
 
-export const SuspensePageLayout: FC<
-  PropsWithChildren<SuspensePageLayoutProps>
-> = props => {
+export const SuspensePageLayout: FC<PropsWithChildren<SuspensePageLayoutProps>> = props => {
   const { title, children, headerChildren } = props;
 
   return (

@@ -30,9 +30,7 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-base font-semibold text-foreground dark:text-slate-50">
-                {exercise.name ?? "Unnamed exercise"}
-              </p>
+              <p className="text-base font-semibold text-foreground dark:text-slate-50">{exercise.name ?? "Unnamed exercise"}</p>
               <p className="mt-1 text-sm text-muted-foreground dark:text-slate-300/80">
                 {exercise.description ?? "No description yet."}
               </p>

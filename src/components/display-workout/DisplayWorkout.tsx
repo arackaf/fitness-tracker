@@ -11,10 +11,7 @@ type DisplayWorkoutProps = {
   exerciseNameById: Map<number, string>;
 };
 
-export const DisplayWorkout: FC<DisplayWorkoutProps> = ({
-  workout,
-  exerciseNameById,
-}) => {
+export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameById }) => {
   return (
     <article className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <header className="mb-3 flex items-start justify-between gap-3">
@@ -24,26 +21,17 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({
         </div>
         {workout.id != null ? (
           <Button variant="outline" size="sm" asChild>
-            <Link
-              to="/app/workouts/edit/$id"
-              params={{ id: String(workout.id) }}
-            >
+            <Link to="/app/workouts/edit/$id" params={{ id: String(workout.id) }}>
               Edit
             </Link>
           </Button>
         ) : null}
       </header>
-      {workout.description ? (
-        <p className="mb-3 text-sm">{workout.description}</p>
-      ) : null}
+      {workout.description ? <p className="mb-3 text-sm">{workout.description}</p> : null}
 
       <div className="flex flex-col gap-3">
         {workout.segments.map((segment, segmentIndex) => (
-          <WorkoutSegment
-            key={`${segment.segmentOrder}-${segmentIndex}`}
-            segment={segment}
-            exerciseNameById={exerciseNameById}
-          />
+          <WorkoutSegment key={`${segment.segmentOrder}-${segmentIndex}`} segment={segment} exerciseNameById={exerciseNameById} />
         ))}
       </div>
     </article>

@@ -13,12 +13,7 @@ type RepetitionExerciseSetProps = {
   showWeightUsed: boolean;
 };
 
-export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
-  form,
-  segmentIndex,
-  exerciseIndex,
-  showWeightUsed,
-}) => {
+export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, segmentIndex, exerciseIndex, showWeightUsed }) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex text-sm items-start gap-2">
@@ -33,13 +28,8 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
               return field.state.value?.map((_, measurementIndex) => {
                 const setNumber = measurementIndex + 1;
                 return (
-                  <div
-                    key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
-                    className="flex gap-1"
-                  >
-                    <span className="h-7 inline-flex items-center">
-                      {setNumber}:
-                    </span>
+                  <div key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`} className="flex gap-1">
+                    <span className="h-7 inline-flex items-center">{setNumber}:</span>
                     <div className="flex flex-col gap-1.5">
                       <div className="flex flex-wrap gap-2">
                         <form.Field
@@ -55,16 +45,9 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                 value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
-                                  repsField.handleChange(
-                                    value === "" ? null : parseInt(value, 10),
-                                  );
+                                  repsField.handleChange(value === "" ? null : parseInt(value, 10));
                                 }}
-                                className={cn(
-                                  "h-7 w-16 px-2 py-1",
-                                  !repsField.state.meta.isValid
-                                    ? "border-red-500"
-                                    : "",
-                                )}
+                                className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
                               />
                             </label>
                           )}
@@ -80,9 +63,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    weightUsedField.handleChange(
-                                      value === "" ? null : value,
-                                    );
+                                    weightUsedField.handleChange(value === "" ? null : value);
                                   }}
                                   className={cn("h-7 w-18 px-2 py-1")}
                                 />
@@ -98,9 +79,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                             <Checkbox
                               checked={repsToFailureField.state.value ?? false}
                               onCheckedChange={checked => {
-                                repsToFailureField.handleChange(
-                                  checked === true,
-                                );
+                                repsToFailureField.handleChange(checked === true);
                               }}
                             />
                             To failure
@@ -117,28 +96,22 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                             const measurementFieldName =
                               `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
-                            const sourceMeasurement =
-                              measurements[measurementIndex];
+                            const sourceMeasurement = measurements[measurementIndex];
 
                             form.setFieldValue(
                               measurementFieldName,
-                              measurements.map(
-                                (measurement, targetMeasurementIndex) => {
-                                  if (
-                                    targetMeasurementIndex === measurementIndex
-                                  ) {
-                                    return measurement;
-                                  }
+                              measurements.map((measurement, targetMeasurementIndex) => {
+                                if (targetMeasurementIndex === measurementIndex) {
+                                  return measurement;
+                                }
 
-                                  return {
-                                    ...measurement,
-                                    reps: sourceMeasurement.reps,
-                                    repsToFailure:
-                                      sourceMeasurement.repsToFailure,
-                                    weightUsed: sourceMeasurement.weightUsed,
-                                  };
-                                },
-                              ),
+                                return {
+                                  ...measurement,
+                                  reps: sourceMeasurement.reps,
+                                  repsToFailure: sourceMeasurement.repsToFailure,
+                                  weightUsed: sourceMeasurement.weightUsed,
+                                };
+                              }),
                             );
                           }}
                         >

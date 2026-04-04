@@ -5,10 +5,7 @@ import { getBodyCompositionMeasurements } from "@/data/body-composition/get-body
 import { getBodyCompositionMetrics } from "@/data/body-composition/get-body-composition-metrics";
 import { insertBodyCompositionMeasurement } from "@/data/body-composition/insert-body-composition-measurement";
 import { insertBodyCompositionMetric } from "@/data/body-composition/insert-body-composition-metric";
-import type {
-  BodyCompositionMeasurementState,
-  BodyCompositionMetricState,
-} from "@/data/body-composition/body-composition-state";
+import type { BodyCompositionMeasurementState, BodyCompositionMetricState } from "@/data/body-composition/body-composition-state";
 import { updateBodyCompositionMeasurement as updateBodyCompositionMeasurementData } from "@/data/body-composition/update-body-composition-measurement";
 import { updateBodyCompositionMetric as updateBodyCompositionMetricData } from "@/data/body-composition/update-body-composition-metric";
 
@@ -52,10 +49,7 @@ export const bodyCompositionMeasurementsQueryOptions = (
   input: Pick<BodyCompositionMeasurementsInput, "bodyCompositionMetricId"> = {},
 ) =>
   queryOptions({
-    queryKey: [
-      "body-composition-measurements",
-      input.bodyCompositionMetricId ?? null,
-    ],
+    queryKey: ["body-composition-measurements", input.bodyCompositionMetricId ?? null],
     queryFn: () => {
       return getBodyCompositionMeasurementsServerFn({
         data: { bodyCompositionMetricId: input.bodyCompositionMetricId },

@@ -8,8 +8,7 @@ import {
   workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
-type WorkoutExerciseInput =
-  WorkoutState["segments"][number]["exercises"][number];
+type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
 
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
@@ -116,12 +115,10 @@ export const insertWorkout = async (input: WorkoutState) => {
         const exerciseMeasurements = createExerciseMeasurements(exercise);
         if (exerciseMeasurements.length > 0) {
           await tx.insert(workoutSegmentExerciseMeasurementTable).values(
-            exerciseMeasurements.map(
-              (measurement: (typeof exerciseMeasurements)[number]) => ({
-                workoutSegmentExerciseId: insertedExercise.id,
-                ...measurement,
-              }),
-            ),
+            exerciseMeasurements.map((measurement: (typeof exerciseMeasurements)[number]) => ({
+              workoutSegmentExerciseId: insertedExercise.id,
+              ...measurement,
+            })),
           );
         }
       }

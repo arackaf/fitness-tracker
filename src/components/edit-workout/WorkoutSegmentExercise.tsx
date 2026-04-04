@@ -1,26 +1,13 @@
 import { type FC } from "react";
 import { Trash2 } from "lucide-react";
 
-import {
-  ExecutionTypeSelect,
-  type ExecutionType,
-} from "@/components/ExecutionTypeSelect";
+import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { WorkoutForm } from "@/lib/workout-form";
 import type { DurationUnit, MuscleGroup } from "@/data/types";
-import {
-  defaultDistanceUnit,
-  defaultDurationUnit,
-  defaultExerciseWeightUnit,
-} from "@/data/constants";
+import { defaultDistanceUnit, defaultDurationUnit, defaultExerciseWeightUnit } from "@/data/constants";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
 import { DistanceExerciseSet } from "./DistanceExerciseSet";
 import { DurationExerciseSet } from "./DurationExerciseSet";
@@ -37,15 +24,9 @@ type WorkoutSegmentExerciseProps = {
 
 const DEFAULT_EXECUTION_TYPE: ExecutionType = "repetition";
 
-const getExerciseExecutionType = (
-  exercise: Exercise | undefined,
-): ExecutionType => {
+const getExerciseExecutionType = (exercise: Exercise | undefined): ExecutionType => {
   const executionType = exercise?.executionType;
-  if (
-    executionType === "repetition" ||
-    executionType === "distance" ||
-    executionType === "time"
-  ) {
+  if (executionType === "repetition" || executionType === "distance" || executionType === "time") {
     return executionType;
   }
 
@@ -86,14 +67,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                     muscleGroups={muscleGroups}
                     onSelect={exerciseId => {
                       segmentExercise.handleChange(exerciseId);
-                      const nextSelectedExercise = exercises.find(
-                        exercise => exercise.id === exerciseId,
-                      )!;
+                      const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
 
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].id`,
-                        nextSelectedExercise.id,
-                      );
+                      form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].id`, nextSelectedExercise.id);
                       form.setFieldValue(
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
                         defaultDistanceUnit,
@@ -114,25 +90,18 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                   />
                   {!segmentExercise.state.meta.isValid &&
                     segmentExercise.state.meta.errors.map((error, idx) => (
-                      <span
-                        key={`error-${idx}`}
-                        className="text-red-500 text-xs"
-                      >
+                      <span key={`error-${idx}`} className="text-red-500 text-xs">
                         {error}
                       </span>
                     ))}
                 </label>
                 <form.Subscribe
                   selector={state => {
-                    const exerciseId =
-                      state.values.segments[idx].exercises[exIdx].id;
+                    const exerciseId = state.values.segments[idx].exercises[exIdx].id;
 
-                    const selectedExercise = exercises.find(
-                      exercise => exercise.id === exerciseId,
-                    );
+                    const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
 
-                    const executionType =
-                      state.values.segments[idx].exercises[exIdx].executionType;
+                    const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
                     return {
                       exerciseId,
@@ -148,25 +117,18 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                         <ExecutionTypeSelect
                           value={formState.executionType ?? "repetition"}
                           onValueChange={value => {
-                            form.setFieldValue(
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                              value,
-                            );
+                            form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`, value);
                           }}
                         />
-                        {formState.executionType === "repetition" &&
-                        formState.selectedExercise?.isBodyweight !== true ? (
+                        {formState.executionType === "repetition" && formState.selectedExercise?.isBodyweight !== true ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             validators={{
                               onSubmit: ({ value }) => {
                                 const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
+                                  form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasWeightValue = measurements?.some(
-                                  measurement =>
-                                    measurement.weightUsed != null &&
-                                    measurement.weightUsed !== "",
+                                  measurement => measurement.weightUsed != null && measurement.weightUsed !== "",
                                 );
 
                                 if (hasWeightValue && value == null) {
@@ -176,14 +138,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             }}
                             children={exerciseWeightUnitField => (
                               <Select
-                                value={
-                                  exerciseWeightUnitField.state.value ??
-                                  undefined
-                                }
+                                value={exerciseWeightUnitField.state.value ?? undefined}
                                 onValueChange={value => {
-                                  exerciseWeightUnitField.handleChange(
-                                    value as any,
-                                  );
+                                  exerciseWeightUnitField.handleChange(value as any);
                                 }}
                               >
                                 <SelectTrigger className="w-28">
@@ -203,12 +160,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             validators={{
                               onSubmit: ({ value }) => {
                                 const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
+                                  form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasDistanceValue = measurements?.some(
-                                  measurement =>
-                                    measurement.distance != null &&
-                                    measurement.distance !== "",
+                                  measurement => measurement.distance != null && measurement.distance !== "",
                                 );
 
                                 if (hasDistanceValue && value == null) {
@@ -218,9 +172,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             }}
                             children={distanceUnitField => (
                               <Select
-                                value={
-                                  distanceUnitField.state.value ?? undefined
-                                }
+                                value={distanceUnitField.state.value ?? undefined}
                                 onValueChange={value => {
                                   distanceUnitField.handleChange(value as any);
                                 }}
@@ -244,12 +196,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             validators={{
                               onSubmit: ({ value }) => {
                                 const measurements =
-                                  form.state.values.segments[segmentIndex]
-                                    ?.exercises[exerciseIndex]?.measurements;
+                                  form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasDurationValue = measurements?.some(
-                                  measurement =>
-                                    measurement.duration != null &&
-                                    measurement.duration !== "",
+                                  measurement => measurement.duration != null && measurement.duration !== "",
                                 );
 
                                 if (hasDurationValue && value == null) {
@@ -259,9 +208,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             }}
                             children={durationUnitField => (
                               <Select
-                                value={
-                                  durationUnitField.state.value ?? undefined
-                                }
+                                value={durationUnitField.state.value ?? undefined}
                                 onValueChange={(value: DurationUnit) => {
                                   durationUnitField.handleChange(value);
                                 }}
@@ -270,12 +217,8 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                                   <SelectValue placeholder="Unit" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="seconds">
-                                    Seconds
-                                  </SelectItem>
-                                  <SelectItem value="minutes">
-                                    Minutes
-                                  </SelectItem>
+                                  <SelectItem value="seconds">Seconds</SelectItem>
+                                  <SelectItem value="minutes">Minutes</SelectItem>
                                   <SelectItem value="hours">Hours</SelectItem>
                                 </SelectContent>
                               </Select>
@@ -307,14 +250,10 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 
       <form.Subscribe
         selector={state => {
-          const selectedExerciseId =
-            state.values.segments[idx].exercises[exIdx].id;
-          const executionType =
-            state.values.segments[idx].exercises[exIdx].executionType;
+          const selectedExerciseId = state.values.segments[idx].exercises[exIdx].id;
+          const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
-          const selectedExercise = exercises.find(
-            exercise => exercise.id === selectedExerciseId,
-          );
+          const selectedExercise = exercises.find(exercise => exercise.id === selectedExerciseId);
           const isBodyweight = selectedExercise?.isBodyweight ?? false;
 
           return {
@@ -326,8 +265,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
         }}
       >
         {formState =>
-          !formState.selectedExerciseId ||
-          formState.executionType === "repetition" ? (
+          !formState.selectedExerciseId || formState.executionType === "repetition" ? (
             <RepetitionExerciseSet
               form={form}
               segmentIndex={segmentIndex}
@@ -335,17 +273,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
               showWeightUsed={formState.hasExercise && !formState.isBodyweight}
             />
           ) : formState.executionType === "distance" ? (
-            <DistanceExerciseSet
-              form={form}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-            />
+            <DistanceExerciseSet form={form} segmentIndex={segmentIndex} exerciseIndex={exerciseIndex} />
           ) : (
-            <DurationExerciseSet
-              form={form}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-            />
+            <DurationExerciseSet form={form} segmentIndex={segmentIndex} exerciseIndex={exerciseIndex} />
           )
         }
       </form.Subscribe>

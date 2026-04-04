@@ -14,11 +14,7 @@ type WorkoutTemplateProps = {
   form: WorkoutTemplateForm;
 };
 
-export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
-  form,
-  exercises,
-  muscleGroups,
-}) => {
+export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55 md:grid-cols-2">
@@ -43,9 +39,7 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
                 />
               </label>
               {!field.state.meta.isValid ? (
-                <span className="text-sm text-red-500">
-                  {field.state.meta.errors.join(", ")}
-                </span>
+                <span className="text-sm text-red-500">{field.state.meta.errors.join(", ")}</span>
               ) : null}
             </div>
           )}
@@ -70,11 +64,7 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({
         />
       </div>
 
-      <WorkoutTemplateSegments
-        form={form}
-        muscleGroups={muscleGroups}
-        exercises={exercises}
-      />
+      <WorkoutTemplateSegments form={form} muscleGroups={muscleGroups} exercises={exercises} />
     </div>
   );
 };

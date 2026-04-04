@@ -14,8 +14,5 @@ export const mutateWorkoutName = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const db = await getDb();
 
-    await db
-      .update(workoutTable)
-      .set({ name: data.newName })
-      .where(eq(workoutTable.id, data.id));
+    await db.update(workoutTable).set({ name: data.newName }).where(eq(workoutTable.id, data.id));
   });

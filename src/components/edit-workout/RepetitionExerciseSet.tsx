@@ -12,12 +12,7 @@ type RepetitionExerciseSetProps = {
   showWeightUsed: boolean;
 };
 
-export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
-  form,
-  segmentIndex,
-  exerciseIndex,
-  showWeightUsed,
-}) => {
+export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, segmentIndex, exerciseIndex, showWeightUsed }) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex text-sm items-start gap-2">
@@ -32,13 +27,8 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
               return field.state.value?.map((_, measurementIndex) => {
                 const setNumber = measurementIndex + 1;
                 return (
-                  <div
-                    key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
-                    className="flex gap-1"
-                  >
-                    <span className="h-7 inline-flex items-center">
-                      {setNumber}:
-                    </span>
+                  <div key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`} className="flex gap-1">
+                    <span className="h-7 inline-flex items-center">{setNumber}:</span>
                     <div className="flex flex-col gap-1.5">
                       <div className="flex flex-wrap gap-2">
                         <form.Field
@@ -61,16 +51,9 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                 value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
-                                  repsField.handleChange(
-                                    value === "" ? null : parseInt(value, 10),
-                                  );
+                                  repsField.handleChange(value === "" ? null : parseInt(value, 10));
                                 }}
-                                className={cn(
-                                  "h-7 w-16 px-2 py-1",
-                                  !repsField.state.meta.isValid
-                                    ? "border-red-500"
-                                    : "",
-                                )}
+                                className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
                               />
                             </label>
                           )}
@@ -80,10 +63,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
                             validators={{
                               onSubmit: ({ value }) => {
-                                if (
-                                  value == null ||
-                                  value?.toString()?.includes("e")
-                                ) {
+                                if (value == null || value?.toString()?.includes("e")) {
                                   return "Required";
                                 }
                               },
@@ -96,15 +76,11 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    weightUsedField.handleChange(
-                                      value === "" ? null : Number(value),
-                                    );
+                                    weightUsedField.handleChange(value === "" ? null : Number(value));
                                   }}
                                   className={cn(
                                     "h-7 w-18 px-2 py-1",
-                                    !weightUsedField.state.meta.isValid
-                                      ? "border-red-500"
-                                      : "",
+                                    !weightUsedField.state.meta.isValid ? "border-red-500" : "",
                                   )}
                                 />
                               </label>
@@ -121,23 +97,16 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
                             const measurements = field.state.value;
-                            const sourceMeasurement =
-                              measurements[measurementIndex];
+                            const sourceMeasurement = measurements[measurementIndex];
 
                             for (let i = 1; i < measurements.length; i++) {
-                              if (
-                                sourceMeasurement.reps ||
-                                sourceMeasurement.reps === 0
-                              ) {
+                              if (sourceMeasurement.reps || sourceMeasurement.reps === 0) {
                                 form.setFieldValue(
                                   `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
                                   sourceMeasurement.reps,
                                 );
                               }
-                              if (
-                                sourceMeasurement.weightUsed ||
-                                sourceMeasurement.weightUsed === 0
-                              ) {
+                              if (sourceMeasurement.weightUsed || sourceMeasurement.weightUsed === 0) {
                                 form.setFieldValue(
                                   `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
                                   sourceMeasurement.weightUsed,

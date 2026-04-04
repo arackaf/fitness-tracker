@@ -1,29 +1,16 @@
 import { useState, type FC } from "react";
 import { Trash2 } from "lucide-react";
 
-import {
-  ExecutionTypeSelect,
-  type ExecutionType,
-} from "@/components/ExecutionTypeSelect";
+import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DistanceExerciseSet } from "@/components/edit-workout-template/DistanceExerciseSet";
 import { DurationExerciseSet } from "@/components/edit-workout-template/DurationExerciseSet";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
 import type { DurationUnit, MuscleGroup } from "@/data/types";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
-import {
-  defaultDistanceUnit,
-  defaultDurationUnit,
-  defaultExerciseWeightUnit,
-} from "@/data/constants";
+import { defaultDistanceUnit, defaultDurationUnit, defaultExerciseWeightUnit } from "@/data/constants";
 
 type WorkoutTemplateSegmentExerciseProps = {
   form: WorkoutTemplateForm;
@@ -37,24 +24,16 @@ type WorkoutTemplateSegmentExerciseProps = {
 
 const DEFAULT_EXECUTION_TYPE: ExecutionType = "repetition";
 
-const getExerciseExecutionType = (
-  exercise: Exercise | undefined,
-): ExecutionType => {
+const getExerciseExecutionType = (exercise: Exercise | undefined): ExecutionType => {
   const executionType = exercise?.executionType;
-  if (
-    executionType === "repetition" ||
-    executionType === "distance" ||
-    executionType === "time"
-  ) {
+  if (executionType === "repetition" || executionType === "distance" || executionType === "time") {
     return executionType;
   }
 
   return DEFAULT_EXECUTION_TYPE;
 };
 
-export const WorkoutTemplateSegmentExercise: FC<
-  WorkoutTemplateSegmentExerciseProps
-> = ({
+export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExerciseProps> = ({
   form,
   exercises,
   muscleGroups,
@@ -88,14 +67,9 @@ export const WorkoutTemplateSegmentExercise: FC<
                     muscleGroups={muscleGroups}
                     onSelect={exerciseId => {
                       segmentExercise.handleChange(exerciseId);
-                      const nextSelectedExercise = exercises.find(
-                        exercise => exercise.id === exerciseId,
-                      )!;
+                      const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
 
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].id`,
-                        nextSelectedExercise.id,
-                      );
+                      form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].id`, nextSelectedExercise.id);
                       form.setFieldValue(
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
                         defaultDistanceUnit,
@@ -116,25 +90,18 @@ export const WorkoutTemplateSegmentExercise: FC<
                   />
                   {!segmentExercise.state.meta.isValid &&
                     segmentExercise.state.meta.errors.map((error, idx) => (
-                      <span
-                        key={`error-${idx}`}
-                        className="text-red-500 text-xs"
-                      >
+                      <span key={`error-${idx}`} className="text-red-500 text-xs">
                         {error}
                       </span>
                     ))}
                 </label>
                 <form.Subscribe
                   selector={state => {
-                    const exerciseId =
-                      state.values.segments[idx].exercises[exIdx].id;
+                    const exerciseId = state.values.segments[idx].exercises[exIdx].id;
 
-                    const selectedExercise = exercises.find(
-                      exercise => exercise.id === exerciseId,
-                    );
+                    const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
 
-                    const executionType =
-                      state.values.segments[idx].exercises[exIdx].executionType;
+                    const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
                     return {
                       exerciseId,
@@ -150,26 +117,17 @@ export const WorkoutTemplateSegmentExercise: FC<
                         <ExecutionTypeSelect
                           value={formState.executionType!}
                           onValueChange={value => {
-                            form.setFieldValue(
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                              value,
-                            );
+                            form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`, value);
                           }}
                         />
-                        {formState.executionType === "repetition" &&
-                        formState.selectedExercise?.isBodyweight !== true ? (
+                        {formState.executionType === "repetition" && formState.selectedExercise?.isBodyweight !== true ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             children={exerciseWeightUnitField => (
                               <Select
-                                value={
-                                  exerciseWeightUnitField.state.value ??
-                                  undefined
-                                }
+                                value={exerciseWeightUnitField.state.value ?? undefined}
                                 onValueChange={value => {
-                                  exerciseWeightUnitField.handleChange(
-                                    value as any,
-                                  );
+                                  exerciseWeightUnitField.handleChange(value as any);
                                 }}
                               >
                                 <SelectTrigger className="w-28">
@@ -188,9 +146,7 @@ export const WorkoutTemplateSegmentExercise: FC<
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`}
                             children={distanceUnitField => (
                               <Select
-                                value={
-                                  distanceUnitField.state.value ?? undefined
-                                }
+                                value={distanceUnitField.state.value ?? undefined}
                                 onValueChange={value => {
                                   distanceUnitField.handleChange(value as any);
                                 }}
@@ -213,9 +169,7 @@ export const WorkoutTemplateSegmentExercise: FC<
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`}
                             children={durationUnitField => (
                               <Select
-                                value={
-                                  durationUnitField.state.value ?? undefined
-                                }
+                                value={durationUnitField.state.value ?? undefined}
                                 onValueChange={(value: DurationUnit) => {
                                   durationUnitField.handleChange(value);
                                 }}
@@ -224,12 +178,8 @@ export const WorkoutTemplateSegmentExercise: FC<
                                   <SelectValue placeholder="Unit" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="seconds">
-                                    Seconds
-                                  </SelectItem>
-                                  <SelectItem value="minutes">
-                                    Minutes
-                                  </SelectItem>
+                                  <SelectItem value="seconds">Seconds</SelectItem>
+                                  <SelectItem value="minutes">Minutes</SelectItem>
                                   <SelectItem value="hours">Hours</SelectItem>
                                 </SelectContent>
                               </Select>
@@ -261,14 +211,10 @@ export const WorkoutTemplateSegmentExercise: FC<
 
       <form.Subscribe
         selector={state => {
-          const selectedExerciseId =
-            state.values.segments[idx].exercises[exIdx].id;
-          const executionType =
-            state.values.segments[idx].exercises[exIdx].executionType;
+          const selectedExerciseId = state.values.segments[idx].exercises[exIdx].id;
+          const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
-          const selectedExercise = exercises.find(
-            exercise => exercise.id === selectedExerciseId,
-          );
+          const selectedExercise = exercises.find(exercise => exercise.id === selectedExerciseId);
           const isBodyweight = selectedExercise?.isBodyweight ?? false;
 
           return {
@@ -285,22 +231,12 @@ export const WorkoutTemplateSegmentExercise: FC<
               form={form}
               segmentIndex={segmentIndex}
               exerciseIndex={exerciseIndex}
-              showWeightUsed={Boolean(
-                formState.hasExercise && formState.isBodyweight !== true,
-              )}
+              showWeightUsed={Boolean(formState.hasExercise && formState.isBodyweight !== true)}
             />
           ) : formState.executionType === "distance" ? (
-            <DistanceExerciseSet
-              form={form}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-            />
+            <DistanceExerciseSet form={form} segmentIndex={segmentIndex} exerciseIndex={exerciseIndex} />
           ) : (
-            <DurationExerciseSet
-              form={form}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-            />
+            <DurationExerciseSet form={form} segmentIndex={segmentIndex} exerciseIndex={exerciseIndex} />
           )
         }
       </form.Subscribe>

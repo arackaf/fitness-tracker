@@ -24,9 +24,7 @@ type WorkoutTemplatesPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkoutTemplates = async (
-  params: GetWorkoutTemplatesParams = {},
-): Promise<WorkoutTemplatesPayload> => {
+export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams = {}): Promise<WorkoutTemplatesPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
   const page = Math.max(1, Math.floor(params.page ?? 1));
@@ -41,9 +39,7 @@ export const getWorkoutTemplates = async (
   const templateIds = db.$with("valid_workout_templates").as(
     db
       .select({
-        workout_template_id: sql<number>`${workoutTemplateTable.id}`.as(
-          "workout_template_id",
-        ),
+        workout_template_id: sql<number>`${workoutTemplateTable.id}`.as("workout_template_id"),
       })
       .from(workoutTemplateTable)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
@@ -67,46 +63,25 @@ export const getWorkoutTemplates = async (
       exerciseExecutionType: workoutTemplateSegmentExerciseTable.executionType,
       exerciseDurationUnit: workoutTemplateSegmentExerciseTable.durationUnit,
       exerciseDistanceUnit: workoutTemplateSegmentExerciseTable.distanceUnit,
-      exerciseWeightUnit:
-        workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
+      exerciseWeightUnit: workoutTemplateSegmentExerciseTable.exerciseWeightUnit,
       measurementId: workoutTemplateSegmentExerciseMeasurementTable.id,
-      measurementSetOrder:
-        workoutTemplateSegmentExerciseMeasurementTable.setOrder,
+      measurementSetOrder: workoutTemplateSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutTemplateSegmentExerciseMeasurementTable.reps,
-      measurementRepsToFailure:
-        workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
-      measurementWeightUsed:
-        workoutTemplateSegmentExerciseMeasurementTable.weightUsed,
-      measurementDuration:
-        workoutTemplateSegmentExerciseMeasurementTable.duration,
-      measurementDistance:
-        workoutTemplateSegmentExerciseMeasurementTable.distance,
+      measurementRepsToFailure: workoutTemplateSegmentExerciseMeasurementTable.repsToFailure,
+      measurementWeightUsed: workoutTemplateSegmentExerciseMeasurementTable.weightUsed,
+      measurementDuration: workoutTemplateSegmentExerciseMeasurementTable.duration,
+      measurementDistance: workoutTemplateSegmentExerciseMeasurementTable.distance,
     })
     .from(workoutTemplateTable)
-    .innerJoin(
-      templateIds,
-      eq(workoutTemplateTable.id, templateIds.workout_template_id),
-    )
-    .leftJoin(
-      workoutTemplateSegmentTable,
-      eq(
-        workoutTemplateSegmentTable.workoutTemplateId,
-        workoutTemplateTable.id,
-      ),
-    )
+    .innerJoin(templateIds, eq(workoutTemplateTable.id, templateIds.workout_template_id))
+    .leftJoin(workoutTemplateSegmentTable, eq(workoutTemplateSegmentTable.workoutTemplateId, workoutTemplateTable.id))
     .leftJoin(
       workoutTemplateSegmentExerciseTable,
-      eq(
-        workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId,
-        workoutTemplateSegmentTable.id,
-      ),
+      eq(workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId, workoutTemplateSegmentTable.id),
     )
     .leftJoin(
       workoutTemplateSegmentExerciseMeasurementTable,
-      eq(
-        workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
-        workoutTemplateSegmentExerciseTable.id,
-      ),
+      eq(workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId, workoutTemplateSegmentExerciseTable.id),
     )
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(
@@ -117,14 +92,8 @@ export const getWorkoutTemplates = async (
     );
 
   const workoutTemplates = new Map<number, WorkoutTemplateState>();
-  const segmentsByTemplate = new Map<
-    number,
-    WorkoutTemplateState["segments"]
-  >();
-  const exercisesBySegment = new Map<
-    number,
-    WorkoutTemplateState["segments"][number]["exercises"]
-  >();
+  const segmentsByTemplate = new Map<number, WorkoutTemplateState["segments"]>();
+  const exercisesBySegment = new Map<number, WorkoutTemplateState["segments"][number]["exercises"]>();
 
   for (const row of rows) {
     let workoutTemplate = workoutTemplates.get(row.templateId);
@@ -140,18 +109,13 @@ export const getWorkoutTemplates = async (
       segmentsByTemplate.set(row.templateId, []);
     }
 
-    if (
-      row.segmentRowId == null ||
-      row.segmentOrder == null ||
-      row.segmentSets == null
-    ) {
+    if (row.segmentRowId == null || row.segmentOrder == null || row.segmentSets == null) {
       continue;
     }
 
     const templateSegments = segmentsByTemplate.get(row.templateId)!;
     const latestSegment = templateSegments.at(-1);
-    let segment =
-      latestSegment?.id === row.segmentRowId ? latestSegment : undefined;
+    let segment = latestSegment?.id === row.segmentRowId ? latestSegment : undefined;
 
     if (!segment) {
       segment = {
@@ -167,18 +131,13 @@ export const getWorkoutTemplates = async (
       workoutTemplate.segments.push(segment);
     }
 
-    if (
-      row.exerciseRowId == null ||
-      row.exerciseOrder == null ||
-      row.exerciseExerciseId == null
-    ) {
+    if (row.exerciseRowId == null || row.exerciseOrder == null || row.exerciseExerciseId == null) {
       continue;
     }
 
     const segmentExercises = exercisesBySegment.get(row.segmentRowId)!;
     const latestExercise = segmentExercises.at(-1);
-    let exercise =
-      latestExercise?.id === row.exerciseRowId ? latestExercise : undefined;
+    let exercise = latestExercise?.id === row.exerciseRowId ? latestExercise : undefined;
 
     if (!exercise) {
       exercise = {
@@ -213,9 +172,7 @@ export const getWorkoutTemplates = async (
 
   const templates = Array.from(workoutTemplates.values());
   const hasNextPage = templates.length > WORKOUT_TEMPLATE_LIST_LIMIT;
-  const currentPageTemplates = hasNextPage
-    ? templates.slice(0, WORKOUT_TEMPLATE_LIST_LIMIT)
-    : templates;
+  const currentPageTemplates = hasNextPage ? templates.slice(0, WORKOUT_TEMPLATE_LIST_LIMIT) : templates;
 
   return {
     workoutTemplates: currentPageTemplates,

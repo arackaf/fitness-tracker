@@ -4,11 +4,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 type DateTimePickerProps = {
@@ -35,12 +31,7 @@ const parseValue = (value: Date | string | null | undefined) => {
   return parsed;
 };
 
-export function DateTimePicker({
-  value,
-  onChange,
-  placeholder = "Pick a date and time",
-  className,
-}: DateTimePickerProps) {
+export function DateTimePicker({ value, onChange, placeholder = "Pick a date and time", className }: DateTimePickerProps) {
   const selectedDate = parseValue(value);
 
   const upsertDate = (nextDate: Date) => {
@@ -53,11 +44,7 @@ export function DateTimePicker({
         <Button
           type="button"
           variant="outline"
-          className={cn(
-            "w-full justify-start text-left font-normal",
-            !selectedDate ? "text-muted-foreground" : "",
-            className,
-          )}
+          className={cn("w-full justify-start text-left font-normal", !selectedDate ? "text-muted-foreground" : "", className)}
         >
           <CalendarIcon className="mr-2 size-4" />
           {selectedDate ? format(selectedDate, "PPP p") : placeholder}

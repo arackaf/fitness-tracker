@@ -2,23 +2,11 @@ import { useMemo, useState, type FC } from "react";
 
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { BodyCompositionMetric } from "@/data/body-composition/body-composition-state";
 import type { BodyCompositionMeasurementForm } from "@/lib/body-composition-form";
-import type {
-  BodyCompositionLengthUnit,
-  BodyCompositionWeightUnit,
-} from "@/data/types";
-import {
-  defaultBodyCompositionLengthUnit,
-  defaultBodyCompositionWeightUnit,
-} from "@/data/constants";
+import type { BodyCompositionLengthUnit, BodyCompositionWeightUnit } from "@/data/types";
+import { defaultBodyCompositionLengthUnit, defaultBodyCompositionWeightUnit } from "@/data/constants";
 
 type MeasurementProps = {
   form: BodyCompositionMeasurementForm;
@@ -41,36 +29,21 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
           <div className="flex flex-col gap-2 text-sm">
             <span className="font-medium">Metric</span>
             <Select
-              value={
-                metricField.state.value > 0
-                  ? String(metricField.state.value)
-                  : undefined
-              }
+              value={metricField.state.value > 0 ? String(metricField.state.value) : undefined}
               onValueChange={value => {
                 const nextMetricId = Number(value);
-                const nextMetric = metrics.find(
-                  metric => metric.id === nextMetricId,
-                )!;
+                const nextMetric = metrics.find(metric => metric.id === nextMetricId)!;
 
                 metricField.handleChange(nextMetricId);
 
                 console.log(nextMetric.measurementType);
-                form.setFieldValue(
-                  "bodyCompositionMeasurementType",
-                  nextMetric.measurementType,
-                );
+                form.setFieldValue("bodyCompositionMeasurementType", nextMetric.measurementType);
                 if (nextMetric.measurementType === "length") {
                   form.setFieldValue("weightUnit", null);
-                  form.setFieldValue(
-                    "lengthUnit",
-                    defaultBodyCompositionLengthUnit,
-                  );
+                  form.setFieldValue("lengthUnit", defaultBodyCompositionLengthUnit);
                 } else if (nextMetric.measurementType === "weight") {
                   form.setFieldValue("lengthUnit", null);
-                  form.setFieldValue(
-                    "weightUnit",
-                    defaultBodyCompositionWeightUnit,
-                  );
+                  form.setFieldValue("weightUnit", defaultBodyCompositionWeightUnit);
                 } else {
                   form.setFieldValue("lengthUnit", null);
                   form.setFieldValue("weightUnit", null);
@@ -89,9 +62,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
               </SelectContent>
             </Select>
             {!metricField.state.meta.isValid ? (
-              <span className="text-sm text-red-500">
-                {metricField.state.meta.errors.join(", ")}
-              </span>
+              <span className="text-sm text-red-500">{metricField.state.meta.errors.join(", ")}</span>
             ) : null}
           </div>
         )}
@@ -110,15 +81,10 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
           <div className="flex flex-col gap-2 text-sm">
             <label className="flex flex-col gap-2">
               <span className="font-medium">Measurement date</span>
-              <DateTimePicker
-                value={dateField.state.value}
-                onChange={nextValue => dateField.handleChange(nextValue)}
-              />
+              <DateTimePicker value={dateField.state.value} onChange={nextValue => dateField.handleChange(nextValue)} />
             </label>
             {!dateField.state.meta.isValid ? (
-              <span className="text-sm text-red-500">
-                {dateField.state.meta.errors.join(", ")}
-              </span>
+              <span className="text-sm text-red-500">{dateField.state.meta.errors.join(", ")}</span>
             ) : null}
           </div>
         )}
@@ -148,28 +114,20 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
               />
             </label>
             {!valueField.state.meta.isValid ? (
-              <span className="text-sm text-red-500">
-                {valueField.state.meta.errors.join(", ")}
-              </span>
+              <span className="text-sm text-red-500">{valueField.state.meta.errors.join(", ")}</span>
             ) : null}
           </div>
         )}
       />
 
-      <form.Subscribe
-        selector={state => state.values.bodyCompositionMeasurementType}
-      >
+      <form.Subscribe selector={state => state.values.bodyCompositionMeasurementType}>
         {measurementType =>
           measurementType === "length" ? (
             <form.Field
               name="lengthUnit"
               validators={{
                 onSubmit: ({ value }) => {
-                  if (
-                    form.getFieldValue("bodyCompositionMeasurementType") ===
-                      "length" &&
-                    !value
-                  ) {
+                  if (form.getFieldValue("bodyCompositionMeasurementType") === "length" && !value) {
                     return "Required";
                   }
                 },
@@ -179,11 +137,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                   <span className="font-medium">Unit</span>
                   <Select
                     value={lengthUnitField.state.value ?? undefined}
-                    onValueChange={value =>
-                      lengthUnitField.handleChange(
-                        value as BodyCompositionLengthUnit,
-                      )
-                    }
+                    onValueChange={value => lengthUnitField.handleChange(value as BodyCompositionLengthUnit)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Unit" />
@@ -194,9 +148,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                     </SelectContent>
                   </Select>
                   {!lengthUnitField.state.meta.isValid ? (
-                    <span className="text-sm text-red-500">
-                      {lengthUnitField.state.meta.errors.join(", ")}
-                    </span>
+                    <span className="text-sm text-red-500">{lengthUnitField.state.meta.errors.join(", ")}</span>
                   ) : null}
                 </div>
               )}
@@ -205,20 +157,14 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
         }
       </form.Subscribe>
 
-      <form.Subscribe
-        selector={state => state.values.bodyCompositionMeasurementType}
-      >
+      <form.Subscribe selector={state => state.values.bodyCompositionMeasurementType}>
         {measurementType =>
           measurementType === "weight" ? (
             <form.Field
               name="weightUnit"
               validators={{
                 onSubmit: ({ value }) => {
-                  if (
-                    form.getFieldValue("bodyCompositionMeasurementType") ===
-                      "weight" &&
-                    !value
-                  ) {
+                  if (form.getFieldValue("bodyCompositionMeasurementType") === "weight" && !value) {
                     return "Required";
                   }
                 },
@@ -228,11 +174,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                   <span className="font-medium">Unit</span>
                   <Select
                     value={weightUnitField.state.value ?? undefined}
-                    onValueChange={value =>
-                      weightUnitField.handleChange(
-                        value as BodyCompositionWeightUnit,
-                      )
-                    }
+                    onValueChange={value => weightUnitField.handleChange(value as BodyCompositionWeightUnit)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Unit" />
@@ -243,9 +185,7 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
                     </SelectContent>
                   </Select>
                   {!weightUnitField.state.meta.isValid ? (
-                    <span className="text-sm text-red-500">
-                      {weightUnitField.state.meta.errors.join(", ")}
-                    </span>
+                    <span className="text-sm text-red-500">{weightUnitField.state.meta.errors.join(", ")}</span>
                   ) : null}
                 </div>
               )}

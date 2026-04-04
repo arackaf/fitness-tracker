@@ -1,27 +1,15 @@
-import {
-  workout,
-  workoutSegment,
-  workoutSegmentExercise,
-  workoutSegmentExerciseMeasurement,
-} from "@/drizzle/schema";
+import { workout, workoutSegment, workoutSegmentExercise, workoutSegmentExerciseMeasurement } from "@/drizzle/schema";
 
 export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
-export type WorkoutSegmentExerciseMeasurement =
-  typeof workoutSegmentExerciseMeasurement.$inferInsert;
-export type WorkoutSegmentExerciseMeasurementState = Omit<
-  WorkoutSegmentExerciseMeasurement,
-  "workoutSegmentExerciseId"
-> & {
+export type WorkoutSegmentExerciseMeasurement = typeof workoutSegmentExerciseMeasurement.$inferInsert;
+export type WorkoutSegmentExerciseMeasurementState = Omit<WorkoutSegmentExerciseMeasurement, "workoutSegmentExerciseId"> & {
   id?: number;
   workoutSegmentExerciseId?: number;
 };
 
-export type WorkoutSegmentExerciseState = Omit<
-  WorkoutSegmentExercise,
-  "workoutSegmentId"
-> & {
+export type WorkoutSegmentExerciseState = Omit<WorkoutSegmentExercise, "workoutSegmentId"> & {
   id?: number;
   workoutSegmentId?: number;
   reps?: Array<number | null>;
@@ -46,8 +34,7 @@ export type ExistingWorkoutState = Workout & {
 };
 
 export type Exercise = SegmentWithExercises["exercises"][number];
-export type Measurement =
-  SegmentWithExercises["exercises"][number]["measurements"][number];
+export type Measurement = SegmentWithExercises["exercises"][number]["measurements"][number];
 
 const DEFAULT_SET_COUNT = 4;
 

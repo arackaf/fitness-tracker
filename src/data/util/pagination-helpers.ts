@@ -18,13 +18,10 @@ export function getPaginationResults<TResult, TPaginationToken>(
   let nextPageToken: TPaginationToken | null | undefined;
   let previousPageToken: TPaginationToken | null | undefined;
 
-  let adjustedResults = currentPagination.previousPage
-    ? [...rawResults].reverse()
-    : [...rawResults];
+  let adjustedResults = currentPagination.previousPage ? [...rawResults].reverse() : [...rawResults];
 
   if (currentPagination.previousPage) {
-    previousPageToken =
-      adjustedResults.length > pageSize ? rowToToken(adjustedResults[1]) : null;
+    previousPageToken = adjustedResults.length > pageSize ? rowToToken(adjustedResults[1]) : null;
 
     nextPageToken = currentPagination.previousPage;
   } else {

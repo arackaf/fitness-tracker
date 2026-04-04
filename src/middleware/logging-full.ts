@@ -1,7 +1,4 @@
-import {
-  addNetworkTimingLog,
-  setNetworkTimingLogClientEnd,
-} from "@/server-functions/network-timing-logs";
+import { addNetworkTimingLog, setNetworkTimingLogClientEnd } from "@/server-functions/network-timing-logs";
 import { createMiddleware } from "@tanstack/react-start";
 
 const loggingMiddlewareInput = createMiddleware({ type: "function" })

@@ -1,7 +1,4 @@
-import {
-  createDefaultWorkoutTemplate,
-  type WorkoutTemplateState,
-} from "@/data/workout-templates/workout-state";
+import { createDefaultWorkoutTemplate, type WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { useForm } from "@tanstack/react-form";
 
 export const useWorkoutTemplateForm = (

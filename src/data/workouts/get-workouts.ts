@@ -26,9 +26,7 @@ type WorkoutsPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkouts = async (
-  options: GetWorkoutsOptions = {},
-): Promise<WorkoutsPayload> => {
+export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<WorkoutsPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const db = await getDb();
   const page = Math.max(1, Math.floor(options.page ?? 1));
@@ -45,11 +43,7 @@ export const getWorkouts = async (
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
       })
       .from(workoutTable)
-      .where(
-        baseWhereConditions.length > 0
-          ? and(...baseWhereConditions)
-          : undefined,
-      )
+      .where(baseWhereConditions.length > 0 ? and(...baseWhereConditions) : undefined)
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
       .limit(WORKOUT_HISTORY_QUERY_LIMIT)
       .offset(offset),
@@ -81,20 +75,11 @@ export const getWorkouts = async (
     })
     .from(workoutTable)
     .innerJoin(workoutIds, eq(workoutTable.id, workoutIds.workout_id))
-    .leftJoin(
-      workoutSegmentTable,
-      eq(workoutSegmentTable.workoutId, workoutTable.id),
-    )
-    .leftJoin(
-      workoutSegmentExerciseTable,
-      eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id),
-    )
+    .leftJoin(workoutSegmentTable, eq(workoutSegmentTable.workoutId, workoutTable.id))
+    .leftJoin(workoutSegmentExerciseTable, eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id))
     .leftJoin(
       workoutSegmentExerciseMeasurementTable,
-      eq(
-        workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId,
-        workoutSegmentExerciseTable.id,
-      ),
+      eq(workoutSegmentExerciseMeasurementTable.workoutSegmentExerciseId, workoutSegmentExerciseTable.id),
     )
     .orderBy(
       desc(workoutTable.workoutDate),
@@ -106,10 +91,7 @@ export const getWorkouts = async (
 
   const workouts = new Map<number, ExistingWorkoutState>();
   const segmentsByWorkout = new Map<number, ExistingWorkoutState["segments"]>();
-  const exercisesBySegment = new Map<
-    number,
-    ExistingWorkoutState["segments"][number]["exercises"]
-  >();
+  const exercisesBySegment = new Map<number, ExistingWorkoutState["segments"][number]["exercises"]>();
 
   for (const row of rows) {
     let workout = workouts.get(row.workoutId);
@@ -126,18 +108,13 @@ export const getWorkouts = async (
       segmentsByWorkout.set(row.workoutId, []);
     }
 
-    if (
-      row.segmentRowId == null ||
-      row.segmentOrder == null ||
-      row.segmentSets == null
-    ) {
+    if (row.segmentRowId == null || row.segmentOrder == null || row.segmentSets == null) {
       continue;
     }
 
     const workoutSegments = segmentsByWorkout.get(row.workoutId)!;
     const latestSegment = workoutSegments.at(-1);
-    let segment =
-      latestSegment?.id === row.segmentRowId ? latestSegment : undefined;
+    let segment = latestSegment?.id === row.segmentRowId ? latestSegment : undefined;
     if (!segment) {
       segment = {
         id: row.segmentRowId,
@@ -152,18 +129,13 @@ export const getWorkouts = async (
       workout.segments.push(segment);
     }
 
-    if (
-      row.exerciseRowId == null ||
-      row.exerciseOrder == null ||
-      row.exerciseExerciseId == null
-    ) {
+    if (row.exerciseRowId == null || row.exerciseOrder == null || row.exerciseExerciseId == null) {
       continue;
     }
 
     const segmentExercises = exercisesBySegment.get(row.segmentRowId)!;
     const latestExercise = segmentExercises.at(-1);
-    let exercise =
-      latestExercise?.id === row.exerciseRowId ? latestExercise : undefined;
+    let exercise = latestExercise?.id === row.exerciseRowId ? latestExercise : undefined;
     if (!exercise) {
       exercise = {
         id: row.exerciseRowId,
@@ -199,9 +171,7 @@ export const getWorkouts = async (
 
   const workoutList = Array.from(workouts.values());
   const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
-  const currentPageWorkouts = hasNextPage
-    ? workoutList.slice(0, WORKOUT_HISTORY_LIMIT)
-    : workoutList;
+  const currentPageWorkouts = hasNextPage ? workoutList.slice(0, WORKOUT_HISTORY_LIMIT) : workoutList;
 
   return {
     workouts: currentPageWorkouts,

@@ -17,7 +17,5 @@ export default function TanStackQueryProvider({
 }) {
   const { queryClient } = context;
 
-  return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

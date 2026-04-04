@@ -24,13 +24,10 @@ const prelimRefetchMiddleware = createMiddleware({ type: "function" })
       refetch: [],
     };
 
-    const allQueriesFound = refetch.flatMap(key =>
-      cache.findAll({ queryKey: key, exact: false, type: "active" }),
-    );
+    const allQueriesFound = refetch.flatMap(key => cache.findAll({ queryKey: key, exact: false, type: "active" }));
 
     allQueriesFound.forEach(entry => {
-      const revalidatePayload: RefetchPayload =
-        (entry?.meta?.__revalidate as RefetchPayload) ?? null;
+      const revalidatePayload: RefetchPayload = (entry?.meta?.__revalidate as RefetchPayload) ?? null;
 
       if (revalidatePayload) {
         revalidate.refetch.push({
@@ -88,9 +85,7 @@ export const refetchMiddleware = createMiddleware({ type: "function" })
     }
 
     data?.refetch.forEach(key => {
-      const allQueries = queryClient
-        .getQueryCache()
-        .findAll({ queryKey: key, exact: false });
+      const allQueries = queryClient.getQueryCache().findAll({ queryKey: key, exact: false });
 
       allQueries.forEach(packet => {
         if (!allRefetchedKeys.has(hashKey(packet.queryKey))) {

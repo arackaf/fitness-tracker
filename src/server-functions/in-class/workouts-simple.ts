@@ -28,9 +28,7 @@ export const workoutHistoryQueryOptions = (page: number = 1) => {
   });
 };
 
-export type InClassWorkout = Awaited<
-  ReturnType<typeof getInClassWorkoutHistoryServerFn>
->["workouts"][number];
+export type InClassWorkout = Awaited<ReturnType<typeof getInClassWorkoutHistoryServerFn>>["workouts"][number];
 
 export const getInClassWorkoutHistoryServerFn = createServerFn({
   method: "GET",
@@ -50,11 +48,7 @@ export const getInClassWorkoutHistoryServerFn = createServerFn({
           name: workout.name,
           date: workout.workoutDate,
           exercises: Array.from(
-            new Set(
-              workout.segments.flatMap(segment =>
-                segment.exercises.map(exercise => exercise.exerciseId),
-              ),
-            ),
+            new Set(workout.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
           ),
         };
       }),
@@ -81,11 +75,7 @@ export const getInClassWorkoutById = createServerFn({ method: "GET" })
         name: workout.name,
         date: workout.workoutDate,
         exercises: Array.from(
-          new Set(
-            workout.segments.flatMap(segment =>
-              segment.exercises.map(exercise => exercise.exerciseId),
-            ),
-          ),
+          new Set(workout.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
         ),
       };
     }
@@ -115,11 +105,7 @@ export const getWorkoutsWithExerciseNames = createServerFn({
       })
       .from(workoutTable);
 
-    const workouts = await (
-      data?.id !== undefined
-        ? workoutsBaseQuery.where(eq(workoutTable.id, data.id))
-        : workoutsBaseQuery
-    )
+    const workouts = await (data?.id !== undefined ? workoutsBaseQuery.where(eq(workoutTable.id, data.id)) : workoutsBaseQuery)
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
       .limit(queryLimit)
       .offset(queryOffset);
@@ -133,9 +119,7 @@ export const getWorkoutsWithExerciseNames = createServerFn({
     }
 
     const hasNextPage = data?.id === undefined && workouts.length > pageSize;
-    const currentPageWorkouts = hasNextPage
-      ? workouts.slice(0, pageSize)
-      : workouts;
+    const currentPageWorkouts = hasNextPage ? workouts.slice(0, pageSize) : workouts;
     const workoutIds = currentPageWorkouts.map(workout => workout.id);
     const workoutExerciseRows = await db
       .select({
@@ -143,17 +127,8 @@ export const getWorkoutsWithExerciseNames = createServerFn({
         exerciseName: exercisesTable.name,
       })
       .from(workoutSegmentTable)
-      .innerJoin(
-        workoutSegmentExerciseTable,
-        eq(
-          workoutSegmentExerciseTable.workoutSegmentId,
-          workoutSegmentTable.id,
-        ),
-      )
-      .innerJoin(
-        exercisesTable,
-        eq(exercisesTable.id, workoutSegmentExerciseTable.exerciseId),
-      )
+      .innerJoin(workoutSegmentExerciseTable, eq(workoutSegmentExerciseTable.workoutSegmentId, workoutSegmentTable.id))
+      .innerJoin(exercisesTable, eq(exercisesTable.id, workoutSegmentExerciseTable.exerciseId))
       .where(inArray(workoutSegmentTable.workoutId, workoutIds))
       .orderBy(desc(workoutSegmentTable.workoutId));
 

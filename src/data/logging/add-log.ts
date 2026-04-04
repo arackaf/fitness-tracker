@@ -25,8 +25,5 @@ export const addLog = async (input: AddLogInput) => {
 export const setClientEnd = async (traceId: string, clientEnd: Date) => {
   const db = await getDb();
 
-  await db
-    .update(networkTimingLog)
-    .set({ clientEnd: clientEnd })
-    .where(eq(networkTimingLog.traceId, traceId));
+  await db.update(networkTimingLog).set({ clientEnd: clientEnd }).where(eq(networkTimingLog.traceId, traceId));
 };

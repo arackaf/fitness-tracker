@@ -7,14 +7,11 @@ import {
 
 export type WorkoutTemplate = typeof workoutTemplate.$inferInsert;
 export type WorkoutTemplateSegment = typeof workoutTemplateSegment.$inferInsert;
-export type WorkoutTemplateSegmentExercise =
-  typeof workoutTemplateSegmentExercise.$inferInsert;
-export type WorkoutTemplateSegmentExerciseMeasurement =
-  typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
-export type WorkoutTemplateSegmentExerciseMeasurementState =
-  WorkoutTemplateSegmentExerciseMeasurement & {
-    id?: number;
-  };
+export type WorkoutTemplateSegmentExercise = typeof workoutTemplateSegmentExercise.$inferInsert;
+export type WorkoutTemplateSegmentExerciseMeasurement = typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
+export type WorkoutTemplateSegmentExerciseMeasurementState = WorkoutTemplateSegmentExerciseMeasurement & {
+  id?: number;
+};
 
 export type WorkoutTemplateState = WorkoutTemplate & {
   id?: number;
@@ -26,15 +23,13 @@ export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
   exercises: WorkoutTemplateSegmentExerciseState[];
 };
 
-export type WorkoutTemplateSegmentExerciseState =
-  WorkoutTemplateSegmentExercise & {
-    id?: number;
-    measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
-  };
+export type WorkoutTemplateSegmentExerciseState = WorkoutTemplateSegmentExercise & {
+  id?: number;
+  measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
+};
 
 export type Exercise = TemplateSegmentWithExercises["exercises"][number];
-export type Measurement =
-  TemplateSegmentWithExercises["exercises"][number]["measurements"][number];
+export type Measurement = TemplateSegmentWithExercises["exercises"][number]["measurements"][number];
 
 const DEFAULT_SET_COUNT = 4;
 

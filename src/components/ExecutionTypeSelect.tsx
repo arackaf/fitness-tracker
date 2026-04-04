@@ -1,12 +1,6 @@
 import type { FC } from "react";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export type ExecutionType = "repetition" | "distance" | "time";
 
@@ -15,10 +9,7 @@ type ExecutionTypeSelectProps = {
   onValueChange: (value: ExecutionType) => void;
 };
 
-export const ExecutionTypeSelect: FC<ExecutionTypeSelectProps> = ({
-  value,
-  onValueChange,
-}) => {
+export const ExecutionTypeSelect: FC<ExecutionTypeSelectProps> = ({ value, onValueChange }) => {
   return (
     <Select
       value={value}

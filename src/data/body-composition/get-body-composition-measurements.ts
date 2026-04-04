@@ -21,19 +21,13 @@ export const getBodyCompositionMeasurements = async (
     conditions.push(eq(bodyCompositionMeasurement.id, options.id));
   }
   if (options.bodyCompositionMetricId != null) {
-    conditions.push(
-      eq(
-        bodyCompositionMeasurement.bodyCompositionMetricId,
-        options.bodyCompositionMetricId,
-      ),
-    );
+    conditions.push(eq(bodyCompositionMeasurement.bodyCompositionMetricId, options.bodyCompositionMetricId));
   }
 
   const rows = await db
     .select({
       id: bodyCompositionMeasurement.id,
-      bodyCompositionMetricId:
-        bodyCompositionMeasurement.bodyCompositionMetricId,
+      bodyCompositionMetricId: bodyCompositionMeasurement.bodyCompositionMetricId,
       measurementDate: bodyCompositionMeasurement.measurementDate,
       value: bodyCompositionMeasurement.value,
       lengthUnit: bodyCompositionMeasurement.lengthUnit,
@@ -41,10 +35,7 @@ export const getBodyCompositionMeasurements = async (
     })
     .from(bodyCompositionMeasurement)
     .where(conditions.length > 0 ? and(...conditions) : undefined)
-    .orderBy(
-      desc(bodyCompositionMeasurement.measurementDate),
-      desc(bodyCompositionMeasurement.id),
-    );
+    .orderBy(desc(bodyCompositionMeasurement.measurementDate), desc(bodyCompositionMeasurement.id));
 
   return rows;
 };

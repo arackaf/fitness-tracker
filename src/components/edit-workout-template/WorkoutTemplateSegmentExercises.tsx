@@ -16,33 +16,35 @@ type WorkoutTemplateSegmentExercisesProps = {
   segmentSets: number;
 };
 
-export const WorkoutTemplateSegmentExercises: FC<
-  WorkoutTemplateSegmentExercisesProps
-> = ({ form, exercises, muscleGroups, segmentIndex, segmentSets }) => {
+export const WorkoutTemplateSegmentExercises: FC<WorkoutTemplateSegmentExercisesProps> = ({
+  form,
+  exercises,
+  muscleGroups,
+  segmentIndex,
+  segmentSets,
+}) => {
   return (
     <form.Field
       mode="array"
       name={`segments[${segmentIndex}].exercises`}
       children={segmentExercisesField => (
         <>
-          {segmentExercisesField.state.value.map(
-            (segmentExercise, exerciseIndex) => (
-              <WorkoutTemplateSegmentExercise
-                key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
-                form={form}
-                exercises={exercises}
-                muscleGroups={muscleGroups}
-                segmentIndex={segmentIndex}
-                exerciseIndex={exerciseIndex}
-                canRemove={segmentExercisesField.state.value.length > 1}
-                onRemove={() =>
-                  segmentExercisesField.removeValue(exerciseIndex, {
-                    dontValidate: true,
-                  })
-                }
-              />
-            ),
-          )}
+          {segmentExercisesField.state.value.map((segmentExercise, exerciseIndex) => (
+            <WorkoutTemplateSegmentExercise
+              key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
+              form={form}
+              exercises={exercises}
+              muscleGroups={muscleGroups}
+              segmentIndex={segmentIndex}
+              exerciseIndex={exerciseIndex}
+              canRemove={segmentExercisesField.state.value.length > 1}
+              onRemove={() =>
+                segmentExercisesField.removeValue(exerciseIndex, {
+                  dontValidate: true,
+                })
+              }
+            />
+          ))}
 
           <div className="flex items-center">
             <Button

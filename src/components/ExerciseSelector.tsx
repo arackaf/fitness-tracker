@@ -2,19 +2,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
 import { exercises as exerciseTable, muscleGroup } from "@/drizzle/schema";
@@ -38,13 +27,7 @@ type MuscleGroupOption = {
   searchableText: string;
 };
 
-export function ExerciseSelector({
-  value,
-  exercises,
-  muscleGroups,
-  onSelect,
-  required = false,
-}: ExerciseSelectorProps) {
+export function ExerciseSelector({ value, exercises, muscleGroups, onSelect, required = false }: ExerciseSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const muscleGroupLookup = useMemo(() => {
@@ -59,16 +42,10 @@ export function ExerciseSelector({
       const normalizedMuscleGroups = exercise.muscleGroups
         .map(group => muscleGroupLookup.get(group)!)
         .filter(group => group)
-        .map(
-          group =>
-            group.name.charAt(0).toLocaleUpperCase() + group.name.slice(1),
-        )
+        .map(group => group.name.charAt(0).toLocaleUpperCase() + group.name.slice(1))
         .sort((a, b) => a.localeCompare(b));
 
-      const groupName =
-        normalizedMuscleGroups.length > 0
-          ? normalizedMuscleGroups.join(", ")
-          : "Ungrouped";
+      const groupName = normalizedMuscleGroups.length > 0 ? normalizedMuscleGroups.join(", ") : "Ungrouped";
 
       const existingEntries = groups.get(groupName) ?? [];
       existingEntries.push({
@@ -81,21 +58,15 @@ export function ExerciseSelector({
     }
 
     return Array.from(groups.entries())
-      .sort(([groupNameA], [groupNameB]) =>
-        groupNameA.localeCompare(groupNameB),
-      )
+      .sort(([groupNameA], [groupNameB]) => groupNameA.localeCompare(groupNameB))
       .map(([groupName, groupOptions]) => ({
         groupName,
-        options: groupOptions.sort((optionA, optionB) =>
-          optionA.name.localeCompare(optionB.name),
-        ),
+        options: groupOptions.sort((optionA, optionB) => optionA.name.localeCompare(optionB.name)),
       }));
   }, [exercises, muscleGroupLookup]);
 
   const selectedOption = exercises.find(exercise => exercise.id === value);
-  const selectedLabel = selectedOption
-    ? (selectedOption.name ?? `Exercise #${selectedOption.id}`)
-    : "Select an exercise";
+  const selectedLabel = selectedOption ? (selectedOption.name ?? `Exercise #${selectedOption.id}`) : "Select an exercise";
 
   return (
     <>
@@ -142,16 +113,9 @@ export function ExerciseSelector({
                       >
                         <div className="flex min-w-0 flex-col">
                           <span className="truncate">{option.name}</span>
-                          <span className="truncate text-xs text-muted-foreground">
-                            {option.muscleGroupListLabel}
-                          </span>
+                          <span className="truncate text-xs text-muted-foreground">{option.muscleGroupListLabel}</span>
                         </div>
-                        <Check
-                          className={cn(
-                            "ml-auto size-4 shrink-0",
-                            isSelected ? "opacity-100" : "opacity-0",
-                          )}
-                        />
+                        <Check className={cn("ml-auto size-4 shrink-0", isSelected ? "opacity-100" : "opacity-0")} />
                       </CommandItem>
                     );
                   })}

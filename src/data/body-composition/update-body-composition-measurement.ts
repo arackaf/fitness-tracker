@@ -13,9 +13,7 @@ const toNumericString = (value: string | number | null | undefined) => {
   return String(value);
 };
 
-export const updateBodyCompositionMeasurement = async (
-  input: BodyCompositionMeasurementState,
-) => {
+export const updateBodyCompositionMeasurement = async (input: BodyCompositionMeasurementState) => {
   if (input.id == null) {
     throw new Error("Body composition measurement ID is required for update.");
   }

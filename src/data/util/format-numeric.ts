@@ -1,6 +1,4 @@
-export const formatNumericForDisplay = (
-  value: string | number | null | undefined,
-): string => {
+export const formatNumericForDisplay = (value: string | number | null | undefined): string => {
   if (value == null || value === "") {
     return "";
   }

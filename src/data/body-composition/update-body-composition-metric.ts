@@ -5,9 +5,7 @@ import type { BodyCompositionMetricState } from "@/data/body-composition/body-co
 import { getDb } from "@/data/db";
 import { bodyCompositionMetric } from "@/drizzle/schema";
 
-export const updateBodyCompositionMetric = async (
-  input: BodyCompositionMetricState,
-) => {
+export const updateBodyCompositionMetric = async (input: BodyCompositionMetricState) => {
   if (input.id == null) {
     throw new Error("Body composition metric ID is required for update.");
   }

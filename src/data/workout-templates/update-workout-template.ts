@@ -10,11 +10,9 @@ import {
   workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
-type TemplateExerciseInput =
-  WorkoutTemplateState["segments"][number]["exercises"][number];
+type TemplateExerciseInput = WorkoutTemplateState["segments"][number]["exercises"][number];
 
-const isPersistedId = (id: number | null | undefined): id is number =>
-  id != null && Number.isInteger(id) && id > 0;
+const isPersistedId = (id: number | null | undefined): id is number => id != null && Number.isInteger(id) && id > 0;
 
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
@@ -118,9 +116,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
       throw new Error(`Workout template ${workoutTemplateId} was not found.`);
     }
 
-    const incomingSegmentIds = input.segments
-      .map(segment => segment.id)
-      .filter(isPersistedId);
+    const incomingSegmentIds = input.segments.map(segment => segment.id).filter(isPersistedId);
 
     await tx
       .delete(workoutTemplateSegmentTable)
@@ -144,10 +140,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
           .where(
             and(
               eq(workoutTemplateSegmentTable.id, segmentId),
-              eq(
-                workoutTemplateSegmentTable.workoutTemplateId,
-                workoutTemplateId,
-              ),
+              eq(workoutTemplateSegmentTable.workoutTemplateId, workoutTemplateId),
             ),
           )
           .returning({ id: workoutTemplateSegmentTable.id });
@@ -169,31 +162,18 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
         segmentId = insertedSegment.id;
       }
 
-      const incomingExerciseIds = segment.exercises
-        .map(exercise => exercise.id)
-        .filter(isPersistedId);
+      const incomingExerciseIds = segment.exercises.map(exercise => exercise.id).filter(isPersistedId);
 
       await tx
         .delete(workoutTemplateSegmentExerciseTable)
         .where(
           and(
-            eq(
-              workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId,
-              segmentId,
-            ),
-            not(
-              inArray(
-                workoutTemplateSegmentExerciseTable.id,
-                incomingExerciseIds,
-              ),
-            ),
+            eq(workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId, segmentId),
+            not(inArray(workoutTemplateSegmentExerciseTable.id, incomingExerciseIds)),
           ),
         );
 
-      for (const [
-        segmentExerciseIndex,
-        segmentExercise,
-      ] of segment.exercises.entries()) {
+      for (const [segmentExerciseIndex, segmentExercise] of segment.exercises.entries()) {
         const exerciseInput = segmentExercise as TemplateExerciseInput;
         const exerciseUnitValues = createExerciseUnitValues(exerciseInput);
         let segmentExerciseId = segmentExercise.id;
@@ -210,10 +190,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
             .where(
               and(
                 eq(workoutTemplateSegmentExerciseTable.id, segmentExercise.id),
-                eq(
-                  workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId,
-                  segmentId,
-                ),
+                eq(workoutTemplateSegmentExerciseTable.workoutTemplateSegmentId, segmentId),
               ),
             )
             .returning({ id: workoutTemplateSegmentExerciseTable.id });
@@ -240,24 +217,14 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
         }
 
         const exerciseMeasurements = createExerciseMeasurements(exerciseInput);
-        const incomingSetOrders = exerciseMeasurements.map(
-          measurement => measurement.setOrder,
-        );
+        const incomingSetOrders = exerciseMeasurements.map(measurement => measurement.setOrder);
 
         await tx
           .delete(workoutTemplateSegmentExerciseMeasurementTable)
           .where(
             and(
-              eq(
-                workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
-                segmentExerciseId,
-              ),
-              not(
-                inArray(
-                  workoutTemplateSegmentExerciseMeasurementTable.setOrder,
-                  incomingSetOrders,
-                ),
-              ),
+              eq(workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId, segmentExerciseId),
+              not(inArray(workoutTemplateSegmentExerciseMeasurementTable.setOrder, incomingSetOrders)),
             ),
           );
 
@@ -268,14 +235,8 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
             .set(measurementValues)
             .where(
               and(
-                eq(
-                  workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
-                  segmentExerciseId,
-                ),
-                eq(
-                  workoutTemplateSegmentExerciseMeasurementTable.setOrder,
-                  measurement.setOrder,
-                ),
+                eq(workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId, segmentExerciseId),
+                eq(workoutTemplateSegmentExerciseMeasurementTable.setOrder, measurement.setOrder),
               ),
             )
             .returning({
@@ -283,12 +244,10 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
             });
 
           if (!updatedMeasurement) {
-            await tx
-              .insert(workoutTemplateSegmentExerciseMeasurementTable)
-              .values({
-                workoutTemplateSegmentExerciseId: segmentExerciseId,
-                ...measurementValues,
-              });
+            await tx.insert(workoutTemplateSegmentExerciseMeasurementTable).values({
+              workoutTemplateSegmentExerciseId: segmentExerciseId,
+              ...measurementValues,
+            });
           }
         }
       }

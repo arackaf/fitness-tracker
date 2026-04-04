@@ -22,9 +22,7 @@ const syncExerciseMeasurementsToSetCount = (
   exerciseIndex: number,
   newSetCount: number,
 ) => {
-  const measurements =
-    form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]
-      ?.measurements ?? [];
+  const measurements = form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements ?? [];
 
   const sourceMeasurement = measurements.at(-1) ?? {
     setOrder: 1,
@@ -35,28 +33,19 @@ const syncExerciseMeasurementsToSetCount = (
     distance: null,
   };
 
-  const nextMeasurements = Array.from({ length: Math.max(newSetCount, 1) }).map(
-    (_, index) => {
-      const existingMeasurement = measurements[index];
-      return {
-        ...sourceMeasurement,
-        ...existingMeasurement,
-        setOrder: index + 1,
-      };
-    },
-  );
+  const nextMeasurements = Array.from({ length: Math.max(newSetCount, 1) }).map((_, index) => {
+    const existingMeasurement = measurements[index];
+    return {
+      ...sourceMeasurement,
+      ...existingMeasurement,
+      setOrder: index + 1,
+    };
+  });
 
-  form.setFieldValue(
-    `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
-    nextMeasurements,
-  );
+  form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`, nextMeasurements);
 };
 
-export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
-  form,
-  exercises,
-  muscleGroups,
-}) => {
+export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <form.Field
       mode="array"
@@ -73,11 +62,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                   name={`segments[${segmentIndex}].sets`}
                   validators={{
                     onSubmit: ({ value }) => {
-                      if (
-                        typeof value !== "number" ||
-                        Number.isNaN(value) ||
-                        value < 1
-                      ) {
+                      if (typeof value !== "number" || Number.isNaN(value) || value < 1) {
                         return "Invalid";
                       }
 
@@ -101,23 +86,12 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                             const newSetsValue = Number(event.target.value);
                             setsField.handleChange(newSetsValue);
 
-                            segmentsField.state.value[
-                              segmentIndex
-                            ].exercises.forEach((_, idx) => {
-                              if (
-                                newSetsValue == null ||
-                                Number.isNaN(newSetsValue) ||
-                                newSetsValue < 1
-                              ) {
+                            segmentsField.state.value[segmentIndex].exercises.forEach((_, idx) => {
+                              if (newSetsValue == null || Number.isNaN(newSetsValue) || newSetsValue < 1) {
                                 return;
                               }
 
-                              syncExerciseMeasurementsToSetCount(
-                                form,
-                                segmentIndex,
-                                idx,
-                                newSetsValue,
-                              );
+                              syncExerciseMeasurementsToSetCount(form, segmentIndex, idx, newSetsValue);
                             });
                           }}
                           onBlur={setsField.handleBlur}
@@ -125,10 +99,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({
                       </label>
                       {!setsField.state.meta.isValid &&
                         setsField.state.meta.errors.map((error, idx) => (
-                          <span
-                            key={`error-${idx}`}
-                            className="text-red-500 text-xs"
-                          >
+                          <span key={`error-${idx}`} className="text-red-500 text-xs">
                             {error}
                           </span>
                         ))}

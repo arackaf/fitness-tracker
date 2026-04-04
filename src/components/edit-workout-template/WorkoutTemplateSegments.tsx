@@ -16,11 +16,7 @@ type WorkoutTemplateSegmentsProps = {
   muscleGroups: MuscleGroup[];
 };
 
-export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
-  form,
-  exercises,
-  muscleGroups,
-}) => {
+export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <form.Field
       mode="array"
@@ -37,11 +33,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                   name={`segments[${segmentIndex}].sets`}
                   validators={{
                     onSubmit: ({ value }) => {
-                      if (
-                        typeof value !== "number" ||
-                        Number.isNaN(value) ||
-                        value < 1
-                      ) {
+                      if (typeof value !== "number" || Number.isNaN(value) || value < 1) {
                         return "Invalid";
                       }
 
@@ -65,17 +57,12 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                             const newSetsValue = Number(event.target.value);
                             setsField.handleChange(newSetsValue);
 
-                            segmentsField.state.value[
-                              segmentIndex
-                            ].exercises.forEach((exercise, idx) => {
-                              const currentMeasurements =
-                                exercise.measurements ?? [];
-                              const measurementsFieldName =
-                                `segments[${segmentIndex}].exercises[${idx}].measurements` as const;
+                            segmentsField.state.value[segmentIndex].exercises.forEach((exercise, idx) => {
+                              const currentMeasurements = exercise.measurements ?? [];
+                              const measurementsFieldName = `segments[${segmentIndex}].exercises[${idx}].measurements` as const;
 
                               if (newSetsValue > currentMeasurements.length) {
-                                const lastMeasurement =
-                                  currentMeasurements.at(-1)!;
+                                const lastMeasurement = currentMeasurements.at(-1)!;
 
                                 form.pushFieldValue(measurementsFieldName, {
                                   ...lastMeasurement,
@@ -84,10 +71,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                               }
 
                               if (newSetsValue < currentMeasurements.length) {
-                                form.removeFieldValue(
-                                  measurementsFieldName,
-                                  currentMeasurements.length - 1,
-                                );
+                                form.removeFieldValue(measurementsFieldName, currentMeasurements.length - 1);
                               }
                             });
                           }}
@@ -96,10 +80,7 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({
                       </label>
                       {!setsField.state.meta.isValid &&
                         setsField.state.meta.errors.map((error, idx) => (
-                          <span
-                            key={`error-${idx}`}
-                            className="text-red-500 text-xs"
-                          >
+                          <span key={`error-${idx}`} className="text-red-500 text-xs">
                             {error}
                           </span>
                         ))}

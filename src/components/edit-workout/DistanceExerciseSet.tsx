@@ -11,11 +11,7 @@ type DistanceExerciseSetProps = {
   exerciseIndex: number;
 };
 
-export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
-  form,
-  segmentIndex,
-  exerciseIndex,
-}) => {
+export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmentIndex, exerciseIndex }) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex text-sm items-start gap-2">
@@ -52,16 +48,9 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                               value={distanceField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;
-                                distanceField.handleChange(
-                                  value === "" ? null : Number(value),
-                                );
+                                distanceField.handleChange(value === "" ? null : Number(value));
                               }}
-                              className={cn(
-                                "h-7 w-24 px-2 py-1",
-                                !distanceField.state.meta.isValid
-                                  ? "border-red-500"
-                                  : "",
-                              )}
+                              className={cn("h-7 w-24 px-2 py-1", !distanceField.state.meta.isValid ? "border-red-500" : "")}
                             />
                           </label>
                         )}
@@ -74,13 +63,9 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
                             const measurements = field.state.value;
-                            const sourceMeasurement =
-                              measurements[measurementIndex];
+                            const sourceMeasurement = measurements[measurementIndex];
 
-                            if (
-                              sourceMeasurement.distance ||
-                              sourceMeasurement.distance === 0
-                            ) {
+                            if (sourceMeasurement.distance || sourceMeasurement.distance === 0) {
                               for (let i = 1; i < measurements.length; i++) {
                                 form.setFieldValue(
                                   `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].distance`,

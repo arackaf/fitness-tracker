@@ -11,10 +11,7 @@ type DisplayWorkoutTemplateProps = {
   workoutTemplate: WorkoutTemplateState;
 };
 
-export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
-  workoutTemplate,
-  exerciseNameById,
-}) => {
+export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workoutTemplate, exerciseNameById }) => {
   return (
     <article className="rounded-xl border border-border bg-card p-4 dark:border-slate-700/80 dark:bg-slate-800/55">
       <header className="mb-3 flex items-start justify-between gap-3">
@@ -23,19 +20,14 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
         </div>
         {workoutTemplate.id != null ? (
           <Button variant="outline" size="sm" asChild>
-            <Link
-              to="/app/admin/workout-templates/edit/$id"
-              params={{ id: String(workoutTemplate.id) }}
-            >
+            <Link to="/app/admin/workout-templates/edit/$id" params={{ id: String(workoutTemplate.id) }}>
               Edit
             </Link>
           </Button>
         ) : null}
       </header>
 
-      {workoutTemplate.description ? (
-        <p className="mb-3 text-sm">{workoutTemplate.description}</p>
-      ) : null}
+      {workoutTemplate.description ? <p className="mb-3 text-sm">{workoutTemplate.description}</p> : null}
 
       <div className="flex flex-col gap-3">
         {workoutTemplate.segments.map((segment, segmentIndex) => (

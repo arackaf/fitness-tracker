@@ -8,8 +8,7 @@ import {
   workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
 
-type TemplateExerciseInput =
-  WorkoutTemplateState["segments"][number]["exercises"][number];
+type TemplateExerciseInput = WorkoutTemplateState["segments"][number]["exercises"][number];
 
 const toNumericString = (value: string | number | null | undefined) => {
   if (value == null || value === "") {
@@ -116,16 +115,12 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
 
         const exerciseMeasurements = createExerciseMeasurements(exerciseInput);
         if (exerciseMeasurements.length > 0) {
-          await tx
-            .insert(workoutTemplateSegmentExerciseMeasurementTable)
-            .values(
-              exerciseMeasurements.map(
-                (measurement: (typeof exerciseMeasurements)[number]) => ({
-                  workoutTemplateSegmentExerciseId: insertedExercise.id,
-                  ...measurement,
-                }),
-              ),
-            );
+          await tx.insert(workoutTemplateSegmentExerciseMeasurementTable).values(
+            exerciseMeasurements.map((measurement: (typeof exerciseMeasurements)[number]) => ({
+              workoutTemplateSegmentExerciseId: insertedExercise.id,
+              ...measurement,
+            })),
+          );
         }
       }
     }
