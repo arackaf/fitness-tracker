@@ -19,7 +19,7 @@ function RouteComponent() {
   };
 
   const inactiveNavLinkProps = {
-    className: "text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:text-slate-300",
+    className: "text-slate-300 hover:bg-accent hover:text-accent-foreground",
   };
 
   return (
