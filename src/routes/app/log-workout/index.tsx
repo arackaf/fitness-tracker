@@ -10,18 +10,11 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { toast } from "sonner";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import {
-  saveWorkout,
-  workoutHistoryQueryOptions,
-} from "@/server-functions/workouts";
+import { saveWorkout, workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  createDefaultWorkout,
-  defaultworkoutDate,
-  type WorkoutState,
-} from "@/data/workouts/workout-state";
+import { createDefaultWorkout, defaultworkoutDate, type WorkoutState } from "@/data/workouts/workout-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 export const Route = createFileRoute("/app/log-workout/")({
@@ -40,21 +33,17 @@ const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
       return {
         ...segment,
         exercises: segment.exercises.map(exercise => {
-          const nextMeasurements = exercise.measurements.map(
-            (measurement, measurementIndex) => ({
-              ...measurement,
-              workoutSegmentExerciseId: 0,
-              setOrder: measurementIndex + 1,
-            }),
-          );
+          const nextMeasurements = exercise.measurements.map((measurement, measurementIndex) => ({
+            ...measurement,
+            workoutSegmentExerciseId: 0,
+            setOrder: measurementIndex + 1,
+          }));
 
           return {
             ...exercise,
             workoutSegmentId: 0,
             reps: nextMeasurements.map(measurement => measurement.reps ?? null),
-            repsToFailure: nextMeasurements.some(
-              measurement => measurement.repsToFailure === true,
-            ),
+            repsToFailure: nextMeasurements.some(measurement => measurement.repsToFailure === true),
             measurements: nextMeasurements,
           };
         }),
@@ -64,22 +53,13 @@ const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
 };
 
 function RouteComponent() {
-  const [workoutState, setWorkoutState] = useState<WorkoutState>(
-    createDefaultWorkout(),
-  );
+  const [workoutState, setWorkoutState] = useState<WorkoutState>(createDefaultWorkout());
   return (
     <SuspensePageLayout
       title="Log Workout"
-      headerChildren={
-        <ImportWorkoutTemplate
-          onSelected={template => setWorkoutState(templateToWorkout(template))}
-        />
-      }
+      headerChildren={<ImportWorkoutTemplate onSelected={template => setWorkoutState(templateToWorkout(template))} />}
     >
-      <RenderWorkoutForm
-        workoutState={workoutState}
-        onReset={() => setWorkoutState(createDefaultWorkout())}
-      />
+      <RenderWorkoutForm workoutState={workoutState} onReset={() => setWorkoutState(createDefaultWorkout())} />
     </SuspensePageLayout>
   );
 }
@@ -100,10 +80,7 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 
   return (
     <Fragment key={formResetKey}>
-      <WorkoutFormContent
-        workoutState={workoutState}
-        onReset={() => onReset()}
-      />
+      <WorkoutFormContent workoutState={workoutState} onReset={() => onReset()} />
     </Fragment>
   );
 };
@@ -159,19 +136,10 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
           {isSaving ? "Saving..." : "Create workout"}
         </Button>
         <label className="flex items-center gap-2 ml-4">
-          <Checkbox
-            onCheckedChange={checked => (addAnotherRef.current = !!checked)}
-            disabled={isSaving}
-          />
+          <Checkbox onCheckedChange={checked => (addAnotherRef.current = !!checked)} disabled={isSaving} />
           <span className="text-sm">Add another</span>
         </label>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={isSaving}
-          className="font-semibold ml-auto"
-          onClick={onReset}
-        >
+        <Button type="button" variant="secondary" disabled={isSaving} className="font-semibold ml-auto" onClick={onReset}>
           Reset workout
         </Button>
       </div>

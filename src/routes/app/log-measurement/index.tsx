@@ -7,10 +7,7 @@ import { Measurement } from "@/components/edit-measurement/Measurement";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { useBodyCompositionMeasurementForm } from "@/lib/body-composition-form";
-import {
-  bodyCompositionMetricsQueryOptions,
-  saveBodyCompositionMeasurement,
-} from "@/server-functions/body-composition";
+import { bodyCompositionMetricsQueryOptions, saveBodyCompositionMeasurement } from "@/server-functions/body-composition";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/log-measurement/")({
@@ -29,9 +26,7 @@ function RouteComponent() {
 }
 
 function RouteContent() {
-  const { data: metrics } = useSuspenseQuery(
-    bodyCompositionMetricsQueryOptions(),
-  );
+  const { data: metrics } = useSuspenseQuery(bodyCompositionMetricsQueryOptions());
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);

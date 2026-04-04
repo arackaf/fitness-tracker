@@ -4,10 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
-import {
-  bodyCompositionMeasurementsQueryOptions,
-  bodyCompositionMetricsQueryOptions,
-} from "@/server-functions/body-composition";
+import { bodyCompositionMeasurementsQueryOptions, bodyCompositionMetricsQueryOptions } from "@/server-functions/body-composition";
 
 export const Route = createFileRoute("/app/measurements/")({
   loader: ({ context }) => {
@@ -33,22 +30,13 @@ function RouteComponent() {
 }
 
 function RouteContent() {
-  const { data: measurements } = useSuspenseQuery(
-    bodyCompositionMeasurementsQueryOptions(),
-  );
+  const { data: measurements } = useSuspenseQuery(bodyCompositionMeasurementsQueryOptions());
   const { data: metrics } = useSuspenseQuery(bodyCompositionMetricsQueryOptions());
 
-  const metricById = useMemo(
-    () => new Map(metrics.map(metric => [metric.id, metric])),
-    [metrics],
-  );
+  const metricById = useMemo(() => new Map(metrics.map(metric => [metric.id, metric])), [metrics]);
 
   if (measurements.length === 0) {
-    return (
-      <p className="text-muted-foreground">
-        No measurements yet. Log your first one to start tracking progress.
-      </p>
-    );
+    return <p className="text-muted-foreground">No measurements yet. Log your first one to start tracking progress.</p>;
   }
 
   return (
@@ -69,16 +57,12 @@ function RouteContent() {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-base font-semibold text-foreground dark:text-slate-50">
-                  {metric?.name ?? "Unknown metric"}
-                </p>
+                <p className="text-base font-semibold text-foreground dark:text-slate-50">{metric?.name ?? "Unknown metric"}</p>
                 <p className="mt-1 text-sm text-muted-foreground dark:text-slate-300/80">
                   {formatMeasurementDate(measurement.measurementDate)}
                 </p>
               </div>
-              <p className="text-base font-semibold text-foreground dark:text-slate-50">
-                {valueWithUnit}
-              </p>
+              <p className="text-base font-semibold text-foreground dark:text-slate-50">{valueWithUnit}</p>
             </div>
           </li>
         );

@@ -28,12 +28,17 @@ function App() {
             <p className="inline-flex rounded-full border border-amber-500/40 bg-amber-500/20 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-200">
               Train smart. Track everything.
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white md:text-6xl">Build strength The TanStack Way</h1>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white md:text-6xl">
+              Build strength The TanStack Way
+            </h1>
             <p className="max-w-2xl text-base leading-relaxed text-slate-700 dark:text-slate-300 md:text-lg">
               Log workouts, follow your progress, and stay consistent without extra clutter.
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button type="button" className="rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400">
+              <button
+                type="button"
+                className="rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400"
+              >
                 Log in
               </button>
               <button
@@ -48,9 +53,15 @@ function App() {
           <aside className="rounded-2xl border border-slate-300 bg-white/70 p-6 shadow-2xl shadow-slate-300/40 backdrop-blur dark:border-slate-700 dark:bg-slate-900/60 dark:shadow-slate-950/40">
             <p className="mb-4 text-sm font-medium text-slate-700 dark:text-slate-300">What you can track</p>
             <ul className="space-y-3 text-sm text-slate-800 dark:text-slate-200">
-              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">Workout sessions and volume</li>
-              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">Body Composition Metrics</li>
-              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">Notes for sets, reps, etc</li>
+              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                Workout sessions and volume
+              </li>
+              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                Body Composition Metrics
+              </li>
+              <li className="rounded-lg border border-slate-300 bg-slate-100/90 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60">
+                Notes for sets, reps, etc
+              </li>
             </ul>
           </aside>
         </section>

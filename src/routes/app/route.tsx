@@ -3,13 +3,7 @@ import { useState } from "react";
 
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
@@ -18,16 +12,14 @@ export const Route = createFileRoute("/app")({
 function RouteComponent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navLinkClassName =
-    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
+  const navLinkClassName = "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
 
   const activeNavLinkProps = {
     className: "cursor-default bg-primary text-primary-foreground",
   };
 
   const inactiveNavLinkProps = {
-    className:
-      "text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:text-slate-300",
+    className: "text-muted-foreground hover:bg-accent hover:text-accent-foreground dark:text-slate-300",
   };
 
   return (
@@ -86,11 +78,7 @@ function RouteComponent() {
         <div className="mx-auto w-full max-w-4xl px-0 md:hidden">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Open navigation menu"
-              >
+              <Button variant="outline" size="icon" aria-label="Open navigation menu">
                 <Menu className="size-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
@@ -141,10 +129,7 @@ function RouteComponent() {
                   <History className="size-4" aria-hidden="true" />
                   Measurements
                 </Link>
-                <div
-                  className="my-1 h-px w-full bg-border"
-                  aria-hidden="true"
-                />
+                <div className="my-1 h-px w-full bg-border" aria-hidden="true" />
                 <Link
                   to="/app/admin"
                   className={`${navLinkClassName} w-full justify-start`}

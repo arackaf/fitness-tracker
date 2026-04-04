@@ -34,23 +34,16 @@ function RouteComponent() {
 function RouteContent() {
   const [, startTransition] = useTransition();
   const [page, setPage] = useState(1);
-  const { data: workoutTemplatesPayload } = useSuspenseQuery(
-    workoutTemplatesQueryOptions(page),
-  );
+  const { data: workoutTemplatesPayload } = useSuspenseQuery(workoutTemplatesQueryOptions(page));
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const workoutTemplates = workoutTemplatesPayload.workoutTemplates;
   const hasNextPage = workoutTemplatesPayload.hasNextPage;
-  const exerciseNameById = useMemo(
-    () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
-    [exercises],
-  );
+  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
 
   return (
     <>
       {workoutTemplates.length === 0 ? (
-        <p className="text-muted-foreground">
-          No workout templates yet. Create your first one to get started.
-        </p>
+        <p className="text-muted-foreground">No workout templates yet. Create your first one to get started.</p>
       ) : (
         <div className="flex flex-col gap-4">
           {workoutTemplates.map((workoutTemplate, templateIndex) => (

@@ -7,16 +7,10 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  createDefaultWorkoutTemplate,
-  type WorkoutTemplateState,
-} from "@/data/workout-templates/workout-state";
+import { createDefaultWorkoutTemplate, type WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import {
-  saveWorkoutTemplate,
-  workoutTemplatesQueryOptions,
-} from "@/server-functions/workout-templates";
+import { saveWorkoutTemplate, workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/admin/workout-templates/create/")({
@@ -28,8 +22,7 @@ export const Route = createFileRoute("/app/admin/workout-templates/create/")({
 });
 
 function RouteComponent() {
-  const [workoutTemplateState, setWorkoutTemplateState] =
-    useState<WorkoutTemplateState>(createDefaultWorkoutTemplate());
+  const [workoutTemplateState, setWorkoutTemplateState] = useState<WorkoutTemplateState>(createDefaultWorkoutTemplate());
 
   return (
     <SuspensePageLayout title="Create Workout Template">
@@ -55,10 +48,7 @@ const RenderWorkoutTemplateForm: FC<RenderWorkoutTemplateFormProps> = props => {
 
   return (
     <Fragment key={formResetKey}>
-      <RouteContent
-        onReset={onReset}
-        workoutTemplateState={workoutTemplateState}
-      />
+      <RouteContent onReset={onReset} workoutTemplateState={workoutTemplateState} />
     </Fragment>
   );
 };
@@ -99,29 +89,16 @@ const RouteContent: FC<RouteContentProps> = props => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <WorkoutTemplate
-        form={form}
-        exercises={exercises}
-        muscleGroups={muscleGroups}
-      />
+      <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8 flex items-center gap-4">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout template"}
         </Button>
         <label className="flex items-center gap-2">
-          <Checkbox
-            onCheckedChange={checked => (addAnotherRef.current = !!checked)}
-            disabled={isSaving}
-          />
+          <Checkbox onCheckedChange={checked => (addAnotherRef.current = !!checked)} disabled={isSaving} />
           <span className="text-sm">Add another</span>
         </label>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={isSaving}
-          className="font-semibold ml-auto"
-          onClick={onReset}
-        >
+        <Button type="button" variant="secondary" disabled={isSaving} className="font-semibold ml-auto" onClick={onReset}>
           Reset workout template
         </Button>
       </div>

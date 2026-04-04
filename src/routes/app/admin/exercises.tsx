@@ -28,9 +28,7 @@ function RouteComponent() {
 function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<number[]>(
-    [],
-  );
+  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<number[]>([]);
 
   const muscleGroupLookup = useMemo(() => {
     return new Map(muscleGroups.map(group => [group.id, group]));
@@ -41,11 +39,7 @@ function RouteContent() {
       return exercises;
     }
 
-    return exercises.filter(exercise =>
-      exercise.muscleGroups?.some(group =>
-        selectedMuscleGroups.includes(group),
-      ),
-    );
+    return exercises.filter(exercise => exercise.muscleGroups?.some(group => selectedMuscleGroups.includes(group)));
   }, [exercises, selectedMuscleGroups]);
 
   const toggleMuscleGroup = (muscleGroup: MuscleGroup, checked: boolean) => {
@@ -66,10 +60,7 @@ function RouteContent() {
         onToggleMuscleGroup={toggleMuscleGroup}
       />
 
-      <ExerciseListDisplay
-        exercises={filteredExercises}
-        muscleGroups={muscleGroups}
-      />
+      <ExerciseListDisplay exercises={filteredExercises} muscleGroups={muscleGroups} />
     </>
   );
 }

@@ -10,10 +10,7 @@ import { Button } from "@/components/ui/button";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import {
-  workoutTemplateByIdQueryOptions,
-  updateWorkoutTemplate,
-} from "@/server-functions/workout-templates";
+import { workoutTemplateByIdQueryOptions, updateWorkoutTemplate } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import type { MuscleGroup } from "@/data/types";
 import { Header } from "@/components/Header";
@@ -26,9 +23,7 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
       throw notFound();
     }
 
-    context.queryClient.ensureQueryData(
-      workoutTemplateByIdQueryOptions(workoutTemplateId),
-    );
+    context.queryClient.ensureQueryData(workoutTemplateByIdQueryOptions(workoutTemplateId));
     context.queryClient.ensureQueryData(exercisesQueryOptions());
     context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
@@ -36,9 +31,7 @@ export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
   notFoundComponent: () => (
     <section>
       <Header title="Workout Template Not Found" />
-      <p className="text-muted-foreground">
-        Could not find this workout template
-      </p>
+      <p className="text-muted-foreground">Could not find this workout template</p>
     </section>
   ),
 });
@@ -55,9 +48,7 @@ function RouteContent() {
   const { id } = Route.useParams();
   const workoutTemplateId = Number(id);
 
-  const { data: workoutTemplate } = useSuspenseQuery(
-    workoutTemplateByIdQueryOptions(workoutTemplateId),
-  );
+  const { data: workoutTemplate } = useSuspenseQuery(workoutTemplateByIdQueryOptions(workoutTemplateId));
 
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
@@ -72,13 +63,7 @@ function RouteContent() {
     return null;
   }
 
-  return (
-    <WorkoutTemplateDetailForm
-      workoutTemplate={workoutTemplate}
-      exercises={exercises}
-      muscleGroups={muscleGroups}
-    />
-  );
+  return <WorkoutTemplateDetailForm workoutTemplate={workoutTemplate} exercises={exercises} muscleGroups={muscleGroups} />;
 }
 
 type WorkoutTemplateDetailFormProps = {
@@ -87,11 +72,7 @@ type WorkoutTemplateDetailFormProps = {
   muscleGroups: MuscleGroup[];
 };
 
-const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
-  workoutTemplate,
-  exercises,
-  muscleGroups,
-}) => {
+const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({ workoutTemplate, exercises, muscleGroups }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useWorkoutTemplateForm(async state => {
@@ -119,11 +100,7 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <WorkoutTemplate
-        form={form}
-        exercises={exercises}
-        muscleGroups={muscleGroups}
-      />
+      <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Update workout template"}

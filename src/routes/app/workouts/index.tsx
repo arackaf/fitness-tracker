@@ -12,9 +12,7 @@ import { Loading } from "@/components/loading-state/Loading";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: ({ context }) => {
-    context.queryClient.ensureQueryData(
-      workoutHistoryQueryOptions({ page: 1 }),
-    );
+    context.queryClient.ensureQueryData(workoutHistoryQueryOptions({ page: 1 }));
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
@@ -49,10 +47,7 @@ const RouteContent: FC = () => {
   const workouts = workoutsPayload.workouts;
   const hasNextPage = workoutsPayload.hasNextPage;
 
-  const exerciseNameById = useMemo(
-    () => new Map(exercises.map(exercise => [exercise.id, exercise.name])),
-    [exercises],
-  );
+  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
 
   const pending = page !== deferredPage;
 
@@ -61,9 +56,7 @@ const RouteContent: FC = () => {
       {pending ? <Loading placement="page" fadeIn /> : null}
 
       {workouts.length === 0 ? (
-        <p className="text-muted-foreground">
-          No workouts yet. Start by logging your first one.
-        </p>
+        <p className="text-muted-foreground">No workouts yet. Start by logging your first one.</p>
       ) : (
         <div className="flex flex-col gap-4">
           {workouts.map((workout, workoutIndex) => (

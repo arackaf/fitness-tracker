@@ -8,10 +8,7 @@ import { Workout } from "@/components/edit-workout/Workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import {
-  workoutByIdQueryOptions,
-  updateWorkout,
-} from "@/server-functions/workouts";
+import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import type { MuscleGroup } from "@/data/types";
@@ -60,9 +57,7 @@ function RouteContent() {
   const navigate = Route.useNavigate();
   const workoutId = Number(id);
 
-  const { data: workout } = useSuspenseQuery(
-    workoutByIdQueryOptions(workoutId),
-  );
+  const { data: workout } = useSuspenseQuery(workoutByIdQueryOptions(workoutId));
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
@@ -79,13 +74,7 @@ function RouteContent() {
     return null;
   }
 
-  return (
-    <WorkoutDetailForm
-      workout={workout}
-      exercises={exercises}
-      muscleGroups={muscleGroups}
-    />
-  );
+  return <WorkoutDetailForm workout={workout} exercises={exercises} muscleGroups={muscleGroups} />;
 }
 
 type WorkoutDetailFormProps = {
@@ -94,11 +83,7 @@ type WorkoutDetailFormProps = {
   muscleGroups: MuscleGroup[];
 };
 
-const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({
-  workout,
-  exercises,
-  muscleGroups,
-}) => {
+const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, muscleGroups }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useWorkoutForm(async state => {
