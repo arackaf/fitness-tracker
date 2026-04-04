@@ -13,7 +13,7 @@ export type WorkoutTemplateSegmentExerciseMeasurementState = WorkoutTemplateSegm
   id?: number;
 };
 
-export type WorkoutTemplateState = WorkoutTemplate & {
+export type WorkoutTemplateState = Omit<WorkoutTemplate, "userId"> & {
   id?: number;
   segments: TemplateSegmentWithExercises[];
 };

@@ -21,6 +21,7 @@ export const insertBodyCompositionMeasurement = async (input: BodyCompositionMea
   const [insertedMeasurement] = await db
     .insert(bodyCompositionMeasurement)
     .values({
+      userId: "", //TODO: Add auth
       bodyCompositionMetricId: input.bodyCompositionMetricId,
       measurementDate: input.measurementDate,
       value: numericValue,

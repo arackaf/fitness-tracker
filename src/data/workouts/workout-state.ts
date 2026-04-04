@@ -23,12 +23,12 @@ export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
   exercises: WorkoutSegmentExerciseState[];
 };
 
-export type WorkoutState = Workout & {
+export type WorkoutState = Omit<Workout, "userId"> & {
   id?: number;
   segments: SegmentWithExercises[];
 };
 
-export type ExistingWorkoutState = Workout & {
+export type ExistingWorkoutState = Omit<Workout, "userId"> & {
   id: number;
   segments: SegmentWithExercises[];
 };

@@ -8,6 +8,7 @@ export const insertBodyCompositionMetric = async (input: BodyCompositionMetricSt
   const [insertedMetric] = await db
     .insert(bodyCompositionMetric)
     .values({
+      userId: "", //TODO: Add auth
       name: input.name.trim(),
       measurementType: input.measurementType,
     })

@@ -83,6 +83,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
       .values({
         name: input.name,
         description: input.description,
+        userId: "", //TODO: Add auth
       })
       .returning({ id: workoutTemplateTable.id });
 

@@ -6,14 +6,14 @@ export type BodyCompositionMetric = typeof bodyCompositionMetric.$inferInsert & 
 };
 export type ExistingBodyCompositionMetric = typeof bodyCompositionMetric.$inferSelect;
 
-export type BodyCompositionMeasurement = typeof bodyCompositionMeasurement.$inferInsert;
-export type ExistingBodyCompositionMeasurement = typeof bodyCompositionMeasurement.$inferSelect;
+export type BodyCompositionMeasurement = Omit<typeof bodyCompositionMeasurement.$inferInsert, "userId">;
+export type ExistingBodyCompositionMeasurement = Omit<typeof bodyCompositionMeasurement.$inferSelect, "userId">;
 
 export type BodyCompositionMetricState = BodyCompositionMetric & {
   id?: number;
 };
 
-export type BodyCompositionMeasurementState = BodyCompositionMeasurement & {
+export type BodyCompositionMeasurementState = Omit<BodyCompositionMeasurement, "userId"> & {
   id?: number;
   bodyCompositionMeasurementType: BodyCompositionMeasurementType | null;
 };

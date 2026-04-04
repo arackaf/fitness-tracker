@@ -80,6 +80,7 @@ export const insertWorkout = async (input: WorkoutState) => {
     const [insertedWorkout] = await tx
       .insert(workoutTable)
       .values({
+        userId: "", //TODO: Add auth
         name: input.name,
         description: input.description,
         workoutDate: input.workoutDate,
