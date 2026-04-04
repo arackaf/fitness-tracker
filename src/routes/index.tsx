@@ -54,7 +54,7 @@ function App() {
                 </Button>
               ) : (
                 <Button variant="default" asChild>
-                  <Link to="/app">Dashboard</Link>
+                  <Link to="/app">Go to the app</Link>
                 </Button>
               )}
             </div>
