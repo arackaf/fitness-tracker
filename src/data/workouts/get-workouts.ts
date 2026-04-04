@@ -10,7 +10,7 @@ import {
   workoutSegmentExercise as workoutSegmentExerciseTable,
   workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
-import { formatNumericForDisplay } from "../util/format-numeric";
+import { toNumericValue } from "@/lib/toNumericValue";
 
 const WORKOUT_HISTORY_LIMIT = 3;
 const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
@@ -161,7 +161,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
         workoutSegmentExerciseId: row.exerciseRowId,
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
-        weightUsed: formatNumericForDisplay(row.measurementWeightUsed),
+        weightUsed: toNumericValue(row.measurementWeightUsed),
         duration: row.measurementDuration,
         distance: row.measurementDistance,
       });

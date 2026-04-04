@@ -41,7 +41,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmen
                               value={distanceField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;
-                                distanceField.handleChange(value === "" ? null : value);
+                                distanceField.handleChange(!value ? null : Number(value));
                               }}
                               className={cn("h-7 w-24 px-2 py-1", !distanceField.state.meta.isValid ? "border-red-500" : "")}
                             />

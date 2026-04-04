@@ -81,7 +81,7 @@ function formatMeasurementDate(measurementDate: Date): string {
 }
 
 function formatMeasurementValue(
-  value: string,
+  value: number,
   lengthUnit: "inches" | "cm" | null,
   weightUnit: "lbs" | "kg" | null,
   measurementType: "length" | "weight" | "percentage" | undefined,
@@ -91,12 +91,12 @@ function formatMeasurementValue(
   }
 
   if (measurementType === "length") {
-    return lengthUnit ? `${value} ${lengthUnit}` : value;
+    return lengthUnit ? `${value} ${lengthUnit}` : value.toString();
   }
 
   if (measurementType === "weight") {
-    return weightUnit ? `${value} ${weightUnit}` : value;
+    return weightUnit ? `${value} ${weightUnit}` : value.toString();
   }
 
-  return value;
+  return value.toString();
 }

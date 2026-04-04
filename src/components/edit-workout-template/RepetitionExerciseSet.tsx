@@ -63,7 +63,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    weightUsedField.handleChange(value === "" ? null : value);
+                                    weightUsedField.handleChange(!value ? null : Number(value));
                                   }}
                                   className={cn("h-7 w-18 px-2 py-1")}
                                 />

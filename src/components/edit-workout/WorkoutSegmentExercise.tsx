@@ -128,7 +128,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                                 const measurements =
                                   form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasWeightValue = measurements?.some(
-                                  measurement => measurement.weightUsed != null && measurement.weightUsed !== "",
+                                  measurement => measurement.weightUsed != null && measurement.weightUsed != null,
                                 );
 
                                 if (hasWeightValue && value == null) {
@@ -162,7 +162,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                                 const measurements =
                                   form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasDistanceValue = measurements?.some(
-                                  measurement => measurement.distance != null && measurement.distance !== "",
+                                  measurement => measurement.distance != null && measurement.distance != null,
                                 );
 
                                 if (hasDistanceValue && value == null) {
@@ -198,7 +198,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                                 const measurements =
                                   form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements;
                                 const hasDurationValue = measurements?.some(
-                                  measurement => measurement.duration != null && measurement.duration !== "",
+                                  measurement => measurement.duration != null && measurement.duration != null,
                                 );
 
                                 if (hasDurationValue && value == null) {
