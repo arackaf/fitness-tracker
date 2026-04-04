@@ -1,4 +1,3 @@
-import { DARK_MODE } from "@/APPLICATION-SETTINGS";
 import { useRouterState } from "@tanstack/react-router";
 import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from "react";
 
@@ -12,7 +11,7 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: PropsWithChildren) {
-  const [theme, setTheme] = useState<Theme>(DARK_MODE ? "dark" : "light");
+  const [theme, setTheme] = useState<Theme>("dark");
   const pathname = useRouterState({ select: state => state.location.pathname });
   const isLessonsRoute = pathname === "/lessons" || pathname.startsWith("/lessons/");
   const appliedTheme: Theme = isLessonsRoute ? "light" : theme;

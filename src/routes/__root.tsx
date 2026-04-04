@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { DARK_MODE } from "@/APPLICATION-SETTINGS";
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -41,7 +40,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isLessonsRoute = pathname === "/lessons" || pathname.startsWith("/lessons/");
 
   return (
-    <html lang="en" className={DARK_MODE && !isLessonsRoute ? "dark" : ""}>
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
