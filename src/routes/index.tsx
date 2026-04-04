@@ -1,9 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { GoogleIcon } from "@/components/icons/Google";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { getSession } from "@/lib/auth.functions";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({
+  beforeLoad: async () => {
+    const session = await getSession();
+    return {
+      loggedIn: !!session,
+    };
+  },
+  component: App,
+});
 
 function App() {
+  const { loggedIn } = Route.useRouteContext();
   return (
     <main className="min-h-screen bg-linear-to-b from-slate-100 via-white to-slate-100 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
       <div className="mx-auto flex w-full max-w-5xl flex-col px-6 py-12 md:px-10 md:py-16">
@@ -35,18 +48,15 @@ function App() {
               Log workouts, follow your progress, and stay consistent without extra clutter.
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button
-                type="button"
-                className="rounded-lg bg-sky-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-sky-400"
-              >
-                Log in
-              </button>
-              <button
-                type="button"
-                className="rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-slate-400 dark:hover:bg-slate-800"
-              >
-                Sign up
-              </button>
+              {!loggedIn ? (
+                <Button type="button" variant="default" onClick={() => authClient.signIn.social({ provider: "google" })}>
+                  <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
+                </Button>
+              ) : (
+                <Button variant="default" asChild>
+                  <Link to="/app">Dashboard</Link>
+                </Button>
+              )}
             </div>
           </div>
 
