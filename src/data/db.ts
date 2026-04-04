@@ -1,10 +1,10 @@
-import { USE_PG_LITE } from "@/APPLICATION-SETTINGS";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 
-import { getPgLiteDb } from "./db-setup/pg-lite/get-pg-lite-db";
-import { getPgDb } from "./db-setup/pg/get-pg-db";
+const connectionString = process.env.POSTGRES!;
 
-import type { DbType } from "@/data/types";
+const pool = new Pool({
+  connectionString: connectionString,
+});
 
-export const getDb = async (): Promise<DbType> => {
-  return USE_PG_LITE ? getPgLiteDb() : getPgDb();
-};
+export const db = drizzle({ client: pool });
