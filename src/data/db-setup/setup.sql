@@ -30,12 +30,14 @@ CREATE TYPE body_composition_weight_unit AS ENUM ('lbs', 'kg');
 
 CREATE TABLE IF NOT EXISTS muscle_group (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   name VARCHAR(50) NOT NULL,
   UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS exercises (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   name VARCHAR(150) NOT NULL,
   description TEXT,
   muscle_groups INT[] NOT NULL,
@@ -53,6 +55,7 @@ CREATE INDEX IF NOT EXISTS idx_exercises_muscle_groups_gin
 
 CREATE TABLE IF NOT EXISTS workout_template (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   name VARCHAR(50) NOT NULL,
   description TEXT NOT NULL DEFAULT ''
 );
@@ -96,6 +99,7 @@ CREATE TABLE IF NOT EXISTS workout_template_segment_exercise_measurement (
 
 CREATE TABLE IF NOT EXISTS workout (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   name VARCHAR(50) NOT NULL,
   description TEXT NOT NULL DEFAULT '',
   workout_date DATE NOT NULL
@@ -137,20 +141,20 @@ CREATE TABLE IF NOT EXISTS workout_segment_exercise_measurement (
 CREATE INDEX IF NOT EXISTS idx_workout_segment_exercise_measurement_exercise_id_set_order
   ON workout_segment_exercise_measurement (workout_segment_exercise_id, set_order);
 
-
-
 -- ================================================================================
 -- Body Composition
 -- ================================================================================
 
 CREATE TABLE IF NOT EXISTS body_composition_metric (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   name VARCHAR(50) NOT NULL,
   measurement_type body_composition_measurement_type NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS body_composition_measurement (
   id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  "userId" TEXT NOT NULL,
   body_composition_metric_id INT NOT NULL REFERENCES body_composition_metric(id),
   measurement_date TIMESTAMP NOT NULL,
   value NUMERIC(8, 2) NOT NULL,
