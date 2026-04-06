@@ -26,12 +26,8 @@ function App() {
               <Dumbbell className="size-5" aria-hidden="true" />
             </div>
             <div>
-              <p className="text-2xl font-extrabold leading-none tracking-tight text-white md:text-3xl">
-                TanStack Jacked
-              </p>
-              <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-                Workout Tracker
-              </p>
+              <p className="text-2xl font-extrabold leading-none tracking-tight text-white md:text-3xl">TanStack Jacked</p>
+              <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">Workout Tracker</p>
             </div>
           </div>
         </header>
@@ -63,15 +59,9 @@ function App() {
           <aside className="rounded-2xl border border-slate-700 bg-slate-900/60 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
             <p className="mb-4 text-sm font-medium text-slate-300">What you can track</p>
             <ul className="space-y-3 text-sm text-slate-200">
-              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">
-                Workout sessions and volume
-              </li>
-              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">
-                Body Composition Metrics
-              </li>
-              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">
-                Notes for sets, reps, etc
-              </li>
+              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">Workout sessions and volume</li>
+              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">Body Composition Metrics</li>
+              <li className="rounded-lg border border-slate-700 bg-slate-800/60 px-4 py-3">Notes for sets, reps, etc</li>
             </ul>
           </aside>
         </section>
