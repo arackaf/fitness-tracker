@@ -6,8 +6,8 @@ import {
   timestamp,
   varchar,
   boolean,
-  numeric,
   date,
+  numeric,
   index,
   foreignKey,
   primaryKey,
@@ -89,7 +89,7 @@ export const muscleGroup = pgTable(
     userId: text().notNull(),
     name: varchar({ length: 50 }).notNull(),
   },
-  table => [unique("muscle_group_name_key").on(table.name)],
+  table => [unique("muscle_group_user_id_name_key").on(table.userId, table.name)],
 );
 
 export const session = pgTable(
@@ -131,6 +131,13 @@ export const user = pgTable(
   },
   table => [unique("user_email_key").on(table.email)],
 );
+
+export const userInfo = pgTable("user_info", {
+  userId: text().primaryKey(),
+  displayName: text("display_name"),
+  imageUrl: text("image_url"),
+  initialDataSetup: boolean("initial_data_setup"),
+});
 
 export const verification = pgTable(
   "verification",
