@@ -576,6 +576,8 @@ export const setupNewUser = async (user: SessionUser) => {
   const existingUser = existingUserResults[0];
 
   if (existingUser) {
+    const end = performance.now();
+    console.log(`Existing user ${userId} found: ${end - start}ms`);
     return;
   }
 
