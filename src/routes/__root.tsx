@@ -6,12 +6,23 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
+import { getSession } from "@/lib/auth.functions";
+import { setupNewUser } from "@/data/new-user-setup";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async () => {
+    const session = await getSession();
+    if (session) {
+      await setupNewUser(session.user);
+    }
+    return {
+      loggedIn: !!session,
+    };
+  },
   head: () => ({
     meta: [
       {

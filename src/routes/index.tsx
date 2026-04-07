@@ -1,17 +1,10 @@
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
-import { getSession } from "@/lib/auth.functions";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: async () => {
-    const session = await getSession();
-    return {
-      loggedIn: !!session,
-    };
-  },
   component: App,
 });
 
