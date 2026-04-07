@@ -4,7 +4,7 @@ WORKDIR /app
 
 FROM base AS deps
 COPY package.json package-lock.json ./
-RUN npm ci --force
+RUN npm install --force
 
 FROM deps AS build
 COPY . .
