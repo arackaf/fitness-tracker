@@ -1,5 +1,7 @@
 import { db } from "@/data/db";
-import { bodyCompositionMetric, exercises, muscleGroup } from "@/drizzle/schema";
+import { bodyCompositionMetric, exercises, muscleGroup, userInfo } from "@/drizzle/schema";
+import type { SessionUser } from "@/lib/auth.functions";
+import { eq } from "drizzle-orm";
 
 type MuscleGroupSeed = {
   name: string;
@@ -565,35 +567,54 @@ const getMuscleGroupId = (name: string, muscleGroupIdByName: Map<string, number>
   return muscleGroupId;
 };
 
-export const setupNewUserData = async (userId: string) => {
-  await db.transaction(async tx => {
-    const insertedMuscleGroups = await tx
-      .insert(muscleGroup)
-      .values(muscleGroupSeedData.map(seed => ({ userId, name: seed.name })))
-      .returning({ id: muscleGroup.id, name: muscleGroup.name });
+export const setupNewUser = async (user: SessionUser) => {
+  const { id: userId, name, image } = user;
 
-    const muscleGroupIdByName = new Map(
-      insertedMuscleGroups.map(insertedMuscleGroup => [insertedMuscleGroup.name, insertedMuscleGroup.id]),
-    );
+  const existingUserResults = await db.select().from(userInfo).for("update").where(eq(userInfo.userId, userId)).limit(1);
+  const existingUser = existingUserResults[0];
 
-    const exerciseRows = exerciseSeedData.map(seed => ({
-      userId,
-      name: seed.name,
-      description: seed.description,
-      muscleGroups: seed.muscleGroups.map(name => getMuscleGroupId(name, muscleGroupIdByName)),
-      isCompound: seed.isCompound,
-      isBodyweight: bodyweightExerciseNames.has(seed.name),
-      executionType: seed.executionType,
-    }));
+  if (existingUser) {
+    return;
+  }
 
-    await tx.insert(exercises).values(exerciseRows);
+  await db.transaction(
+    async tx => {
+      await tx.insert(userInfo).values({
+        userId,
+        displayName: name,
+        imageUrl: image,
+        initialDataSetup: true,
+      });
 
-    await tx.insert(bodyCompositionMetric).values(
-      bodyCompositionMetricSeedData.map(seed => ({
+      const insertedMuscleGroups = await tx
+        .insert(muscleGroup)
+        .values(muscleGroupSeedData.map(seed => ({ userId, name: seed.name })))
+        .returning({ id: muscleGroup.id, name: muscleGroup.name });
+
+      const muscleGroupIdByName = new Map(
+        insertedMuscleGroups.map(insertedMuscleGroup => [insertedMuscleGroup.name, insertedMuscleGroup.id]),
+      );
+
+      const exerciseRows = exerciseSeedData.map(seed => ({
         userId,
         name: seed.name,
-        measurementType: seed.measurementType,
-      })),
-    );
-  });
+        description: seed.description,
+        muscleGroups: seed.muscleGroups.map(name => getMuscleGroupId(name, muscleGroupIdByName)),
+        isCompound: seed.isCompound,
+        isBodyweight: bodyweightExerciseNames.has(seed.name),
+        executionType: seed.executionType,
+      }));
+
+      await tx.insert(exercises).values(exerciseRows);
+
+      await tx.insert(bodyCompositionMetric).values(
+        bodyCompositionMetricSeedData.map(seed => ({
+          userId,
+          name: seed.name,
+          measurementType: seed.measurementType,
+        })),
+      );
+    },
+    { isolationLevel: "repeatable read" },
+  );
 };
