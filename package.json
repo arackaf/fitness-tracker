@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.15",
+    "@noble/ciphers": "^2.1.1",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.10.0",
     "@tanstack/react-form": "^1.28.3",
