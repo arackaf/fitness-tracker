@@ -1,0 +1,15 @@
+# flyctl launch added from .gitignore
+**/node_modules
+**/.DS_Store
+**/dist
+**/dist-ssr
+**/*.local
+**/.nitro
+**/.tanstack
+**/.wrangler
+**/.output
+**/.vinxi
+**/__unconfig*
+**/todos.json
+**/.env
+fly.toml
