@@ -8,20 +8,26 @@ import appCss from "../styles.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import { getSession } from "@/lib/auth.functions";
 import { setupNewUser } from "@/data/new-user-setup";
+import { createServerFn } from "@tanstack/react-start";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
 
+const setupNewUserServerFn = createServerFn({ method: "POST" }).handler(async () => {
+  const session = await getSession();
+  if (session) {
+    await setupNewUser(session.user);
+  }
+  return {
+    loggedIn: !!session,
+  };
+});
+
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async () => {
-    const session = await getSession();
-    if (session) {
-      await setupNewUser(session.user);
-    }
-    return {
-      loggedIn: !!session,
-    };
+    const result = await setupNewUserServerFn();
+    return result;
   },
   head: () => ({
     meta: [
