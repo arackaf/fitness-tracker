@@ -15,12 +15,12 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async () => {
-    const session = await getSession();
-    if (session) {
-      await setupNewUser(session.user);
-    }
+    // const session = await getSession();
+    // if (session) {
+    //   await setupNewUser(session.user);
+    // }
     return {
-      loggedIn: !!session,
+      loggedIn: false, // !!session,
     };
   },
   head: () => ({
