@@ -568,6 +568,8 @@ const getMuscleGroupId = (name: string, muscleGroupIdByName: Map<string, number>
 };
 
 export const setupNewUser = async (user: SessionUser) => {
+  const start = performance.now();
+
   const { id: userId, name, image } = user;
 
   const existingUserResults = await db.select().from(userInfo).for("update").where(eq(userInfo.userId, userId)).limit(1);
@@ -617,4 +619,7 @@ export const setupNewUser = async (user: SessionUser) => {
     },
     { isolationLevel: "repeatable read" },
   );
+
+  const end = performance.now();
+  console.log(`Setup new user ${userId}: ${end - start}ms`);
 };
