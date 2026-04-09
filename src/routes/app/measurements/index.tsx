@@ -51,16 +51,11 @@ function RouteContent() {
         );
 
         return (
-          <li
-            key={measurement.id}
-            className="rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 shadow-sm"
-          >
+          <li key={measurement.id} className="rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-base font-semibold text-slate-50">{metric?.name ?? "Unknown metric"}</p>
-                <p className="mt-1 text-sm text-slate-300/80">
-                  {formatMeasurementDate(measurement.measurementDate)}
-                </p>
+                <p className="mt-1 text-sm text-slate-300/80">{formatMeasurementDate(measurement.measurementDate)}</p>
               </div>
               <p className="text-base font-semibold text-slate-50">{valueWithUnit}</p>
             </div>
