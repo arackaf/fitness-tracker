@@ -30,10 +30,6 @@ function RouteContent() {
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
   const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<number[]>([]);
 
-  const muscleGroupLookup = useMemo(() => {
-    return new Map(muscleGroups.map(group => [group.id, group]));
-  }, [muscleGroups]);
-
   const filteredExercises = useMemo(() => {
     if (!selectedMuscleGroups.length) {
       return exercises;
