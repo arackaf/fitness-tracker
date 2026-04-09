@@ -33,13 +33,9 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
               <p className="text-base font-semibold">{exercise.name ?? "Unnamed exercise"}</p>
               <p className="mt-1 text-sm">{exercise.description ?? "No description yet."}</p>
             </div>
-            <span
-              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                exercise.isCompound === true ? "bg-emerald-400/20 text-emerald-200" : "bg-slate-700/70 text-foreground"
-              }`}
-            >
-              {exercise.isCompound === true ? "Compound" : "Isolation"}
-            </span>
+            {exercise.isCompound ? (
+              <span className="rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-400/20 text-emerald-200">Compound</span>
+            ) : null}
           </div>
 
           {exercise.muscleGroups?.length ? (
