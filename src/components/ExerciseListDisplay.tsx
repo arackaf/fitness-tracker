@@ -26,7 +26,7 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
       {exercises.map(exercise => (
         <li
           key={exercise.id}
-          className="rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 shadow-sm transition hover:border-slate-600"
+          className="rounded-xl border border-card-border bg-card p-4 shadow-sm transition hover:border-card-hover-border"
         >
           <div className="flex items-start justify-between gap-4">
             <div>

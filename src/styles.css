@@ -29,6 +29,8 @@ code {
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+  --color-card-border: var(--card-border);
+  --color-card-hover-border: var(--card-hover-border);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
@@ -96,8 +98,10 @@ code {
 .dark {
   --background: var(--color-slate-900);
   --foreground: var(--color-slate-300);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
+  --card: color-mix(in oklab, var(--color-slate-800) 55%, transparent);
+  --card-foreground: var(--color-slate-300);
+  --card-border: color-mix(in oklab, var(--color-slate-700) 80%, transparent);
+  --card-hover-border: var(--color-slate-600);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
   --primary: oklch(0.929 0.013 255.508);
