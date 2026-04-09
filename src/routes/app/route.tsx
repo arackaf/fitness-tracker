@@ -24,7 +24,7 @@ function RouteComponent() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-card/60 px-6 py-4 backdrop-blur-md md:px-8">
+      <header className="border-b border-border px-6 py-4 backdrop-blur-md md:px-8">
         <nav className="mx-auto hidden w-full max-w-4xl flex-wrap items-center gap-2 px-6 md:flex">
           <Link
             to="/app/log-workout"
