@@ -3,6 +3,7 @@ import type { FC } from "react";
 import type { TemplateSegmentWithExercises } from "@/data/workout-templates/workout-state";
 
 import { WorkoutTemplateSegmentExerciseReps } from "./WorkoutTemplateSegmentExerciseReps";
+import { InnerCard } from "@/components/InnerCard";
 
 type WorkoutTemplateSegmentProps = {
   exerciseNameById: Map<number, string>;
@@ -14,7 +15,7 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({ segmen
     measurements.some(measurement => measurement.repsToFailure);
 
   return (
-    <section className="rounded-lg border border-border/80 bg-background/70 p-3">
+    <InnerCard as="section">
       <p className="text-sm font-medium">{segment.sets} sets</p>
       <p className="mt-2 text-sm text-muted-foreground">
         {segment.exercises.map((exercise, exerciseIndex) => (
@@ -27,6 +28,6 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({ segmen
       </p>
 
       <WorkoutTemplateSegmentExerciseReps segment={segment} />
-    </section>
+    </InnerCard>
   );
 };

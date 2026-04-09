@@ -1,6 +1,7 @@
 import { useState, type FC } from "react";
 import { Trash2 } from "lucide-react";
 
+import { InnerCard } from "@/components/InnerCard";
 import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,7 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
   const exIdx = exerciseIndex;
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-border/80 bg-background/70 p-4">
+    <InnerCard className="flex flex-col gap-4">
       <div className="flex items-start">
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
           <form.Field
@@ -240,6 +241,6 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
           )
         }
       </form.Subscribe>
-    </div>
+    </InnerCard>
   );
 };
