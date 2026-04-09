@@ -53,9 +53,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: state => state.location.pathname });
-  const isLessonsRoute = pathname === "/lessons" || pathname.startsWith("/lessons/");
-
   return (
     <html lang="en" className="dark">
       <head>
