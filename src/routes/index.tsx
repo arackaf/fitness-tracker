@@ -1,3 +1,4 @@
+import { Card } from "@/components/Card";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -50,9 +51,11 @@ function App() {
           <aside className="rounded-2xl border border-slate-700 bg-background/60 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
             <p className="mb-4 text-sm font-medium">What you can track</p>
             <ul className="space-y-3 text-sm">
-              <li className="rounded-lg ui-card px-4 py-3">Workout sessions and volume</li>
-              <li className="rounded-lg ui-card px-4 py-3">Body Composition Metrics</li>
-              <li className="rounded-lg ui-card px-4 py-3">Notes for sets, reps, etc</li>
+              <Card as="li" className="rounded-lg px-4">
+                Workout sessions and volume
+              </Card>
+              <Card className="rounded-lg">Body Composition Metrics</Card>
+              <Card className="rounded-lg px-4">Notes for sets, reps, etc</Card>
             </ul>
           </aside>
         </section>

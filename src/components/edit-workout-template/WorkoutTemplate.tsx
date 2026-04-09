@@ -1,5 +1,6 @@
 import type { FC } from "react";
 
+import { Card } from "@/components/Card";
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,7 +18,7 @@ type WorkoutTemplateProps = {
 export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid gap-4 rounded-xl ui-card p-4 md:grid-cols-2">
+      <Card className="grid gap-4 md:grid-cols-2">
         <form.Field
           name="name"
           validators={{
@@ -62,7 +63,7 @@ export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises, mus
             </label>
           )}
         />
-      </div>
+      </Card>
 
       <WorkoutTemplateSegments form={form} muscleGroups={muscleGroups} exercises={exercises} />
     </div>

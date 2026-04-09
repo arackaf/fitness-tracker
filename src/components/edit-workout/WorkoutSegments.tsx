@@ -1,6 +1,7 @@
 import type { FC } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
+import { Card } from "@/components/Card";
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,7 +54,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, mus
       children={segmentsField => (
         <div className="flex flex-col gap-4">
           {segmentsField.state.value.map((segment, segmentIndex) => (
-            <div key={`segment-${segment.id}`} className="flex flex-col gap-4 rounded-xl ui-card p-4">
+            <Card key={`segment-${segment.id}`} className="flex flex-col gap-4">
               <div className="flex items-end gap-3">
                 <form.Field
                   name={`segments[${segmentIndex}].sets`}
@@ -128,7 +129,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, mus
                 segmentIndex={segmentIndex}
                 segmentSets={segmentsField.state.value[segmentIndex].sets}
               />
-            </div>
+            </Card>
           ))}
           <Button
             type="button"

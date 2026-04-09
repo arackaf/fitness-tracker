@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { Link } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { Card } from "@/components/Card";
 import { Button } from "@/components/ui/button";
 
 import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
@@ -13,7 +14,7 @@ type DisplayWorkoutTemplateProps = {
 
 export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workoutTemplate, exerciseNameById }) => {
   return (
-    <article className="rounded-xl ui-card p-4">
+    <Card as="article">
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">{workoutTemplate.name}</h3>
@@ -38,6 +39,6 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workou
           />
         ))}
       </div>
-    </article>
+    </Card>
   );
 };

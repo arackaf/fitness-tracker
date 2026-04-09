@@ -1,5 +1,6 @@
-import { useMemo, useState, type FC } from "react";
+import { type FC } from "react";
 
+import { Card } from "@/components/Card";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,7 +16,7 @@ type MeasurementProps = {
 
 export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
   return (
-    <div className="grid gap-4 rounded-xl ui-card p-4 md:grid-cols-2">
+    <Card className="grid gap-4 md:grid-cols-2">
       <form.Field
         name="bodyCompositionMetricId"
         validators={{
@@ -193,6 +194,6 @@ export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
           ) : null
         }
       </form.Subscribe>
-    </div>
+    </Card>
   );
 };

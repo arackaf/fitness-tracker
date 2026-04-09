@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 import type { WorkoutState } from "@/data/workouts/workout-state";
 
+import { Card } from "@/components/Card";
 import { WorkoutSegment } from "@/components/display-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +14,7 @@ type DisplayWorkoutProps = {
 
 export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameById }) => {
   return (
-    <article className="rounded-xl ui-card p-4">
+    <Card as="article">
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">{workout.name}</h3>
@@ -34,6 +35,6 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameB
           <WorkoutSegment key={`${segment.segmentOrder}-${segmentIndex}`} segment={segment} exerciseNameById={exerciseNameById} />
         ))}
       </div>
-    </article>
+    </Card>
   );
 };

@@ -1,3 +1,4 @@
+import { Card } from "@/components/Card";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { MuscleGroup } from "@/data/types";
 
@@ -9,7 +10,7 @@ type ExerciseFiltersProps = {
 
 export function ExerciseFilters({ muscleGroups, selectedMuscleGroups, onToggleMuscleGroup }: ExerciseFiltersProps) {
   return (
-    <section className="mb-8 rounded-xl ui-card p-4 backdrop-blur-sm">
+    <Card as="section" className="mb-8 backdrop-blur-sm">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/90">Filter by muscle group</h2>
       <div className="mt-3 flex flex-wrap gap-4">
         {muscleGroups.map(muscleGroup => {
@@ -23,6 +24,6 @@ export function ExerciseFilters({ muscleGroups, selectedMuscleGroups, onToggleMu
           );
         })}
       </div>
-    </section>
+    </Card>
   );
 }
