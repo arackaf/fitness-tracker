@@ -1,9 +1,10 @@
 import { ClipboardPen, History, Menu, PencilRuler, Shield } from "lucide-react";
 import { useState } from "react";
 
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
@@ -21,6 +22,9 @@ function RouteComponent() {
   const inactiveNavLinkProps = {
     className: "hover:bg-accent hover:text-accent-foreground",
   };
+
+  const location = useLocation();
+  const adminIsActive = location.pathname.includes("/app/admin");
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -67,9 +71,8 @@ function RouteComponent() {
           <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link
             to="/app/admin/exercises"
-            className={navLinkClassName}
-            activeProps={activeNavLinkProps}
-            inactiveProps={inactiveNavLinkProps}
+            activeOptions={{ exact: false }}
+            className={cn(navLinkClassName, adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className)}
           >
             <Shield className="size-4" aria-hidden="true" />
             Admin
