@@ -134,10 +134,8 @@ function RouteComponent() {
                 </Link>
                 <div className="my-1 h-px w-full bg-border" aria-hidden="true" />
                 <Link
-                  to="/app/admin"
-                  className={`${navLinkClassName} w-full justify-start`}
-                  activeProps={activeNavLinkProps}
-                  inactiveProps={inactiveNavLinkProps}
+                  to="/app/admin/exercises"
+                  className={cn(navLinkClassName, adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className)}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Shield className="size-4" aria-hidden="true" />
