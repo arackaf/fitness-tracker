@@ -9,7 +9,7 @@ type ExerciseFiltersProps = {
 
 export function ExerciseFilters({ muscleGroups, selectedMuscleGroups, onToggleMuscleGroup }: ExerciseFiltersProps) {
   return (
-    <section className="mb-8 rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 backdrop-blur-sm">
+    <section className="mb-8 rounded-xl bg-card border border-card-border p-4 backdrop-blur-sm">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-foreground/90">Filter by muscle group</h2>
       <div className="mt-3 flex flex-wrap gap-4">
         {muscleGroups.map(muscleGroup => {

@@ -15,7 +15,7 @@ type MeasurementProps = {
 
 export const Measurement: FC<MeasurementProps> = ({ form, metrics }) => {
   return (
-    <div className="grid gap-4 rounded-xl border border-slate-700/80 bg-slate-800/55 p-4 md:grid-cols-2">
+    <div className="grid gap-4 rounded-xl bg-card border border-card-border p-4 md:grid-cols-2">
       <form.Field
         name="bodyCompositionMetricId"
         validators={{
