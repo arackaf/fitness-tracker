@@ -54,8 +54,12 @@ function App() {
               <Card as="li" className="rounded-lg px-4">
                 Workout sessions and volume
               </Card>
-              <Card className="rounded-lg">Body Composition Metrics</Card>
-              <Card className="rounded-lg px-4">Notes for sets, reps, etc</Card>
+              <Card as="li" className="rounded-lg">
+                Body Composition Metrics
+              </Card>
+              <Card as="li" className="rounded-lg px-4">
+                Notes for sets, reps, etc
+              </Card>
             </ul>
           </aside>
         </section>

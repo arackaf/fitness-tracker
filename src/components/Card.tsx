@@ -7,13 +7,14 @@ type CardProps = {
 } & HtmlHTMLAttributes<any>;
 
 export const Card: FC<CardProps> = props => {
-  const { children, as = "div", hoverStyle, ...rest } = props;
+  const { children, as = "div", className = "", hoverStyle, ...rest } = props;
   const Comp = as;
   return (
     <Comp
       className={cn(
         "rounded-xl bg-card border border-card-border p-4",
         hoverStyle === "border" && "hover:border-card-hover-border",
+        className,
       )}
       {...rest}
     >
