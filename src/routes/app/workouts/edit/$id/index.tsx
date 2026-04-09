@@ -40,7 +40,7 @@ function RouteComponent() {
         <Link
           to="/app/workouts"
           search={{ page: 1 }}
-          className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-slate-300 transition-colors hover:bg-accent hover:text-accent-foreground"
+          className="inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
         >
           <Undo2 className="size-4" aria-hidden="true" />
           Workouts

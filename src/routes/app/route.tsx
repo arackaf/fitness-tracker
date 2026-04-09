@@ -19,11 +19,11 @@ function RouteComponent() {
   };
 
   const inactiveNavLinkProps = {
-    className: "text-slate-300 hover:bg-accent hover:text-accent-foreground",
+    className: "hover:bg-accent hover:text-accent-foreground",
   };
 
   return (
-    <main className="min-h-screen bg-slate-900 text-slate-100">
+    <main className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border bg-card/60 px-6 py-4 backdrop-blur-md md:px-8">
         <nav className="mx-auto hidden w-full max-w-4xl flex-wrap items-center gap-2 px-6 md:flex">
           <Link
