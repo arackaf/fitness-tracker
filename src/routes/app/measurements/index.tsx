@@ -51,7 +51,7 @@ function RouteContent() {
         );
 
         return (
-          <li key={measurement.id} className="rounded-xl bg-card border border-card-border p-4 shadow-sm">
+          <li key={measurement.id} className="rounded-xl ui-card p-4 shadow-sm">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-base font-semibold">{metric?.name ?? "Unknown metric"}</p>

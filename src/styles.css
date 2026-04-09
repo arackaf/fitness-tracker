@@ -138,6 +138,10 @@ code {
   body {
     @apply bg-background text-foreground;
   }
+
+  .ui-card {
+    @apply bg-card border border-card-border;
+  }
 }
 
 /* for shadcn checkbox, keep the normal border color even when checked */

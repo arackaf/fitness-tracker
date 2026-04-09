@@ -53,7 +53,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, mus
       children={segmentsField => (
         <div className="flex flex-col gap-4">
           {segmentsField.state.value.map((segment, segmentIndex) => (
-            <div key={`segment-${segment.id}`} className="flex flex-col gap-4 rounded-xl bg-card border border-card-border p-4">
+            <div key={`segment-${segment.id}`} className="flex flex-col gap-4 rounded-xl ui-card p-4">
               <div className="flex items-end gap-3">
                 <form.Field
                   name={`segments[${segmentIndex}].sets`}

@@ -17,7 +17,7 @@ type WorkoutTemplateProps = {
 export const WorkoutTemplate: FC<WorkoutTemplateProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid gap-4 rounded-xl bg-card border border-card-border p-4 md:grid-cols-2">
+      <div className="grid gap-4 rounded-xl ui-card p-4 md:grid-cols-2">
         <form.Field
           name="name"
           validators={{

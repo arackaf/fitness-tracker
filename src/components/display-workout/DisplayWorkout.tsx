@@ -13,7 +13,7 @@ type DisplayWorkoutProps = {
 
 export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameById }) => {
   return (
-    <article className="rounded-xl bg-card border border-card-border p-4">
+    <article className="rounded-xl ui-card p-4">
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">{workout.name}</h3>

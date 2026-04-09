@@ -50,9 +50,9 @@ function App() {
           <aside className="rounded-2xl border border-slate-700 bg-background/60 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
             <p className="mb-4 text-sm font-medium">What you can track</p>
             <ul className="space-y-3 text-sm">
-              <li className="rounded-lg bg-card border border-card-border px-4 py-3">Workout sessions and volume</li>
-              <li className="rounded-lg bg-card border border-card-border px-4 py-3">Body Composition Metrics</li>
-              <li className="rounded-lg bg-card border border-card-border px-4 py-3">Notes for sets, reps, etc</li>
+              <li className="rounded-lg ui-card px-4 py-3">Workout sessions and volume</li>
+              <li className="rounded-lg ui-card px-4 py-3">Body Composition Metrics</li>
+              <li className="rounded-lg ui-card px-4 py-3">Notes for sets, reps, etc</li>
             </ul>
           </aside>
         </section>
