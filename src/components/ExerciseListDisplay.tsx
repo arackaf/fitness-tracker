@@ -1,5 +1,6 @@
 import type { MuscleGroup } from "@/data/types";
 import { useMemo, type FC } from "react";
+import { Card } from "@/components/Card";
 
 type ExerciseListDisplayItem = {
   id: number;
@@ -24,10 +25,7 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
   return (
     <ul className="space-y-3">
       {exercises.map(exercise => (
-        <li
-          key={exercise.id}
-          className="rounded-xl border border-card-border bg-card p-4 shadow-sm transition hover:border-card-hover-border"
-        >
+        <Card as="li" key={exercise.id} hoverStyle="border" className="rounded-xl shadow-sm transition">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-base font-semibold">{exercise.name ?? "Unnamed exercise"}</p>
@@ -46,7 +44,7 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
                 .join(" • ")}
             </p>
           ) : null}
-        </li>
+        </Card>
       ))}
     </ul>
   );
