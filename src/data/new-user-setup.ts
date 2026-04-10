@@ -31,6 +31,7 @@ const muscleGroupSeedData: MuscleGroupSeed[] = [
   { name: "lats" },
   { name: "back" },
   { name: "cardio" },
+  { name: "abs" },
 ];
 
 const bodyweightExerciseNames = new Set([
@@ -56,7 +57,7 @@ const exerciseSeedData: ExerciseSeed[] = [
   },
   {
     name: "Incline Dumbbell Press",
-    description: "Set the bench to an incline and press dumbbells from chest level to full extension overhead of your chest.",
+    description: "Set the bench to an incline and press dumbbells from chest level to full extension above your chest.",
     muscleGroups: ["chest", "shoulders", "triceps"],
     isCompound: true,
     executionType: "repetition",
@@ -238,7 +239,7 @@ const exerciseSeedData: ExerciseSeed[] = [
   },
   {
     name: "Seated Leg Curl",
-    description: "Sit in the machine, pull the pad down with your legs, then return slowly.",
+    description: "Sit in the machine, pull the pad down with your legs by curling your heels back, then return slowly.",
     muscleGroups: ["hamstrings"],
     isCompound: false,
     executionType: "repetition",
@@ -482,6 +483,13 @@ const exerciseSeedData: ExerciseSeed[] = [
     executionType: "repetition",
   },
   {
+    name: "Zottman Curl",
+    description: "Stand with dumbbells at your sides, palms up. Curl, while rotating palms. Lower, slowly rotating palms back",
+    muscleGroups: ["biceps"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
     name: "Close-Grip Bench Press",
     description: "Use a narrower grip, lower the bar to your chest, and press up.",
     muscleGroups: ["triceps", "chest"],
@@ -550,6 +558,84 @@ const exerciseSeedData: ExerciseSeed[] = [
     muscleGroups: ["back", "lats", "biceps"],
     isCompound: true,
     executionType: "time",
+  },
+  {
+    name: "Russian Twist",
+    description:
+      "Sit with knees bent and feet off the ground, lean back slightly, hold a weighted ball, and rotate side to side tapping the ball near each hip.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Hanging Leg Raise",
+    description:
+      "Support yourself on the forearm pads of a captain's chair or dip station, keep your torso steady, and raise your knees or legs upward before lowering under control.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Crunch",
+    description:
+      "Lie on your back with knees bent, curl your shoulders off the floor by contracting your abs, then lower back down slowly.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Sit-Up",
+    description: "Lie on your back with knees bent, raise your torso toward your thighs, then lower back down under control.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Bicycle Crunch",
+    description:
+      "Lie on your back, bring one elbow toward the opposite knee while extending the other leg, then alternate sides in a pedaling motion.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Reverse Crunch",
+    description:
+      "Lie on your back with knees bent, pull your knees toward your chest and lift your hips slightly off the floor, then lower slowly.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Plank",
+    description: "Hold your body in a straight line supported on your forearms and toes while keeping your core tight.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "time",
+  },
+  {
+    name: "Ab Wheel Rollout",
+    description:
+      "Grip an ab wheel, roll forward while keeping your core tight and back flat, then pull yourself back to the starting position.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Flutter Kick",
+    description:
+      "Lie on your back with legs extended slightly off the floor and alternate kicking them up and down in small movements.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
+  },
+  {
+    name: "Leg Raise",
+    description:
+      "Lie on your back with legs straight, raise them upward until roughly perpendicular to the floor, then lower them slowly without letting them touch down.",
+    muscleGroups: ["abs"],
+    isCompound: false,
+    executionType: "repetition",
   },
 ];
 
