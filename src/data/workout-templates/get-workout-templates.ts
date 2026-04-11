@@ -15,7 +15,7 @@ type GetWorkoutTemplatesParams = {
   page?: number;
 };
 
-const WORKOUT_TEMPLATE_LIST_LIMIT = 3;
+const WORKOUT_TEMPLATE_LIST_LIMIT = 20;
 
 type WorkoutTemplatesPayload = {
   workoutTemplates: WorkoutTemplateState[];
