@@ -63,7 +63,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    weightUsedField.handleChange(!value ? null : Number(value));
+                                    weightUsedField.handleChange(value);
                                   }}
                                   className={cn("h-7 w-18 px-2 py-1")}
                                 />
@@ -103,7 +103,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                   sourceMeasurement.reps,
                                 );
                               }
-                              if (sourceMeasurement.weightUsed != 0) {
+                              if (sourceMeasurement.weightUsed != "") {
                                 form.setFieldValue(
                                   `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
                                   sourceMeasurement.weightUsed,
