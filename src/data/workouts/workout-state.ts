@@ -7,11 +7,17 @@ export type WorkoutSegmentExerciseMeasurement = typeof workoutSegmentExerciseMea
 export type WorkoutSegmentExerciseMeasurementState = Omit<WorkoutSegmentExerciseMeasurement, "workoutSegmentExerciseId"> & {
   id?: number;
   workoutSegmentExerciseId?: number;
+  workoutTemplateSegmentExerciseMeasurementId?: number;
+  templateReps?: string;
+  templateWeightUsed?: string;
+  templateDuration?: string;
+  templateDistance?: string;
 };
 
 export type WorkoutSegmentExerciseState = Omit<WorkoutSegmentExercise, "workoutSegmentId"> & {
   id?: number;
   workoutSegmentId?: number;
+  workoutTemplateSegmentExerciseId?: number;
   reps?: Array<number | null>;
   repsToFailure?: boolean;
   measurements: WorkoutSegmentExerciseMeasurementState[];
@@ -19,12 +25,14 @@ export type WorkoutSegmentExerciseState = Omit<WorkoutSegmentExercise, "workoutS
 
 export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
   id?: number;
+  workoutTemplateSegmentId?: number;
   workoutId?: number;
   exercises: WorkoutSegmentExerciseState[];
 };
 
 export type WorkoutState = Omit<Workout, "userId"> & {
   id?: number;
+  workoutTemplateId?: number;
   segments: SegmentWithExercises[];
 };
 

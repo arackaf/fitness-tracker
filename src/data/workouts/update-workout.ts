@@ -1,6 +1,6 @@
 import { and, eq, inArray, not } from "drizzle-orm";
 
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import {
@@ -25,41 +25,55 @@ const toNumericValue = (value: string | number | null | undefined) => {
   return value;
 };
 
-const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
+const createExerciseMeasurements = (exercise: WorkoutExerciseInput): WorkoutSegmentExerciseMeasurementState[] => {
   const measurements = exercise.measurements ?? [];
 
   if (exercise.executionType === "distance") {
-    return measurements.map((measurement, index) => ({
-      id: measurement.id,
-      setOrder: index + 1,
-      reps: null,
-      repsToFailure: null,
-      weightUsed: null,
-      duration: null,
-      distance: toNumericValue(measurement.distance),
-    }));
+    return measurements.map(
+      (measurement, index) =>
+        ({
+          id: measurement.id,
+          setOrder: index + 1,
+          reps: null,
+          weightUsed: null,
+          duration: null,
+          distance: toNumericValue(measurement.distance),
+          workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+          templateDistance: measurement.templateDistance,
+        }) satisfies WorkoutSegmentExerciseMeasurementState,
+    );
   }
 
   if (exercise.executionType === "time") {
-    return measurements.map((measurement, index) => ({
-      id: measurement.id,
-      setOrder: index + 1,
-      reps: null,
-      repsToFailure: null,
-      weightUsed: null,
-      duration: toNumericValue(measurement.duration),
-      distance: null,
-    }));
+    return measurements.map(
+      (measurement, index) =>
+        ({
+          id: measurement.id,
+          setOrder: index + 1,
+          reps: null,
+          weightUsed: null,
+          duration: toNumericValue(measurement.duration),
+          distance: null,
+          workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+          templateDuration: measurement.templateDuration,
+        }) satisfies WorkoutSegmentExerciseMeasurementState,
+    );
   }
 
-  return measurements.map((measurement, index) => ({
-    id: measurement.id,
-    setOrder: index + 1,
-    reps: measurement.reps ?? null,
-    weightUsed: toNumericValue(measurement.weightUsed),
-    duration: null,
-    distance: null,
-  }));
+  return measurements.map(
+    (measurement, index) =>
+      ({
+        id: measurement.id,
+        setOrder: index + 1,
+        reps: measurement.reps ?? null,
+        weightUsed: toNumericValue(measurement.weightUsed),
+        duration: null,
+        distance: null,
+        workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+        templateReps: measurement.templateReps,
+        templateWeightUsed: measurement.templateWeightUsed,
+      }) satisfies WorkoutSegmentExerciseMeasurementState,
+  );
 };
 
 const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
@@ -107,6 +121,7 @@ export const updateWorkout = async (input: WorkoutState) => {
       .update(workoutTable)
       .set({
         name: input.name,
+        workoutTemplateId: input.workoutTemplateId,
         description: input.description,
         workoutDate: input.workoutDate,
       })
@@ -132,6 +147,7 @@ export const updateWorkout = async (input: WorkoutState) => {
           .set({
             segmentOrder: segmentIndex + 1,
             sets: segment.sets,
+            workoutTemplateSegmentId: segment.workoutTemplateSegmentId,
           })
           .where(and(eq(workoutSegmentTable.id, segmentId), eq(workoutSegmentTable.workoutId, workoutId)))
           .returning({ id: workoutSegmentTable.id });
@@ -147,6 +163,7 @@ export const updateWorkout = async (input: WorkoutState) => {
             workoutId,
             segmentOrder: segmentIndex + 1,
             sets: segment.sets,
+            workoutTemplateSegmentId: segment.workoutTemplateSegmentId,
           })
           .returning({ id: workoutSegmentTable.id });
 
@@ -176,6 +193,7 @@ export const updateWorkout = async (input: WorkoutState) => {
               exerciseId: exercise.exerciseId,
               executionType: exercise.executionType ?? null,
               ...exerciseUnitValues,
+              workoutTemplateSegmentExerciseId: exercise.workoutTemplateSegmentExerciseId,
             })
             .where(
               and(eq(workoutSegmentExerciseTable.id, exercise.id), eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId)),
@@ -196,12 +214,12 @@ export const updateWorkout = async (input: WorkoutState) => {
               exerciseId: exercise.exerciseId,
               executionType: exercise.executionType ?? null,
               ...exerciseUnitValues,
+              workoutTemplateSegmentExerciseId: exercise.workoutTemplateSegmentExerciseId,
             })
             .returning({ id: workoutSegmentExerciseTable.id });
 
           segmentExerciseId = insertedSegmentExercise.id;
         }
-
         const exerciseMeasurements = createExerciseMeasurements(exercise);
         const incomingSetOrders = exerciseMeasurements.map(measurement => measurement.setOrder);
 

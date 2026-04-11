@@ -1,4 +1,4 @@
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import {
@@ -11,28 +11,44 @@ import { toNumericValue } from "@/lib/toNumericValue";
 
 type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
 
-const createExerciseMeasurements = (exercise: WorkoutExerciseInput) => {
+const createExerciseMeasurements = (exercise: WorkoutExerciseInput): WorkoutSegmentExerciseMeasurementState[] => {
   const measurements = exercise.measurements ?? [];
 
   if (exercise.executionType === "distance") {
-    return measurements.map((measurement, index) => ({
-      setOrder: index + 1,
-      distance: toNumericValue(measurement.distance),
-    }));
+    return measurements.map(
+      (measurement, index) =>
+        ({
+          setOrder: index + 1,
+          distance: toNumericValue(measurement.distance),
+          workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+          templateDistance: measurement.templateDistance,
+        }) satisfies WorkoutSegmentExerciseMeasurementState,
+    );
   }
 
   if (exercise.executionType === "time") {
-    return measurements.map((measurement, index) => ({
-      setOrder: index + 1,
-      duration: toNumericValue(measurement.duration),
-    }));
+    return measurements.map(
+      (measurement, index) =>
+        ({
+          setOrder: index + 1,
+          duration: toNumericValue(measurement.duration),
+          workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+          templateDuration: measurement.templateDuration,
+        }) satisfies WorkoutSegmentExerciseMeasurementState,
+    );
   }
 
-  return measurements.map((measurement, index) => ({
-    setOrder: index + 1,
-    reps: measurement.reps ?? null,
-    weightUsed: toNumericValue(measurement.weightUsed),
-  }));
+  return measurements.map(
+    (measurement, index) =>
+      ({
+        setOrder: index + 1,
+        reps: measurement.reps ?? null,
+        weightUsed: toNumericValue(measurement.weightUsed),
+        workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
+        templateReps: measurement.templateReps,
+        templateWeightUsed: measurement.templateWeightUsed,
+      }) satisfies WorkoutSegmentExerciseMeasurementState,
+  );
 };
 
 const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
@@ -74,6 +90,7 @@ export const insertWorkout = async (input: WorkoutState) => {
       .insert(workoutTable)
       .values({
         userId: "", //TODO: Add auth
+        workoutTemplateId: input.workoutTemplateId,
         name: input.name,
         description: input.description,
         workoutDate: input.workoutDate,
@@ -85,6 +102,7 @@ export const insertWorkout = async (input: WorkoutState) => {
         .insert(workoutSegmentTable)
         .values({
           workoutId: insertedWorkout.id,
+          workoutTemplateSegmentId: segment.workoutTemplateSegmentId,
           segmentOrder: segmentIndex + 1,
           sets: segment.sets,
         })
@@ -97,6 +115,7 @@ export const insertWorkout = async (input: WorkoutState) => {
           .insert(workoutSegmentExerciseTable)
           .values({
             workoutSegmentId: insertedSegment.id,
+            workoutTemplateSegmentExerciseId: exercise.workoutTemplateSegmentExerciseId,
             exerciseOrder: exerciseIndex + 1,
             exerciseId: exercise.exerciseId,
             executionType: exercise.executionType ?? null,
