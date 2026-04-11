@@ -88,7 +88,7 @@ const RouteContent: FC<RouteContentProps> = props => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8 flex items-center gap-4">
         <Button type="submit" disabled={isSaving} className="font-semibold">

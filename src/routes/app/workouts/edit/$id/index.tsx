@@ -110,7 +110,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
