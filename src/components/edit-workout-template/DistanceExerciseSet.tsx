@@ -35,9 +35,7 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmen
                         children={distanceField => (
                           <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                             <Input
-                              min={0}
-                              step="1"
-                              type="number"
+                              maxLength={50}
                               value={distanceField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;

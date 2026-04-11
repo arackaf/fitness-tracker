@@ -40,8 +40,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                               className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
                             >
                               <Input
-                                min={0}
-                                type="number"
+                                maxLength={50}
                                 value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
@@ -58,8 +57,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                             children={weightUsedField => (
                               <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <Input
-                                  min={0}
-                                  type="number"
+                                  maxLength={50}
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;

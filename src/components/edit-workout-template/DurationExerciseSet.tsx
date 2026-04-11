@@ -35,9 +35,7 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({ form, segmen
                         children={durationField => (
                           <label className="h-7 inline-flex items-start gap-1 text-xs text-muted-foreground">
                             <Input
-                              min={0}
-                              step="1"
-                              type="number"
+                              maxLength={50}
                               value={durationField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;
