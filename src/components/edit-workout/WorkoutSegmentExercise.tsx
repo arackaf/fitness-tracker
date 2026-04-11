@@ -70,7 +70,10 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                       segmentExercise.handleChange(exerciseId);
                       const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
 
-                      form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].id`, nextSelectedExercise.id);
+                      form.setFieldValue(
+                        `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`,
+                        nextSelectedExercise.id,
+                      );
                       form.setFieldValue(
                         `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
                         defaultDistanceUnit,
@@ -98,10 +101,9 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                 </label>
                 <form.Subscribe
                   selector={state => {
-                    const exerciseId = state.values.segments[idx].exercises[exIdx].id;
+                    const exerciseId = state.values.segments[idx].exercises[exIdx].exerciseId;
 
                     const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
-
                     const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
                     return {
@@ -251,7 +253,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 
       <form.Subscribe
         selector={state => {
-          const selectedExerciseId = state.values.segments[idx].exercises[exIdx].id;
+          const selectedExerciseId = state.values.segments[idx].exercises[exIdx].exerciseId;
           const executionType = state.values.segments[idx].exercises[exIdx].executionType;
 
           const selectedExercise = exercises.find(exercise => exercise.id === selectedExerciseId);
