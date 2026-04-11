@@ -30,7 +30,7 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
       name={`segments[${segmentIndex}].exercises`}
       children={segmentExercisesField => (
         <>
-          {segmentExercisesField.state.value.map((segmentExercise, exerciseIndex) => (
+          {(segmentExercisesField.state.value ?? []).map((segmentExercise, exerciseIndex) => (
             <WorkoutSegmentExercise
               key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
               form={form}
