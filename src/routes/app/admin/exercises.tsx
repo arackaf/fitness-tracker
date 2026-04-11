@@ -2,12 +2,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
+import { CreateExercise } from "@/components/CreateExercise";
 import { ExerciseFilters } from "@/components/ExerciseFilters";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import type { MuscleGroup } from "@/data/types";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
-import type { MuscleGroup } from "@/data/types";
 
 export const Route = createFileRoute("/app/admin/exercises")({
   loader: ({ context }) => {
@@ -18,8 +21,10 @@ export const Route = createFileRoute("/app/admin/exercises")({
 });
 
 function RouteComponent() {
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
+
   return (
-    <SuspensePageLayout title="Exercises">
+    <SuspensePageLayout title="Exercises" headerChildren={<CreateExerciseDialog muscleGroups={muscleGroups} />}>
       <RouteContent />
     </SuspensePageLayout>
   );
@@ -60,3 +65,23 @@ function RouteContent() {
     </>
   );
 }
+
+type CreateExerciseDialogProps = {
+  muscleGroups: MuscleGroup[];
+};
+
+const CreateExerciseDialog = ({ muscleGroups }: CreateExerciseDialogProps) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="secondary">Create Exercise</Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <CreateExercise muscleGroups={muscleGroups} onCancel={() => setOpen(false)} onCreated={() => setOpen(false)} />
+      </DialogContent>
+    </Dialog>
+  );
+};
