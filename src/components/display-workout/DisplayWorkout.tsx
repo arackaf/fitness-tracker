@@ -18,7 +18,7 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameB
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">{workout.name}</h3>
-          <p className="text-sm text-muted-foreground">{workout.workoutDate}</p>
+          <p className="text-sm text-muted-foreground">{workout.workoutDate.toLocaleDateString()}</p>
         </div>
         {workout.id != null ? (
           <Button variant="outline" size="sm" asChild>

@@ -80,7 +80,7 @@ export const createDefaultSegment = (): SegmentWithExercises => {
 };
 
 export const defaultworkoutDate = () => {
-  return new Date().toISOString().split("T")[0];
+  return new Date();
 };
 
 export const createDefaultWorkout = (): WorkoutState => {
