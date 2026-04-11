@@ -74,8 +74,6 @@ type RenderWorkoutFormProps = {
 const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
   const { workoutState, onReset } = props;
   const [formResetKey, setFormResetKey] = useState(0);
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     setFormResetKey(key => key + 1);
