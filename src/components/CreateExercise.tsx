@@ -181,15 +181,15 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups, onCancel
 
                 <div className="flex flex-wrap gap-2">
                   {selectedMuscleGroups.map(group => (
-                    <Badge key={group.id} variant="outline" className="py-1 text-sm">
+                    <Badge key={group.id} variant="secondary">
                       <span>{group.name}</span>
                       <button
                         type="button"
-                        className="rounded-sm text-muted-foreground hover:text-foreground"
+                        className="cursor-pointer rounded-sm text-muted-foreground hover:text-foreground"
                         onClick={() => field.handleChange(current => current.filter(id => id !== group.id))}
                         aria-label={`Remove ${group.name}`}
                       >
-                        <X className="size-3.5" />
+                        <X className="size-3" />
                       </button>
                     </Badge>
                   ))}
