@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE workout
+ALTER COLUMN workout_date TYPE TIMESTAMP;
+
+COMMIT;
