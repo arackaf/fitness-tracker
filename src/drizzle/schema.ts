@@ -6,7 +6,6 @@ import {
   timestamp,
   varchar,
   boolean,
-  date,
   numeric,
   index,
   foreignKey,
@@ -163,7 +162,7 @@ export const workout = pgTable(
     userId: text().notNull(),
     name: varchar({ length: 50 }).notNull(),
     description: text().default("").notNull(),
-    workoutDate: date("workout_date").notNull(),
+    workoutDate: timestamp("workout_date").notNull(),
   },
   table => [index("idx_workout_workout_date").using("btree", table.workoutDate.asc().nullsLast())],
 );
