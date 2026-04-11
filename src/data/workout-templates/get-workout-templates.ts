@@ -9,7 +9,6 @@ import {
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
   workoutTemplateSegmentExerciseMeasurement as workoutTemplateSegmentExerciseMeasurementTable,
 } from "@/drizzle/schema";
-import { toNumericValue } from "@/lib/toNumericValue";
 
 type GetWorkoutTemplatesParams = {
   id?: number;
