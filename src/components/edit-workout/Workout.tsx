@@ -2,6 +2,7 @@ import type { FC } from "react";
 
 import { Card } from "@/components/Card";
 import type { Exercise } from "@/components/ExerciseSelector";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -60,12 +61,7 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => 
             <div className="flex flex-col gap-2 text-sm">
               <label className="flex flex-col gap-2">
                 <span className="font-medium">Workout date</span>
-                <Input
-                  type="date"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={event => field.handleChange(event.target.value)}
-                />
+                <DateTimePicker value={field.state.value} onChange={nextValue => field.handleChange(nextValue.toISOString())} />
               </label>
               {!field.state.meta.isValid ? (
                 <span className="text-sm text-red-500">{field.state.meta.errors.join(", ")}</span>
