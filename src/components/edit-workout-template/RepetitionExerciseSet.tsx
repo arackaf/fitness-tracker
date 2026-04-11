@@ -45,7 +45,7 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                 value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
-                                  repsField.handleChange(value === "" ? null : parseInt(value, 10));
+                                  repsField.handleChange(value);
                                 }}
                                 className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
                               />
