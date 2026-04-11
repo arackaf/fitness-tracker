@@ -162,7 +162,7 @@ export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams = {}
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
         repsToFailure: row.measurementRepsToFailure,
-        weightUsed: toNumericValue(row.measurementWeightUsed),
+        weightUsed: row.measurementWeightUsed,
         duration: row.measurementDuration,
         distance: row.measurementDistance,
       });

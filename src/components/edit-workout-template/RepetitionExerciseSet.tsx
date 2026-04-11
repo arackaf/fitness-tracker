@@ -40,12 +40,11 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                               className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
                             >
                               <Input
-                                min={0}
-                                type="number"
+                                maxLength={50}
                                 value={repsField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
-                                  repsField.handleChange(value === "" ? null : parseInt(value, 10));
+                                  repsField.handleChange(value);
                                 }}
                                 className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
                               />
@@ -58,12 +57,11 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                             children={weightUsedField => (
                               <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <Input
-                                  min={0}
-                                  type="number"
+                                  maxLength={50}
                                   value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    weightUsedField.handleChange(!value ? null : Number(value));
+                                    weightUsedField.handleChange(value);
                                   }}
                                   className={cn("h-7 w-18 px-2 py-1")}
                                 />
@@ -93,26 +91,27 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                           size="sm"
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
-                            const measurementFieldName =
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
                             const sourceMeasurement = measurements[measurementIndex];
 
-                            form.setFieldValue(
-                              measurementFieldName,
-                              measurements.map((measurement, targetMeasurementIndex) => {
-                                if (targetMeasurementIndex === measurementIndex) {
-                                  return measurement;
-                                }
-
-                                return {
-                                  ...measurement,
-                                  reps: sourceMeasurement.reps,
-                                  repsToFailure: sourceMeasurement.repsToFailure,
-                                  weightUsed: sourceMeasurement.weightUsed,
-                                };
-                              }),
-                            );
+                            for (let i = 1; i < measurements.length; i++) {
+                              if (sourceMeasurement.reps != "") {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
+                                  sourceMeasurement.reps,
+                                );
+                              }
+                              if (sourceMeasurement.weightUsed != "") {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
+                                  sourceMeasurement.weightUsed,
+                                );
+                              }
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].repsToFailure`,
+                                sourceMeasurement.repsToFailure,
+                              );
+                            }
                           }}
                         >
                           Fill

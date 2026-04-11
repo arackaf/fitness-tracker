@@ -300,11 +300,11 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
       .notNull()
       .references(() => workoutTemplateSegmentExercise.id, { onDelete: "cascade" }),
     setOrder: integer("set_order").notNull(),
-    reps: integer(),
+    reps: varchar({ length: 50 }),
     repsToFailure: boolean("reps_to_failure"),
-    weightUsed: numeric("weight_used", { precision: 8, scale: 2, mode: "number" }),
-    duration: numeric({ precision: 8, scale: 2, mode: "number" }),
-    distance: numeric({ precision: 8, scale: 2, mode: "number" }),
+    weightUsed: varchar("weight_used", { length: 50 }),
+    duration: varchar({ length: 50 }),
+    distance: varchar({ length: 50 }),
   },
   table => [check("workout_template_segment_exercise_measurement_set_order_check", sql`(set_order > 0)`)],
 );

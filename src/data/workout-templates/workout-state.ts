@@ -50,7 +50,7 @@ export const createDefaultExercise = (sets?: number) => {
     measurements: Array.from({ length: measurementCount }, (_, index) => ({
       workoutTemplateSegmentExerciseId: 0,
       setOrder: index + 1,
-      reps: 8,
+      reps: "8",
       repsToFailure: false,
       weightUsed: null,
     })),
