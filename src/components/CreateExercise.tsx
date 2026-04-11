@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 
 import { MuscleGroupSelector } from "@/components/MuscleGroupSelector";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -180,7 +181,7 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups, onCancel
 
                 <div className="flex flex-wrap gap-2">
                   {selectedMuscleGroups.map(group => (
-                    <div key={group.id} className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-sm">
+                    <Badge key={group.id} variant="outline" className="py-1 text-sm">
                       <span>{group.name}</span>
                       <button
                         type="button"
@@ -190,7 +191,7 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups, onCancel
                       >
                         <X className="size-3.5" />
                       </button>
-                    </div>
+                    </Badge>
                   ))}
                 </div>
                 {!field.state.meta.isValid ? (
