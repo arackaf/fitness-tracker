@@ -93,26 +93,27 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                           size="sm"
                           className="w-fit h-5 cursor-pointer"
                           onClick={() => {
-                            const measurementFieldName =
-                              `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements` as const;
                             const measurements = field.state.value;
                             const sourceMeasurement = measurements[measurementIndex];
 
-                            form.setFieldValue(
-                              measurementFieldName,
-                              measurements.map((measurement, targetMeasurementIndex) => {
-                                if (targetMeasurementIndex === measurementIndex) {
-                                  return measurement;
-                                }
-
-                                return {
-                                  ...measurement,
-                                  reps: sourceMeasurement.reps,
-                                  repsToFailure: sourceMeasurement.repsToFailure,
-                                  weightUsed: sourceMeasurement.weightUsed,
-                                };
-                              }),
-                            );
+                            for (let i = 1; i < measurements.length; i++) {
+                              if (sourceMeasurement.reps != "") {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].reps`,
+                                  sourceMeasurement.reps,
+                                );
+                              }
+                              if (sourceMeasurement.weightUsed != 0) {
+                                form.setFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].weightUsed`,
+                                  sourceMeasurement.weightUsed,
+                                );
+                              }
+                              form.setFieldValue(
+                                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${i}].repsToFailure`,
+                                sourceMeasurement.repsToFailure,
+                              );
+                            }
                           }}
                         >
                           Fill
