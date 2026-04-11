@@ -74,7 +74,6 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups, onCancel
     <>
       <div className="space-y-1">
         <h2 className="text-lg font-semibold leading-none">Create exercise</h2>
-        <p className="text-sm text-muted-foreground">Add a custom exercise to your catalog.</p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
