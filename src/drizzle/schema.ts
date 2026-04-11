@@ -163,6 +163,7 @@ export const workout = pgTable(
     name: varchar({ length: 50 }).notNull(),
     description: text().default("").notNull(),
     workoutDate: timestamp("workout_date").notNull(),
+    workoutTemplateId: integer("workout_template_id"),
   },
   table => [index("idx_workout_workout_date").using("btree", table.workoutDate.asc().nullsLast())],
 );
@@ -176,6 +177,7 @@ export const workoutSegment = pgTable(
       .references(() => workout.id, { onDelete: "cascade" }),
     segmentOrder: integer("segment_order").notNull(),
     sets: integer().notNull(),
+    workoutTemplateSegmentId: integer("workout_template_segment_id"),
   },
   table => [
     index("idx_workout_segment_workout_id_segment_order").using(
@@ -203,6 +205,7 @@ export const workoutSegmentExercise = pgTable(
     exerciseWeightUnit: exerciseWeightUnit("exercise_weight_unit"),
     durationUnit: durationUnit("duration_unit"),
     distanceUnit: distanceUnit("distance_unit"),
+    workoutTemplateSegmentExerciseId: integer("workout_template_segment_exercise_id"),
   },
   table => [
     index("idx_workout_segment_exercise_segment_id_exercise_order").using(
@@ -226,6 +229,11 @@ export const workoutSegmentExerciseMeasurement = pgTable(
     weightUsed: numeric("weight_used", { precision: 8, scale: 2, mode: "number" }),
     duration: numeric({ precision: 8, scale: 2, mode: "number" }),
     distance: numeric({ precision: 8, scale: 2, mode: "number" }),
+    workoutTemplateSegmentExerciseMeasurementId: integer("workout_template_segment_exercise_measurement_id"),
+    templateReps: varchar("template_reps", { length: 50 }),
+    templateWeightUsed: varchar("template_weight_used", { length: 50 }),
+    templateDuration: varchar("template_duration", { length: 50 }),
+    templateDistance: varchar("template_distance", { length: 50 }),
   },
   table => [
     index("idx_workout_segment_exercise_measurement_exercise_id_set_order").using(
