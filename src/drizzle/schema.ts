@@ -234,6 +234,7 @@ export const workoutSegmentExerciseMeasurement = pgTable(
     templateWeightUsed: varchar("template_weight_used", { length: 50 }),
     templateDuration: varchar("template_duration", { length: 50 }),
     templateDistance: varchar("template_distance", { length: 50 }),
+    templateRepsToFailure: boolean("template_reps_to_failure"),
   },
   table => [
     index("idx_workout_segment_exercise_measurement_exercise_id_set_order").using(
