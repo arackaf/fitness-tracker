@@ -43,66 +43,65 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                     ) : null}
                     <div className="flex gap-1 items-center">
                       <span className="h-7 inline-flex items-center">{setNumber}:</span>
-                      <div className="flex flex-col gap-1.5">
-                        <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        <form.Field
+                          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
+                          validators={{
+                            onSubmit: ({ value }) => {
+                              if (value == null) {
+                                return "Required";
+                              }
+                            },
+                          }}
+                          children={repsField => (
+                            <label
+                              key={`reps-${setNumber}`}
+                              className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
+                            >
+                              <Input
+                                min={0}
+                                type="number"
+                                value={repsField.state.value ?? ""}
+                                onChange={event => {
+                                  const value = event.target.value;
+                                  repsField.handleChange(value === "" ? null : parseInt(value, 10));
+                                }}
+                                className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
+                              />
+                            </label>
+                          )}
+                        />
+                        {showWeightUsed ? (
                           <form.Field
-                            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
+                            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
                             validators={{
                               onSubmit: ({ value }) => {
-                                if (value == null) {
+                                if (value == null || value?.toString()?.includes("e")) {
                                   return "Required";
                                 }
                               },
                             }}
-                            children={repsField => (
-                              <label
-                                key={`reps-${setNumber}`}
-                                className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground"
-                              >
+                            children={weightUsedField => (
+                              <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                                 <Input
                                   min={0}
                                   type="number"
-                                  value={repsField.state.value ?? ""}
+                                  value={weightUsedField.state.value ?? ""}
                                   onChange={event => {
                                     const value = event.target.value;
-                                    repsField.handleChange(value === "" ? null : parseInt(value, 10));
+                                    weightUsedField.handleChange(value === "" ? null : Number(value));
                                   }}
-                                  className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
+                                  className={cn(
+                                    "h-7 w-18 px-2 py-1",
+                                    !weightUsedField.state.meta.isValid ? "border-red-500" : "",
+                                  )}
                                 />
                               </label>
                             )}
                           />
-                          {showWeightUsed ? (
-                            <form.Field
-                              name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
-                              validators={{
-                                onSubmit: ({ value }) => {
-                                  if (value == null || value?.toString()?.includes("e")) {
-                                    return "Required";
-                                  }
-                                },
-                              }}
-                              children={weightUsedField => (
-                                <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                                  <Input
-                                    min={0}
-                                    type="number"
-                                    value={weightUsedField.state.value ?? ""}
-                                    onChange={event => {
-                                      const value = event.target.value;
-                                      weightUsedField.handleChange(value === "" ? null : Number(value));
-                                    }}
-                                    className={cn(
-                                      "h-7 w-18 px-2 py-1",
-                                      !weightUsedField.state.meta.isValid ? "border-red-500" : "",
-                                    )}
-                                  />
-                                </label>
-                              )}
-                            />
-                          ) : null}
-                        </div>
+                        ) : null}
                       </div>
+
                       {measurementIndex === 0 ? (
                         <Button
                           type="button"
