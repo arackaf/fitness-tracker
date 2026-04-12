@@ -38,6 +38,7 @@ export type WorkoutState = Omit<Workout, "userId"> & {
 
 export type ExistingWorkoutState = Omit<Workout, "userId"> & {
   id: number;
+  workoutTemplateId?: number;
   segments: SegmentWithExercises[];
 };
 
@@ -53,7 +54,7 @@ const defaultExercise: WorkoutSegmentExercise = {
 };
 
 let newExerciseId = -1;
-export const createDefaultExercise = (sets?: number) => {
+export const createDefaultExercise = (sets?: number): WorkoutSegmentExerciseState => {
   const measurementCount = sets ?? DEFAULT_SET_COUNT;
 
   return {
@@ -62,6 +63,7 @@ export const createDefaultExercise = (sets?: number) => {
     executionType: "repetition" as const,
     repsToFailure: false,
     reps: Array.from({ length: measurementCount }, () => 8),
+    workoutTemplateSegmentExerciseId: undefined,
     measurements: Array.from({ length: measurementCount }, (_, index) => ({
       workoutSegmentExerciseId: 0,
       setOrder: index + 1,
@@ -83,6 +85,7 @@ export const createDefaultSegment = (): SegmentWithExercises => {
   return {
     ...defaultSegment,
     id: newSegmentId--,
+    workoutTemplateSegmentId: undefined,
     exercises: [createDefaultExercise()],
   };
 };
