@@ -17,35 +17,6 @@ type WorkoutSegmentsProps = {
   muscleGroups: MuscleGroup[];
 };
 
-const syncExerciseMeasurementsToSetCount = (
-  form: WorkoutForm,
-  segmentIndex: number,
-  exerciseIndex: number,
-  newSetCount: number,
-) => {
-  const measurements = form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements ?? [];
-
-  const sourceMeasurement = measurements.at(-1) ?? {
-    setOrder: 1,
-    reps: 8,
-    repsToFailure: false,
-    weightUsed: null,
-    duration: null,
-    distance: null,
-  };
-
-  const nextMeasurements = Array.from({ length: Math.max(newSetCount, 1) }).map((_, index) => {
-    const existingMeasurement = measurements[index];
-    return {
-      ...sourceMeasurement,
-      ...existingMeasurement,
-      setOrder: index + 1,
-    };
-  });
-
-  form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`, nextMeasurements);
-};
-
 export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, muscleGroups }) => {
   return (
     <form.Field
@@ -84,12 +55,48 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, mus
                             const newSetsValue = Number(event.target.value);
                             setsField.handleChange(newSetsValue);
 
-                            segmentsField.state.value[segmentIndex].exercises.forEach((_, idx) => {
-                              if (newSetsValue == null || Number.isNaN(newSetsValue) || newSetsValue < 1) {
-                                return;
-                              }
+                            if (newSetsValue == null || Number.isNaN(newSetsValue) || newSetsValue < 1) {
+                              return;
+                            }
 
-                              syncExerciseMeasurementsToSetCount(form, segmentIndex, idx, newSetsValue);
+                            segmentsField.state.value[segmentIndex].exercises.forEach((exercise, exerciseIndex) => {
+                              const measurements =
+                                form.state.values.segments[segmentIndex]?.exercises[exerciseIndex]?.measurements ?? [];
+
+                              const numberToAdd = newSetsValue - measurements.length;
+                              const numberToRemove = measurements.length - newSetsValue;
+
+                              const templateMeasurement = Object.assign(
+                                {},
+                                measurements.at(-1) ?? {
+                                  setOrder: 1,
+                                  reps: 8,
+                                  repsToFailure: false,
+                                  weightUsed: null,
+                                  duration: null,
+                                  distance: null,
+                                },
+                                {
+                                  templateReps: undefined,
+                                  templateRepsToFailure: undefined,
+                                  templateWeightUsed: undefined,
+                                  templateDuration: undefined,
+                                  templateDistance: undefined,
+                                },
+                              );
+
+                              for (let i = 1; i <= numberToAdd; i++) {
+                                form.pushFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
+                                  templateMeasurement,
+                                );
+                              }
+                              for (let i = 1; i <= numberToRemove; i++) {
+                                form.removeFieldValue(
+                                  `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
+                                  exercise.measurements.length - 1,
+                                );
+                              }
                             });
                           }}
                           onBlur={setsField.handleBlur}

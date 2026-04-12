@@ -52,13 +52,16 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
     .with(workoutIds)
     .select({
       workoutId: workoutTable.id,
+      workoutTemplateId: workoutTable.workoutTemplateId,
       workoutName: workoutTable.name,
       workoutDescription: workoutTable.description,
       workoutDate: workoutTable.workoutDate,
       segmentRowId: workoutSegmentTable.id,
+      workoutTemplateSegmentId: workoutSegmentTable.workoutTemplateSegmentId,
       segmentOrder: workoutSegmentTable.segmentOrder,
       segmentSets: workoutSegmentTable.sets,
       exerciseRowId: workoutSegmentExerciseTable.id,
+      workoutTemplateSegmentExerciseId: workoutSegmentExerciseTable.workoutTemplateSegmentExerciseId,
       exerciseOrder: workoutSegmentExerciseTable.exerciseOrder,
       exerciseExerciseId: workoutSegmentExerciseTable.exerciseId,
       exerciseExecutionType: workoutSegmentExerciseTable.executionType,
@@ -66,6 +69,12 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
       exerciseDistanceUnit: workoutSegmentExerciseTable.distanceUnit,
       exerciseWeightUnit: workoutSegmentExerciseTable.exerciseWeightUnit,
       measurementId: workoutSegmentExerciseMeasurementTable.id,
+      workoutTemplateSegmentExerciseMeasurementId:
+        workoutSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseMeasurementId,
+      templateReps: workoutSegmentExerciseMeasurementTable.templateReps,
+      templateWeightUsed: workoutSegmentExerciseMeasurementTable.templateWeightUsed,
+      templateDuration: workoutSegmentExerciseMeasurementTable.templateDuration,
+      templateDistance: workoutSegmentExerciseMeasurementTable.templateDistance,
       measurementSetOrder: workoutSegmentExerciseMeasurementTable.setOrder,
       measurementReps: workoutSegmentExerciseMeasurementTable.reps,
       measurementWeightUsed: workoutSegmentExerciseMeasurementTable.weightUsed,
@@ -97,6 +106,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
     if (!workout) {
       workout = {
         id: row.workoutId,
+        workoutTemplateId: row.workoutTemplateId ?? undefined,
         name: row.workoutName,
         description: row.workoutDescription,
         workoutDate: row.workoutDate,
@@ -118,6 +128,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
       segment = {
         id: row.segmentRowId,
         workoutId: row.workoutId,
+        workoutTemplateSegmentId: row.workoutTemplateSegmentId ?? undefined,
         segmentOrder: row.segmentOrder,
         sets: row.segmentSets,
         exercises: [],
@@ -139,6 +150,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
       exercise = {
         id: row.exerciseRowId,
         workoutSegmentId: row.segmentRowId,
+        workoutTemplateSegmentExerciseId: row.workoutTemplateSegmentExerciseId ?? undefined,
         exerciseOrder: row.exerciseOrder,
         exerciseId: row.exerciseExerciseId,
         executionType: row.exerciseExecutionType ?? null,
@@ -159,6 +171,11 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
       exercise.measurements.push({
         id: row.measurementId ?? undefined,
         workoutSegmentExerciseId: row.exerciseRowId,
+        workoutTemplateSegmentExerciseMeasurementId: row.workoutTemplateSegmentExerciseMeasurementId ?? undefined,
+        templateReps: row.templateReps ?? undefined,
+        templateWeightUsed: row.templateWeightUsed ?? undefined,
+        templateDuration: row.templateDuration ?? undefined,
+        templateDistance: row.templateDistance ?? undefined,
         setOrder: row.measurementSetOrder,
         reps: row.measurementReps,
         weightUsed: toNumericValue(row.measurementWeightUsed),
