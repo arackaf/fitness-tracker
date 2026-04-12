@@ -26,9 +26,14 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmen
                 `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].templateDistance`,
               );
 
+              const allMeasurements = form.getFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`);
+              const hasTemplateValue = allMeasurements.some(m => m.templateDistance);
+
               return (
                 <div className="flex flex-col gap-1" key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}>
-                  {templateDistance ? <div className="flex text-xs">{templateDistance}</div> : null}
+                  {templateDistance || hasTemplateValue ? (
+                    <div className="flex text-xs">{templateDistance || <>&nbsp;</>}</div>
+                  ) : null}
                   <div className="flex gap-1 items-center">
                     <span className="flex items-center h-7">{setNumber}:</span>
 

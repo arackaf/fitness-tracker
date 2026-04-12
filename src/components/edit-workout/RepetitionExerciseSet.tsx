@@ -29,12 +29,16 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
               const templateRepsToFailure = form.getFieldValue(
                 `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].templateRepsToFailure`,
               );
+              const allMeasurements = form.getFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`);
+              const hasTemplateValue = allMeasurements.some(m => m.templateReps || m.templateRepsToFailure);
+
               return (
                 <div className="flex flex-col gap-1" key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}>
-                  {templateReps || templateRepsToFailure ? (
+                  {templateReps || templateRepsToFailure || hasTemplateValue ? (
                     <div className="flex gap-1 text-xs">
                       {templateReps ? <span>{templateReps}</span> : null}
                       {templateRepsToFailure ? <span>To failure</span> : null}
+                      {!templateReps && !templateRepsToFailure ? <span>&nbsp;</span> : null}
                     </div>
                   ) : null}
                   <div className="flex gap-1 items-center">

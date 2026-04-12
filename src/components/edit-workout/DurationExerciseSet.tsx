@@ -26,9 +26,14 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({ form, segmen
                 `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].templateDuration`,
               );
 
+              const allMeasurements = form.getFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`);
+              const hasTemplateValue = allMeasurements.some(m => m.templateDuration);
+
               return (
                 <div className="flex flex-col gap-1" key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}>
-                  {templateDuration ? <div className="flex text-xs">{templateDuration}</div> : null}
+                  {templateDuration || hasTemplateValue ? (
+                    <div className="flex text-xs">{templateDuration || <>&nbsp;</>}</div>
+                  ) : null}
                   <div className="flex gap-1 items-center">
                     <span className="flex gap-1 items-center h-7">{setNumber}:</span>
 
