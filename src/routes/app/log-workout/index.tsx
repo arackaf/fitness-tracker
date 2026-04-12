@@ -14,7 +14,13 @@ import { saveWorkout, workoutHistoryQueryOptions } from "@/server-functions/work
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { createDefaultWorkout, defaultworkoutDate, type WorkoutState } from "@/data/workouts/workout-state";
+import {
+  createDefaultWorkout,
+  defaultworkoutDate,
+  type WorkoutSegmentExerciseMeasurementState,
+  type WorkoutSegmentExerciseState,
+  type WorkoutState,
+} from "@/data/workouts/workout-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 export const Route = createFileRoute("/app/log-workout/")({
@@ -28,27 +34,39 @@ export const Route = createFileRoute("/app/log-workout/")({
 const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
   return {
     ...template,
+    workoutTemplateId: template.id,
     workoutDate: defaultworkoutDate(),
     segments: template.segments.map(segment => {
       return {
         ...segment,
+        workoutTemplateSegmentId: segment.id,
         exercises: segment.exercises.map(exercise => {
-          const nextMeasurements = exercise.measurements.map((measurement, measurementIndex) => ({
-            ...measurement,
-            duration: null,
-            distance: null,
-            weightUsed: null,
-            reps: null,
-            workoutSegmentExerciseId: 0,
-            setOrder: measurementIndex + 1,
-          }));
+          const segmentMeasurements = exercise.measurements.map(
+            (measurement, measurementIndex) =>
+              ({
+                ...measurement,
+                workoutTemplateSegmentExerciseMeasurementId: measurement.id,
+                duration: null,
+                distance: null,
+                weightUsed: null,
+                reps: null,
+                workoutSegmentExerciseId: 0,
+                setOrder: measurementIndex + 1,
+
+                templateDistance: measurement.distance ?? undefined,
+                templateDuration: measurement.duration ?? undefined,
+                templateReps: measurement.reps ?? undefined,
+                templateWeightUsed: measurement.weightUsed ?? undefined,
+              }) satisfies WorkoutSegmentExerciseMeasurementState,
+          );
 
           return {
             ...exercise,
             workoutSegmentId: 0,
-            repsToFailure: nextMeasurements.some(measurement => measurement.repsToFailure === true),
-            measurements: nextMeasurements,
-          };
+            workoutTemplateSegmentExerciseId: exercise.id,
+            repsToFailure: segmentMeasurements.some(measurement => measurement.repsToFailure === true),
+            measurements: segmentMeasurements,
+          } satisfies WorkoutSegmentExerciseState;
         }),
       };
     }),
@@ -77,6 +95,8 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 
   useEffect(() => {
     setFormResetKey(key => key + 1);
+    let xxx = workoutState;
+    console.log({ xxx });
   }, [workoutState]);
 
   return (
