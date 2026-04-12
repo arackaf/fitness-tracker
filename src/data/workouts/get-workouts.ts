@@ -72,6 +72,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
       workoutTemplateSegmentExerciseMeasurementId:
         workoutSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseMeasurementId,
       templateReps: workoutSegmentExerciseMeasurementTable.templateReps,
+      templateRepsToFailure: workoutSegmentExerciseMeasurementTable.templateRepsToFailure,
       templateWeightUsed: workoutSegmentExerciseMeasurementTable.templateWeightUsed,
       templateDuration: workoutSegmentExerciseMeasurementTable.templateDuration,
       templateDistance: workoutSegmentExerciseMeasurementTable.templateDistance,
@@ -173,6 +174,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
         workoutSegmentExerciseId: row.exerciseRowId,
         workoutTemplateSegmentExerciseMeasurementId: row.workoutTemplateSegmentExerciseMeasurementId ?? undefined,
         templateReps: row.templateReps ?? undefined,
+        templateRepsToFailure: row.templateRepsToFailure ?? undefined,
         templateWeightUsed: row.templateWeightUsed ?? undefined,
         templateDuration: row.templateDuration ?? undefined,
         templateDistance: row.templateDistance ?? undefined,
