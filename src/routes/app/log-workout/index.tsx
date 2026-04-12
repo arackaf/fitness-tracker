@@ -57,6 +57,7 @@ const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
                 templateDuration: measurement.duration ?? undefined,
                 templateReps: measurement.reps ?? undefined,
                 templateWeightUsed: measurement.weightUsed ?? undefined,
+                templateRepsToFailure: measurement.repsToFailure ?? undefined,
               }) satisfies WorkoutSegmentExerciseMeasurementState,
           );
 

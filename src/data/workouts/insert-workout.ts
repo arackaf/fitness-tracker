@@ -47,6 +47,7 @@ const createExerciseMeasurements = (exercise: WorkoutExerciseInput): WorkoutSegm
         workoutTemplateSegmentExerciseMeasurementId: measurement.workoutTemplateSegmentExerciseMeasurementId,
         templateReps: measurement.templateReps,
         templateWeightUsed: measurement.templateWeightUsed,
+        templateRepsToFailure: measurement.templateRepsToFailure,
       }) satisfies WorkoutSegmentExerciseMeasurementState,
   );
 };
