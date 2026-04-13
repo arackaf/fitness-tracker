@@ -13,6 +13,7 @@ type ExerciseSeed = {
   muscleGroups: string[];
   isCompound: boolean;
   executionType: "repetition" | "distance" | "time";
+  isBodyweight?: boolean;
 };
 
 type BodyCompositionMetricSeed = {
@@ -340,6 +341,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description: "Pull a rope attachment toward your face with elbows high, then return under control.",
     muscleGroups: ["shoulders", "back"],
     isCompound: false,
+    isBodyweight: true,
     executionType: "repetition",
   },
   {
@@ -564,6 +566,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Sit with knees bent and feet off the ground, lean back slightly, hold a weighted ball, and rotate side to side tapping the ball near each hip.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -572,6 +575,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Support yourself on the forearm pads of a captain's chair or dip station, keep your torso steady, and raise your knees or legs upward before lowering under control.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -580,6 +584,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Lie on your back with knees bent, curl your shoulders off the floor by contracting your abs, then lower back down slowly.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -587,6 +592,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     name: "Sit-Up",
     description: "Lie on your back with knees bent, raise your torso toward your thighs, then lower back down under control.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -595,6 +601,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Lie on your back, bring one elbow toward the opposite knee while extending the other leg, then alternate sides in a pedaling motion.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -603,6 +610,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Lie on your back with knees bent, pull your knees toward your chest and lift your hips slightly off the floor, then lower slowly.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -610,6 +618,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     name: "Plank",
     description: "Hold your body in a straight line supported on your forearms and toes while keeping your core tight.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "time",
   },
@@ -618,6 +627,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Grip an ab wheel, roll forward while keeping your core tight and back flat, then pull yourself back to the starting position.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -626,6 +636,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Lie on your back with legs extended slightly off the floor and alternate kicking them up and down in small movements.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -634,6 +645,7 @@ const exerciseSeedData: ExerciseSeed[] = [
     description:
       "Lie on your back with legs straight, raise them upward until roughly perpendicular to the floor, then lower them slowly without letting them touch down.",
     muscleGroups: ["abs"],
+    isBodyweight: true,
     isCompound: false,
     executionType: "repetition",
   },
@@ -691,7 +703,7 @@ export const setupNewUser = async (user: SessionUser) => {
         description: seed.description,
         muscleGroups: seed.muscleGroups.map(name => getMuscleGroupId(name, muscleGroupIdByName)),
         isCompound: seed.isCompound,
-        isBodyweight: bodyweightExerciseNames.has(seed.name),
+        isBodyweight: bodyweightExerciseNames.has(seed.name) || seed.isBodyweight,
         executionType: seed.executionType,
       }));
 
