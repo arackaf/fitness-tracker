@@ -96,8 +96,6 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 
   useEffect(() => {
     setFormResetKey(key => key + 1);
-    let xxx = workoutState;
-    console.log({ xxx });
   }, [workoutState]);
 
   return (
