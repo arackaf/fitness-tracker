@@ -1,10 +1,11 @@
 import type { FC } from "react";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { WorkoutForm } from "@/lib/workout-form";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { getInputValueId, setValueKeydownHandler } from "./util";
 
 type DistanceExerciseSetProps = {
   form: WorkoutForm;
@@ -49,13 +50,14 @@ export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmen
                       children={distanceField => (
                         <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                           <Input
-                            min={0}
-                            step="1"
-                            type="number"
+                            id={getInputValueId(segmentIndex, exerciseIndex, measurementIndex)}
                             value={distanceField.state.value ?? ""}
                             onChange={event => {
                               const value = event.target.value;
                               distanceField.handleChange(value === "" ? null : Number(value));
+                            }}
+                            onKeyDown={evt => {
+                              setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
                             }}
                             className={cn("h-7 w-24 px-2 py-1", !distanceField.state.meta.isValid ? "border-red-500" : "")}
                           />

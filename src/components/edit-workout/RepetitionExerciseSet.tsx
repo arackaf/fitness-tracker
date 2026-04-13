@@ -1,10 +1,12 @@
 import { type FC } from "react";
+import { ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { WorkoutForm } from "@/lib/workout-form";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+
+import { getInputValueId, getInputWeightId, setValueKeydownHandler } from "./util";
 
 type RepetitionExerciseSetProps = {
   form: WorkoutForm;
@@ -56,12 +58,23 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                         children={repsField => (
                           <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                             <Input
-                              min={0}
-                              type="number"
+                              id={getInputValueId(segmentIndex, exerciseIndex, measurementIndex)}
                               value={repsField.state.value ?? ""}
                               onChange={event => {
                                 const value = event.target.value;
                                 repsField.handleChange(value === "" ? null : parseInt(value, 10));
+                              }}
+                              onKeyDown={evt => {
+                                if ((evt.target as HTMLInputElement).value.trim() && evt.key === "Enter") {
+                                  const weightInputId = getInputWeightId(segmentIndex, exerciseIndex, measurementIndex);
+                                  const nextWeightInput = document.getElementById(weightInputId);
+                                  if (nextWeightInput) {
+                                    nextWeightInput.focus();
+                                    evt.preventDefault();
+                                  } else {
+                                    setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
+                                  }
+                                }
                               }}
                               className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
                             />
@@ -81,12 +94,14 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                           children={weightUsedField => (
                             <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
                               <Input
-                                min={0}
-                                type="number"
+                                id={getInputWeightId(segmentIndex, exerciseIndex, measurementIndex)}
                                 value={weightUsedField.state.value ?? ""}
                                 onChange={event => {
                                   const value = event.target.value;
                                   weightUsedField.handleChange(value === "" ? null : Number(value));
+                                }}
+                                onKeyDown={evt => {
+                                  setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
                                 }}
                                 className={cn("h-7 w-18 px-2 py-1", !weightUsedField.state.meta.isValid ? "border-red-500" : "")}
                               />
