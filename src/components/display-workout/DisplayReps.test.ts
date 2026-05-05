@@ -37,17 +37,6 @@ const constructSegment = (
 
 describe("Reps no weight", function () {
   test("Test 1", () => {
-    let measurements: WorkoutSegmentExerciseMeasurementState[] = [
-      { setOrder: 0, reps: 20 },
-      { setOrder: 0, reps: 20 },
-      { setOrder: 0, reps: 20 },
-      { setOrder: 0, reps: 20 },
-    ];
-    let segment: SegmentWithExercises = {
-      segmentOrder: 0,
-      exercises: [Object.assign({}, pushup, { measurements })],
-      sets: 4,
-    };
     expect(
       getDisplayReps(
         constructSegment([[pushup, [{ reps: 20 }, { reps: 20 }, { reps: 20 }, { reps: 20 }]]]),
