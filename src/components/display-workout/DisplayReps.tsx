@@ -8,14 +8,14 @@ type DisplayRepsProps = {
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
-    return `${(measurement.distance ?? "").toString()}${exercise.distanceUnit ?? ""}`;
+    return `${measurement.distance}${exercise.distanceUnit}`;
   }
 
   if (exercise.executionType === "time") {
-    return `${(measurement.duration ?? "_").toString()}${exercise.durationUnit ?? ""}`;
+    return `${measurement.duration}${exercise.durationUnit}`;
   }
 
-  return (measurement.reps ?? "_").toString();
+  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.reps}`;
 };
 
 export const getDisplayReps = (segment: SegmentWithExercises) => {
