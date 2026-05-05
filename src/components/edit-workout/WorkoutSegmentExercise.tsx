@@ -123,7 +123,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                             form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`, value);
                           }}
                         />
-                        {formState.executionType === "repetition" && formState.selectedExercise?.isBodyweight !== true ? (
+                        {formState.executionType === "repetition" && !formState.selectedExercise?.isBodyweight ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             validators={{
