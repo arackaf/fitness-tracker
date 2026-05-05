@@ -46,6 +46,34 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                   <div className="flex gap-1 items-center">
                     <span className="h-7 inline-flex items-center">{setNumber}:</span>
                     <div className="flex flex-wrap gap-2">
+                      {showWeightUsed ? (
+                        <form.Field
+                          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
+                          validators={{
+                            onSubmit: ({ value }) => {
+                              if (value == null || value?.toString()?.includes("e")) {
+                                return "Required";
+                              }
+                            },
+                          }}
+                          children={weightUsedField => (
+                            <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                              <Input
+                                id={getInputWeightId(segmentIndex, exerciseIndex, measurementIndex)}
+                                value={weightUsedField.state.value ?? ""}
+                                onChange={event => {
+                                  const value = event.target.value;
+                                  weightUsedField.handleChange(value === "" ? null : Number(value));
+                                }}
+                                onKeyDown={evt => {
+                                  setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
+                                }}
+                                className={cn("h-7 w-18 px-2 py-1", !weightUsedField.state.meta.isValid ? "border-red-500" : "")}
+                              />
+                            </label>
+                          )}
+                        />
+                      ) : null}
                       <form.Field
                         name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].reps`}
                         validators={{
@@ -81,34 +109,6 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                           </label>
                         )}
                       />
-                      {showWeightUsed ? (
-                        <form.Field
-                          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].weightUsed`}
-                          validators={{
-                            onSubmit: ({ value }) => {
-                              if (value == null || value?.toString()?.includes("e")) {
-                                return "Required";
-                              }
-                            },
-                          }}
-                          children={weightUsedField => (
-                            <label className="h-7 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                              <Input
-                                id={getInputWeightId(segmentIndex, exerciseIndex, measurementIndex)}
-                                value={weightUsedField.state.value ?? ""}
-                                onChange={event => {
-                                  const value = event.target.value;
-                                  weightUsedField.handleChange(value === "" ? null : Number(value));
-                                }}
-                                onKeyDown={evt => {
-                                  setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
-                                }}
-                                className={cn("h-7 w-18 px-2 py-1", !weightUsedField.state.meta.isValid ? "border-red-500" : "")}
-                              />
-                            </label>
-                          )}
-                        />
-                      ) : null}
                     </div>
 
                     {measurementIndex === 0 ? (
