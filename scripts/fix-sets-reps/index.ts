@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { config } from "dotenv";
 import path from "node:path";
@@ -24,16 +25,24 @@ async function main(): Promise<void> {
   try {
     const rows = await db.select().from(workoutSegmentExerciseMeasurement);
 
-    for (const row of rows) {
-      if (
-        row.reps != null &&
-        row.weightUsed != null &&
-        isNumeric(row.reps) &&
-        isNumeric(row.weightUsed)
-      ) {
-        console.log(row.id, row.reps, row.weightUsed);
+    await db.transaction(async tx => {
+      for (const row of rows) {
+        if (
+          row.reps != null &&
+          row.weightUsed != null &&
+          isNumeric(row.reps) &&
+          isNumeric(row.weightUsed)
+        ) {
+          await tx
+            .update(workoutSegmentExerciseMeasurement)
+            .set({
+              reps: row.weightUsed,
+              weightUsed: row.reps,
+            })
+            .where(eq(workoutSegmentExerciseMeasurement.id, row.id));
+        }
       }
-    }
+    });
   } finally {
     await pool.end();
   }
