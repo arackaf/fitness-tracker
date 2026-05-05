@@ -2,23 +2,30 @@ import type { Exercise, SegmentWithExercises } from "@/data/workouts/workout-sta
 import { describe, expect, test } from "vitest";
 import { getDisplayReps } from "./DisplayReps";
 
-const pushup: Exercise = {
+type RawExercise = Omit<Exercise, "measurements">;
+
+const running: RawExercise = {
+  exerciseId: 0,
+  executionType: "distance",
+  distanceUnit: "miles",
+  exerciseOrder: 0,
+};
+
+const pushup: RawExercise = {
   exerciseId: 0,
   executionType: "repetition",
   exerciseOrder: 0,
-  measurements: [],
 };
 
-const bench: Exercise = {
+const bench: RawExercise = {
   exerciseId: 0,
   executionType: "repetition",
   exerciseWeightUnit: "lbs",
   exerciseOrder: 0,
-  measurements: [],
 };
 
 type SegmentInput = [
-  exercise: Exercise,
+  exercise: RawExercise,
   measurements: Omit<Exercise["measurements"][number], "setOrder">[],
 ];
 const constructSegment = (
@@ -39,18 +46,32 @@ const constructSegment = (
   };
 };
 
-describe("Reps no weight", function () {
+describe("Distance", function () {
   test("Push-ups", () => {
+    expect(getDisplayReps(constructSegment([[running, [{ distance: 5 }]]]))).toBe("5 miles");
+  });
+  test("Push-ups", () => {
+    expect(getDisplayReps(constructSegment([[running, [{ distance: 5 }, { distance: 5 }]]]))).toBe(
+      "5 miles, 5 miles",
+    );
+  });
+});
+
+describe("Reps no weight", function () {
+  test("Push-ups 4 sets", () => {
     expect(
       getDisplayReps(
         constructSegment([[pushup, [{ reps: 20 }, { reps: 20 }, { reps: 20 }, { reps: 20 }]]]),
       ),
     ).toBe("20, 20, 20, 20");
   });
+  test("Push-ups 1 set", () => {
+    expect(getDisplayReps(constructSegment([[pushup, [{ reps: 20 }]]]))).toBe("20");
+  });
 });
 
 describe("Reps with weight", function () {
-  test("Bench", () => {
+  test("Bench 4 sets", () => {
     expect(
       getDisplayReps(
         constructSegment([
@@ -66,6 +87,11 @@ describe("Reps with weight", function () {
         ]),
       ),
     ).toBe("135x12, 135x12, 135x8, 135x8");
+  });
+  test("Bench 1 set", () => {
+    expect(getDisplayReps(constructSegment([[bench, [{ weightUsed: 135, reps: 12 }]]]))).toBe(
+      "135x12",
+    );
   });
 });
 

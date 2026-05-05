@@ -8,7 +8,7 @@ type DisplayRepsProps = {
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
-    return `${measurement.distance}${exercise.distanceUnit}`;
+    return `${measurement.distance} ${exercise.distanceUnit}`;
   }
 
   if (exercise.executionType === "time") {
