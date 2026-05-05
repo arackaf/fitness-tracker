@@ -8,7 +8,7 @@ type DisplayRepsProps = {
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
-    return `${(measurement.distance ?? "_").toString()}${exercise.distanceUnit ?? ""}`;
+    return `${(measurement.distance ?? "").toString()}${exercise.distanceUnit ?? ""}`;
   }
 
   if (exercise.executionType === "time") {
@@ -18,7 +18,7 @@ const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => 
   return (measurement.reps ?? "_").toString();
 };
 
-const getDisplayReps = (segment: SegmentWithExercises) => {
+export const getDisplayReps = (segment: SegmentWithExercises) => {
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
     exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
