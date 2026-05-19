@@ -22,7 +22,8 @@ export const Route = createFileRoute("/app/admin/workout-templates/create/")({
 });
 
 function RouteComponent() {
-  const [workoutTemplateState, setWorkoutTemplateState] = useState<WorkoutTemplateState>(createDefaultWorkoutTemplate());
+  const [workoutTemplateState, setWorkoutTemplateState] =
+    useState<WorkoutTemplateState>(createDefaultWorkoutTemplate());
 
   return (
     <SuspensePageLayout title="Create Workout Template">
@@ -98,7 +99,13 @@ const RouteContent: FC<RouteContentProps> = props => {
           <Checkbox onCheckedChange={checked => (addAnotherRef.current = !!checked)} disabled={isSaving} />
           <span className="text-sm">Add another</span>
         </label>
-        <Button type="button" variant="secondary" disabled={isSaving} className="font-semibold ml-auto" onClick={onReset}>
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={isSaving}
+          className="font-semibold ml-auto"
+          onClick={onReset}
+        >
           Reset workout template
         </Button>
       </div>

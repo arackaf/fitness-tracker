@@ -79,7 +79,10 @@ export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams = {}
     )
     .leftJoin(
       workoutTemplateSegmentExerciseMeasurementTable,
-      eq(workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId, workoutTemplateSegmentExerciseTable.id),
+      eq(
+        workoutTemplateSegmentExerciseMeasurementTable.workoutTemplateSegmentExerciseId,
+        workoutTemplateSegmentExerciseTable.id,
+      ),
     )
     .where(conditions.length > 0 ? and(...conditions) : undefined)
     .orderBy(

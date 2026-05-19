@@ -63,7 +63,9 @@ function RouteContent() {
     return null;
   }
 
-  return <WorkoutTemplateDetailForm workoutTemplate={workoutTemplate} exercises={exercises} muscleGroups={muscleGroups} />;
+  return (
+    <WorkoutTemplateDetailForm workoutTemplate={workoutTemplate} exercises={exercises} muscleGroups={muscleGroups} />
+  );
 }
 
 type WorkoutTemplateDetailFormProps = {
@@ -72,7 +74,11 @@ type WorkoutTemplateDetailFormProps = {
   muscleGroups: MuscleGroup[];
 };
 
-const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({ workoutTemplate, exercises, muscleGroups }) => {
+const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
+  workoutTemplate,
+  exercises,
+  muscleGroups,
+}) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const form = useWorkoutTemplateForm(async state => {

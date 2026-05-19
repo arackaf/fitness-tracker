@@ -27,11 +27,16 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({ form, segmen
                 `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].templateDuration`,
               );
 
-              const allMeasurements = form.getFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`);
+              const allMeasurements = form.getFieldValue(
+                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
+              );
               const hasTemplateValue = allMeasurements.some(m => m.templateDuration);
 
               return (
-                <div className="flex flex-col gap-1" key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}>
+                <div
+                  className="flex flex-col gap-1"
+                  key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
+                >
                   {templateDuration || hasTemplateValue ? (
                     <div className="flex text-xs">{templateDuration || <>&nbsp;</>}</div>
                   ) : null}
@@ -59,7 +64,10 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({ form, segmen
                             onKeyDown={evt => {
                               setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
                             }}
-                            className={cn("h-7 w-24 px-2 py-1", !durationField.state.meta.isValid ? "border-red-500" : "")}
+                            className={cn(
+                              "h-7 w-24 px-2 py-1",
+                              !durationField.state.meta.isValid ? "border-red-500" : "",
+                            )}
                           />
                         </label>
                       )}

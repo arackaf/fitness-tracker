@@ -32,7 +32,9 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
               <p className="mt-1 text-sm">{exercise.description ?? "No description yet."}</p>
             </div>
             {exercise.isCompound ? (
-              <span className="rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-400/20 text-emerald-200">Compound</span>
+              <span className="rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-400/20 text-emerald-200">
+                Compound
+              </span>
             ) : null}
           </div>
 

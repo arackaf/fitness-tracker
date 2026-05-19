@@ -32,7 +32,11 @@ export const DisplayWorkout: FC<DisplayWorkoutProps> = ({ workout, exerciseNameB
 
       <div className="flex flex-col gap-3">
         {workout.segments.map((segment, segmentIndex) => (
-          <WorkoutSegment key={`${segment.segmentOrder}-${segmentIndex}`} segment={segment} exerciseNameById={exerciseNameById} />
+          <WorkoutSegment
+            key={`${segment.segmentOrder}-${segmentIndex}`}
+            segment={segment}
+            exerciseNameById={exerciseNameById}
+          />
         ))}
       </div>
     </Card>

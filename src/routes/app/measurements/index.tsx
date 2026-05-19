@@ -5,7 +5,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/Card";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
-import { bodyCompositionMeasurementsQueryOptions, bodyCompositionMetricsQueryOptions } from "@/server-functions/body-composition";
+import {
+  bodyCompositionMeasurementsQueryOptions,
+  bodyCompositionMetricsQueryOptions,
+} from "@/server-functions/body-composition";
 
 export const Route = createFileRoute("/app/measurements/")({
   loader: ({ context }) => {

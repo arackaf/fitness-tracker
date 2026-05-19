@@ -13,9 +13,10 @@ async function createLocalDatabase() {
   try {
     await client.connect();
 
-    const existingDatabase = await client.query<{ datname: string }>("SELECT datname FROM pg_database WHERE datname = $1", [
-      databaseName,
-    ]);
+    const existingDatabase = await client.query<{ datname: string }>(
+      "SELECT datname FROM pg_database WHERE datname = $1",
+      [databaseName],
+    );
 
     if (existingDatabase.rowCount && existingDatabase.rowCount > 0) {
       console.log(`Database "${databaseName}" already exists.`);

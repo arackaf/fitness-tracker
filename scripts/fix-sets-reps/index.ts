@@ -27,12 +27,7 @@ async function main(): Promise<void> {
 
     await db.transaction(async tx => {
       for (const row of rows) {
-        if (
-          row.reps != null &&
-          row.weightUsed != null &&
-          isNumeric(row.reps) &&
-          isNumeric(row.weightUsed)
-        ) {
+        if (row.reps != null && row.weightUsed != null && isNumeric(row.reps) && isNumeric(row.weightUsed)) {
           await tx
             .update(workoutSegmentExerciseMeasurement)
             .set({

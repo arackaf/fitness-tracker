@@ -57,7 +57,8 @@ export const WorkoutTemplateSegments: FC<WorkoutTemplateSegmentsProps> = ({ form
 
                             segmentsField.state.value[segmentIndex].exercises.forEach((exercise, idx) => {
                               const currentMeasurements = exercise.measurements ?? [];
-                              const measurementsFieldName = `segments[${segmentIndex}].exercises[${idx}].measurements` as const;
+                              const measurementsFieldName =
+                                `segments[${segmentIndex}].exercises[${idx}].measurements` as const;
 
                               if (newSetsValue > currentMeasurements.length) {
                                 const lastMeasurement = currentMeasurements.at(-1)!;

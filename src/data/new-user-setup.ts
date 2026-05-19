@@ -486,7 +486,8 @@ const exerciseSeedData: ExerciseSeed[] = [
   },
   {
     name: "Zottman Curl",
-    description: "Stand with dumbbells at your sides, palms up. Curl, while rotating palms. Lower, slowly rotating palms back",
+    description:
+      "Stand with dumbbells at your sides, palms up. Curl, while rotating palms. Lower, slowly rotating palms back",
     muscleGroups: ["biceps"],
     isCompound: false,
     executionType: "repetition",
@@ -590,7 +591,8 @@ const exerciseSeedData: ExerciseSeed[] = [
   },
   {
     name: "Sit-Up",
-    description: "Lie on your back with knees bent, raise your torso toward your thighs, then lower back down under control.",
+    description:
+      "Lie on your back with knees bent, raise your torso toward your thighs, then lower back down under control.",
     muscleGroups: ["abs"],
     isBodyweight: true,
     isCompound: false,
@@ -670,7 +672,12 @@ export const setupNewUser = async (user: SessionUser) => {
 
   const { id: userId, name, image } = user;
 
-  const existingUserResults = await db.select().from(userInfo).for("update").where(eq(userInfo.userId, userId)).limit(1);
+  const existingUserResults = await db
+    .select()
+    .from(userInfo)
+    .for("update")
+    .where(eq(userInfo.userId, userId))
+    .limit(1);
   const existingUser = existingUserResults[0];
 
   if (existingUser) {

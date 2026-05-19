@@ -12,7 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { MuscleGroup } from "@/data/types";
-import { createExerciseServerFn, exercisesQueryOptions, type CreateExerciseServerInput } from "@/server-functions/exercises";
+import {
+  createExerciseServerFn,
+  exercisesQueryOptions,
+  type CreateExerciseServerInput,
+} from "@/server-functions/exercises";
 
 type CreateExerciseProps = {
   muscleGroups: MuscleGroup[];
@@ -174,7 +178,9 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups, onCancel
                 <MuscleGroupSelector
                   muscleGroups={availableMuscleGroups}
                   onSelected={muscleGroup => {
-                    field.handleChange(current => (current.includes(muscleGroup.id) ? current : [...current, muscleGroup.id]));
+                    field.handleChange(current =>
+                      current.includes(muscleGroup.id) ? current : [...current, muscleGroup.id],
+                    );
                   }}
                 />
 

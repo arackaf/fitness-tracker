@@ -15,7 +15,12 @@ type RepetitionExerciseSetProps = {
   showWeightUsed: boolean;
 };
 
-export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, segmentIndex, exerciseIndex, showWeightUsed }) => {
+export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
+  form,
+  segmentIndex,
+  exerciseIndex,
+  showWeightUsed,
+}) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex flex-wrap gap-2 text-sm">
@@ -31,11 +36,16 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
               const templateRepsToFailure = form.getFieldValue(
                 `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements[${measurementIndex}].templateRepsToFailure`,
               );
-              const allMeasurements = form.getFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`);
+              const allMeasurements = form.getFieldValue(
+                `segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`,
+              );
               const hasTemplateValue = allMeasurements.some(m => m.templateReps || m.templateRepsToFailure);
 
               return (
-                <div className="flex flex-col gap-1" key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}>
+                <div
+                  className="flex flex-col gap-1"
+                  key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
+                >
                   {templateReps || templateRepsToFailure || hasTemplateValue ? (
                     <div className="flex gap-1 text-xs">
                       {templateReps ? <span>{templateReps}</span> : null}
@@ -68,7 +78,10 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                 onKeyDown={evt => {
                                   setValueKeydownHandler(evt, form, segmentIndex, exerciseIndex, measurementIndex);
                                 }}
-                                className={cn("h-7 w-18 px-2 py-1", !weightUsedField.state.meta.isValid ? "border-red-500" : "")}
+                                className={cn(
+                                  "h-7 w-18 px-2 py-1",
+                                  !weightUsedField.state.meta.isValid ? "border-red-500" : "",
+                                )}
                               />
                             </label>
                           )}
@@ -104,7 +117,10 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                   }
                                 }
                               }}
-                              className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
+                              className={cn(
+                                "h-7 w-16 px-2 py-1",
+                                !repsField.state.meta.isValid ? "border-red-500" : "",
+                              )}
                             />
                           </label>
                         )}

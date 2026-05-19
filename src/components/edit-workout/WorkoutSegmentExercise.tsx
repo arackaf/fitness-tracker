@@ -120,7 +120,10 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                         <ExecutionTypeSelect
                           value={formState.executionType ?? "repetition"}
                           onValueChange={value => {
-                            form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`, value);
+                            form.setFieldValue(
+                              `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                              value,
+                            );
                           }}
                         />
                         {formState.executionType === "repetition" && !formState.selectedExercise?.isBodyweight ? (

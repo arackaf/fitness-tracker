@@ -18,7 +18,10 @@ export function ExerciseFilters({ muscleGroups, selectedMuscleGroups, onToggleMu
 
           return (
             <label key={muscleGroup.id} className="inline-flex cursor-pointer items-center gap-2 text-sm">
-              <Checkbox checked={isChecked} onCheckedChange={checked => onToggleMuscleGroup(muscleGroup, checked === true)} />
+              <Checkbox
+                checked={isChecked}
+                onCheckedChange={checked => onToggleMuscleGroup(muscleGroup, checked === true)}
+              />
               <span className="capitalize">{muscleGroup.name}</span>
             </label>
           );

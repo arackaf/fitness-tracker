@@ -13,7 +13,8 @@ export const Route = createFileRoute("/app")({
 function RouteComponent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navLinkClassName = "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
+  const navLinkClassName =
+    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
 
   const activeNavLinkProps = {
     className: "cursor-default bg-primary text-primary-foreground",
@@ -72,7 +73,10 @@ function RouteComponent() {
           <Link
             to="/app/admin/exercises"
             activeOptions={{ exact: false }}
-            className={cn(navLinkClassName, adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className)}
+            className={cn(
+              navLinkClassName,
+              adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className,
+            )}
           >
             <Shield className="size-4" aria-hidden="true" />
             Admin
@@ -135,7 +139,10 @@ function RouteComponent() {
                 <div className="my-1 h-px w-full bg-border" aria-hidden="true" />
                 <Link
                   to="/app/admin/exercises"
-                  className={cn(navLinkClassName, adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className)}
+                  className={cn(
+                    navLinkClassName,
+                    adminIsActive ? activeNavLinkProps.className : inactiveNavLinkProps.className,
+                  )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Shield className="size-4" aria-hidden="true" />

@@ -13,7 +13,12 @@ type RepetitionExerciseSetProps = {
   showWeightUsed: boolean;
 };
 
-export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, segmentIndex, exerciseIndex, showWeightUsed }) => {
+export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
+  form,
+  segmentIndex,
+  exerciseIndex,
+  showWeightUsed,
+}) => {
   return (
     <div className="flex gap-2 min-h-7">
       <div className="flex text-sm items-start gap-2">
@@ -28,7 +33,10 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
               return field.state.value?.map((_, measurementIndex) => {
                 const setNumber = measurementIndex + 1;
                 return (
-                  <div key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`} className="flex gap-1">
+                  <div
+                    key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
+                    className="flex gap-1"
+                  >
                     <span className="h-7 inline-flex items-center">{setNumber}:</span>
                     <div className="flex flex-col gap-1.5">
                       <div className="flex flex-wrap gap-2">
@@ -46,7 +54,10 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({ form, se
                                   const value = event.target.value;
                                   repsField.handleChange(value);
                                 }}
-                                className={cn("h-7 w-16 px-2 py-1", !repsField.state.meta.isValid ? "border-red-500" : "")}
+                                className={cn(
+                                  "h-7 w-16 px-2 py-1",
+                                  !repsField.state.meta.isValid ? "border-red-500" : "",
+                                )}
                               />
                             </label>
                           )}

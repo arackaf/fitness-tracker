@@ -7,7 +7,10 @@ import { Measurement } from "@/components/edit-measurement/Measurement";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { useBodyCompositionMeasurementForm } from "@/lib/body-composition-form";
-import { bodyCompositionMetricsQueryOptions, saveBodyCompositionMeasurement } from "@/server-functions/body-composition";
+import {
+  bodyCompositionMetricsQueryOptions,
+  saveBodyCompositionMeasurement,
+} from "@/server-functions/body-composition";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/log-measurement/")({

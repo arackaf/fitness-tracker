@@ -3,7 +3,14 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { Loading } from "@/components/loading-state/Loading";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { cn } from "@/lib/utils";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
@@ -43,7 +50,9 @@ export const ImportWorkoutTemplate: FC<ImportWorkoutTemplateProps> = props => {
 
           {isError ? <p className="text-sm text-destructive">Failed to load templates. Please try again.</p> : null}
 
-          {workoutTemplates?.length === 0 ? <p className="text-sm text-muted-foreground">No workout templates found.</p> : null}
+          {workoutTemplates?.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No workout templates found.</p>
+          ) : null}
 
           {workoutTemplates?.length ? (
             <div className="flex flex-col gap-2">

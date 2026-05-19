@@ -70,7 +70,10 @@ function Calendar({
         ),
         table: "w-full border-collapse",
         weekdays: cn("flex", defaultClassNames.weekdays),
-        weekday: cn("flex-1 rounded-md text-[0.8rem] font-normal text-muted-foreground select-none", defaultClassNames.weekday),
+        weekday: cn(
+          "flex-1 rounded-md text-[0.8rem] font-normal text-muted-foreground select-none",
+          defaultClassNames.weekday,
+        ),
         week: cn("mt-2 flex w-full", defaultClassNames.week),
         week_number_header: cn("w-(--cell-size) select-none", defaultClassNames.week_number_header),
         week_number: cn("text-[0.8rem] text-muted-foreground select-none", defaultClassNames.week_number),
@@ -84,7 +87,10 @@ function Calendar({
         range_start: cn("rounded-l-md bg-accent", defaultClassNames.range_start),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
-        today: cn("rounded-md bg-accent text-accent-foreground data-[selected=true]:rounded-none", defaultClassNames.today),
+        today: cn(
+          "rounded-md bg-accent text-accent-foreground data-[selected=true]:rounded-none",
+          defaultClassNames.today,
+        ),
         outside: cn("text-muted-foreground aria-selected:text-muted-foreground", defaultClassNames.outside),
         disabled: cn("text-muted-foreground opacity-50", defaultClassNames.disabled),
         hidden: cn("invisible", defaultClassNames.hidden),
@@ -134,7 +140,9 @@ function CalendarDayButton({ className, day, modifiers, ...props }: React.Compon
       variant="ghost"
       size="icon"
       data-day={day.date.toLocaleDateString()}
-      data-selected-single={modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle}
+      data-selected-single={
+        modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle
+      }
       data-range-start={modifiers.range_start}
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}

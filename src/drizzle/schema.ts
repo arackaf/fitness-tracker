@@ -19,7 +19,11 @@ export const executionType = pgEnum("execution_type", ["repetition", "distance",
 export const durationUnit = pgEnum("duration_unit", ["seconds", "minutes", "hours"]);
 export const distanceUnit = pgEnum("distance_unit", ["feet", "yards", "miles", "km"]);
 export const exerciseWeightUnit = pgEnum("exercise_weight_unit", ["lbs", "kg"]);
-export const bodyCompositionMeasurementType = pgEnum("body_composition_measurement_type", ["length", "weight", "percentage"]);
+export const bodyCompositionMeasurementType = pgEnum("body_composition_measurement_type", [
+  "length",
+  "weight",
+  "percentage",
+]);
 export const bodyCompositionLengthUnit = pgEnum("body_composition_length_unit", ["inches", "cm"]);
 export const bodyCompositionWeightUnit = pgEnum("body_composition_weight_unit", ["lbs", "kg"]);
 

@@ -12,7 +12,8 @@ export const Route = createFileRoute("/app/admin")({
 });
 
 function RouteComponent() {
-  const navLinkClassName = "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
+  const navLinkClassName =
+    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
 
   const activeNavLinkProps = {
     className: "cursor-default bg-primary text-primary-foreground",

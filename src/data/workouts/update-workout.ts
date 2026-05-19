@@ -136,7 +136,9 @@ export const updateWorkout = async (input: WorkoutState) => {
 
     await tx
       .delete(workoutSegmentTable)
-      .where(and(eq(workoutSegmentTable.workoutId, workoutId), not(inArray(workoutSegmentTable.id, incomingSegmentIds))));
+      .where(
+        and(eq(workoutSegmentTable.workoutId, workoutId), not(inArray(workoutSegmentTable.id, incomingSegmentIds))),
+      );
 
     for (const [segmentIndex, segment] of input.segments.entries()) {
       let segmentId = segment.id;
@@ -196,7 +198,10 @@ export const updateWorkout = async (input: WorkoutState) => {
               workoutTemplateSegmentExerciseId: exercise.workoutTemplateSegmentExerciseId,
             })
             .where(
-              and(eq(workoutSegmentExerciseTable.id, exercise.id), eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId)),
+              and(
+                eq(workoutSegmentExerciseTable.id, exercise.id),
+                eq(workoutSegmentExerciseTable.workoutSegmentId, segmentId),
+              ),
             )
             .returning({ id: workoutSegmentExerciseTable.id });
 

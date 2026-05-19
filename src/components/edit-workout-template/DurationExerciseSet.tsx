@@ -41,7 +41,10 @@ export const DurationExerciseSet: FC<DurationExerciseSetProps> = ({ form, segmen
                                 const value = event.target.value;
                                 durationField.handleChange(value);
                               }}
-                              className={cn("h-7 w-24 px-2 py-1", !durationField.state.meta.isValid ? "border-red-500" : "")}
+                              className={cn(
+                                "h-7 w-24 px-2 py-1",
+                                !durationField.state.meta.isValid ? "border-red-500" : "",
+                              )}
                             />
                           </label>
                         )}

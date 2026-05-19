@@ -120,10 +120,14 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
                         <ExecutionTypeSelect
                           value={formState.executionType!}
                           onValueChange={value => {
-                            form.setFieldValue(`segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`, value);
+                            form.setFieldValue(
+                              `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                              value,
+                            );
                           }}
                         />
-                        {formState.executionType === "repetition" && formState.selectedExercise?.isBodyweight !== true ? (
+                        {formState.executionType === "repetition" &&
+                        formState.selectedExercise?.isBodyweight !== true ? (
                           <form.Field
                             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`}
                             children={exerciseWeightUnitField => (

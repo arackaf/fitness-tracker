@@ -4,7 +4,10 @@ export type Workout = typeof workout.$inferInsert;
 export type WorkoutSegment = typeof workoutSegment.$inferInsert;
 export type WorkoutSegmentExercise = typeof workoutSegmentExercise.$inferInsert;
 export type WorkoutSegmentExerciseMeasurement = typeof workoutSegmentExerciseMeasurement.$inferInsert;
-export type WorkoutSegmentExerciseMeasurementState = Omit<WorkoutSegmentExerciseMeasurement, "workoutSegmentExerciseId"> & {
+export type WorkoutSegmentExerciseMeasurementState = Omit<
+  WorkoutSegmentExerciseMeasurement,
+  "workoutSegmentExerciseId"
+> & {
   id?: number;
   workoutSegmentExerciseId?: number;
   workoutTemplateSegmentExerciseMeasurementId?: number;

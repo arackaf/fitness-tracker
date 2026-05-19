@@ -27,7 +27,13 @@ type MuscleGroupOption = {
   searchableText: string;
 };
 
-export function ExerciseSelector({ value, exercises, muscleGroups, onSelect, required = false }: ExerciseSelectorProps) {
+export function ExerciseSelector({
+  value,
+  exercises,
+  muscleGroups,
+  onSelect,
+  required = false,
+}: ExerciseSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const muscleGroupLookup = useMemo(() => {
@@ -66,7 +72,9 @@ export function ExerciseSelector({ value, exercises, muscleGroups, onSelect, req
   }, [exercises, muscleGroupLookup]);
 
   const selectedOption = exercises.find(exercise => exercise.id === value);
-  const selectedLabel = selectedOption ? (selectedOption.name ?? `Exercise #${selectedOption.id}`) : "Select an exercise";
+  const selectedLabel = selectedOption
+    ? (selectedOption.name ?? `Exercise #${selectedOption.id}`)
+    : "Select an exercise";
 
   return (
     <>
