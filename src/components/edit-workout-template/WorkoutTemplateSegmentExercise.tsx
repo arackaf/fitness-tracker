@@ -207,7 +207,7 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
             onClick={onRemove}
             disabled={!canRemove}
             variant="secondary"
-            size="sm"
+            size="xs"
             className="disabled:cursor-not-allowed cursor-pointer"
           >
             <Trash2 className="size-3.5" aria-hidden="true" />
