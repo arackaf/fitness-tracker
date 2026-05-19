@@ -31,20 +31,23 @@ export const WorkoutSegmentExercises: FC<WorkoutSegmentExercisesProps> = ({
       children={segmentExercisesField => (
         <>
           {(segmentExercisesField.state.value ?? []).map((segmentExercise, exerciseIndex) => (
-            <WorkoutSegmentExercise
-              key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
-              form={form}
-              exercises={exercises}
-              muscleGroups={muscleGroups}
-              segmentIndex={segmentIndex}
-              exerciseIndex={exerciseIndex}
-              canRemove={segmentExercisesField.state.value.length > 1}
-              onRemove={() =>
-                segmentExercisesField.removeValue(exerciseIndex, {
-                  dontValidate: true,
-                })
-              }
-            />
+            <>
+              <WorkoutSegmentExercise
+                key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
+                form={form}
+                exercises={exercises}
+                muscleGroups={muscleGroups}
+                segmentIndex={segmentIndex}
+                exerciseIndex={exerciseIndex}
+                canRemove={segmentExercisesField.state.value.length > 1}
+                onRemove={() =>
+                  segmentExercisesField.removeValue(exerciseIndex, {
+                    dontValidate: true,
+                  })
+                }
+              />
+              <hr className="sm:hidden" />
+            </>
           ))}
 
           <div className="flex items-center">
