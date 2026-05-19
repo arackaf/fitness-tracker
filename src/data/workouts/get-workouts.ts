@@ -12,7 +12,7 @@ import {
 } from "@/drizzle/schema";
 import { toNumericValue } from "@/lib/toNumericValue";
 
-const WORKOUT_HISTORY_LIMIT = 3;
+const WORKOUT_HISTORY_LIMIT = 10;
 const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 
 type GetWorkoutsOptions = {
