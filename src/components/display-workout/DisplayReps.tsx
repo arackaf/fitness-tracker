@@ -8,17 +8,17 @@ type DisplayRepsProps = {
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
-    return `${(measurement.distance ?? "_").toString()}${exercise.distanceUnit ?? ""}`;
+    return `${measurement.distance} ${exercise.distanceUnit}`;
   }
 
   if (exercise.executionType === "time") {
-    return `${(measurement.duration ?? "_").toString()}${exercise.durationUnit ?? ""}`;
+    return `${measurement.duration}${exercise.durationUnit}`;
   }
 
-  return (measurement.reps ?? "_").toString();
+  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.reps}`;
 };
 
-const getDisplayReps = (segment: SegmentWithExercises) => {
+export const getDisplayReps = (segment: SegmentWithExercises) => {
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
     exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
