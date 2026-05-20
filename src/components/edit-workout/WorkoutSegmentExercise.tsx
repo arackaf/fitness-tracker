@@ -49,7 +49,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
   return (
     <InnerCard className="flex flex-col gap-4">
       <div className="flex items-center">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-[60%] sm:w-unset">
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-[60%]">
           <form.Field
             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
             validators={{
@@ -61,7 +61,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
             }}
             children={segmentExercise => (
               <>
-                <label className="flex flex-col gap-2 text-sm w-full sm:w-unset">
+                <label className="flex flex-col gap-2 text-sm w-full">
                   <ExerciseSelector
                     value={segmentExercise.state.value ?? null}
                     exercises={exercises}
