@@ -18,6 +18,7 @@ type ExerciseSelectorProps = {
   muscleGroups: MuscleGroup[];
   onSelect: (exerciseId: number) => void;
   required?: boolean;
+  className?: string;
 };
 
 type MuscleGroupOption = {
@@ -33,6 +34,7 @@ export function ExerciseSelector({
   muscleGroups,
   onSelect,
   required = false,
+  className = "",
 }: ExerciseSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -93,7 +95,10 @@ export function ExerciseSelector({
             variant="outline"
             role="combobox"
             aria-expanded={isOpen}
-            className="min-w-40 px-2 sm:px-4 max-w-40 sm:min-w-64 sm:max-w-64 justify-between font-normal"
+            className={cn(
+              "min-w-40 px-2 sm:px-4 max-w-40 sm:min-w-64 sm:max-w-64 justify-between font-normal",
+              className,
+            )}
           >
             <span className="truncate">{selectedLabel}</span>
             <ChevronsUpDown className="ml-0 sm:ml-2 size-4 shrink-0 text-muted-foreground" />
