@@ -48,8 +48,8 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 
   return (
     <InnerCard className="flex flex-col gap-4">
-      <div className="flex items-start">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+      <div className="flex items-center">
+        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-[60%] sm:w-unset">
           <form.Field
             name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
             validators={{
@@ -61,11 +61,12 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
             }}
             children={segmentExercise => (
               <>
-                <label className="flex flex-col gap-2 text-sm">
+                <label className="flex flex-col gap-2 text-sm w-full sm:w-unset">
                   <ExerciseSelector
                     value={segmentExercise.state.value ?? null}
                     exercises={exercises}
                     muscleGroups={muscleGroups}
+                    className="max-w-full sm:max-w-64"
                     onSelect={exerciseId => {
                       segmentExercise.handleChange(exerciseId);
                       const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
