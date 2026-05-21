@@ -9,7 +9,7 @@ export const InnerCard: FC<InnerCardProps> = props => {
   const { children, as = "div", className = "", ...rest } = props;
   const Comp = as;
   return (
-    <Comp className={cn("rounded-lg border border-border/80 bg-background/70 p-3", className)} {...rest}>
+    <Comp className={cn("rounded-lg sm:border sm:border-border/80 sm:bg-background/70 sm:p-3", className)} {...rest}>
       {children}
     </Comp>
   );

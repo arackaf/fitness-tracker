@@ -128,6 +128,7 @@ export const WorkoutSegments: FC<WorkoutSegmentsProps> = ({ form, exercises, mus
                   Remove
                 </Button>
               </div>
+              <hr className="sm:hidden" />
 
               <WorkoutSegmentExercises
                 form={form}
