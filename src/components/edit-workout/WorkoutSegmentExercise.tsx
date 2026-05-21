@@ -48,7 +48,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 
   return (
     <InnerCard className="flex flex-col gap-4">
-      <div className="grid gap-2 grid-rows-2 grid-cols-[auto_auto] sm:grid-rows-1 sm:grid-cols-[auto_auto_1fr]">
+      <div className="grid gap-2 grid-rows-2 grid-cols-[auto_auto] md:grid-rows-1 md:grid-cols-[auto_auto_1fr]">
         <form.Field
           name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
           validators={{
@@ -115,7 +115,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                 }}
               >
                 {formState => (
-                  <div className="order-2 col-span-2 sm:col-span-1 sm:order-2 flex flex-wrap gap-2">
+                  <div className="order-2 col-span-2 md:col-span-1 md:order-2 flex flex-wrap gap-2">
                     {formState.hasExercise ? (
                       <>
                         <ExecutionTypeSelect
@@ -247,7 +247,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
           disabled={!canRemove}
           variant="secondary"
           size="xs"
-          className="disabled:cursor-not-allowed cursor-pointer order-1 sm:order-3 w-fit ml-auto"
+          className="disabled:cursor-not-allowed cursor-pointer order-1 md:order-3 w-fit ml-auto"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />
           Remove
