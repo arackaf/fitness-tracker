@@ -115,7 +115,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
                 }}
               >
                 {formState => (
-                  <div className="order-2 col-span-2 sm:col-span-1 sm:order-2">
+                  <div className="order-2 col-span-2 sm:col-span-1 sm:order-2 flex flex-wrap gap-2">
                     {formState.hasExercise ? (
                       <>
                         <ExecutionTypeSelect
@@ -247,7 +247,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
           disabled={!canRemove}
           variant="secondary"
           size="xs"
-          className="disabled:cursor-not-allowed cursor-pointer order-1 sm:order-3"
+          className="disabled:cursor-not-allowed cursor-pointer order-1 sm:order-3 w-fit ml-auto"
         >
           <Trash2 className="size-3.5" aria-hidden="true" />
           Remove
