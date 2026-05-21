@@ -15,7 +15,7 @@ type DistanceExerciseSetProps = {
 export const DistanceExerciseSet: FC<DistanceExerciseSetProps> = ({ form, segmentIndex, exerciseIndex }) => {
   return (
     <div className="flex gap-2 min-h-7">
-      <div className="flex text-sm items-start gap-2">
+      <div className="flex flex-wrap gap-2 text-sm">
         <form.Field
           mode="array"
           name={`segments[${segmentIndex}].exercises[${exerciseIndex}].measurements`}
