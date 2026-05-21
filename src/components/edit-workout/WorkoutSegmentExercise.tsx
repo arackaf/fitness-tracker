@@ -48,7 +48,7 @@ export const WorkoutSegmentExercise: FC<WorkoutSegmentExerciseProps> = ({
 
   return (
     <InnerCard className="flex flex-col gap-4">
-      <div className="grid gap-2 grid-rows-2 grid-cols-[auto_auto] sm:grid-rows-1 sm:grid-cols-[auto_auto_auto]">
+      <div className="grid gap-2 grid-rows-2 grid-cols-[auto_auto] sm:grid-rows-1 sm:grid-cols-[auto_auto_1fr]">
         <form.Field
           name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
           validators={{
