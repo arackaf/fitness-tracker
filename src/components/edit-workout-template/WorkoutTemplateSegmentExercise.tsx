@@ -48,75 +48,75 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
 
   return (
     <InnerCard className="flex flex-col gap-4">
-      <div className="flex items-center">
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-[60%]">
-          <form.Field
-            name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
-            validators={{
-              onSubmit: ({ value }) => {
-                if (!value) {
-                  return "Required";
-                }
-              },
-            }}
-            children={segmentExercise => (
-              <>
-                <label className="flex flex-col gap-2 text-sm w-full">
-                  <ExerciseSelector
-                    value={segmentExercise.state.value ?? null}
-                    exercises={exercises}
-                    muscleGroups={muscleGroups}
-                    className="max-w-full sm:max-w-64"
-                    onSelect={exerciseId => {
-                      segmentExercise.handleChange(exerciseId);
-                      const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
+      <div className="grid gap-2 grid-rows-2 grid-cols-[auto_auto] sm:grid-rows-1 sm:grid-cols-[auto_auto_auto]">
+        <form.Field
+          name={`segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`}
+          validators={{
+            onSubmit: ({ value }) => {
+              if (!value) {
+                return "Required";
+              }
+            },
+          }}
+          children={segmentExercise => (
+            <>
+              <label className="flex flex-col gap-2 text-sm w-full order-0">
+                <ExerciseSelector
+                  value={segmentExercise.state.value ?? null}
+                  exercises={exercises}
+                  muscleGroups={muscleGroups}
+                  className="max-w-full sm:max-w-64"
+                  onSelect={exerciseId => {
+                    segmentExercise.handleChange(exerciseId);
+                    const nextSelectedExercise = exercises.find(exercise => exercise.id === exerciseId)!;
 
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`,
-                        nextSelectedExercise.id,
-                      );
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
-                        defaultDistanceUnit,
-                      );
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
-                        defaultDurationUnit,
-                      );
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
-                        getExerciseExecutionType(nextSelectedExercise),
-                      );
-                      form.setFieldValue(
-                        `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`,
-                        defaultExerciseWeightUnit,
-                      );
-                    }}
-                  />
-                  {!segmentExercise.state.meta.isValid &&
-                    segmentExercise.state.meta.errors.map((error, idx) => (
-                      <span key={`error-${idx}`} className="text-red-500 text-xs">
-                        {error}
-                      </span>
-                    ))}
-                </label>
-                <form.Subscribe
-                  selector={state => {
-                    const exerciseId = state.values.segments[idx].exercises[exIdx].exerciseId;
-
-                    const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
-                    const executionType = state.values.segments[idx].exercises[exIdx].executionType;
-
-                    return {
-                      exerciseId,
-                      hasExercise: exerciseId != null && exerciseId > 0,
-                      selectedExercise,
-                      executionType,
-                    };
+                    form.setFieldValue(
+                      `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseId`,
+                      nextSelectedExercise.id,
+                    );
+                    form.setFieldValue(
+                      `segments[${segmentIndex}].exercises[${exerciseIndex}].distanceUnit`,
+                      defaultDistanceUnit,
+                    );
+                    form.setFieldValue(
+                      `segments[${segmentIndex}].exercises[${exerciseIndex}].durationUnit`,
+                      defaultDurationUnit,
+                    );
+                    form.setFieldValue(
+                      `segments[${segmentIndex}].exercises[${exerciseIndex}].executionType`,
+                      getExerciseExecutionType(nextSelectedExercise),
+                    );
+                    form.setFieldValue(
+                      `segments[${segmentIndex}].exercises[${exerciseIndex}].exerciseWeightUnit`,
+                      defaultExerciseWeightUnit,
+                    );
                   }}
-                >
-                  {formState =>
-                    formState.hasExercise ? (
+                />
+                {!segmentExercise.state.meta.isValid &&
+                  segmentExercise.state.meta.errors.map((error, idx) => (
+                    <span key={`error-${idx}`} className="text-red-500 text-xs">
+                      {error}
+                    </span>
+                  ))}
+              </label>
+              <form.Subscribe
+                selector={state => {
+                  const exerciseId = state.values.segments[idx].exercises[exIdx].exerciseId;
+
+                  const selectedExercise = exercises.find(exercise => exercise.id === exerciseId);
+                  const executionType = state.values.segments[idx].exercises[exIdx].executionType;
+
+                  return {
+                    exerciseId,
+                    hasExercise: exerciseId != null && exerciseId > 0,
+                    selectedExercise,
+                    executionType,
+                  };
+                }}
+              >
+                {formState => (
+                  <div className="order-2 col-span-2 sm:col-span-1 sm:order-2">
+                    {formState.hasExercise ? (
                       <>
                         <ExecutionTypeSelect
                           value={formState.executionType!}
@@ -195,26 +195,25 @@ export const WorkoutTemplateSegmentExercise: FC<WorkoutTemplateSegmentExercisePr
                           />
                         ) : null}
                       </>
-                    ) : null
-                  }
-                </form.Subscribe>
-              </>
-            )}
-          />
-        </div>
-        <div className="flex items-end ml-auto">
-          <Button
-            type="button"
-            onClick={onRemove}
-            disabled={!canRemove}
-            variant="secondary"
-            size="xs"
-            className="disabled:cursor-not-allowed cursor-pointer"
-          >
-            <Trash2 className="size-3.5" aria-hidden="true" />
-            Remove
-          </Button>
-        </div>
+                    ) : null}
+                  </div>
+                )}
+              </form.Subscribe>
+            </>
+          )}
+        />
+
+        <Button
+          type="button"
+          onClick={onRemove}
+          disabled={!canRemove}
+          variant="secondary"
+          size="xs"
+          className="disabled:cursor-not-allowed cursor-pointer order-1 sm:order-3"
+        >
+          <Trash2 className="size-3.5" aria-hidden="true" />
+          Remove
+        </Button>
       </div>
 
       <form.Subscribe
