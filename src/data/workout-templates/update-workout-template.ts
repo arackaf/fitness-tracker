@@ -2,7 +2,7 @@ import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -92,7 +92,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const workoutTemplateId = input.id;
 
-  return db.transaction(async tx => {
+  return getDb().transaction(async tx => {
     const [updatedWorkoutTemplate] = await tx
       .update(workoutTemplateTable)
       .set({

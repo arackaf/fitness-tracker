@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import { createExercise, type CreateExerciseInput } from "@/data/exercises/create-exercise";
 import { getExercises } from "@/data/exercises/get-exercises";
 import { exercises as exercisesTable } from "@/drizzle/schema";
@@ -65,7 +65,7 @@ export const editExercise = createServerFn({ method: "POST" })
 
     const name = data.name.trim();
 
-    await db
+    await getDb()
       .update(exercisesTable)
       .set({ name })
       .where(and(eq(exercisesTable.id, data.id), eq(exercisesTable.userId, session.user.id)));

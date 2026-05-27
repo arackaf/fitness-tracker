@@ -1,13 +1,20 @@
-import { getEnv } from "@/lib/cloudflareUtil";
+import { getRequest } from "@tanstack/react-start/server";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
 
-const connectionString = process.env.POSTGRES!;
+import { getPool } from "@/lib/pg";
 
-const env = getEnv();
+export function getDb() {
+  const request = getRequest() as Request & {
+    __drizzle?: ReturnType<typeof createDb>;
+  };
 
-const pool = new Pool({
-  connectionString: env.CF ? env.HYPERDRIVE.connectionString : connectionString,
-});
+  if (!request.__drizzle) {
+    request.__drizzle = createDb();
+  }
 
-export const db = drizzle({ client: pool });
+  return request.__drizzle;
+}
+
+function createDb() {
+  return drizzle({ client: getPool() });
+}

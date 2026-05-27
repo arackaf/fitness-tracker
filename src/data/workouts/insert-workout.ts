@@ -1,6 +1,6 @@
 import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import {
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
@@ -86,7 +86,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
 
 export const insertWorkout = async (input: WorkoutState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  return db.transaction(async tx => {
+  return getDb().transaction(async tx => {
     const [insertedWorkout] = await tx
       .insert(workoutTable)
       .values({

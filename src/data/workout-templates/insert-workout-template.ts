@@ -1,6 +1,6 @@
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -69,7 +69,7 @@ const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
 
 export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  return db.transaction(async tx => {
+  return getDb().transaction(async tx => {
     const [insertedWorkoutTemplate] = await tx
       .insert(workoutTemplateTable)
       .values({

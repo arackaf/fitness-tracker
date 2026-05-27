@@ -1,6 +1,6 @@
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMeasurementState } from "@/data/body-composition/body-composition-state";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import { bodyCompositionMeasurement } from "@/drizzle/schema";
 import { toNumericValue } from "@/lib/toNumericValue";
 
@@ -11,7 +11,7 @@ export const insertBodyCompositionMeasurement = async (input: BodyCompositionMea
     throw new Error("Measurement value is required.");
   }
 
-  const [insertedMeasurement] = await db
+  const [insertedMeasurement] = await getDb()
     .insert(bodyCompositionMeasurement)
     .values({
       userId: "", //TODO: Add auth

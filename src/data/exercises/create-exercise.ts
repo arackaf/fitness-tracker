@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import { exercises as exercisesTable, type executionType } from "@/drizzle/schema";
 
 export type CreateExerciseInput = typeof exercisesTable.$inferInsert;
@@ -20,6 +20,8 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
 
   const normalizedName = input.name.trim();
+
+  const db = getDb();
 
   const existingExerciseResults = await db
     .select({ id: exercisesTable.id })

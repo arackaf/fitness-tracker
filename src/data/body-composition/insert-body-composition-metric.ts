@@ -1,11 +1,11 @@
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMetricState } from "@/data/body-composition/body-composition-state";
-import { db } from "@/data/db";
+import { getDb } from "@/data/db";
 import { bodyCompositionMetric } from "@/drizzle/schema";
 
 export const insertBodyCompositionMetric = async (input: BodyCompositionMetricState) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  const [insertedMetric] = await db
+  const [insertedMetric] = await getDb()
     .insert(bodyCompositionMetric)
     .values({
       userId: "", //TODO: Add auth
