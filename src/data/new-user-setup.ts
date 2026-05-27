@@ -1,4 +1,4 @@
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import { bodyCompositionMetric, exercises, muscleGroup, userInfo } from "@/drizzle/schema";
 import type { SessionUser } from "@/lib/auth.functions";
 import { eq } from "drizzle-orm";
@@ -671,8 +671,6 @@ export const setupNewUser = async (user: SessionUser) => {
   const start = performance.now();
 
   const { id: userId, name, image } = user;
-
-  const db = getDb();
 
   const existingUserResults = await db
     .select()

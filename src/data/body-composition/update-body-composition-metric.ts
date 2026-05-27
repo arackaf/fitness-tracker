@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMetricState } from "@/data/body-composition/body-composition-state";
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import { bodyCompositionMetric } from "@/drizzle/schema";
 
 export const updateBodyCompositionMetric = async (input: BodyCompositionMetricState) => {
@@ -11,7 +11,7 @@ export const updateBodyCompositionMetric = async (input: BodyCompositionMetricSt
   }
 
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  await getDb()
+  await db
     .update(bodyCompositionMetric)
     .set({
       name: input.name.trim(),

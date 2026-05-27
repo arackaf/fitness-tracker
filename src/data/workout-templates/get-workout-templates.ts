@@ -2,7 +2,7 @@ import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { getDb } from "@/data/db";
+import { db } from "@/data/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -33,8 +33,6 @@ export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams = {}
   if (params.id != null) {
     conditions.push(eq(workoutTemplateTable.id, params.id));
   }
-
-  const db = getDb();
 
   const templateIds = db.$with("valid_workout_templates").as(
     db
