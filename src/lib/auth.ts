@@ -1,18 +1,31 @@
+import { env } from "cloudflare:workers";
 import { betterAuth } from "better-auth";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { Pool } from "pg";
+import { getRequest } from "@tanstack/react-start/server";
 
-const connectionString = process.env.POSTGRES!;
+import { getPool } from "@/lib/pg";
 
-export const auth = betterAuth({
-  database: new Pool({
-    connectionString,
-  }),
-  plugins: [tanstackStartCookies()],
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!,
+export function getAuth() {
+  const request = getRequest() as Request & {
+    __auth?: ReturnType<typeof createAuth>;
+  };
+
+  if (!request.__auth) {
+    request.__auth = createAuth();
+  }
+
+  return request.__auth;
+}
+
+function createAuth() {
+  return betterAuth({
+    database: getPool(),
+    plugins: [tanstackStartCookies()],
+    socialProviders: {
+      google: {
+        clientId: env.GOOGLE_AUTH_CLIENT_ID,
+        clientSecret: env.GOOGLE_AUTH_CLIENT_SECRET,
+      },
     },
-  },
-});
+  });
+}
