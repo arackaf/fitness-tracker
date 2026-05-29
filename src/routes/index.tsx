@@ -21,7 +21,7 @@ function App() {
             </div>
             <div>
               <p className="text-2xl font-extrabold leading-none tracking-tight text-white md:text-3xl">
-                TanStack Jacked
+                Fitness Tracker
               </p>
               <p className="mt-1 text-xs font-medium uppercase tracking-[0.18em] text-foreground/80">Workout Tracker</p>
             </div>
@@ -33,9 +33,6 @@ function App() {
             <p className="inline-flex rounded-full border border-amber-300/30 bg-amber-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-amber-200">
               Train smart. Track everything.
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-              Build strength The TanStack Way
-            </h1>
             <p className="max-w-2xl text-base leading-relaxed md:text-lg">
               Log workouts, follow your progress, and stay consistent without extra clutter.
             </p>
