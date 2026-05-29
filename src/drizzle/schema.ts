@@ -146,6 +146,7 @@ export const verification = pgTable(
   "verification",
   {
     id: text().primaryKey(),
+    userId: text().references(() => user.id, { onDelete: "cascade" }),
     identifier: text().notNull(),
     value: text().notNull(),
     expiresAt: timestamp({ withTimezone: true }).notNull(),
@@ -156,7 +157,10 @@ export const verification = pgTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
   },
-  table => [index("verification_identifier_idx").using("btree", table.identifier.asc().nullsLast())],
+  table => [
+    index("verification_identifier_idx").using("btree", table.identifier.asc().nullsLast()),
+    index("verification_userId_idx").using("btree", table.userId.asc().nullsLast()),
+  ],
 );
 
 export const workout = pgTable(
