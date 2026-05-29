@@ -1,7 +1,10 @@
+import { and, eq, inArray } from "drizzle-orm";
+
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import {
+  exercises as exercisesTable,
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
@@ -67,15 +70,30 @@ const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
   };
 };
 
-export const insertWorkoutTemplate = async (input: WorkoutTemplateState) => {
+export const insertWorkoutTemplate = async (input: WorkoutTemplateState, userId: string) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+  const exerciseIds = Array.from(
+    new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
+  );
+
+  if (exerciseIds.length > 0) {
+    const ownedExercises = await db
+      .select({ id: exercisesTable.id })
+      .from(exercisesTable)
+      .where(and(eq(exercisesTable.userId, userId), inArray(exercisesTable.id, exerciseIds)));
+
+    if (ownedExercises.length !== exerciseIds.length) {
+      throw new Error("One or more exercises were not found.");
+    }
+  }
+
   return db.transaction(async tx => {
     const [insertedWorkoutTemplate] = await tx
       .insert(workoutTemplateTable)
       .values({
         name: input.name,
         description: input.description,
-        userId: "", //TODO: Add auth
+        userId,
       })
       .returning({ id: workoutTemplateTable.id });
 

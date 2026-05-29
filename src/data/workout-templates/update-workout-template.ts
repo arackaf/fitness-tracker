@@ -4,6 +4,7 @@ import type { WorkoutTemplateState } from "@/data/workout-templates/workout-stat
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import {
+  exercises as exercisesTable,
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
   workoutTemplateSegmentExercise as workoutTemplateSegmentExerciseTable,
@@ -84,13 +85,27 @@ const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
   };
 };
 
-export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
+export const updateWorkoutTemplate = async (input: WorkoutTemplateState, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout template ID is required for update.");
   }
 
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const workoutTemplateId = input.id;
+  const exerciseIds = Array.from(
+    new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
+  );
+
+  if (exerciseIds.length > 0) {
+    const ownedExercises = await db
+      .select({ id: exercisesTable.id })
+      .from(exercisesTable)
+      .where(and(eq(exercisesTable.userId, userId), inArray(exercisesTable.id, exerciseIds)));
+
+    if (ownedExercises.length !== exerciseIds.length) {
+      throw new Error("One or more exercises were not found.");
+    }
+  }
 
   return db.transaction(async tx => {
     const [updatedWorkoutTemplate] = await tx
@@ -99,7 +114,7 @@ export const updateWorkoutTemplate = async (input: WorkoutTemplateState) => {
         name: input.name,
         description: input.description,
       })
-      .where(eq(workoutTemplateTable.id, workoutTemplateId))
+      .where(and(eq(workoutTemplateTable.id, workoutTemplateId), eq(workoutTemplateTable.userId, userId)))
       .returning({ id: workoutTemplateTable.id });
 
     if (!updatedWorkoutTemplate) {

@@ -1,15 +1,14 @@
-import { and, eq } from "drizzle-orm";
 import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
-import { db } from "@/data/db";
 import { createExercise, type CreateExerciseInput } from "@/data/exercises/create-exercise";
 import { getExercises } from "@/data/exercises/get-exercises";
-import { exercises as exercisesTable } from "@/drizzle/schema";
-import { getSession } from "@/lib/auth.functions";
+import { updateExercise } from "@/data/exercises/update-exercise";
+import { requireUserId } from "@/lib/server-auth";
 
-export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(async () => {
-  return getExercises();
+export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(async ({ context }) => {
+  const userId = await requireUserId(context);
+  return getExercises(userId);
 });
 
 export const exercisesQueryOptions = () =>
@@ -31,15 +30,10 @@ export type CreateExerciseServerInput = Omit<CreateExerciseInput, "userId">;
 
 export const createExerciseServerFn = createServerFn({ method: "POST" })
   .inputValidator((input: CreateExerciseServerInput) => input)
-  .handler(async ({ data }) => {
-    const session = await getSession();
-
-    if (!session) {
-      return Response.json({ error: true, code: "FORBIDDEN", message: "Forbidden" }, { status: 403 });
-    }
-
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
     const result = await createExercise({
-      userId: session.user.id,
+      userId,
       ...data,
     });
 
@@ -56,17 +50,7 @@ export const createExerciseServerFn = createServerFn({ method: "POST" })
 
 export const editExercise = createServerFn({ method: "POST" })
   .inputValidator((input: EditExerciseInput) => input)
-  .handler(async ({ data }) => {
-    const session = await getSession();
-
-    if (!session) {
-      return Response.json({}, { status: 403 });
-    }
-
-    const name = data.name.trim();
-
-    await db
-      .update(exercisesTable)
-      .set({ name })
-      .where(and(eq(exercisesTable.id, data.id), eq(exercisesTable.userId, session.user.id)));
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await updateExercise({ ...data, userId });
   });

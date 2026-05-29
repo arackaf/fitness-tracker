@@ -11,6 +11,7 @@ import type {
 } from "@/data/body-composition/body-composition-state";
 import { updateBodyCompositionMeasurement as updateBodyCompositionMeasurementData } from "@/data/body-composition/update-body-composition-measurement";
 import { updateBodyCompositionMetric as updateBodyCompositionMetricData } from "@/data/body-composition/update-body-composition-metric";
+import { requireUserId } from "@/lib/server-auth";
 
 type BodyCompositionMetricsInput = {
   id?: number;
@@ -44,8 +45,9 @@ export const getBodyCompositionMetricsServerFn = createServerFn({
   method: "GET",
 })
   .inputValidator((input: BodyCompositionMetricsInput) => input)
-  .handler(async ({ data }) => {
-    return getBodyCompositionMetrics({ id: data.id });
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    return getBodyCompositionMetrics({ id: data.id, userId });
   });
 
 export const bodyCompositionMeasurementsQueryOptions = (
@@ -66,10 +68,12 @@ export const getBodyCompositionMeasurementsServerFn = createServerFn({
   method: "GET",
 })
   .inputValidator((input: BodyCompositionMeasurementsInput) => input)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
     return getBodyCompositionMeasurements({
       id: data.id,
       bodyCompositionMetricId: data.bodyCompositionMetricId,
+      userId,
     });
   });
 
@@ -85,35 +89,40 @@ export const getBodyCompositionMeasurementById = createServerFn({
   method: "GET",
 })
   .inputValidator((input: { id: number }) => input)
-  .handler(async ({ data }) => {
-    const measurements = await getBodyCompositionMeasurements({ id: data.id });
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    const measurements = await getBodyCompositionMeasurements({ id: data.id, userId });
     return measurements[0] ?? null;
   });
 
 export const saveBodyCompositionMetric = createServerFn({ method: "POST" })
   .inputValidator((input: BodyCompositionMetricState) => input)
-  .handler(async ({ data }) => {
-    await insertBodyCompositionMetric(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await insertBodyCompositionMetric(data, userId);
   });
 
 export const updateBodyCompositionMetric = createServerFn({ method: "POST" })
   .inputValidator((input: BodyCompositionMetricState) => input)
-  .handler(async ({ data }) => {
-    await updateBodyCompositionMetricData(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await updateBodyCompositionMetricData(data, userId);
   });
 
 export const saveBodyCompositionMeasurement = createServerFn({
   method: "POST",
 })
   .inputValidator((input: BodyCompositionMeasurementState) => input)
-  .handler(async ({ data }) => {
-    await insertBodyCompositionMeasurement(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await insertBodyCompositionMeasurement(data, userId);
   });
 
 export const updateBodyCompositionMeasurement = createServerFn({
   method: "POST",
 })
   .inputValidator((input: BodyCompositionMeasurementState) => input)
-  .handler(async ({ data }) => {
-    await updateBodyCompositionMeasurementData(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await updateBodyCompositionMeasurementData(data, userId);
   });

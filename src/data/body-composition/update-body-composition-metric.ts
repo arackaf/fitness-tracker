@@ -1,11 +1,11 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMetricState } from "@/data/body-composition/body-composition-state";
 import { db } from "@/data/db";
 import { bodyCompositionMetric } from "@/drizzle/schema";
 
-export const updateBodyCompositionMetric = async (input: BodyCompositionMetricState) => {
+export const updateBodyCompositionMetric = async (input: BodyCompositionMetricState, userId: string) => {
   if (input.id == null) {
     throw new Error("Body composition metric ID is required for update.");
   }
@@ -17,5 +17,5 @@ export const updateBodyCompositionMetric = async (input: BodyCompositionMetricSt
       name: input.name.trim(),
       measurementType: input.measurementType,
     })
-    .where(eq(bodyCompositionMetric.id, input.id));
+    .where(and(eq(bodyCompositionMetric.id, input.id), eq(bodyCompositionMetric.userId, userId)));
 };

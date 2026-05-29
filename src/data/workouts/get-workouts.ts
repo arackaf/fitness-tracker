@@ -18,6 +18,7 @@ const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 type GetWorkoutsOptions = {
   id?: number;
   page?: number;
+  userId: string;
 };
 
 type WorkoutsPayload = {
@@ -26,12 +27,13 @@ type WorkoutsPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<WorkoutsPayload> => {
+export const getWorkouts = async (options: GetWorkoutsOptions): Promise<WorkoutsPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const page = Math.max(1, Math.floor(options.page ?? 1));
   const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
 
   const baseWhereConditions: SQLWrapper[] = [];
+  baseWhereConditions.push(eq(workoutTable.userId, options.userId));
   if (options.id != null) {
     baseWhereConditions.push(eq(workoutTable.id, options.id));
   }

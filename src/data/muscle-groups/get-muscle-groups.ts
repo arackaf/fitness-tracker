@@ -1,10 +1,10 @@
-import { asc, sql } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import { muscleGroup } from "@/drizzle/schema";
 
-export async function getMuscleGroups() {
+export async function getMuscleGroups(userId: string) {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  return db.select().from(muscleGroup).orderBy(asc(muscleGroup.name));
+  return db.select().from(muscleGroup).where(eq(muscleGroup.userId, userId)).orderBy(asc(muscleGroup.name));
 }

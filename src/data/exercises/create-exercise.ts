@@ -1,7 +1,7 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
-import { exercises as exercisesTable, type executionType } from "@/drizzle/schema";
+import { exercises as exercisesTable, muscleGroup, type executionType } from "@/drizzle/schema";
 
 export type CreateExerciseInput = typeof exercisesTable.$inferInsert;
 
@@ -20,6 +20,18 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
 
   const normalizedName = input.name.trim();
+  const muscleGroupIds = Array.from(new Set(input.muscleGroups));
+
+  if (muscleGroupIds.length > 0) {
+    const ownedMuscleGroups = await db
+      .select({ id: muscleGroup.id })
+      .from(muscleGroup)
+      .where(and(eq(muscleGroup.userId, input.userId), inArray(muscleGroup.id, muscleGroupIds)));
+
+    if (ownedMuscleGroups.length !== muscleGroupIds.length) {
+      throw new Error("One or more muscle groups were not found.");
+    }
+  }
 
   const existingExerciseResults = await db
     .select({ id: exercisesTable.id })

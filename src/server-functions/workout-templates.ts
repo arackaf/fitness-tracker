@@ -5,6 +5,7 @@ import { getWorkoutTemplates } from "@/data/workout-templates/get-workout-templa
 import { insertWorkoutTemplate } from "@/data/workout-templates/insert-workout-template";
 import { updateWorkoutTemplate as updateWorkoutTemplateData } from "@/data/workout-templates/update-workout-template";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { requireUserId } from "@/lib/server-auth";
 
 type WorkoutTemplatesInput = {
   page?: number;
@@ -24,8 +25,9 @@ export const workoutTemplatesQueryOptions = (pageInput = 1) => {
 
 export const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
   .inputValidator((input: WorkoutTemplatesInput) => input)
-  .handler(async ({ data }) => {
-    return getWorkoutTemplates({ page: data.page });
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    return getWorkoutTemplates({ page: data.page, userId });
   });
 
 export const workoutTemplateByIdQueryOptions = (id: number) =>
@@ -38,20 +40,23 @@ export const workoutTemplateByIdQueryOptions = (id: number) =>
 
 export const getWorkoutTemplateById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
-  .handler(async ({ data }) => {
-    const payload = await getWorkoutTemplates({ id: data.id });
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    const payload = await getWorkoutTemplates({ id: data.id, userId });
 
     return payload.workoutTemplates[0] ?? null;
   });
 
 export const saveWorkoutTemplate = createServerFn({ method: "POST" })
   .inputValidator((input: WorkoutTemplateState) => input)
-  .handler(async ({ data }) => {
-    await insertWorkoutTemplate(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await insertWorkoutTemplate(data, userId);
   });
 
 export const updateWorkoutTemplate = createServerFn({ method: "POST" })
   .inputValidator((input: WorkoutTemplateState) => input)
-  .handler(async ({ data }) => {
-    await updateWorkoutTemplateData(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await updateWorkoutTemplateData(data, userId);
   });
