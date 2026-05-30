@@ -1,4 +1,4 @@
-import { and, eq, inArray, not } from "drizzle-orm";
+import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import { exercises as exercisesTable, muscleGroup, type executionType } from "@/drizzle/schema";
@@ -24,9 +24,16 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
 
   if (muscleGroupIds.length > 0) {
     const mismatchedMuscleGroups = await db
-      .select({ id: muscleGroup.id })
+      .select({ securityCheckFailed: sql<number>`0` })
       .from(muscleGroup)
-      .where(and(inArray(muscleGroup.id, muscleGroupIds), not(eq(muscleGroup.userId, input.userId))))
+      .where(
+        exists(
+          db
+            .select({ id: muscleGroup.id })
+            .from(muscleGroup)
+            .where(and(inArray(muscleGroup.id, muscleGroupIds), not(eq(muscleGroup.userId, input.userId)))),
+        ),
+      )
       .limit(1);
 
     if (mismatchedMuscleGroups.length > 0) {

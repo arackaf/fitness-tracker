@@ -1,4 +1,4 @@
-import { and, eq, inArray, not } from "drizzle-orm";
+import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
@@ -78,9 +78,16 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState, userId:
 
   if (exerciseIds.length > 0) {
     const mismatchedExercises = await db
-      .select({ id: exercisesTable.id })
+      .select({ securityCheckFailed: sql<number>`0` })
       .from(exercisesTable)
-      .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId))))
+      .where(
+        exists(
+          db
+            .select({ id: exercisesTable.id })
+            .from(exercisesTable)
+            .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId)))),
+        ),
+      )
       .limit(1);
 
     if (mismatchedExercises.length > 0) {

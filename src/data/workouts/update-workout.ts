@@ -1,4 +1,4 @@
-import { and, eq, inArray, not } from "drizzle-orm";
+import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
@@ -123,9 +123,16 @@ export const updateWorkout = async (input: WorkoutState, userId: string) => {
 
   if (exerciseIds.length > 0) {
     const mismatchedExercises = await db
-      .select({ id: exercisesTable.id })
+      .select({ securityCheckFailed: sql<number>`0` })
       .from(exercisesTable)
-      .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId))))
+      .where(
+        exists(
+          db
+            .select({ id: exercisesTable.id })
+            .from(exercisesTable)
+            .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId)))),
+        ),
+      )
       .limit(1);
 
     if (mismatchedExercises.length > 0) {
