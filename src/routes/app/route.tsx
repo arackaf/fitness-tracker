@@ -1,12 +1,19 @@
 import { ClipboardPen, History, Menu, PencilRuler, Shield } from "lucide-react";
 import { useState } from "react";
 
-import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app")({
+  beforeLoad: ({ context }) => {
+    if (!context.loggedIn) {
+      throw redirect({
+        to: "/",
+      });
+    }
+  },
   component: RouteComponent,
 });
 
