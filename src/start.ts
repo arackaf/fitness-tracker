@@ -7,19 +7,16 @@ import { Pool } from "pg";
 import { getEnv } from "@/lib/cloudflareUtil";
 
 const globalContextMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const connectionString = process.env.POSTGRES!;
   const env = getEnv();
 
   const pool = new Pool({
-    connectionString: env.CF ? env.HYPERDRIVE.connectionString : connectionString,
+    connectionString: env.HYPERDRIVE.connectionString,
   });
 
   const db = drizzle({ client: pool });
 
   const auth = betterAuth({
-    database: new Pool({
-      connectionString,
-    }),
+    database: pool,
     plugins: [tanstackStartCookies()],
     socialProviders: {
       google: {
