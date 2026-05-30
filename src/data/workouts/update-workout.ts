@@ -122,12 +122,13 @@ export const updateWorkout = async (input: WorkoutState, userId: string) => {
   );
 
   if (exerciseIds.length > 0) {
-    const ownedExercises = await db
+    const mismatchedExercises = await db
       .select({ id: exercisesTable.id })
       .from(exercisesTable)
-      .where(and(eq(exercisesTable.userId, userId), inArray(exercisesTable.id, exerciseIds)));
+      .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId))))
+      .limit(1);
 
-    if (ownedExercises.length !== exerciseIds.length) {
+    if (mismatchedExercises.length > 0) {
       throw new Error("One or more exercises were not found.");
     }
   }
