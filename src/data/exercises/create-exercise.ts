@@ -33,8 +33,7 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
             .from(muscleGroup)
             .where(and(inArray(muscleGroup.id, muscleGroupIds), not(eq(muscleGroup.userId, input.userId)))),
         ),
-      )
-      .limit(1);
+      );
 
     if (mismatchedMuscleGroups.length > 0) {
       throw new Error("One or more muscle groups were not found.");

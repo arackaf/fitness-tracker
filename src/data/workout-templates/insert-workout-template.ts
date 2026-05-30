@@ -87,8 +87,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState, userId:
             .from(exercisesTable)
             .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId)))),
         ),
-      )
-      .limit(1);
+      );
 
     if (mismatchedExercises.length > 0) {
       throw new Error("One or more exercises were not found.");
