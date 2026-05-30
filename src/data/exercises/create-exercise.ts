@@ -23,7 +23,7 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
   const muscleGroupIds = Array.from(new Set(input.muscleGroups));
 
   if (muscleGroupIds.length > 0) {
-    const mismatchedMuscleGroups = await db
+    const [mismatchedMuscleGroup] = await db
       .select({ securityCheckFailed: sql<number>`0` })
       .from(muscleGroup)
       .where(
@@ -35,7 +35,7 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
         ),
       );
 
-    if (mismatchedMuscleGroups.length > 0) {
+    if (mismatchedMuscleGroup != null) {
       throw new Error("One or more muscle groups were not found.");
     }
   }

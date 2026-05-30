@@ -95,7 +95,7 @@ export const insertWorkout = async (input: WorkoutState, userId: string) => {
   );
 
   if (exerciseIds.length > 0) {
-    const mismatchedExercises = await db
+    const [mismatchedExercise] = await db
       .select({ securityCheckFailed: sql<number>`0` })
       .from(exercisesTable)
       .where(
@@ -107,7 +107,7 @@ export const insertWorkout = async (input: WorkoutState, userId: string) => {
         ),
       );
 
-    if (mismatchedExercises.length > 0) {
+    if (mismatchedExercise != null) {
       throw new Error("One or more exercises were not found.");
     }
   }
