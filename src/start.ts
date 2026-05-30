@@ -1,14 +1,11 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from "@tanstack/react-start";
 import { betterAuth } from "better-auth";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-import { getEnv } from "@/lib/cloudflareUtil";
-
 const globalContextMiddleware = createMiddleware({ type: "function" }).server(async ({ next }) => {
-  const env = getEnv();
-
   const pool = new Pool({
     connectionString: env.HYPERDRIVE.connectionString,
   });
