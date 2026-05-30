@@ -43,8 +43,7 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
   const existingExerciseResults = await db
     .select({ id: exercisesTable.id })
     .from(exercisesTable)
-    .where(and(eq(exercisesTable.userId, input.userId), eq(exercisesTable.name, normalizedName)))
-    .limit(1);
+    .where(and(eq(exercisesTable.userId, input.userId), eq(exercisesTable.name, normalizedName)));
 
   const existingExercise = existingExerciseResults[0];
 

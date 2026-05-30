@@ -20,8 +20,7 @@ export const updateBodyCompositionMeasurement = async (input: BodyCompositionMea
   const [metric] = await db
     .select({ id: bodyCompositionMetric.id })
     .from(bodyCompositionMetric)
-    .where(and(eq(bodyCompositionMetric.id, input.bodyCompositionMetricId), eq(bodyCompositionMetric.userId, userId)))
-    .limit(1);
+    .where(and(eq(bodyCompositionMetric.id, input.bodyCompositionMetricId), eq(bodyCompositionMetric.userId, userId)));
 
   if (!metric) {
     throw new Error(`Body composition metric ${input.bodyCompositionMetricId} was not found.`);

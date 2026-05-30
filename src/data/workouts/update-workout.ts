@@ -143,8 +143,7 @@ export const updateWorkout = async (input: WorkoutState, userId: string) => {
     const [template] = await db
       .select({ id: workoutTemplateTable.id })
       .from(workoutTemplateTable)
-      .where(and(eq(workoutTemplateTable.id, input.workoutTemplateId), eq(workoutTemplateTable.userId, userId)))
-      .limit(1);
+      .where(and(eq(workoutTemplateTable.id, input.workoutTemplateId), eq(workoutTemplateTable.userId, userId)));
 
     if (!template) {
       throw new Error(`Workout template ${input.workoutTemplateId} was not found.`);
