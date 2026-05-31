@@ -3,17 +3,15 @@ import { getRequestHeaders } from "@tanstack/react-start/server";
 import type { auth } from "@/lib/auth";
 
 type AuthContext = {
-  auth: typeof auth;
+  userId?: string;
 };
 
-export const requireUserId = async (context: AuthContext) => {
-  const session = await context.auth.api.getSession({
-    headers: getRequestHeaders(),
-  });
+export const requireUserId = (context: AuthContext) => {
+  const userId = context.userId;
 
-  if (!session) {
+  if (!userId) {
     throw Response.json({ error: true, code: "FORBIDDEN", message: "Forbidden" }, { status: 403 });
   }
 
-  return session.user.id;
+  return userId;
 };
