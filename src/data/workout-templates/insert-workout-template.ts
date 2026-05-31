@@ -78,7 +78,7 @@ export const insertWorkoutTemplate = async (input: WorkoutTemplateState, userId:
 
   if (exerciseIds.length > 0) {
     const [mismatchedExercise] = await db
-      .select({ securityCheckFailed: sql<number>`0` })
+      .select({ securityCheckFailed: sql`0` })
       .from(exercisesTable)
       .where(
         exists(

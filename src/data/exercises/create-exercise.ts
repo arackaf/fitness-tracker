@@ -24,7 +24,7 @@ export const createExercise = async (input: CreateExerciseInput): Promise<Create
 
   if (muscleGroupIds.length > 0) {
     const [mismatchedMuscleGroup] = await db
-      .select({ securityCheckFailed: sql<number>`0` })
+      .select({ securityCheckFailed: sql`0` })
       .from(muscleGroup)
       .where(
         exists(
