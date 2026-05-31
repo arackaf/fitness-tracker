@@ -1,10 +1,12 @@
-import { ClipboardPen, History, Menu, PencilRuler, Shield } from "lucide-react";
+import { ClipboardPen, History, LogOut, Menu, PencilRuler, Shield } from "lucide-react";
 import { useState } from "react";
 
-import { createFileRoute, Link, Outlet, redirect, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useLocation, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app")({
   beforeLoad: ({ context }) => {
@@ -19,6 +21,7 @@ export const Route = createFileRoute("/app")({
 
 function RouteComponent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   const navLinkClassName =
     "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
@@ -33,6 +36,21 @@ function RouteComponent() {
 
   const location = useLocation();
   const adminIsActive = location.pathname.includes("/app/admin");
+
+  const queryClient = useQueryClient();
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: async () => {
+          setIsMobileMenuOpen(false);
+          await router.invalidate();
+          queryClient.clear();
+          router.navigate({ to: "/", reloadDocument: true });
+        },
+      },
+    });
+  };
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -76,7 +94,15 @@ function RouteComponent() {
             <History className="size-4" aria-hidden="true" />
             Measurements
           </Link>
-          <div className="ml-auto mr-1 h-5 w-px bg-border" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={cn(navLinkClassName, "ml-auto cursor-pointer", inactiveNavLinkProps.className)}
+          >
+            <LogOut className="size-4" aria-hidden="true" />
+            Logout
+          </button>
+          <div className="mr-1 h-5 w-px bg-border" aria-hidden="true" />
           <Link
             to="/app/admin/exercises"
             activeOptions={{ exact: false }}
@@ -143,6 +169,14 @@ function RouteComponent() {
                   <History className="size-4" aria-hidden="true" />
                   Measurements
                 </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className={cn(navLinkClassName, "w-full justify-start", inactiveNavLinkProps.className)}
+                >
+                  <LogOut className="size-4" aria-hidden="true" />
+                  Logout
+                </button>
                 <div className="my-1 h-px w-full bg-border" aria-hidden="true" />
                 <Link
                   to="/app/admin/exercises"
