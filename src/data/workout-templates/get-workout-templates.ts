@@ -29,8 +29,7 @@ export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams): Pr
   const page = Math.max(1, Math.floor(params.page ?? 1));
   const offset = (page - 1) * WORKOUT_TEMPLATE_LIST_LIMIT;
 
-  const conditions: SQLWrapper[] = [];
-  conditions.push(eq(workoutTemplateTable.userId, params.userId));
+  const conditions: SQLWrapper[] = [eq(workoutTemplateTable.userId, params.userId)];
 
   if (params.id != null) {
     conditions.push(eq(workoutTemplateTable.id, params.id));
