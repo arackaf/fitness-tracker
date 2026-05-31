@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRouteWithContext, useRouterState } from "@tanstack/react-router";
+import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 
 import { ThemeProvider } from "../components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
