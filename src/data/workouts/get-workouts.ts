@@ -32,10 +32,9 @@ export const getWorkouts = async (options: GetWorkoutsOptions): Promise<Workouts
   const page = Math.max(1, Math.floor(options.page ?? 1));
   const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
 
-  const baseWhereConditions: SQLWrapper[] = [];
-  baseWhereConditions.push(eq(workoutTable.userId, options.userId));
+  const whereConditions: SQLWrapper[] = [eq(workoutTable.userId, options.userId)];
   if (options.id != null) {
-    baseWhereConditions.push(eq(workoutTable.id, options.id));
+    whereConditions.push(eq(workoutTable.id, options.id));
   }
 
   const workoutIds = db.$with("valid_workouts").as(
@@ -44,7 +43,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions): Promise<Workouts
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
       })
       .from(workoutTable)
-      .where(baseWhereConditions.length > 0 ? and(...baseWhereConditions) : undefined)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
       .limit(WORKOUT_HISTORY_QUERY_LIMIT)
       .offset(offset),
