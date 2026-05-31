@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { getSession } from "@/lib/auth.functions";
 import { setupNewUser } from "@/data/new-user-setup";
 import { createServerFn } from "@tanstack/react-start";
 

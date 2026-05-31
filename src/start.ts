@@ -5,6 +5,9 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import type { ContextUser } from "./types";
+import { account } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 const globalContextMiddleware = createMiddleware().server(async ({ next, context }) => {
   const pool = new Pool({
@@ -31,22 +34,28 @@ const globalContextMiddleware = createMiddleware().server(async ({ next, context
   const end = performance.now();
   console.log(`getSession took ${end - start}ms`);
 
-  const currentUser =
-    session == null
-      ? null
-      : {
-          id: session.user.id,
-          name: session.user.name,
-          image: session.user.image,
-        };
+  const loggedIn = !!session;
+  let currentUser: ContextUser | null = null;
+  let userId: string | null = null;
+
+  if (loggedIn) {
+    const [loggedInAccount] = await db.select().from(account).where(eq(account.userId, session.user.id));
+    userId = loggedInAccount.accountId;
+
+    currentUser = {
+      id: userId,
+      name: session.user.name,
+      image: session.user.image,
+    };
+  }
 
   return next({
     context: {
       db,
       auth,
-      loggedIn: !!session,
+      loggedIn,
       user: currentUser,
-      userId: currentUser?.id,
+      userId,
     },
   });
 });

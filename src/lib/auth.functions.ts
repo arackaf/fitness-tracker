@@ -17,5 +17,5 @@ export const ensureSession = createServerFn({ method: "GET" }).handler(async () 
   return session;
 });
 
-export type Session = Exclude<Awaited<ReturnType<typeof getSession>>, null>;
+export type Session = typeof auth.$Infer.Session;
 export type SessionUser = Session["user"];
