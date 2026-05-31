@@ -14,13 +14,12 @@ interface MyRouterContext {
   queryClient: QueryClient;
 }
 
-const setupNewUserServerFn = createServerFn({ method: "POST" }).handler(async () => {
-  const session = await getSession();
-  if (session) {
-    await setupNewUser(session.user);
+const setupNewUserServerFn = createServerFn({ method: "POST" }).handler(async ({ context }) => {
+  if (context.user) {
+    await setupNewUser(context.user);
   }
   return {
-    loggedIn: !!session,
+    loggedIn: context.loggedIn,
   };
 });
 

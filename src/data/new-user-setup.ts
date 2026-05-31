@@ -667,7 +667,9 @@ const getMuscleGroupId = (name: string, muscleGroupIdByName: Map<string, number>
   return muscleGroupId;
 };
 
-export const setupNewUser = async (user: SessionUser) => {
+type ContextUser = Pick<SessionUser, "id" | "name" | "image">;
+
+export const setupNewUser = async (user: ContextUser) => {
   const start = performance.now();
 
   const { id: userId, name, image } = user;
