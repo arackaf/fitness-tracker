@@ -1,6 +1,7 @@
 import { db } from "@/data/db";
 import { bodyCompositionMetric, exercises, muscleGroup, userInfo } from "@/drizzle/schema";
 import type { SessionUser } from "@/lib/auth.functions";
+import type { ContextUser } from "@/types";
 import { eq } from "drizzle-orm";
 
 type MuscleGroupSeed = {
@@ -666,8 +667,6 @@ const getMuscleGroupId = (name: string, muscleGroupIdByName: Map<string, number>
   }
   return muscleGroupId;
 };
-
-type ContextUser = Pick<SessionUser, "id" | "name" | "image">;
 
 export const setupNewUser = async (user: ContextUser) => {
   const start = performance.now();

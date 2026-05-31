@@ -1,9 +1,5 @@
-import { getRequestHeaders } from "@tanstack/react-start/server";
-
-import type { auth } from "@/lib/auth";
-
 type AuthContext = {
-  userId?: string;
+  userId: string | null;
 };
 
 export const requireUserId = (context: AuthContext) => {
