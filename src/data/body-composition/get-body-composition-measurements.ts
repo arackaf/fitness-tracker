@@ -8,13 +8,14 @@ import { bodyCompositionMeasurement } from "@/drizzle/schema";
 type GetBodyCompositionMeasurementsOptions = {
   id?: number;
   bodyCompositionMetricId?: number;
+  userId: string;
 };
 
 export const getBodyCompositionMeasurements = async (
-  options: GetBodyCompositionMeasurementsOptions = {},
+  options: GetBodyCompositionMeasurementsOptions,
 ): Promise<ExistingBodyCompositionMeasurement[]> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
-  const conditions: SQLWrapper[] = [];
+  const conditions: SQLWrapper[] = [eq(bodyCompositionMeasurement.userId, options.userId)];
   if (options.id != null) {
     conditions.push(eq(bodyCompositionMeasurement.id, options.id));
   }

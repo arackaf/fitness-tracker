@@ -5,6 +5,7 @@ import { getWorkouts } from "@/data/workouts/get-workouts";
 import { insertWorkout } from "@/data/workouts/insert-workout";
 import { updateWorkout as updateWorkoutData } from "@/data/workouts/update-workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
+import { requireUserId } from "@/lib/server-auth";
 
 type WorkoutHistoryInput = {
   page?: number;
@@ -27,9 +28,11 @@ export const workoutHistoryQueryOptions = (input?: WorkoutHistoryInput) => {
 
 const getWorkoutHistory = createServerFn({ method: "GET" })
   .inputValidator((input: WorkoutHistoryInput) => input)
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
     const payload = await getWorkouts({
       page: data.page,
+      userId,
     });
 
     return {
@@ -47,20 +50,23 @@ export const workoutByIdQueryOptions = (id: number) =>
 
 const getWorkoutById = createServerFn({ method: "GET" })
   .inputValidator((input: { id: number }) => input)
-  .handler(async ({ data }) => {
-    const { workouts } = await getWorkouts({ id: data.id });
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    const { workouts } = await getWorkouts({ id: data.id, userId });
 
     return workouts[0] ?? null;
   });
 
 export const saveWorkout = createServerFn({ method: "POST" })
   .inputValidator((input: WorkoutState) => input)
-  .handler(async ({ data }) => {
-    await insertWorkout(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await insertWorkout(data, userId);
   });
 
 export const updateWorkout = createServerFn({ method: "POST" })
   .inputValidator((input: WorkoutState) => input)
-  .handler(async ({ data }) => {
-    await updateWorkoutData(data);
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await updateWorkoutData(data, userId);
   });

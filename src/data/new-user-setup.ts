@@ -672,12 +672,8 @@ export const setupNewUser = async (user: SessionUser) => {
 
   const { id: userId, name, image } = user;
 
-  const existingUserResults = await db
-    .select()
-    .from(userInfo)
-    .for("update")
-    .where(eq(userInfo.userId, userId))
-    .limit(1);
+  const existingUserResults = await db.select().from(userInfo).for("update").where(eq(userInfo.userId, userId));
+
   const existingUser = existingUserResults[0];
 
   if (existingUser) {

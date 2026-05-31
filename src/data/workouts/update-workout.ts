@@ -1,13 +1,15 @@
-import { and, eq, inArray, not } from "drizzle-orm";
+import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import { db } from "@/data/db";
 import {
+  exercises as exercisesTable,
   workout as workoutTable,
   workoutSegment as workoutSegmentTable,
   workoutSegmentExercise as workoutSegmentExerciseTable,
   workoutSegmentExerciseMeasurement as workoutSegmentExerciseMeasurementTable,
+  workoutTemplate as workoutTemplateTable,
 } from "@/drizzle/schema";
 
 type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
@@ -108,13 +110,45 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const updateWorkout = async (input: WorkoutState) => {
+export const updateWorkout = async (input: WorkoutState, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout ID is required for update.");
   }
 
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const workoutId = input.id;
+  const exerciseIds = Array.from(
+    new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
+  );
+
+  if (exerciseIds.length > 0) {
+    const [mismatchedExercise] = await db
+      .select({ securityCheckFailed: sql`0` })
+      .from(exercisesTable)
+      .where(
+        exists(
+          db
+            .select({ id: exercisesTable.id })
+            .from(exercisesTable)
+            .where(and(inArray(exercisesTable.id, exerciseIds), not(eq(exercisesTable.userId, userId)))),
+        ),
+      );
+
+    if (mismatchedExercise != null) {
+      throw new Error("One or more exercises were not found.");
+    }
+  }
+
+  if (input.workoutTemplateId != null) {
+    const [template] = await db
+      .select({ id: workoutTemplateTable.id })
+      .from(workoutTemplateTable)
+      .where(and(eq(workoutTemplateTable.id, input.workoutTemplateId), eq(workoutTemplateTable.userId, userId)));
+
+    if (!template) {
+      throw new Error(`Workout template ${input.workoutTemplateId} was not found.`);
+    }
+  }
 
   return db.transaction(async tx => {
     const [updatedWorkout] = await tx
@@ -125,7 +159,7 @@ export const updateWorkout = async (input: WorkoutState) => {
         description: input.description,
         workoutDate: input.workoutDate,
       })
-      .where(eq(workoutTable.id, workoutId))
+      .where(and(eq(workoutTable.id, workoutId), eq(workoutTable.userId, userId)))
       .returning({ id: workoutTable.id });
 
     if (!updatedWorkout) {

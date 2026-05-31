@@ -18,6 +18,7 @@ const WORKOUT_HISTORY_QUERY_LIMIT = WORKOUT_HISTORY_LIMIT + 1;
 type GetWorkoutsOptions = {
   id?: number;
   page?: number;
+  userId: string;
 };
 
 type WorkoutsPayload = {
@@ -26,14 +27,14 @@ type WorkoutsPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<WorkoutsPayload> => {
+export const getWorkouts = async (options: GetWorkoutsOptions): Promise<WorkoutsPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const page = Math.max(1, Math.floor(options.page ?? 1));
   const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
 
-  const baseWhereConditions: SQLWrapper[] = [];
+  const whereConditions: SQLWrapper[] = [eq(workoutTable.userId, options.userId)];
   if (options.id != null) {
-    baseWhereConditions.push(eq(workoutTable.id, options.id));
+    whereConditions.push(eq(workoutTable.id, options.id));
   }
 
   const workoutIds = db.$with("valid_workouts").as(
@@ -42,7 +43,7 @@ export const getWorkouts = async (options: GetWorkoutsOptions = {}): Promise<Wor
         workout_id: sql<number>`${workoutTable.id}`.as("workout_id"),
       })
       .from(workoutTable)
-      .where(baseWhereConditions.length > 0 ? and(...baseWhereConditions) : undefined)
+      .where(whereConditions.length > 0 ? and(...whereConditions) : undefined)
       .orderBy(desc(workoutTable.workoutDate), desc(workoutTable.id))
       .limit(WORKOUT_HISTORY_QUERY_LIMIT)
       .offset(offset),
