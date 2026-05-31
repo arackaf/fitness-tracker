@@ -8,14 +8,14 @@ import { Pool } from "pg";
 import type { ContextUser } from "./types";
 import { account } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { getDb, type DB } from "./data/db";
 
 const globalContextMiddleware = createMiddleware().server(async ({ next, context }) => {
   const pool = new Pool({
     connectionString: env.HYPERDRIVE.connectionString,
   });
 
-  const db = drizzle({ client: pool });
-
+  const db = getDb(pool);
   const auth = betterAuth({
     database: pool,
     plugins: [tanstackStartCookies()],
