@@ -2,7 +2,7 @@ import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import {
   exercises as exercisesTable,
   workoutTemplate as workoutTemplateTable,
@@ -85,7 +85,7 @@ const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
   };
 };
 
-export const updateWorkoutTemplate = async (input: WorkoutTemplateState, userId: string) => {
+export const updateWorkoutTemplate = async (db: DB, input: WorkoutTemplateState, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout template ID is required for update.");
   }
