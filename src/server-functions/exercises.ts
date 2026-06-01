@@ -8,7 +8,7 @@ import { requireUserId } from "@/lib/server-auth";
 
 export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(async ({ context }) => {
   const userId = await requireUserId(context);
-  return getExercises(userId);
+  return getExercises(context.db, userId);
 });
 
 export const exercisesQueryOptions = () =>
@@ -32,7 +32,7 @@ export const createExerciseServerFn = createServerFn({ method: "POST" })
   .inputValidator((input: CreateExerciseServerInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
-    const result = await createExercise({
+    const result = await createExercise(context.db, {
       userId,
       ...data,
     });
@@ -52,5 +52,5 @@ export const editExercise = createServerFn({ method: "POST" })
   .inputValidator((input: EditExerciseInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
-    await updateExercise({ ...data, userId });
+    await updateExercise(context.db, { ...data, userId });
   });

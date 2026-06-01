@@ -1,30 +1,19 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { betterAuth } from "better-auth";
-import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import type { ContextUser } from "./types";
 import { account } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
+import { getDb } from "./data/db";
+import { createAuth } from "./lib/auth";
 
-const globalContextMiddleware = createMiddleware().server(async ({ next, context }) => {
+const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   const pool = new Pool({
     connectionString: process.env.POSTGRES!,
   });
 
-  const db = drizzle({ client: pool });
-
-  const auth = betterAuth({
-    database: pool,
-    plugins: [tanstackStartCookies()],
-    socialProviders: {
-      google: {
-        clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
-        clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!,
-      },
-    },
-  });
+  const db = getDb(pool);
+  const auth = createAuth(pool);
 
   const start = performance.now();
   const session = await auth.api.getSession({

@@ -1,7 +1,7 @@
 import { and, asc, eq, type SQLWrapper } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import { bodyCompositionMetric } from "@/drizzle/schema";
 
 type GetBodyCompositionMetricsOptions = {
@@ -9,7 +9,7 @@ type GetBodyCompositionMetricsOptions = {
   userId: string;
 };
 
-export const getBodyCompositionMetrics = async (options: GetBodyCompositionMetricsOptions) => {
+export const getBodyCompositionMetrics = async (db: DB, options: GetBodyCompositionMetricsOptions) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const conditions: SQLWrapper[] = [eq(bodyCompositionMetric.userId, options.userId)];
 

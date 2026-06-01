@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { Trash2 } from "lucide-react";
 
 import { InnerCard } from "@/components/InnerCard";

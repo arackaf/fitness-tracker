@@ -2,7 +2,7 @@ import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import {
   exercises as exercisesTable,
   workoutTemplate as workoutTemplateTable,
@@ -70,7 +70,7 @@ const createExerciseUnitValues = (exercise: TemplateExerciseInput) => {
   };
 };
 
-export const insertWorkoutTemplate = async (input: WorkoutTemplateState, userId: string) => {
+export const insertWorkoutTemplate = async (db: DB, input: WorkoutTemplateState, userId: string) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const exerciseIds = Array.from(
     new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),

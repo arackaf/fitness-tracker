@@ -2,7 +2,7 @@ import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import {
   exercises as exercisesTable,
   workout as workoutTable,
@@ -110,7 +110,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const updateWorkout = async (input: WorkoutState, userId: string) => {
+export const updateWorkout = async (db: DB, input: WorkoutState, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout ID is required for update.");
   }

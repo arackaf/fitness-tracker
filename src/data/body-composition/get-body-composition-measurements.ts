@@ -2,7 +2,7 @@ import { and, desc, eq, type SQLWrapper } from "drizzle-orm";
 
 import type { ExistingBodyCompositionMeasurement } from "@/data/body-composition/body-composition-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import { bodyCompositionMeasurement } from "@/drizzle/schema";
 
 type GetBodyCompositionMeasurementsOptions = {
@@ -12,6 +12,7 @@ type GetBodyCompositionMeasurementsOptions = {
 };
 
 export const getBodyCompositionMeasurements = async (
+  db: DB,
   options: GetBodyCompositionMeasurementsOptions,
 ): Promise<ExistingBodyCompositionMeasurement[]> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));

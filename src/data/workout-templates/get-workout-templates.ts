@@ -2,7 +2,7 @@ import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import {
   workoutTemplate as workoutTemplateTable,
   workoutTemplateSegment as workoutTemplateSegmentTable,
@@ -24,7 +24,7 @@ type WorkoutTemplatesPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkoutTemplates = async (params: GetWorkoutTemplatesParams): Promise<WorkoutTemplatesPayload> => {
+export const getWorkoutTemplates = async (db: DB, params: GetWorkoutTemplatesParams): Promise<WorkoutTemplatesPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const page = Math.max(1, Math.floor(params.page ?? 1));
   const offset = (page - 1) * WORKOUT_TEMPLATE_LIST_LIMIT;
