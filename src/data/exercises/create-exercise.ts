@@ -1,7 +1,7 @@
 import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";
-import { exercises as exercisesTable, muscleGroup, type executionType } from "@/drizzle/schema";
+import { exercises as exercisesTable, muscleGroup } from "@/drizzle/schema";
 
 export type CreateExerciseInput = typeof exercisesTable.$inferInsert;
 

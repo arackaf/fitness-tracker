@@ -5,10 +5,10 @@ import { Pool } from "pg";
 import type { ContextUser } from "./types";
 import { account } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { getDb, type DB } from "./data/db";
+import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
 
-const globalContextMiddleware = createMiddleware().server(async ({ next, context }) => {
+const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   const pool = new Pool({
     connectionString: env.HYPERDRIVE.connectionString,
   });
