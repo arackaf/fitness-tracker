@@ -12,10 +12,6 @@
   ],
   "observability": {
     "enabled": true,
-    "logs": {
-      "enabled": true,
-      "invocation_logs": true,
-    },
   },
   "upload_source_maps": true,
 }
