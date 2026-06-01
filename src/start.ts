@@ -10,6 +10,8 @@ import { createAuth } from "./lib/auth";
 
 const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   try {
+    console.log({ name: "DEBUGGING", processEnv: process.env.GOOGLE_AUTH_CLIENT_ID!, env: env.GOOGLE_AUTH_CLIENT_ID! });
+
     const pool = new Pool({
       connectionString: env.HYPERDRIVE.connectionString,
     });
