@@ -22,6 +22,7 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
         current_setting('search_path') as search_path
     `);
 
+    console.log("Begin");
     console.log("DB DEBUG", result.rows[0]);
 
     const tables = await pool.query(`
