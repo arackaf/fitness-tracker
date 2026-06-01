@@ -1,6 +1,5 @@
 import type { DB } from "@/data/db";
 import { bodyCompositionMetric, exercises, muscleGroup, userInfo } from "@/drizzle/schema";
-import type { SessionUser } from "@/lib/auth.functions";
 import type { ContextUser } from "@/types";
 import { eq } from "drizzle-orm";
 
