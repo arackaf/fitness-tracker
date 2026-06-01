@@ -9,44 +9,49 @@ import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
 
 const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
-  const pool = new Pool({
-    connectionString: env.HYPERDRIVE.connectionString,
-  });
+  try {
+    const pool = new Pool({
+      connectionString: env.HYPERDRIVE.connectionString,
+    });
 
-  const db = getDb(pool);
-  const auth = createAuth(pool);
+    const db = getDb(pool);
+    const auth = createAuth(pool);
 
-  const start = performance.now();
-  const session = await auth.api.getSession({
-    headers: getRequestHeaders(),
-  });
-  const end = performance.now();
-  console.log(`getSession took ${end - start}ms`);
+    const start = performance.now();
+    const session = await auth.api.getSession({
+      headers: getRequestHeaders(),
+    });
+    const end = performance.now();
+    console.log(`getSession took ${end - start}ms`);
 
-  const loggedIn = !!session;
-  let currentUser: ContextUser | null = null;
-  let userId: string | null = null;
+    const loggedIn = !!session;
+    let currentUser: ContextUser | null = null;
+    let userId: string | null = null;
 
-  if (loggedIn) {
-    const [loggedInAccount] = await db.select().from(account).where(eq(account.userId, session.user.id));
-    userId = loggedInAccount.accountId;
+    if (loggedIn) {
+      const [loggedInAccount] = await db.select().from(account).where(eq(account.userId, session.user.id));
+      userId = loggedInAccount.accountId;
 
-    currentUser = {
-      id: userId,
-      name: session.user.name,
-      image: session.user.image,
-    };
+      currentUser = {
+        id: userId,
+        name: session.user.name,
+        image: session.user.image,
+      };
+    }
+
+    return next({
+      context: {
+        db,
+        auth,
+        loggedIn,
+        user: currentUser,
+        userId,
+      },
+    });
+  } catch (error) {
+    console.log({ msg: "Error in root context middleware", error });
+    throw error;
   }
-
-  return next({
-    context: {
-      db,
-      auth,
-      loggedIn,
-      user: currentUser,
-      userId,
-    },
-  });
 });
 
 const csrfMiddleware = createCsrfMiddleware({
