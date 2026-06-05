@@ -14,25 +14,6 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
       connectionString: env.HYPERDRIVE.connectionString,
     });
 
-    const result = await pool.query(`
-      select
-        current_database() as db,
-        current_user as user,
-        current_schema() as schema,
-        current_setting('search_path') as search_path
-    `);
-
-    console.log("Begin");
-    console.log("DB DEBUG", result.rows[0]);
-
-    const tables = await pool.query(`
-      select table_schema, table_name
-      from information_schema.tables
-      where table_name ilike '%verification%'
-    `);
-
-    console.log("VERIFICATION TABLES", tables.rows);
-
     const db = getDb(pool);
     const auth = createAuth(pool);
 
