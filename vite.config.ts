@@ -9,7 +9,11 @@ import { nitro } from "nitro/vite";
 
 const config = defineConfig({
   plugins: [
-    nitro({ rollupConfig: { external: [/^@sentry\//] } }),
+    nitro({
+      rollupConfig: {
+        external: [/^@sentry\//, "better-auth", /^@better-auth\//, "kysely"],
+      },
+    }),
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     tanstackStart(),
