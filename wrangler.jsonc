@@ -14,4 +14,7 @@
     "enabled": true,
   },
   "upload_source_maps": true,
+  "placement": {
+    "region": "aws:us-east-1",
+  },
 }
