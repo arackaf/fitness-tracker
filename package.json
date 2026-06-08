@@ -56,6 +56,10 @@
     "zod": "^4.3.6",
     "zustand": "^5.0.11"
   },
+  "overrides": {
+    "@noble/ciphers": "^2.2.0",
+    "kysely": "0.28.17"
+  },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.38.0",
     "@tanstack/devtools-vite": "^0.3.11",

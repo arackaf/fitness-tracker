@@ -9,12 +9,34 @@ import { nitro } from "nitro/vite";
 
 const config = defineConfig({
   plugins: [
-    nitro({ rollupConfig: { external: [/^@sentry\//] } }),
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    nitro({
+      rollupConfig: {
+        external: [
+          /^@sentry\//,
+          "better-auth",
+          /^@better-auth\//,
+          "kysely",
+          "@noble/ciphers",
+          "@noble/hashes",
+          "jose",
+        ],
+      },
+    }),
   ],
+  ssr: {
+    external: [
+      "better-auth",
+      /^@better-auth\//,
+      "kysely",
+      "@noble/ciphers",
+      "@noble/hashes",
+      "jose",
+    ],
+  },
 });
 
 export default config;
