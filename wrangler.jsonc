@@ -10,4 +10,8 @@
       "id": "dd0103f82a11410b91c8fb5752050a21",
     },
   ],
+  "observability": {
+    "enabled": true,
+  },
+  "upload_source_maps": true,
 }

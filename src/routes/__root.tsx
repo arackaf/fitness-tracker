@@ -15,7 +15,7 @@ interface MyRouterContext {
 
 const setupNewUserServerFn = createServerFn({ method: "POST" }).handler(async ({ context }) => {
   if (context.user) {
-    await setupNewUser(context.user);
+    await setupNewUser(context.db, context.user);
   }
   return {
     loggedIn: context.loggedIn,

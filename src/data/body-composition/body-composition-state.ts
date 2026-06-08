@@ -1,4 +1,4 @@
-import { bodyCompositionMeasurement, bodyCompositionMeasurementType, bodyCompositionMetric } from "@/drizzle/schema";
+import { bodyCompositionMeasurement, bodyCompositionMetric } from "@/drizzle/schema";
 import type { BodyCompositionMeasurementType } from "../types";
 
 export type BodyCompositionMetric = typeof bodyCompositionMetric.$inferInsert & {

@@ -1,4 +1,4 @@
-import { Suspense, useState, type FC, type PropsWithChildren } from "react";
+import { Suspense, type FC, type PropsWithChildren } from "react";
 import { Header, type HeaderProps } from "./Header";
 import { Loading } from "./loading-state/Loading";
 

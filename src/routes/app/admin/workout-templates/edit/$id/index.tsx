@@ -1,7 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";

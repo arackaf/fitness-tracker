@@ -2,7 +2,7 @@ import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import {
   exercises as exercisesTable,
   workout as workoutTable,
@@ -88,7 +88,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const insertWorkout = async (input: WorkoutState, userId: string) => {
+export const insertWorkout = async (db: DB, input: WorkoutState, userId: string) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const exerciseIds = Array.from(
     new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),

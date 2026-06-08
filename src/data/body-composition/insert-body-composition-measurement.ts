@@ -2,11 +2,11 @@ import { and, eq } from "drizzle-orm";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { BodyCompositionMeasurementState } from "@/data/body-composition/body-composition-state";
-import { db } from "@/data/db";
+import type { DB } from "@/data/db";
 import { bodyCompositionMeasurement, bodyCompositionMetric } from "@/drizzle/schema";
 import { toNumericValue } from "@/lib/toNumericValue";
 
-export const insertBodyCompositionMeasurement = async (input: BodyCompositionMeasurementState, userId: string) => {
+export const insertBodyCompositionMeasurement = async (db: DB, input: BodyCompositionMeasurementState, userId: string) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const numericValue = toNumericValue(input.value);
   if (numericValue == null) {

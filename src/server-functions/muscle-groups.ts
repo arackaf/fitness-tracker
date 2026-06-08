@@ -8,7 +8,7 @@ export const getMuscleGroupsServerFn = createServerFn({
   method: "GET",
 }).handler(async ({ context }) => {
   const userId = await requireUserId(context);
-  return getMuscleGroups(userId);
+  return getMuscleGroups(context.db, userId);
 });
 
 export const muscleGroupsQueryOptions = () =>
