@@ -8,15 +8,15 @@ import { eq } from "drizzle-orm";
 import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
 
+const pool = new Pool({
+  connectionString: env.HYPERDRIVE.connectionString,
+});
+
+const db = getDb(pool);
+const auth = createAuth(pool);
+
 const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   try {
-    const pool = new Pool({
-      connectionString: env.HYPERDRIVE.connectionString,
-    });
-
-    const db = getDb(pool);
-    const auth = createAuth(pool);
-
     const start = performance.now();
     const session = await auth.api.getSession({
       headers: getRequestHeaders(),
