@@ -1,6 +1,5 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { env } from "cloudflare:workers";
 import { Pool } from "pg";
 import type { ContextUser } from "./types";
 import { account } from "@/drizzle/schema";
@@ -9,7 +8,7 @@ import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
 
 const pool = new Pool({
-  connectionString: env.HYPERDRIVE.connectionString,
+  connectionString: process.env.POSTGRES!,
 });
 
 const db = getDb(pool);

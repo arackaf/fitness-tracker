@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { Pool } from "pg";
-import { env } from "cloudflare:workers";
 
 export function createAuth(pool: Pool) {
   return betterAuth({
@@ -9,8 +8,8 @@ export function createAuth(pool: Pool) {
     plugins: [tanstackStartCookies()],
     socialProviders: {
       google: {
-        clientId: env.GOOGLE_AUTH_CLIENT_ID!,
-        clientSecret: env.GOOGLE_AUTH_CLIENT_SECRET!,
+        clientId: process.env.GOOGLE_AUTH_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET!,
       },
     },
   });
