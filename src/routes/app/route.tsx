@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createFileRoute, Link, Outlet, redirect, useLocation, useRouter } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { authClient } from "@/lib/auth-client";
+import { createAuthClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -40,6 +40,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
 
   const handleLogout = async () => {
+    const authClient = createAuthClient();
     await authClient.signOut({
       fetchOptions: {
         onSuccess: async () => {

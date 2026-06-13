@@ -1,7 +1,7 @@
 import { Card } from "@/components/Card";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
+import { createAuthClient } from "@/lib/auth-client";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
@@ -44,7 +44,10 @@ function App() {
                 <Button
                   type="button"
                   variant="default"
-                  onClick={() => authClient.signIn.social({ provider: "google" })}
+                  onClick={() => {
+                    const authClient = createAuthClient();
+                    authClient.signIn.social({ provider: "google" });
+                  }}
                 >
                   <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
                 </Button>
