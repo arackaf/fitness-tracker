@@ -24,7 +24,10 @@ type WorkoutTemplatesPayload = {
   hasNextPage: boolean;
 };
 
-export const getWorkoutTemplates = async (db: DB, params: GetWorkoutTemplatesParams): Promise<WorkoutTemplatesPayload> => {
+export const getWorkoutTemplates = async (
+  db: DB,
+  params: GetWorkoutTemplatesParams,
+): Promise<WorkoutTemplatesPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const page = Math.max(1, Math.floor(params.page ?? 1));
   const offset = (page - 1) * WORKOUT_TEMPLATE_LIST_LIMIT;

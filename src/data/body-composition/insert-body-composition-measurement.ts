@@ -6,7 +6,11 @@ import type { DB } from "@/data/db";
 import { bodyCompositionMeasurement, bodyCompositionMetric } from "@/drizzle/schema";
 import { toNumericValue } from "@/lib/toNumericValue";
 
-export const insertBodyCompositionMeasurement = async (db: DB, input: BodyCompositionMeasurementState, userId: string) => {
+export const insertBodyCompositionMeasurement = async (
+  db: DB,
+  input: BodyCompositionMeasurementState,
+  userId: string,
+) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const numericValue = toNumericValue(input.value);
   if (numericValue == null) {

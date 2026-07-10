@@ -6,7 +6,11 @@ import type { DB } from "@/data/db";
 import { bodyCompositionMeasurement, bodyCompositionMetric } from "@/drizzle/schema";
 import { toNumericValue } from "@/lib/toNumericValue";
 
-export const updateBodyCompositionMeasurement = async (db: DB, input: BodyCompositionMeasurementState, userId: string) => {
+export const updateBodyCompositionMeasurement = async (
+  db: DB,
+  input: BodyCompositionMeasurementState,
+  userId: string,
+) => {
   if (input.id == null) {
     throw new Error("Body composition measurement ID is required for update.");
   }
