@@ -117,7 +117,6 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
   const [isSaving, setIsSaving] = useState(false);
-  const addAnotherRef = useRef(false);
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -127,15 +126,10 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
 
     await saveWorkout({ data: state });
 
-    if (addAnotherRef.current) {
-      onReset();
-      setIsSaving(false);
-    } else {
-      queryClient.invalidateQueries({
-        queryKey: workoutHistoryQueryOptions({ page: 1 }).queryKey,
-      });
-      navigate({ to: "/app/workouts", search: { page: 1 } });
-    }
+    queryClient.invalidateQueries({
+      queryKey: workoutHistoryQueryOptions({ page: 1 }).queryKey,
+    });
+    navigate({ to: "/app/workouts", search: { page: 1 } });
 
     toast.success("Workout created", { position: "top-center" });
   }, workoutState);
@@ -155,10 +149,6 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}
         </Button>
-        <label className="flex items-center gap-2 ml-4">
-          <Checkbox onCheckedChange={checked => (addAnotherRef.current = !!checked)} disabled={isSaving} />
-          <span className="text-sm">Add another</span>
-        </label>
         <Button
           type="button"
           variant="secondary"
