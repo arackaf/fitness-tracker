@@ -30,6 +30,30 @@ export const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
     return getWorkoutTemplates(context.db, { page: data.page, userId });
   });
 
+export const allWorkoutTemplatesQueryOptions = () =>
+  queryOptions({
+    queryKey: ["workout-templates", "all"],
+    queryFn: () => getAllWorkoutTemplatesServerFn(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+  });
+
+export const getAllWorkoutTemplatesServerFn = createServerFn({ method: "GET" }).handler(async ({ context }) => {
+  const userId = await requireUserId(context);
+  const allWorkoutTemplates = [];
+  let page = 1;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const payload = await getWorkoutTemplates(context.db, { page, userId });
+    allWorkoutTemplates.push(...payload.workoutTemplates);
+    hasNextPage = payload.hasNextPage;
+    page += 1;
+  }
+
+  return allWorkoutTemplates;
+});
+
 export const workoutTemplateByIdQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ["workout-template", id],

@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useTransition } from "react";
 
+import { CreateWorkoutTemplateWithAi } from "@/components/CreateWorkoutTemplateWithAi";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,12 @@ function RouteComponent() {
     <SuspensePageLayout
       title="Workout Templates"
       headerChildren={
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/create">Create</Link>
-        </Button>
+        <div className="flex gap-2">
+          <CreateWorkoutTemplateWithAi />
+          <Button asChild variant="secondary">
+            <Link to="/app/admin/workout-templates/create">Create</Link>
+          </Button>
+        </div>
       }
     >
       <RouteContent />
