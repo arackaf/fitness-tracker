@@ -1,4 +1,7 @@
 import { useMemo, useState } from "react";
+import { generateText } from "ai";
+
+import { createServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronsUpDown, X } from "lucide-react";
 
@@ -18,6 +21,21 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+
+export const generateWorkoutTemplateWithAi = createServerFn({
+  method: "GET",
+}).handler(async ({ data, context }) => {
+  try {
+    const { text } = await generateText({
+      model: "anthropic/claude-sonnet-4.5",
+      prompt: "Generate for me a good, basic chest workout. Plain text, no structure",
+    });
+
+    console.log("RESULT: ", text);
+  } catch (error) {
+    console.error({ error });
+  }
+});
 
 function getTemplateExerciseSummary(
   workoutTemplate: WorkoutTemplateState,
@@ -75,6 +93,10 @@ export function CreateWorkoutTemplateWithAi() {
 
   const handleRemoveTemplate = (templateId: number) => {
     setSelectedTemplates(currentTemplates => currentTemplates.filter(template => template.id !== templateId));
+  };
+
+  const handleGenerate = async () => {
+    generateWorkoutTemplateWithAi();
   };
 
   return (
@@ -176,7 +198,7 @@ export function CreateWorkoutTemplateWithAi() {
             />
           </label>
 
-          <Button type="button" className="self-start">
+          <Button onClick={handleGenerate} type="button" className="self-start">
             Generate
           </Button>
         </div>
