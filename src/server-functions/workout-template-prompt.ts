@@ -4,12 +4,23 @@ import z from "zod";
 
 import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+
+type PromptReturnType =
+  | {
+      success: false;
+    }
+  | {
+      success: true;
+      workouts: WorkoutTemplateState[];
+      commentary: string;
+    };
 
 export const generateWorkoutTemplateWithAi = createServerFn({
   method: "GET",
 })
   .inputValidator((input: { workoutTemplates: CompressedWorkoutTemplate[]; prompt: string }) => input)
-  .handler(async ({ data }) => {
+  .handler(async ({ data }): Promise<PromptReturnType> => {
     try {
       const { text } = await generateText({
         instructions: `
@@ -67,7 +78,7 @@ Generate workouts that conform to the provided output schema.
         throw new Error("No workouts generated");
       }
 
-      const parsedWorkouts = workoutTemplateValidator.parse(obj.workouts);
+      const parsedWorkouts = z.array(workoutTemplateValidator).parse(obj.workouts);
       return {
         success: true,
         workouts: parsedWorkouts,

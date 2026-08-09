@@ -22,6 +22,8 @@ import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForL
 import type { ExerciseRow } from "@/data/types";
 import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-prompt";
 
+import { ModelResults } from "./ModelResults";
+
 const MIN_PROMPT_LENGTH = 20;
 
 function getTemplateExerciseSummary(
@@ -83,6 +85,8 @@ export function CreateWorkoutTemplateWithAi() {
       setSelectedTemplates([]);
       setPrompt("");
       setIsError(false);
+      setGeneratedWorkouts([]);
+      setGeneratedCommentary(undefined);
     }
   };
 
@@ -96,6 +100,8 @@ export function CreateWorkoutTemplateWithAi() {
 
   const handleGenerate = async () => {
     setIsError(false);
+    setGeneratedWorkouts([]);
+    setGeneratedCommentary(undefined);
     setIsGenerating(true);
     const result = await generateWorkoutTemplateWithAi({
       data: {
@@ -109,14 +115,19 @@ export function CreateWorkoutTemplateWithAi() {
       setIsError(true);
       return;
     }
+
+    setGeneratedWorkouts(result.workouts);
+    setGeneratedCommentary(result.commentary);
   };
+
+  const hasGeneratedResults = generatedWorkouts.length > 0 || generatedCommentary != null;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="secondary">Create with AI</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-xl">
+      <DialogContent className={hasGeneratedResults ? "sm:max-w-3xl max-h-[90vh] overflow-y-auto" : "sm:max-w-xl"}>
         <DialogHeader>
           <DialogTitle>Create with AI</DialogTitle>
           <DialogDescription>
@@ -154,7 +165,11 @@ export function CreateWorkoutTemplateWithAi() {
                           key={template.id}
                           value={`${template.name} ${exerciseSummary} ${template.id}`}
                           onSelect={() => {
+                            const close = availableTemplates.length === 1;
                             handleSelectTemplate(template);
+                            if (close) {
+                              setIsComboboxOpen(false);
+                            }
                           }}
                           className="flex items-start justify-between gap-2"
                         >
@@ -175,7 +190,7 @@ export function CreateWorkoutTemplateWithAi() {
             </PopoverContent>
           </Popover>
 
-          <div className="flex gap-2 text-sm">
+          <div className="flex gap-2 text-sm min-h-5.5">
             <span className="font-medium">Selected workouts:</span>
             {selectedTemplates.length > 0 ? (
               <div className="flex flex-wrap gap-2">
@@ -229,6 +244,12 @@ export function CreateWorkoutTemplateWithAi() {
               ) : null}
             </div>
           </div>
+
+          <ModelResults
+            commentary={generatedCommentary}
+            exerciseNameById={exerciseNameById}
+            generatedWorkouts={generatedWorkouts}
+          />
         </div>
       </DialogContent>
     </Dialog>
