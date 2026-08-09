@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState, useTransition } from "react";
 
-import { CreateWorkoutTemplateWithAi } from "@/components/CreateWorkoutTemplateWithAi";
+import { CreateWorkoutTemplateWithAi } from "@/components/CreateWorkoutTemplatesWithAi/MainModal";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";

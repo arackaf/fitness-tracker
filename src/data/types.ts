@@ -5,6 +5,7 @@ import {
   distanceUnit,
   durationUnit,
   exerciseWeightUnit,
+  exercises,
   type muscleGroup,
 } from "@/drizzle/schema";
 
@@ -16,3 +17,5 @@ export type ExerciseWeightUnit = (typeof exerciseWeightUnit.enumValues)[number];
 export type BodyCompositionLengthUnit = (typeof bodyCompositionLengthUnit.enumValues)[number];
 export type BodyCompositionWeightUnit = (typeof bodyCompositionWeightUnit.enumValues)[number];
 export type BodyCompositionMeasurementType = (typeof bodyCompositionMeasurementType.enumValues)[number];
+
+export type ExerciseRow = typeof exercises.$inferSelect;
