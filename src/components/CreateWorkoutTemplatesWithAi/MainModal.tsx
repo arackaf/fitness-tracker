@@ -245,11 +245,13 @@ export function CreateWorkoutTemplateWithAi() {
             </div>
           </div>
 
-          <ModelResults
-            commentary={generatedCommentary}
-            exerciseNameById={exerciseNameById}
-            generatedWorkouts={generatedWorkouts}
-          />
+          {hasGeneratedResults ? (
+            <ModelResults
+              commentary={generatedCommentary}
+              exerciseNameById={exerciseNameById}
+              generatedWorkouts={generatedWorkouts}
+            />
+          ) : null}
         </div>
       </DialogContent>
     </Dialog>

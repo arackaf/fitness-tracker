@@ -1,7 +1,9 @@
-import type { FC } from "react";
+import { useState, type FC } from "react";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
+import { Button } from "../ui/button";
+import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
 
 type ModelResultsProps = {
   commentary?: string;
@@ -10,11 +12,12 @@ type ModelResultsProps = {
 };
 
 export const ModelResults: FC<ModelResultsProps> = ({ commentary, exerciseNameById, generatedWorkouts }) => {
-  const hasResults = generatedWorkouts.length > 0 || commentary != null;
+  const [workoutsToShow, setWorkoutsToShow] = useState<WorkoutTemplateState[]>(generatedWorkouts);
 
-  if (!hasResults) {
-    return null;
-  }
+  const saveIt = async (workoutTemplate: WorkoutTemplateState) => {
+    await saveWorkoutTemplate({ data: workoutTemplate });
+    setWorkoutsToShow(currentWorkouts => currentWorkouts.filter(workout => workout !== workoutTemplate));
+  };
 
   return (
     <div className="flex flex-col gap-4 border-t pt-4">
@@ -27,15 +30,45 @@ export const ModelResults: FC<ModelResultsProps> = ({ commentary, exerciseNameBy
       {generatedWorkouts.length > 0 ? (
         <div className="flex flex-col gap-4">
           <h3 className="text-sm font-medium">Generated workouts</h3>
-          {generatedWorkouts.map((workoutTemplate, templateIndex) => (
-            <DisplayWorkoutTemplate
-              key={`${workoutTemplate.name}-${templateIndex}`}
+          {workoutsToShow.map((workoutTemplate, templateIndex) => (
+            <DisplayGeneratedWorkoutTemplate
               workoutTemplate={workoutTemplate}
               exerciseNameById={exerciseNameById}
+              saveWorkoutTemplate={saveIt}
             />
           ))}
         </div>
       ) : null}
     </div>
+  );
+};
+
+type DisplayGeneratedWorkoutTemplateProps = {
+  workoutTemplate: WorkoutTemplateState;
+  exerciseNameById: Map<number, string>;
+  saveWorkoutTemplate: (workoutTemplate: WorkoutTemplateState) => Promise<void>;
+};
+
+const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
+  const { workoutTemplate, exerciseNameById, saveWorkoutTemplate } = props;
+  const [enabled, setEnabled] = useState(false);
+
+  const handleSave = async () => {
+    setEnabled(false);
+    await saveWorkoutTemplate(workoutTemplate);
+  };
+
+  return (
+    <DisplayWorkoutTemplate
+      workoutTemplate={workoutTemplate}
+      exerciseNameById={exerciseNameById}
+      footer={
+        <div className="mt-2">
+          <Button variant="secondary" onClick={handleSave}>
+            Save it!
+          </Button>
+        </div>
+      }
+    />
   );
 };
