@@ -8,11 +8,11 @@ type WorkoutTemplateSegmentRepsProps = {
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
   if (exercise.executionType === "distance") {
-    return `${(measurement.distance ?? "_").toString()}${exercise.distanceUnit ?? ""}`;
+    return `${(measurement.distance ?? "_").toString()} ${exercise.distanceUnit ?? ""}`;
   }
 
   if (exercise.executionType === "time") {
-    return `${(measurement.duration ?? "_").toString()}${exercise.durationUnit ?? ""}`;
+    return `${(measurement.duration ?? "_").toString()} ${exercise.durationUnit ?? ""}`;
   }
 
   return (measurement.reps ?? "_").toString();
@@ -50,6 +50,24 @@ const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
     .join(", ");
 };
 
+const getDisplayUnits = (segment: TemplateSegmentWithExercises) => {
+  const firstExerciseUnit = segment.exercises[0].executionType;
+  if (segment.exercises.some(exercise => exercise.executionType !== firstExerciseUnit)) {
+    return "";
+  }
+
+  if (firstExerciseUnit === "repetition") {
+    return "Reps: ";
+  }
+
+  return "";
+};
+
 export const WorkoutTemplateSegmentExerciseReps: FC<WorkoutTemplateSegmentRepsProps> = ({ segment }) => {
-  return <p className="ml-4 text-sm text-muted-foreground">{getDisplayReps(segment)}</p>;
+  return (
+    <p className="ml-4 text-sm text-muted-foreground">
+      {getDisplayUnits(segment)}
+      {getDisplayReps(segment)}
+    </p>
+  );
 };
