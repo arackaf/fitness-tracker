@@ -9,7 +9,10 @@ import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { generateText } from "ai";
+import { anthropic } from "@ai-sdk/anthropic";
 import { createServerFn } from "@tanstack/react-start";
+
+const claudeSonnet45Model = anthropic("claude-sonnet-4-5");
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
   loader: ({ context }) => {
@@ -17,6 +20,21 @@ export const Route = createFileRoute("/app/admin/workout-templates/")({
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
   component: RouteComponent,
+});
+
+export const runVercelAiSdkWithAnthropic = createServerFn({
+  method: "GET",
+}).handler(async ({ data }) => {
+  try {
+    const { text } = await generateText({
+      model: claudeSonnet45Model,
+      prompt: `Give me a basic chest workout`,
+    });
+
+    console.log("Anthropic result", { text });
+  } catch (error) {
+    console.error("Error using Vercel AI SDK", { error });
+  }
 });
 
 export const runVercelAiSdk = createServerFn({
@@ -40,6 +58,7 @@ function RouteComponent() {
       title="Workout Templates"
       headerChildren={
         <div className="flex gap-2">
+          <Button onClick={() => runVercelAiSdkWithAnthropic()}>Anthropic</Button>
           <Button onClick={() => runVercelAiSdk()}>Gateway</Button>
           <CreateWorkoutTemplateWithAi />
           <Button asChild variant="secondary">
