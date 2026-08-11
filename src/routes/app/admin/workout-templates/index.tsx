@@ -8,6 +8,8 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import { generateText } from "ai";
+import { createServerFn } from "@tanstack/react-start";
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
   loader: ({ context }) => {
@@ -17,12 +19,28 @@ export const Route = createFileRoute("/app/admin/workout-templates/")({
   component: RouteComponent,
 });
 
+export const runVercelAiSdk = createServerFn({
+  method: "GET",
+}).handler(async ({ data }) => {
+  try {
+    const { text } = await generateText({
+      model: "anthropic/claude-sonnet-4.5",
+      prompt: `Give me a basic chest workout`,
+    });
+
+    console.log({ text });
+  } catch (error) {
+    console.error("Error using Vercel AI SDK", { error });
+  }
+});
+
 function RouteComponent() {
   return (
     <SuspensePageLayout
       title="Workout Templates"
       headerChildren={
         <div className="flex gap-2">
+          <Button onClick={() => runVercelAiSdk()}>Gateway</Button>
           <CreateWorkoutTemplateWithAi />
           <Button asChild variant="secondary">
             <Link to="/app/admin/workout-templates/create">Create</Link>
