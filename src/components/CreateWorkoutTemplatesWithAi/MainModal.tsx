@@ -106,6 +106,11 @@ export function CreateWorkoutTemplateWithAi() {
     const result = await generateWorkoutTemplateWithAi({
       data: {
         prompt,
+        exercises: exercises.map(exercise => ({
+          id: exercise.id,
+          name: exercise.name,
+          description: exercise.description,
+        })),
         workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
       },
     });
