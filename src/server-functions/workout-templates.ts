@@ -1,6 +1,7 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
+import { deleteWorkoutTemplate as deleteWorkoutTemplateData } from "@/data/workout-templates/delete-workout-template";
 import { getWorkoutTemplates } from "@/data/workout-templates/get-workout-templates";
 import { insertWorkoutTemplate } from "@/data/workout-templates/insert-workout-template";
 import { updateWorkoutTemplate as updateWorkoutTemplateData } from "@/data/workout-templates/update-workout-template";
@@ -11,11 +12,13 @@ type WorkoutTemplatesInput = {
   page?: number;
 };
 
+export const WORKOUT_TEMPLATES_KEY_ROOT = "workout-templates";
+
 export const workoutTemplatesQueryOptions = (pageInput = 1) => {
   const page = pageInput ?? 1;
 
   return queryOptions({
-    queryKey: ["workout-templates", { page }],
+    queryKey: [WORKOUT_TEMPLATES_KEY_ROOT, { page }],
     queryFn: () => getWorkoutTemplatesServerFn({ data: { page } }),
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 5,
@@ -83,4 +86,11 @@ export const updateWorkoutTemplate = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateWorkoutTemplateData(context.db, data, userId);
+  });
+
+export const deleteWorkoutTemplate = createServerFn({ method: "POST" })
+  .inputValidator((input: { id: number }) => input)
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    await deleteWorkoutTemplateData(context.db, data.id, userId);
   });
