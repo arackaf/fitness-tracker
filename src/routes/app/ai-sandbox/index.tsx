@@ -231,11 +231,13 @@ function RouteComponent() {
               <span>{result.model.toString()}</span>
               <span>Input: {result.usage.inputTokens}</span>
               <span>Output: {result.usage.outputTokens}</span>
+              <span>Cost: {result.cost}</span>
               <ModelResults
                 commentary={result.commentary}
                 exerciseNameById={exerciseNameById}
                 generatedWorkouts={result.workouts}
               />
+              <hr className="border-t-4 border-white my-4" />
             </div>
           ) : (
             <div>{result.model} Error</div>

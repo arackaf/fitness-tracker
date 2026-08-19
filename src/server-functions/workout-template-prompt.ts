@@ -24,6 +24,7 @@ export type SuccessPromptResult = {
   workouts: WorkoutTemplateState[];
   commentary: string;
   usage: LanguageModelUsage;
+  cost: any;
 };
 
 export type PromptReturnType =
@@ -39,7 +40,7 @@ export const generateWorkoutTemplateWithAi = createServerFn({
   .handler(async ({ data }): Promise<PromptReturnType> => {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
     try {
-      const { text, usage } = await generateText({
+      const { text, usage, finalStep } = await generateText({
         instructions: `
         You are a workout-programming assistant.
 
@@ -113,6 +114,7 @@ ${JSON.stringify(exercises)}
         workouts: parsedWorkouts,
         commentary: obj.commentary ?? "",
         usage,
+        cost: finalStep.providerMetadata?.gateway?.cost ?? "<unknown>",
       };
     } catch (error) {
       console.error("Error using Vercel AI SDK", { model, error });
