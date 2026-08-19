@@ -13,8 +13,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-prompt";
+import { generateWorkoutTemplateWithAi, type PromptReturnType } from "@/server-functions/workout-template-prompt";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import type { GatewayModelId } from "ai";
 
 export const Route = createFileRoute("/app/ai-sandbox/")({
   component: RouteComponent,
@@ -41,8 +42,8 @@ function RouteComponent() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [generatedWorkouts, setGeneratedWorkouts] = useState<WorkoutTemplateState[]>([]);
-  const [generatedCommentary, setGeneratedCommentary] = useState<string>();
+
+  const [promptResults, setPromptResults] = useState<({ model: GatewayModelId } & PromptReturnType)[]>([]);
 
   const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useQuery(exercisesQueryOptions());
@@ -77,34 +78,35 @@ function RouteComponent() {
 
   const handleGenerate = async () => {
     setIsError(false);
-    setGeneratedWorkouts([]);
-    setGeneratedCommentary(undefined);
     setIsGenerating(true);
 
-    const result = await generateWorkoutTemplateWithAi({
-      data: {
-        prompt,
-        exercises: exercises.map(exercise => ({
-          id: exercise.id,
-          name: exercise.name,
-          description: exercise.description,
-        })),
-        workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
-      },
-    });
+    const models: GatewayModelId[] = [
+      "anthropic/claude-sonnet-4.5", //$15
+      "anthropic/claude-sonnet-4.6", //$15
+      "openai/gpt-5.4-nano", //$1.25
+      "openai/gpt-5.4-mini", //$4.50
+      "openai/gpt-5.4", //$15.00
+      "openai/gpt-5", //$10.00
+      "openai/o4-mini", //$4.40
+    ];
 
-    setIsGenerating(false);
-
-    if (!result.success) {
-      setIsError(true);
-      return;
+    for (const model of models) {
+      generateWorkoutTemplateWithAi({
+        data: {
+          prompt,
+          model,
+          exercises: exercises.map(exercise => ({
+            id: exercise.id,
+            name: exercise.name,
+            description: exercise.description,
+          })),
+          workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
+        },
+      }).then(result => {
+        setPromptResults(currentResults => [...currentResults, { model, ...result }]);
+      });
     }
-
-    setGeneratedWorkouts(result.workouts);
-    setGeneratedCommentary(result.commentary);
   };
-
-  const hasGeneratedResults = generatedWorkouts.length > 0 || generatedCommentary != null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -219,19 +221,26 @@ function RouteComponent() {
             >
               {isGenerating ? "Generating..." : "Generate"}
             </Button>
-            {isError ? (
-              <p className="text-sm text-destructive">There was an error generating this response.</p>
-            ) : null}
+            {isError ? <p className="text-sm text-destructive">There was an error generating this response.</p> : null}
           </div>
         </div>
 
-        {hasGeneratedResults ? (
-          <ModelResults
-            commentary={generatedCommentary}
-            exerciseNameById={exerciseNameById}
-            generatedWorkouts={generatedWorkouts}
-          />
-        ) : null}
+        {promptResults.map(result =>
+          result.success ? (
+            <div className="flex flex-col gap-2">
+              <span>{result.model.toString()}</span>
+              <span>Input: {result.usage.inputTokens}</span>
+              <span>Output: {result.usage.outputTokens}</span>
+              <ModelResults
+                commentary={result.commentary}
+                exerciseNameById={exerciseNameById}
+                generatedWorkouts={result.workouts}
+              />
+            </div>
+          ) : (
+            <div>{result.model} Error</div>
+          ),
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { gateway, generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
 import z from "zod";
 
 import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
@@ -16,33 +16,37 @@ type PromptInput = {
   prompt: string;
   exercises: ExerciseSummary[];
   workoutTemplates: CompressedWorkoutTemplate[];
+  model?: GatewayModelId;
 };
 
-type PromptReturnType =
+export type SuccessPromptResult = {
+  success: true;
+  workouts: WorkoutTemplateState[];
+  commentary: string;
+  usage: LanguageModelUsage;
+};
+
+export type PromptReturnType =
   | {
       success: false;
     }
-  | {
-      success: true;
-      workouts: WorkoutTemplateState[];
-      commentary: string;
-    };
+  | SuccessPromptResult;
 
 export const generateWorkoutTemplateWithAi = createServerFn({
   method: "POST",
 })
   .inputValidator((input: PromptInput) => input)
   .handler(async ({ data }): Promise<PromptReturnType> => {
+    const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
     try {
-      const { workoutTemplates, prompt, exercises } = data;
-      const { text } = await generateText({
+      const { text, usage } = await generateText({
         instructions: `
         You are a workout-programming assistant.
 
 Your only job is to generate workout routines.
 
 ${
-  data.workoutTemplates.length > 0
+  workoutTemplates.length > 0
     ? `Use the provided existing workouts as reference material for things like:
 - exercise selection
 - terminology
@@ -66,14 +70,14 @@ Here are the exercises from which you can choose:
 ${JSON.stringify(exercises)}
 </exercises>
         `,
-        model: "anthropic/claude-sonnet-4.5",
+        model,
         prompt: `
       ${
-        data.workoutTemplates.length > 0
+        workoutTemplates.length > 0
           ? `Here are the workouts the user selected:
 
         <reference_workouts>
-        ${JSON.stringify(data.workoutTemplates)}
+        ${JSON.stringify(workoutTemplates)}
         </reference_workouts>`
           : ""
       }
@@ -81,9 +85,14 @@ ${JSON.stringify(exercises)}
         Here are the user's instructions on what kind of workouts they want, from this starting point:
 
         <user_request>
-        ${data.prompt}
+        ${prompt}
         </user_request>
         `,
+        providerOptions: {
+          gateway: {
+            only: ["openai", "anthropic"],
+          },
+        },
         output: Output.object({
           schema: z.object({
             commentary: z.string().describe("The output from the llm, explaining what it did and why"),
@@ -98,13 +107,15 @@ ${JSON.stringify(exercises)}
       }
 
       const parsedWorkouts = z.array(workoutTemplateValidator).parse(obj.workouts);
+
       return {
         success: true,
         workouts: parsedWorkouts,
         commentary: obj.commentary ?? "",
+        usage,
       };
     } catch (error) {
-      console.error("Error using Vercel AI SDK", { error });
+      console.error("Error using Vercel AI SDK", { model, error });
       return {
         success: false,
       };

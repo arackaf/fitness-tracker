@@ -4,29 +4,41 @@ import {
   workoutTemplateSegmentExercise,
   workoutTemplateSegmentExerciseMeasurement,
 } from "@/drizzle/schema";
+import type { Prettify } from "@/lib/type-utils";
 
 export type WorkoutTemplate = typeof workoutTemplate.$inferInsert;
 export type WorkoutTemplateSegment = typeof workoutTemplateSegment.$inferInsert;
 export type WorkoutTemplateSegmentExercise = typeof workoutTemplateSegmentExercise.$inferInsert;
 export type WorkoutTemplateSegmentExerciseMeasurement = typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
-export type WorkoutTemplateSegmentExerciseMeasurementState = WorkoutTemplateSegmentExerciseMeasurement & {
-  id?: number;
-};
+export type WorkoutTemplateSegmentExerciseMeasurementState = Prettify<
+  Omit<WorkoutTemplateSegmentExerciseMeasurement, "workoutTemplateSegmentExerciseId"> & {
+    id?: number;
+    workoutTemplateSegmentExerciseId?: number;
+  }
+>;
 
-export type WorkoutTemplateState = Omit<WorkoutTemplate, "userId"> & {
-  id?: number;
-  segments: TemplateSegmentWithExercises[];
-};
+export type WorkoutTemplateState = Prettify<
+  Omit<WorkoutTemplate, "userId"> & {
+    id?: number;
+    segments: TemplateSegmentWithExercises[];
+  }
+>;
 
-export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
-  id?: number;
-  exercises: WorkoutTemplateSegmentExerciseState[];
-};
+export type TemplateSegmentWithExercises = Prettify<
+  Omit<WorkoutTemplateSegment, "workoutTemplateId"> & {
+    id?: number;
+    workoutTemplateId?: number;
+    exercises: WorkoutTemplateSegmentExerciseState[];
+  }
+>;
 
-export type WorkoutTemplateSegmentExerciseState = WorkoutTemplateSegmentExercise & {
-  id?: number;
-  measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
-};
+export type WorkoutTemplateSegmentExerciseState = Prettify<
+  Omit<WorkoutTemplateSegmentExercise, "workoutTemplateSegmentId"> & {
+    id?: number;
+    workoutTemplateSegmentId?: number;
+    measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
+  }
+>;
 
 export type Exercise = TemplateSegmentWithExercises["exercises"][number];
 export type Measurement = TemplateSegmentWithExercises["exercises"][number]["measurements"][number];
