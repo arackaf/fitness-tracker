@@ -1,16 +1,33 @@
 import { useEffect, useState, type FC } from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
-import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { workoutTemplateByIdQueryOptions, updateWorkoutTemplate } from "@/server-functions/workout-templates";
+import {
+  deleteWorkoutTemplate,
+  updateWorkoutTemplate,
+  WORKOUT_TEMPLATES_KEY_ROOT,
+  workoutTemplateByIdQueryOptions,
+  workoutTemplatesQueryOptions,
+} from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import type { MuscleGroup } from "@/data/types";
 import { Header } from "@/components/Header";
@@ -79,7 +96,11 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
   exercises,
   muscleGroups,
 }) => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const form = useWorkoutTemplateForm(async state => {
     setIsSaving(true);
@@ -104,13 +125,62 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
     await form.handleSubmit();
   };
 
+  const handleDelete = async () => {
+    if (workoutTemplate.id == null) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      await deleteWorkoutTemplate({ data: { id: workoutTemplate.id } });
+      await queryClient.invalidateQueries({
+        queryKey: [WORKOUT_TEMPLATES_KEY_ROOT],
+        exact: false,
+      });
+
+      navigate({ to: "/app/admin/workout-templates" });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
-      <div className="mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+      <div className="mt-8 flex items-center gap-4">
+        <Button type="submit" disabled={isSaving || isDeleting} className="font-semibold">
           {isSaving ? "Saving..." : "Update workout template"}
         </Button>
+        {workoutTemplate.id != null ? (
+          <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button type="button" className="ml-auto" variant="destructive" disabled={isSaving || isDeleting}>
+                Delete workout template
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete workout template?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete this workout template. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className={buttonVariants({ variant: "destructive" })}
+                  type="button"
+                  disabled={isDeleting}
+                  onClick={() => handleDelete()}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        ) : null}
       </div>
     </form>
   );
