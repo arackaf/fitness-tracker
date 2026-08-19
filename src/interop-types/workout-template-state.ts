@@ -13,7 +13,6 @@ const durationUnitValidator = z.enum(["seconds", "minutes", "hours"]);
 const distanceUnitValidator = z.enum(["feet", "yards", "miles", "km"]);
 
 export const workoutTemplateSegmentExerciseMeasurementValidator = z.object({
-  id: z.number().describe("The id of the measurement").optional(),
   setOrder: z.number().describe("The order of the set within the exercise"),
   reps: z.string().describe("The number of reps for the set").nullable(),
   repsToFailure: z.boolean().describe("Whether the set was performed to failure").nullable(),
@@ -23,7 +22,6 @@ export const workoutTemplateSegmentExerciseMeasurementValidator = z.object({
 }) satisfies z.ZodType<WorkoutTemplateSegmentExerciseMeasurementState>;
 
 export const workoutTemplateSegmentExerciseValidator = z.object({
-  id: z.number().describe("The id of the exercise").optional(),
   exerciseOrder: z.number().describe("The order of the exercise within the segment"),
   exerciseId: z.number().describe("The id of the exercise definition"),
   executionType: executionTypeValidator.describe("How the exercise is performed").nullable(),
@@ -43,6 +41,6 @@ export const templateSegmentWithExercisesValidator = z.object({
 
 export const workoutTemplateValidator = z.object({
   name: z.string().describe("The name of the workout template"),
-  description: z.string().describe("The description of the workout template").optional(),
+  description: z.string().describe("The description of the workout template"),
   segments: z.array(templateSegmentWithExercisesValidator).describe("The segments of the workout template"),
 }) satisfies z.ZodType<WorkoutTemplateState>;
