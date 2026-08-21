@@ -3,10 +3,16 @@ import { AIIcon } from "@/components/icons/AI";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { createAuthClient } from "@/lib/auth-client";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    const { loggedIn } = context;
+    if (loggedIn) {
+      throw redirect({ to: "/app/workouts", search: { page: 1 } });
+    }
+  },
   component: App,
 });
 
