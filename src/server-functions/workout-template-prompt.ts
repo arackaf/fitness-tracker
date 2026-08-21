@@ -40,7 +40,7 @@ export const generateWorkoutTemplateWithAi = createServerFn({
   .handler(async ({ data }): Promise<PromptReturnType> => {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
     try {
-      const { text, usage, finalStep } = await generateText({
+      const { output, usage, finalStep } = await generateText({
         instructions: `
         You are a workout-programming assistant.
 
@@ -102,17 +102,16 @@ ${JSON.stringify(exercises)}
         }),
       });
 
-      const obj = JSON.parse(text);
-      if (!obj.workouts) {
+      if (!output.workouts.length) {
         throw new Error("No workouts generated");
       }
 
-      const parsedWorkouts = z.array(workoutTemplateValidator).parse(obj.workouts);
+      const parsedWorkouts = z.array(workoutTemplateValidator).parse(output.workouts);
 
       return {
         success: true,
         workouts: parsedWorkouts,
-        commentary: obj.commentary ?? "",
+        commentary: output.commentary ?? "",
         usage,
         cost: finalStep.providerMetadata?.gateway?.cost ?? "<unknown>",
       };
