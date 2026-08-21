@@ -47,7 +47,7 @@ function App() {
                     authClient.signIn.social({ provider: "google" });
                   }}
                 >
-                  <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
+                  <GoogleIcon className="w-4! h-4!" /> Login with Google
                 </Button>
               ) : (
                 <Button variant="default" asChild>
