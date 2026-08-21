@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 
 import { Card } from "@/components/Card";
 import type { Exercise } from "@/components/ExerciseSelector";
@@ -18,6 +18,12 @@ type WorkoutProps = {
 };
 
 export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => {
+  useEffect(() => {
+    if (!form.state.values.workoutDate) {
+      form.setFieldValue("workoutDate", new Date());
+    }
+    // do not depend on the form value - one time init after SSR to avoid a flash of the wrong time because of UTC / timezones on SSR vs hydration
+  }, []);
   return (
     <div className="flex flex-col gap-4">
       <Card className="grid gap-4 md:grid-cols-2">

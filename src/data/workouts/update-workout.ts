@@ -157,7 +157,7 @@ export const updateWorkout = async (db: DB, input: WorkoutState, userId: string)
         name: input.name,
         workoutTemplateId: input.workoutTemplateId,
         description: input.description,
-        workoutDate: input.workoutDate,
+        workoutDate: input.workoutDate!,
       })
       .where(and(eq(workoutTable.id, workoutId), eq(workoutTable.userId, userId)))
       .returning({ id: workoutTable.id });
