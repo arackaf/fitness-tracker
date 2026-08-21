@@ -55,11 +55,7 @@ function App() {
                 >
                   <GoogleIcon className="w-4! h-4!" /> Login with Google
                 </Button>
-              ) : (
-                <Button variant="default" asChild>
-                  <Link to="/app">Go to the app</Link>
-                </Button>
-              )}
+              ) : null}
             </div>
           </div>
 
