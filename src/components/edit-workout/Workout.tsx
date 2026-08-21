@@ -15,9 +15,10 @@ type WorkoutProps = {
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
   form: WorkoutForm;
+  setWorkoutDate: (workoutDate: Date | null) => void;
 };
 
-export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => {
+export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWorkoutDate }) => {
   useEffect(() => {
     if (!form.state.values.workoutDate) {
       form.setFieldValue("workoutDate", new Date());
@@ -67,7 +68,13 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => 
             <div className="flex flex-col gap-2 text-sm">
               <label className="flex flex-col gap-2">
                 <span className="font-medium">Workout date</span>
-                <DateTimePicker value={field.state.value} onChange={nextValue => field.handleChange(nextValue)} />
+                <DateTimePicker
+                  value={field.state.value}
+                  onChange={nextValue => {
+                    field.handleChange(nextValue);
+                    setWorkoutDate(nextValue);
+                  }}
+                />
               </label>
               {!field.state.meta.isValid ? (
                 <span className="text-sm text-red-500">{field.state.meta.errors.join(", ")}</span>

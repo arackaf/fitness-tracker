@@ -98,10 +98,10 @@ export const defaultworkoutDate = () => {
   return new Date();
 };
 
-export const createDefaultWorkout = (): WorkoutState => {
+export const createDefaultWorkout = (workoutDate: Date | null = null): WorkoutState => {
   return {
     name: "",
-    workoutDate: null,
+    workoutDate: workoutDate ?? null,
     description: "",
     segments: [createDefaultSegment()],
   };
