@@ -1,0 +1,115 @@
+import { useMemo, useState, type FC } from "react";
+import { ChevronsUpDown } from "lucide-react";
+
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
+
+function getTemplateExerciseSummary(
+  workoutTemplate: WorkoutTemplateState,
+  exerciseNameById: Map<number, string>,
+): string {
+  return workoutTemplate.segments
+    .flatMap(segment =>
+      segment.exercises.map(
+        exercise => exerciseNameById.get(exercise.exerciseId) ?? `Exercise #${exercise.exerciseId}`,
+      ),
+    )
+    .join(", ");
+}
+
+interface SelectWorkoutTemplatesProps {
+  workoutTemplates: WorkoutTemplateState[];
+  exerciseNameById: Map<number, string>;
+  isFetchingTemplates?: boolean;
+  selectedTemplates: WorkoutTemplateState[];
+  onSelectTemplate: (template: WorkoutTemplateState) => void;
+  onRemoveTemplate: (templateId: number) => void;
+}
+
+export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => {
+  const {
+    workoutTemplates,
+    exerciseNameById,
+    isFetchingTemplates,
+    selectedTemplates,
+    onSelectTemplate,
+    onRemoveTemplate,
+  } = props;
+  const [isComboboxOpen, setIsComboboxOpen] = useState(false);
+
+  const selectedTemplateIds = useMemo(
+    () => new Set(selectedTemplates.map(template => template.id)),
+    [selectedTemplates],
+  );
+
+  const availableTemplates = useMemo(
+    () => workoutTemplates.filter(template => template.id != null && !selectedTemplateIds.has(template.id)),
+    [selectedTemplateIds, workoutTemplates],
+  );
+
+  return (
+    <>
+      <Popover open={isComboboxOpen} onOpenChange={setIsComboboxOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            role="combobox"
+            aria-expanded={isComboboxOpen}
+            className="w-full justify-between font-normal"
+          >
+            <span className="truncate text-muted-foreground">Select workout templates...</span>
+            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Search workout templates..." />
+            <CommandList>
+              <CommandEmpty>
+                {isFetchingTemplates ? "Loading templates..." : "No workout templates found."}
+              </CommandEmpty>
+              <CommandGroup>
+                {availableTemplates.map(template => {
+                  const exerciseSummary = getTemplateExerciseSummary(template, exerciseNameById);
+
+                  return (
+                    <CommandItem
+                      key={template.id}
+                      value={`${template.name} ${exerciseSummary} ${template.id}`}
+                      onSelect={() => {
+                        const close = availableTemplates.length === 1;
+                        onSelectTemplate(template);
+                        if (close) {
+                          setIsComboboxOpen(false);
+                        }
+                      }}
+                      className="flex items-start justify-between gap-2"
+                    >
+                      <div className="flex min-w-0 flex-col gap-0.5">
+                        <span className="truncate font-medium">{template.name}</span>
+                        {exerciseSummary ? (
+                          <span className="truncate text-xs text-muted-foreground">{exerciseSummary}</span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">No exercises</span>
+                        )}
+                      </div>
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <DisplaySelectedWorkoutTemplates
+        selectedTemplates={selectedTemplates}
+        onRemoveTemplate={onRemoveTemplate}
+      />
+    </>
+  );
+};
