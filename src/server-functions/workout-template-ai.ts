@@ -1,10 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
-import { gateway, generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
+import { env } from "cloudflare:workers";
+
+import { generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
 import z from "zod";
 
 import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { requireUserId, type AuthContext } from "@/lib/server-auth";
 
 type ExerciseSummary = {
   id: number;
@@ -33,11 +36,15 @@ export type PromptReturnType =
     }
   | SuccessPromptResult;
 
+export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
+  const userId = await requireUserId(context);
+};
+
 export const generateWorkoutTemplateWithAi = createServerFn({
   method: "POST",
 })
   .inputValidator((input: PromptInput) => input)
-  .handler(async ({ data }): Promise<PromptReturnType> => {
+  .handler(async ({ data, context }): Promise<PromptReturnType> => {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
     try {
       const { output, usage, finalStep } = await generateText({

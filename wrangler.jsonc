@@ -3,13 +3,27 @@
   "name": "fitness-tracker",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry",
+  "main": "src/server.ts",
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
       "id": "dd0103f82a11410b91c8fb5752050a21",
     },
   ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "WorkoutTemplateAIGeneration",
+        "class_name": "WorkoutTemplateAIGeneration",
+      },
+    ],
+  },
+  "exports": {
+    "WorkoutTemplateAIGeneration": {
+      "type": "durable-object",
+      "storage": "sqlite",
+    },
+  },
   "observability": {
     "enabled": true,
   },

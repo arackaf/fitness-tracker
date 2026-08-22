@@ -20,7 +20,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import type { ExerciseRow } from "@/data/types";
-import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-prompt";
+import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-ai";
 
 import { ModelResults } from "./ModelResults";
 
