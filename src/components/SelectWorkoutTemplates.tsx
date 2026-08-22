@@ -5,7 +5,6 @@ import type { WorkoutTemplateState } from "@/data/workout-templates/workout-stat
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
 
 function getTemplateExerciseSummary(
   workoutTemplate: WorkoutTemplateState,
@@ -23,13 +22,13 @@ function getTemplateExerciseSummary(
 interface SelectWorkoutTemplatesProps {
   workoutTemplates: WorkoutTemplateState[];
   exerciseNameById: Map<number, string>;
-  isFetchingTemplates?: boolean;
   onSelectTemplate: (template: WorkoutTemplateState) => void;
 }
 
 export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => {
-  const { workoutTemplates, exerciseNameById, isFetchingTemplates, onSelectTemplate } = props;
+  const { workoutTemplates, exerciseNameById, onSelectTemplate } = props;
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   return (
     <>
@@ -48,11 +47,9 @@ export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => 
         </PopoverTrigger>
         <PopoverContent className="w-(--radix-popover-trigger-width) p-0" align="start">
           <Command>
-            <CommandInput placeholder="Search workout templates..." />
+            <CommandInput value={search} onValueChange={setSearch} placeholder="Search workout templates..." />
             <CommandList>
-              <CommandEmpty>
-                {isFetchingTemplates ? "Loading templates..." : "No workout templates found."}
-              </CommandEmpty>
+              <CommandEmpty>{search ? "No workout templates found" : "No workout templates remaining"}</CommandEmpty>
               <CommandGroup>
                 {workoutTemplates.map(template => {
                   const exerciseSummary = getTemplateExerciseSummary(template, exerciseNameById);

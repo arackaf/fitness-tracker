@@ -37,9 +37,7 @@ function RouteComponentContent() {
     [selectedTemplates],
   );
 
-  const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useSuspenseQuery(
-    allWorkoutTemplatesQueryOptions(),
-  );
+  const { data: workoutTemplates } = useSuspenseQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useSuspenseQuery(exercisesQueryOptions());
   const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
 
@@ -66,7 +64,6 @@ function RouteComponentContent() {
           <SelectWorkoutTemplates
             workoutTemplates={workoutTemplates.filter(template => !selectedTemplateIds.has(template.id!))}
             exerciseNameById={exerciseNameById}
-            isFetchingTemplates={isFetchingTemplates}
             onSelectTemplate={handleSelectTemplate}
           />
           <DisplaySelectedWorkoutTemplates
