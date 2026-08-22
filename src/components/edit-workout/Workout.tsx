@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 
 import { Card } from "@/components/Card";
 import type { Exercise } from "@/components/ExerciseSelector";
@@ -15,9 +15,16 @@ type WorkoutProps = {
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
   form: WorkoutForm;
+  setWorkoutDate: (workoutDate: Date | null) => void;
 };
 
-export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => {
+export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWorkoutDate }) => {
+  useEffect(() => {
+    if (!form.state.values.workoutDate) {
+      form.setFieldValue("workoutDate", new Date());
+    }
+    // do not depend on the form value - one time init after SSR to avoid a flash of the wrong time because of UTC / timezones on SSR vs hydration
+  }, []);
   return (
     <div className="flex flex-col gap-4">
       <Card className="grid gap-4 md:grid-cols-2">
@@ -61,7 +68,13 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups }) => 
             <div className="flex flex-col gap-2 text-sm">
               <label className="flex flex-col gap-2">
                 <span className="font-medium">Workout date</span>
-                <DateTimePicker value={field.state.value} onChange={nextValue => field.handleChange(nextValue)} />
+                <DateTimePicker
+                  value={field.state.value}
+                  onChange={nextValue => {
+                    field.handleChange(nextValue);
+                    setWorkoutDate(nextValue);
+                  }}
+                />
               </label>
               {!field.state.meta.isValid ? (
                 <span className="text-sm text-red-500">{field.state.meta.errors.join(", ")}</span>

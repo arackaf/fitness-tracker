@@ -33,8 +33,9 @@ export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
   exercises: WorkoutSegmentExerciseState[];
 };
 
-export type WorkoutState = Omit<Workout, "userId"> & {
+export type WorkoutState = Omit<Workout, "userId" | "workoutDate"> & {
   id?: number;
+  workoutDate: Date | null;
   workoutTemplateId?: number;
   segments: SegmentWithExercises[];
 };
@@ -97,10 +98,10 @@ export const defaultworkoutDate = () => {
   return new Date();
 };
 
-export const createDefaultWorkout = (): WorkoutState => {
+export const createDefaultWorkout = (workoutDate: Date | null = null): WorkoutState => {
   return {
     name: "",
-    workoutDate: defaultworkoutDate(),
+    workoutDate: workoutDate ?? null,
     description: "",
     segments: [createDefaultSegment()],
   };

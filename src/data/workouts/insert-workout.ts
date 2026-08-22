@@ -131,7 +131,7 @@ export const insertWorkout = async (db: DB, input: WorkoutState, userId: string)
         workoutTemplateId: input.workoutTemplateId,
         name: input.name,
         description: input.description,
-        workoutDate: input.workoutDate,
+        workoutDate: input.workoutDate!,
       })
       .returning({ id: workoutTable.id });
 

@@ -1,11 +1,18 @@
 import { Card } from "@/components/Card";
+import { AIIcon } from "@/components/icons/AI";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { createAuthClient } from "@/lib/auth-client";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    const { loggedIn } = context;
+    if (loggedIn) {
+      throw redirect({ to: "/app/workouts", search: { page: 1 } });
+    }
+  },
   component: App,
 });
 
@@ -30,14 +37,11 @@ function App() {
 
         <section className="grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="space-y-6">
-            <p className="inline-flex rounded-full border border-amber-300/30 bg-amber-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-amber-200">
-              Train smart. Track everything.
-            </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-              Build strength The TanStack Way
+            <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-6xl">
+              Practical workout & fitness tracking
             </h1>
             <p className="max-w-2xl text-base leading-relaxed md:text-lg">
-              Log workouts, follow your progress, and stay consistent without extra clutter.
+              Log workouts, follow your progress, and stay consistent.
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2">
               {!loggedIn ? (
@@ -49,27 +53,24 @@ function App() {
                     authClient.signIn.social({ provider: "google" });
                   }}
                 >
-                  <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
+                  <GoogleIcon className="w-4! h-4!" /> Login with Google
                 </Button>
-              ) : (
-                <Button variant="default" asChild>
-                  <Link to="/app">Go to the app</Link>
-                </Button>
-              )}
+              ) : null}
             </div>
           </div>
 
           <aside className="rounded-2xl border border-slate-700 bg-background/60 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
-            <p className="mb-4 text-sm font-medium">What you can track</p>
             <ul className="space-y-3 text-sm">
               <Card as="li" className="rounded-lg px-4">
-                Workout sessions and volume
+                Track workout sessions, reps, volume
               </Card>
               <Card as="li" className="rounded-lg">
-                Body Composition Metrics
+                Track body Composition Metrics
               </Card>
               <Card as="li" className="rounded-lg px-4">
-                Notes for sets, reps, etc
+                <div className="inline-flex items-center gap-2">
+                  <AIIcon color="var(--color-amber-400)" /> Generate workouts with AI
+                </div>
               </Card>
             </ul>
           </aside>

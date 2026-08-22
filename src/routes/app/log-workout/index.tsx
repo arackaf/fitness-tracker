@@ -31,11 +31,11 @@ export const Route = createFileRoute("/app/log-workout/")({
   component: RouteComponent,
 });
 
-const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
+const templateToWorkout = (template: WorkoutTemplateState, workoutDate: Date | null): WorkoutState => {
   return {
     ...template,
     workoutTemplateId: template.id,
-    workoutDate: defaultworkoutDate(),
+    workoutDate: workoutDate ?? defaultworkoutDate(),
     segments: template.segments.map(segment => {
       return {
         ...segment,
@@ -76,22 +76,32 @@ const templateToWorkout = (template: WorkoutTemplateState): WorkoutState => {
 
 function RouteComponent() {
   const [workoutState, setWorkoutState] = useState<WorkoutState>(createDefaultWorkout());
+  const [currentWorkoutDate, setCurrentWorkoutDate] = useState<Date | null>(null);
   return (
     <SuspensePageLayout
       title="Log Workout"
-      headerChildren={<ImportWorkoutTemplate onSelected={template => setWorkoutState(templateToWorkout(template))} />}
+      headerChildren={
+        <ImportWorkoutTemplate
+          onSelected={template => setWorkoutState(templateToWorkout(template, currentWorkoutDate))}
+        />
+      }
     >
-      <RenderWorkoutForm workoutState={workoutState} onReset={() => setWorkoutState(createDefaultWorkout())} />
+      <RenderWorkoutForm
+        workoutState={workoutState}
+        setWorkoutDate={setCurrentWorkoutDate}
+        onReset={() => setWorkoutState(createDefaultWorkout())}
+      />
     </SuspensePageLayout>
   );
 }
 
 type RenderWorkoutFormProps = {
   workoutState: WorkoutState;
+  setWorkoutDate: (workoutDate: Date | null) => void;
   onReset: () => void;
 };
 const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
-  const { workoutState, onReset } = props;
+  const { workoutState, setWorkoutDate, onReset } = props;
   const [formResetKey, setFormResetKey] = useState(0);
 
   useEffect(() => {
@@ -100,18 +110,19 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 
   return (
     <Fragment key={formResetKey}>
-      <WorkoutFormContent workoutState={workoutState} onReset={() => onReset()} />
+      <WorkoutFormContent workoutState={workoutState} setWorkoutDate={setWorkoutDate} onReset={() => onReset()} />
     </Fragment>
   );
 };
 
 type WorkoutFormContentProps = {
   workoutState: WorkoutState;
+  setWorkoutDate: (workoutDate: Date | null) => void;
   onReset: () => void;
 };
 
 const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
-  const { workoutState, onReset } = props;
+  const { workoutState, setWorkoutDate, onReset } = props;
 
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
@@ -144,7 +155,7 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
+      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="flex mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Create workout"}
