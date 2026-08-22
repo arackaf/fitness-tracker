@@ -24,31 +24,12 @@ interface SelectWorkoutTemplatesProps {
   workoutTemplates: WorkoutTemplateState[];
   exerciseNameById: Map<number, string>;
   isFetchingTemplates?: boolean;
-  selectedTemplates: WorkoutTemplateState[];
   onSelectTemplate: (template: WorkoutTemplateState) => void;
-  onRemoveTemplate: (templateId: number) => void;
 }
 
 export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => {
-  const {
-    workoutTemplates,
-    exerciseNameById,
-    isFetchingTemplates,
-    selectedTemplates,
-    onSelectTemplate,
-    onRemoveTemplate,
-  } = props;
+  const { workoutTemplates, exerciseNameById, isFetchingTemplates, onSelectTemplate } = props;
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
-
-  const selectedTemplateIds = useMemo(
-    () => new Set(selectedTemplates.map(template => template.id)),
-    [selectedTemplates],
-  );
-
-  const availableTemplates = useMemo(
-    () => workoutTemplates.filter(template => template.id != null && !selectedTemplateIds.has(template.id)),
-    [selectedTemplateIds, workoutTemplates],
-  );
 
   return (
     <>
@@ -73,7 +54,7 @@ export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => 
                 {isFetchingTemplates ? "Loading templates..." : "No workout templates found."}
               </CommandEmpty>
               <CommandGroup>
-                {availableTemplates.map(template => {
+                {workoutTemplates.map(template => {
                   const exerciseSummary = getTemplateExerciseSummary(template, exerciseNameById);
 
                   return (
@@ -81,7 +62,7 @@ export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => 
                       key={template.id}
                       value={`${template.name} ${exerciseSummary} ${template.id}`}
                       onSelect={() => {
-                        const close = availableTemplates.length === 1;
+                        const close = workoutTemplates.length === 1;
                         onSelectTemplate(template);
                         if (close) {
                           setIsComboboxOpen(false);
@@ -105,11 +86,6 @@ export const SelectWorkoutTemplates: FC<SelectWorkoutTemplatesProps> = props => 
           </Command>
         </PopoverContent>
       </Popover>
-
-      <DisplaySelectedWorkoutTemplates
-        selectedTemplates={selectedTemplates}
-        onRemoveTemplate={onRemoveTemplate}
-      />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
@@ -8,23 +8,39 @@ import { Textarea } from "@/components/ui/textarea";
 import { SelectWorkoutTemplates } from "@/components/SelectWorkoutTemplates";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    context.queryClient.ensureQueryData(allWorkoutTemplatesQueryOptions());
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
+  },
 });
 
 const MIN_PROMPT_LENGTH = 20;
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="Create with AI">
+      <RouteComponentContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteComponentContent() {
   const [selectedTemplates, setSelectedTemplates] = useState<WorkoutTemplateState[]>([]);
   const [prompt, setPrompt] = useState("");
-  const selectedTemplateIdLookup = useMemo(
-    () => new Map(selectedTemplates.map(template => [template.id, template])),
+  const selectedTemplateIds = useMemo(
+    () => new Set(selectedTemplates.map(template => template.id!)),
     [selectedTemplates],
   );
 
-  const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useQuery(allWorkoutTemplatesQueryOptions());
-  const { data: exercises = [] } = useQuery(exercisesQueryOptions());
+  const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useSuspenseQuery(
+    allWorkoutTemplatesQueryOptions(),
+  );
+  const { data: exercises = [] } = useSuspenseQuery(exercisesQueryOptions());
   const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
 
   const trimmedPromptLength = prompt.trim().length;
@@ -41,20 +57,23 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-6 max-w-xl">
-      <h2 className="text-lg font-semibold">Create with AI</h2>
-      <p className="text-sm text-muted-foreground">
-        Select existing templates as reference, then describe the workout you want to generate.
-      </p>
+      <div className="flex flex-col gap-2">
+        <p className="text-sm text-muted-foreground">
+          Select existing templates as a reference and describe the workout you want to generate.
+        </p>
 
-      <div className="flex flex-col gap-4">
-        <SelectWorkoutTemplates
-          workoutTemplates={workoutTemplates}
-          exerciseNameById={exerciseNameById}
-          isFetchingTemplates={isFetchingTemplates}
-          selectedTemplates={selectedTemplates}
-          onSelectTemplate={handleSelectTemplate}
-          onRemoveTemplate={handleRemoveTemplate}
-        />
+        <div className="flex flex-col gap-4">
+          <SelectWorkoutTemplates
+            workoutTemplates={workoutTemplates.filter(template => !selectedTemplateIds.has(template.id!))}
+            exerciseNameById={exerciseNameById}
+            isFetchingTemplates={isFetchingTemplates}
+            onSelectTemplate={handleSelectTemplate}
+          />
+          <DisplaySelectedWorkoutTemplates
+            selectedTemplates={selectedTemplates}
+            onRemoveTemplate={handleRemoveTemplate}
+          />
+        </div>
 
         <div className="flex flex-col gap-2 text-sm">
           <label className="flex flex-col gap-2 text-sm">
