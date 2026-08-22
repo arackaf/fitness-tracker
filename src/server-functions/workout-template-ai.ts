@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { env } from "cloudflare:workers";
 
 import { generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
 import z from "zod";
@@ -7,15 +6,16 @@ import z from "zod";
 import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { requireUserId, type AuthContext } from "@/lib/server-auth";
+import { queryOptions } from "@tanstack/react-query";
+import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
 
-type ExerciseSummary = {
+export type ExerciseSummary = {
   id: number;
   name: string;
   description: string | null;
 };
 
-type PromptInput = {
+export type PromptInput = {
   prompt: string;
   exercises: ExerciseSummary[];
   workoutTemplates: CompressedWorkoutTemplate[];
@@ -36,9 +36,30 @@ export type PromptReturnType =
     }
   | SuccessPromptResult;
 
-export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
-  const userId = await requireUserId(context);
-};
+export const getAiSessionsQueryOptions = () =>
+  queryOptions({
+    queryKey: ["ai-sessions"],
+    queryFn: () => getAiSessionsServerFn(),
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 5,
+  });
+
+export const getAiSessionsServerFn = createServerFn({
+  method: "POST",
+}).handler(async ({ data, context }): Promise<any> => {
+  const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
+  return durableObject.getSessions();
+});
+
+export const createAiSessionsServerFn = createServerFn({
+  method: "POST",
+})
+  .inputValidator((payload: { promptInfo: PromptInput }) => payload)
+  .handler(async ({ data, context }): Promise<any> => {
+    const { promptInfo } = data;
+    const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
+    return durableObject.createSession(promptInfo);
+  });
 
 export const generateWorkoutTemplateWithAi = createServerFn({
   method: "POST",
