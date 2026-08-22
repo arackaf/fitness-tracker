@@ -15,7 +15,7 @@ type WorkoutProps = {
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
   form: WorkoutForm;
-  setWorkoutDate: (workoutDate: Date | null) => void;
+  setWorkoutDate?: (workoutDate: Date | null) => void;
 };
 
 export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWorkoutDate }) => {
@@ -72,7 +72,7 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWo
                   value={field.state.value}
                   onChange={nextValue => {
                     field.handleChange(nextValue);
-                    setWorkoutDate(nextValue);
+                    setWorkoutDate?.(nextValue);
                   }}
                 />
               </label>
