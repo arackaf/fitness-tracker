@@ -1,7 +1,10 @@
+import { drizzle, type DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
+
 import { DurableObject, env } from "cloudflare:workers";
 import { initialWorkoutTemplateDDL } from "./sql";
 import type { PromptInput } from "@/server-functions/workout-template-ai";
 import { requireUserId, type AuthContext } from "@/lib/server-auth";
+import { session } from "./schema";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -11,23 +14,25 @@ export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthC
 };
 
 export class WorkoutTemplateAIGeneration extends DurableObject {
+  db: DrizzleSqliteDODatabase;
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
 
     ctx.blockConcurrencyWhile(async () => {
       ctx.storage.sql.exec(initialWorkoutTemplateDDL);
     });
+
+    this.db = drizzle(ctx.storage);
   }
-  getSessions() {
-    const rows = this.ctx.storage.sql.exec("SELECT * FROM session").toArray();
+  async getSessions() {
+    const rows = await this.db.select().from(session).all();
     return rows;
   }
   createSession(promptInfo: PromptInput) {
-    this.ctx.storage.sql.exec(
-      "INSERT INTO session (name, created_at) VALUES (?, ?)",
-      promptInfo.prompt,
-      new Date().toISOString(),
-    );
+    this.db.insert(session).values({
+      name: promptInfo.prompt,
+      createdAt: new Date().toISOString(),
+    });
   }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {
