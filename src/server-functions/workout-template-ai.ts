@@ -18,6 +18,7 @@ export type ExerciseSummary = {
 export type PromptInput = {
   prompt: string;
   exercises: ExerciseSummary[];
+  workoutNames: string[];
   workoutTemplates: CompressedWorkoutTemplate[];
   model?: GatewayModelId;
 };
@@ -75,7 +76,7 @@ export const generateWorkoutTemplateWithAi = createServerFn({
   method: "POST",
 })
   .inputValidator((input: PromptInput) => input)
-  .handler(async ({ data, context }): Promise<PromptReturnType> => {
+  .handler(async ({ data }): Promise<PromptReturnType> => {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
     try {
       const { output, usage, finalStep } = await generateText({

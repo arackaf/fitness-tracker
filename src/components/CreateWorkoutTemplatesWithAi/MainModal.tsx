@@ -111,6 +111,7 @@ export function CreateWorkoutTemplateWithAi() {
           name: exercise.name,
           description: exercise.description,
         })),
+        workoutNames: selectedTemplates.map(template => template.name),
         workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
       },
     });

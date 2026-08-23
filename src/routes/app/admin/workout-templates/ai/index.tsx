@@ -70,6 +70,7 @@ function RouteComponentContent() {
         data: {
           promptInfo: {
             prompt,
+            workoutNames: selectedTemplates.map(template => template.name),
             exercises: exercises.map(e => ({ id: e.id, name: e.name, description: e.description })),
             workoutTemplates: selectedTemplates.map(t => compressWorkoutTemplateForLLM(exerciseLookup, t)),
           },
