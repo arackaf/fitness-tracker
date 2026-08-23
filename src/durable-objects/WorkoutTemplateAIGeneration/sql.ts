@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS session_prompt (
   created_at TEXT NOT NULL,
   prompt TEXT NOT NULL,
   workout_templates TEXT NOT NULL,
-  exercises TEXT NOT NULL,
   result TEXT,
+  pending BOOLEAN NOT NULL DEFAULT TRUE,
+  error BOOLEAN NOT NULL DEFAULT FALSE,
 
   FOREIGN KEY (session_id)
       REFERENCES session(id)

@@ -17,7 +17,6 @@ export const sessionPrompt = sqliteTable(
     createdAt: text("created_at").notNull(),
     prompt: text().notNull(),
     workoutTemplates: text("workout_templates").notNull(),
-    exercises: text().notNull(),
     result: text(),
   },
   table => [index("idx_session_prompt_session_id").on(table.sessionId)],

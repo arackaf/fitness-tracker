@@ -35,14 +35,25 @@ export class WorkoutTemplateAIGeneration extends DurableObject {
     const result = await this.db
       .insert(sessionTable)
       .values({
-        name: promptInfo.prompt,
+        name: "",
         createdAt: new Date().toISOString(),
       })
       .returning({ id: sessionTable.id });
+
+    await this.db.insert(sessionPromptTable).values({
+      sessionId: result[0].id,
+      createdAt: new Date().toISOString(),
+      prompt: promptInfo.prompt,
+      workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
+    });
+
     return result[0];
   }
   async loadSession(sessionId: number) {
-    const session = await this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
+    const [session, prompts] = await Promise.all([
+      this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get(),
+      this.db.select().from(sessionPromptTable).where(eq(sessionPromptTable.sessionId, sessionId)),
+    ]);
     return session;
   }
   fetch(request: Request): Response {
