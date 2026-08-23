@@ -61,6 +61,16 @@ export const createAiSessionsServerFn = createServerFn({
     return durableObject.createSession(promptInfo);
   });
 
+export const loadAiSessionServerFn = createServerFn({
+  method: "POST",
+})
+  .inputValidator((payload: { sessionId: number }) => payload)
+  .handler(async ({ data, context }) => {
+    const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
+    const result = await durableObject.loadSession(data.sessionId);
+    return { session: result.session, prompts: result.prompts };
+  });
+
 export const generateWorkoutTemplateWithAi = createServerFn({
   method: "POST",
 })

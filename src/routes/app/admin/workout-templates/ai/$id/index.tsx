@@ -1,5 +1,4 @@
-import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
-import type { PromptReturnType } from "@/server-functions/workout-template-ai";
+import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
@@ -7,21 +6,56 @@ export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
 });
 
+type SessionState =
+  | { status: "not-found" }
+  | { status: "error" }
+  | {
+      status: "loaded";
+      session: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["session"];
+      prompts: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["prompts"];
+    };
+
 function RouteComponent() {
   const { id } = Route.useParams();
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const [sessionState, setSessionState] = useState<SessionState | null>(null);
 
   useEffect(() => {
-    openWorkoutTemplateWebSocket(id).then(socket => {
-      setWebSocket(socket);
-      socket.addEventListener("message", evt => {
-        console.log("Message received in component:", evt.data);
+    loadAiSessionServerFn({ data: { sessionId: Number(id) } })
+      .then(result => {
+        if (result == null || result.session == null) {
+          setSessionState({ status: "not-found" });
+        } else {
+          setSessionState({ status: "loaded", ...result });
+        }
+      })
+      .catch(() => {
+        setSessionState({ status: "error" });
       });
-    });
-    return () => {
-      webSocket?.close();
-    };
   }, [id]);
 
-  return <div>Hello "/app/admin/workout-templates/ai/$id/"!</div>;
+  if (sessionState == null) {
+    return <div className="text-sm text-muted-foreground">Loading session...</div>;
+  }
+
+  if (sessionState.status === "not-found") {
+    return <div className="text-sm text-destructive">Session not found.</div>;
+  }
+
+  if (sessionState.status === "error") {
+    return (
+      <div className="text-sm text-destructive">
+        Something went wrong loading the session. Please refresh and try again.
+      </div>
+    );
+  }
+
+  if (sessionState.session == null) {
+    return <div className="text-sm text-destructive">Session not found.</div>;
+  }
+
+  return (
+    <div>
+      Session {sessionState.session.id}: {sessionState.session.name}
+    </div>
+  );
 }
