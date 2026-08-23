@@ -13,13 +13,13 @@
   "durable_objects": {
     "bindings": [
       {
-        "name": "WorkoutTemplateAIGeneration",
-        "class_name": "WorkoutTemplateAIGeneration",
+        "name": "WorkoutTemplateAIGenerationDO",
+        "class_name": "WorkoutTemplateAIGenerationDO",
       },
     ],
   },
   "exports": {
-    "WorkoutTemplateAIGeneration": {
+    "WorkoutTemplateAIGenerationDO": {
       "type": "durable-object",
       "storage": "sqlite",
     },

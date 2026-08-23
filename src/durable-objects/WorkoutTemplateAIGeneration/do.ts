@@ -9,14 +9,14 @@ import { eq } from "drizzle-orm";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
-  const { WorkoutTemplateAIGeneration } = env;
-  const doId = WorkoutTemplateAIGeneration.idFromName(userId);
-  return WorkoutTemplateAIGeneration.get(doId);
+  const { WorkoutTemplateAIGenerationDO } = env;
+  const doId = WorkoutTemplateAIGenerationDO.idFromName(userId);
+  return WorkoutTemplateAIGenerationDO.get(doId);
 };
 
 const webSocketTag = (sessionId: number) => `session:${sessionId}`;
 
-export class WorkoutTemplateAIGeneration extends DurableObject {
+export class WorkoutTemplateAIGenerationDO extends DurableObject {
   db: DrizzleSqliteDODatabase;
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
