@@ -1,4 +1,4 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, type RequiredFetcher } from "@tanstack/react-start";
 
 import { generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
 import z from "zod";
@@ -7,7 +7,10 @@ import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateFor
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { queryOptions } from "@tanstack/react-query";
-import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
+import {
+  getWorkoutTemplateAIGenerationDurableObject,
+  WorkoutTemplateAIGeneration,
+} from "@/durable-objects/WorkoutTemplateAIGeneration/do";
 
 export type ExerciseSummary = {
   id: number;
@@ -45,9 +48,42 @@ export const getAiSessionsQueryOptions = () =>
     gcTime: 1000 * 60 * 5,
   });
 
+type Serialzable = boolean | number | string | null | undefined | Serialzable[] | { [K: string]: Serialzable };
+
+type SerializablePayloads<T> = {
+  [K in keyof T]: T[K] extends (...args: infer A) => any
+    ? A extends Serialzable[]
+      ? {
+          action: K;
+          args: A;
+        }
+      : never
+    : never;
+}[keyof T];
+
+const workoutTemplateAIGenerationProxyServerFn = createServerFn({
+  method: "POST",
+  strict: false,
+})
+  .inputValidator((payload: { userId: string } & SerializablePayloads<WorkoutTemplateAIGeneration>) => payload)
+  .handler(async ({ data }) => {
+    const durableObject = await getWorkoutTemplateAIGenerationDurableObject({ userId: data.userId });
+    return durableObject[data.action](...(data.args as any));
+  });
+
+// T[K] extends (...args: any[]) => any ? Promise<ReturnType<T[K]>> : never
+export const workoutTemplateAIGenerationDOProxy: DOProxy<WorkoutTemplateAIGeneration, any> = null as any;
+
+workoutTemplateAIGenerationDOProxy({
+  data: {
+    action: "createSession",
+    args: [{ exercises: [], workoutNames: [], workoutTemplates: [], prompt: "" }],
+  },
+});
+
 export const getAiSessionsServerFn = createServerFn({
   method: "POST",
-}).handler(async ({ data, context }): Promise<any> => {
+}).handler(async ({ context }) => {
   const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
   return durableObject.getSessions();
 });
