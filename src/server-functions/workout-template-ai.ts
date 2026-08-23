@@ -55,7 +55,7 @@ export const createAiSessionsServerFn = createServerFn({
   method: "POST",
 })
   .inputValidator((payload: { promptInfo: PromptInput }) => payload)
-  .handler(async ({ data, context }): Promise<any> => {
+  .handler(async ({ data, context }): Promise<{ id: number }> => {
     const { promptInfo } = data;
     const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
     return durableObject.createSession(promptInfo);

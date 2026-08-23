@@ -31,11 +31,15 @@ export class WorkoutTemplateAIGeneration extends DurableObject {
     const rows = await this.db.select().from(sessionTable).all();
     return rows;
   }
-  createSession(promptInfo: PromptInput) {
-    this.db.insert(sessionTable).values({
-      name: promptInfo.prompt,
-      createdAt: new Date().toISOString(),
-    });
+  async createSession(promptInfo: PromptInput) {
+    const result = await this.db
+      .insert(sessionTable)
+      .values({
+        name: promptInfo.prompt,
+        createdAt: new Date().toISOString(),
+      })
+      .returning({ id: sessionTable.id });
+    return result[0];
   }
   async loadSession(sessionId: number) {
     const session = await this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
