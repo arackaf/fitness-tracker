@@ -54,7 +54,7 @@ export class WorkoutTemplateAIGeneration extends DurableObject {
       this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get(),
       this.db.select().from(sessionPromptTable).where(eq(sessionPromptTable.sessionId, sessionId)),
     ]);
-    return session;
+    return { session, prompts };
   }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {
