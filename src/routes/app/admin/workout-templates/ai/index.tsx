@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
@@ -10,6 +10,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
@@ -40,6 +41,9 @@ function RouteComponentContent() {
   const { data: workoutTemplates } = useSuspenseQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useSuspenseQuery(exercisesQueryOptions());
   const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
+
+  const { data: sessions } = useQuery(getAiSessionsQueryOptions());
+  console.log({ sessions });
 
   const trimmedPromptLength = prompt.trim().length;
   const remainingPromptChars = MIN_PROMPT_LENGTH - trimmedPromptLength;
