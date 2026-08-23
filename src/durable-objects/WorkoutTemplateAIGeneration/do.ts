@@ -44,7 +44,7 @@ export class WorkoutTemplateAIGeneration extends DurableObject {
       sessionId: result[0].id,
       createdAt: new Date().toISOString(),
       prompt: promptInfo.prompt,
-      workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
+      workoutTemplates: JSON.stringify(promptInfo.workoutNames),
     });
 
     return result[0];
