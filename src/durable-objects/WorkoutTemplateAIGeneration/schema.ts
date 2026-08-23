@@ -4,6 +4,7 @@ export const session = sqliteTable("session", {
   id: integer().primaryKey(),
   createdAt: text("created_at").notNull(),
   name: text().notNull(),
+  savedId: integer("saved_id"),
 });
 
 export const sessionPrompt = sqliteTable(

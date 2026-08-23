@@ -3,7 +3,8 @@ export const initialWorkoutTemplateDDL = `
 CREATE TABLE IF NOT EXISTS session (
   id INTEGER PRIMARY KEY,
   created_at TEXT NOT NULL,
-  name TEXT NOT NULL
+  name TEXT NOT NULL,
+  saved_id INTEGER NULL
 );
 
 CREATE TABLE IF NOT EXISTS session_prompt (
