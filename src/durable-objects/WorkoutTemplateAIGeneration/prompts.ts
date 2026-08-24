@@ -1,5 +1,5 @@
 import type { CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
-import type { ExerciseSummary } from "@/server-functions/workout-template-ai";
+import type { ExerciseSummary } from "./types";
 
 export const systemPrompt = (referenceWorkoutTemplates: CompressedWorkoutTemplate[], exercises: ExerciseSummary[]) =>
   `

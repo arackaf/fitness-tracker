@@ -1,42 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 
-import { generateText, Output, type GatewayModelId, type LanguageModelUsage } from "ai";
-import z from "zod";
-
-import { type CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
-import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
-import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { queryOptions } from "@tanstack/react-query";
 import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
-import { systemPrompt, userPrompt } from "@/durable-objects/WorkoutTemplateAIGeneration/prompts";
-
-export type ExerciseSummary = {
-  id: number;
-  name: string;
-  description: string | null;
-};
-
-export type PromptInput = {
-  prompt: string;
-  exercises: ExerciseSummary[];
-  workoutNames: string[];
-  workoutTemplates: CompressedWorkoutTemplate[];
-  model?: GatewayModelId;
-};
-
-export type SuccessPromptResult = {
-  success: true;
-  workouts: WorkoutTemplateState[];
-  commentary: string;
-  usage: LanguageModelUsage;
-  cost: any;
-};
-
-export type PromptReturnType =
-  | {
-      success: false;
-    }
-  | SuccessPromptResult;
+import type { PromptInput, PromptReturnType } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
@@ -71,43 +37,7 @@ export const loadAiSessionServerFn = createServerFn({ method: "POST" })
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
   .inputValidator((input: PromptInput) => input)
-  .handler(async ({ data }): Promise<PromptReturnType> => {
-    const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = data;
-    try {
-      const { output, usage, finalStep } = await generateText({
-        instructions: systemPrompt(workoutTemplates, exercises),
-        model,
-        prompt: userPrompt(prompt, workoutTemplates),
-        providerOptions: {
-          gateway: {
-            only: ["openai", "anthropic"],
-          },
-        },
-        output: Output.object({
-          schema: z.object({
-            commentary: z.string().describe("The output from the llm, explaining what it did and why"),
-            workouts: z.array(workoutTemplateValidator),
-          }),
-        }),
-      });
-
-      if (!output.workouts.length) {
-        throw new Error("No workouts generated");
-      }
-
-      const parsedWorkouts = z.array(workoutTemplateValidator).parse(output.workouts);
-
-      return {
-        success: true,
-        workouts: parsedWorkouts,
-        commentary: output.commentary ?? "",
-        usage,
-        cost: finalStep.providerMetadata?.gateway?.cost ?? "<unknown>",
-      };
-    } catch (error) {
-      console.error("Error using Vercel AI SDK", { model, error });
-      return {
-        success: false,
-      };
-    }
+  .handler(async ({ data, context }): Promise<PromptReturnType> => {
+    const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
+    return durableObject.prompt(data);
   });

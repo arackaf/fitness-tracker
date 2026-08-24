@@ -2,10 +2,14 @@ import { drizzle, type DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlit
 
 import { DurableObject, env } from "cloudflare:workers";
 import { initialWorkoutTemplateDDL } from "./sql";
-import type { PromptInput } from "@/server-functions/workout-template-ai";
 import { requireUserId, type AuthContext } from "@/lib/server-auth";
 import { session as sessionTable, sessionPrompt as sessionPromptTable } from "./schema";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
+import { generateText, Output } from "ai";
+import { systemPrompt, userPrompt } from "./prompts";
+import type { PromptInput, PromptReturnType } from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -55,6 +59,51 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       this.db.select().from(sessionPromptTable).where(eq(sessionPromptTable.sessionId, sessionId)),
     ]);
     return { session, prompts };
+  }
+  async prompt(input: PromptInput): Promise<PromptReturnType> {
+    const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;
+
+    try {
+      const { output, usage, finalStep } = await generateText({
+        instructions: systemPrompt(workoutTemplates, exercises),
+        model,
+        prompt: userPrompt(prompt, workoutTemplates),
+        providerOptions: {
+          gateway: {
+            only: ["openai", "anthropic"],
+          },
+        },
+        output: Output.object({
+          schema: z.object({
+            commentary: z.string().describe("The output from the llm, explaining what it did and why"),
+            workouts: z.array(workoutTemplateValidator),
+          }),
+        }),
+      });
+
+      if (!output.workouts.length) {
+        throw new Error("No workouts generated");
+      }
+
+      const parsedWorkouts = z.array(workoutTemplateValidator).parse(output.workouts);
+
+      return {
+        success: true,
+        commentary: output.commentary ?? "",
+        workouts: parsedWorkouts,
+        usage: {
+          inputTokens: usage.inputTokens ?? 0,
+          outputTokens: usage.outputTokens ?? 0,
+          totalTokens: usage.totalTokens ?? 0,
+        },
+        cost: finalStep.providerMetadata?.gateway?.cost ?? "<unknown>",
+      };
+    } catch (error) {
+      console.error("Error using Vercel AI SDK", { model, error });
+      return {
+        success: false,
+      };
+    }
   }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {

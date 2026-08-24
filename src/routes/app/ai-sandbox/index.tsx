@@ -13,9 +13,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { generateWorkoutTemplateWithAi, type PromptReturnType } from "@/server-functions/workout-template-ai";
+import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-ai";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import type { GatewayModelId } from "ai";
+import type { PromptReturnType } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const Route = createFileRoute("/app/ai-sandbox/")({
   component: RouteComponent,
