@@ -17,7 +17,25 @@ export const sessionPrompt = sqliteTable(
     createdAt: text("created_at").notNull(),
     prompt: text().notNull(),
     workoutTemplates: text("workout_templates").notNull(),
-    result: text(),
+    pending: integer({ mode: "boolean" }).notNull().default(true),
+    error: integer({ mode: "boolean" }).notNull().default(false),
   },
   table => [index("idx_session_prompt_session_id").on(table.sessionId)],
+);
+
+export type SessionPromptRawSQLite = Omit<typeof sessionPrompt.$inferSelect, "pending" | "error"> & {
+  pending: 0 | 1;
+  error: 0 | 1;
+};
+
+export const sessionPromptResult = sqliteTable(
+  "session_prompt_result",
+  {
+    id: integer().primaryKey(),
+    sessionPromptId: integer("session_prompt_id")
+      .notNull()
+      .references(() => sessionPrompt.id, { onDelete: "cascade" }),
+    result: text().notNull(),
+  },
+  table => [index("idx_session_prompt_result_session_prompt_id").on(table.sessionPromptId)],
 );

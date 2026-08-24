@@ -3,7 +3,12 @@ import { drizzle, type DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlit
 import { DurableObject, env } from "cloudflare:workers";
 import { initialWorkoutTemplateDDL } from "./sql";
 import { requireUserId, type AuthContext } from "@/lib/server-auth";
-import { session as sessionTable, sessionPrompt as sessionPromptTable } from "./schema";
+import {
+  session as sessionTable,
+  sessionPrompt as sessionPromptTable,
+  sessionPromptResult as sessionPromptResultTable,
+  type SessionPromptRawSQLite,
+} from "./schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
@@ -50,6 +55,14 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       prompt: promptInfo.prompt,
       workoutTemplates: JSON.stringify(promptInfo.workoutNames),
     });
+
+    this.prompt(promptInfo)
+      .then(promptResult => {
+        this.syncPromptResult(result[0].id, promptResult);
+      })
+      .catch(error => {
+        this.syncPromptResult(result[0].id, { success: false });
+      });
 
     return result[0];
   }
@@ -105,6 +118,35 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     }
   }
+  syncPromptResult(sessionPromptId: number, result: PromptReturnType) {
+    if (result.success) {
+      this.db.transaction(tx => {
+        tx.update(sessionPromptTable)
+          .set({
+            pending: false,
+            error: false,
+          })
+          .where(eq(sessionPromptTable.id, sessionPromptId))
+          .run();
+
+        tx.insert(sessionPromptResultTable)
+          .values({
+            sessionPromptId,
+            result: JSON.stringify(result),
+          })
+          .run();
+      });
+    } else {
+      this.db
+        .update(sessionPromptTable)
+        .set({
+          pending: false,
+          error: true,
+        })
+        .where(eq(sessionPromptTable.id, sessionPromptId))
+        .run();
+    }
+  }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {
       return new Response("Expected WebSocket", {
@@ -125,7 +167,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     }
 
     const prompts = this.ctx.storage.sql
-      .exec<typeof sessionPromptTable.$inferSelect>(
+      .exec<SessionPromptRawSQLite>(
         `
         SELECT * 
         FROM session_prompt 
