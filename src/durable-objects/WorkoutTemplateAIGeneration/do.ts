@@ -53,7 +53,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       sessionId: result[0].id,
       createdAt: new Date().toISOString(),
       prompt: promptInfo.prompt,
-      workoutTemplates: JSON.stringify(promptInfo.workoutNames),
+      workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
     });
 
     this.prompt(promptInfo)

@@ -12,7 +12,6 @@ export type ExerciseSummary = {
 export type PromptInput = {
   prompt: string;
   exercises: ExerciseSummary[];
-  workoutNames: string[];
   workoutTemplates: CompressedWorkoutTemplate[];
   model?: GatewayModelId;
 };

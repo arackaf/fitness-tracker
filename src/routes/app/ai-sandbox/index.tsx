@@ -96,7 +96,6 @@ function RouteComponent() {
         data: {
           prompt,
           model,
-          workoutNames: selectedTemplates.map(template => template.name),
           exercises: exercises.map(exercise => ({
             id: exercise.id,
             name: exercise.name,
