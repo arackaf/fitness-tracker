@@ -7,9 +7,8 @@ import {
   session as sessionTable,
   sessionPrompt as sessionPromptTable,
   sessionPromptResult as sessionPromptResultTable,
-  type SessionPromptRawSQLite,
 } from "./schema";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq, gt, SQL } from "drizzle-orm";
 import { z } from "zod";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
@@ -79,20 +78,20 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     return result[0];
   }
-  async loadSession(sessionId: number): Promise<QueriedSessionResult> {
-    const [session, prompts] = await Promise.all([
-      this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get(),
-      this.db
-        .select({
-          prompt: sessionPromptTable,
-          result: sessionPromptResultTable,
-        })
-        .from(sessionPromptTable)
-        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-        .where(eq(sessionPromptTable.sessionId, sessionId)),
-    ]);
+  loadSession(sessionId: number): QueriedSessionResult | null {
+    const session = this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
 
-    return { session: session ?? null, prompts };
+    const prompts: QueriedPromptResult[] = this.db
+      .select({
+        prompt: sessionPromptTable,
+        result: sessionPromptResultTable,
+      })
+      .from(sessionPromptTable)
+      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+      .where(eq(sessionPromptTable.sessionId, sessionId))
+      .all();
+
+    return session ? { session: session, prompts } : null;
   }
   async prompt(input: PromptInput): Promise<PromptResult> {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;
@@ -167,6 +166,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         .where(eq(sessionPromptTable.id, sessionPromptId))
         .run();
     }
+    this.sendUpdateForPromptId(sessionId, sessionPromptId);
   }
   sendUpdateForPromptId(sessionId: number, promptId: number) {
     const promptResult = this.fetchPrompt(sessionId, promptId);
@@ -204,16 +204,21 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       });
     }
 
-    const prompts = this.ctx.storage.sql
-      .exec<SessionPromptRawSQLite>(
-        `
-        SELECT * 
-        FROM session_prompt 
-        WHERE session_id = ? ${currentPromptId ? ` AND id > ${currentPromptId}` : ""} 
-        ORDER BY id ASC`,
-        [sessionId, currentPromptId].filter(Boolean),
-      )
-      .toArray();
+    const filters: SQL<unknown>[] = [eq(sessionPromptTable.sessionId, sessionId)];
+    if (currentPromptId) {
+      filters.push(gt(sessionPromptTable.id, currentPromptId));
+    }
+
+    const prompts: QueriedPromptResult[] = this.db
+      .select({
+        prompt: sessionPromptTable,
+        result: sessionPromptResultTable,
+      })
+      .from(sessionPromptTable)
+      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+      .where(and(...filters))
+      .orderBy(asc(sessionPromptTable.id))
+      .all();
 
     const pair = new WebSocketPair();
     const client = pair[0];

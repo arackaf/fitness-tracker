@@ -23,11 +23,6 @@ export const sessionPrompt = sqliteTable(
   table => [index("idx_session_prompt_session_id").on(table.sessionId)],
 );
 
-export type SessionPromptRawSQLite = Omit<typeof sessionPrompt.$inferSelect, "pending" | "error"> & {
-  pending: 0 | 1;
-  error: 0 | 1;
-};
-
 export const sessionPromptResult = sqliteTable(
   "session_prompt_result",
   {
