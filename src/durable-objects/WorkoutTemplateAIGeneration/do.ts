@@ -14,7 +14,7 @@ import { z } from "zod";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
 import { systemPrompt, userPrompt } from "./prompts";
-import type { PromptInput, PromptResult } from "./types";
+import type { PromptInput, PromptResult, QueriedSessionResult } from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -66,12 +66,20 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     return result[0];
   }
-  async loadSession(sessionId: number) {
+  async loadSession(sessionId: number): Promise<QueriedSessionResult> {
     const [session, prompts] = await Promise.all([
       this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get(),
-      this.db.select().from(sessionPromptTable).where(eq(sessionPromptTable.sessionId, sessionId)),
+      this.db
+        .select({
+          prompt: sessionPromptTable,
+          result: sessionPromptResultTable,
+        })
+        .from(sessionPromptTable)
+        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+        .where(eq(sessionPromptTable.sessionId, sessionId)),
     ]);
-    return { session, prompts };
+
+    return { session: session ?? null, prompts };
   }
   async prompt(input: PromptInput): Promise<PromptResult> {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;

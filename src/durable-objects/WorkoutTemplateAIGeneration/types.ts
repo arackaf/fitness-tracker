@@ -1,6 +1,7 @@
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import type { CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
 import type { GatewayModelId, LanguageModelUsage } from "ai";
+import { session, sessionPrompt, sessionPromptResult } from "./schema";
 
 export type ExerciseSummary = {
   id: number;
@@ -29,3 +30,13 @@ export type PromptResult =
       success: false;
     }
   | SuccessPromptResult;
+
+export type QueriedPromptResult = {
+  prompt: typeof sessionPrompt.$inferSelect;
+  result: typeof sessionPromptResult.$inferSelect | null;
+};
+
+export type QueriedSessionResult = {
+  session: typeof session.$inferSelect | null;
+  prompts: QueriedPromptResult[];
+};
