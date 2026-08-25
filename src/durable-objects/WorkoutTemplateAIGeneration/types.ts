@@ -31,8 +31,8 @@ export type PromptResult =
   | SuccessPromptResult;
 
 export type QueriedPromptResult = {
-  prompt: typeof sessionPrompt.$inferSelect;
-  result: typeof sessionPromptResult.$inferSelect | null;
+  prompt: typeof sessionPrompt.$inferSelect | null | undefined;
+  result: typeof sessionPromptResult.$inferSelect | null | undefined;
 };
 
 export type QueriedSessionResult = {

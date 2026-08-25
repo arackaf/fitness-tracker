@@ -9,12 +9,12 @@ import {
   sessionPromptResult as sessionPromptResultTable,
   type SessionPromptRawSQLite,
 } from "./schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
 import { systemPrompt, userPrompt } from "./prompts";
-import type { PromptInput, PromptResult, QueriedSessionResult } from "./types";
+import type { PromptInput, PromptResult, QueriedPromptResult, QueriedSessionResult } from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -49,19 +49,32 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       })
       .returning({ id: sessionTable.id });
 
-    await this.db.insert(sessionPromptTable).values({
-      sessionId: result[0].id,
-      createdAt: new Date().toISOString(),
-      prompt: promptInfo.prompt,
-      workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
-    });
+    const sessionId = result[0].id;
+    const sessionPromptRow = this.db
+      .insert(sessionPromptTable)
+      .values({
+        sessionId,
+        createdAt: new Date().toISOString(),
+        prompt: promptInfo.prompt,
+        workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
+      })
+      .returning({ id: sessionPromptTable.id })
+      .get();
+
+    const sessionPromptId = sessionPromptRow?.id;
+    if (!sessionPromptId) {
+      throw new Error("Failed to create session prompt");
+    }
 
     this.prompt(promptInfo)
       .then(promptResult => {
-        this.syncPromptResult(result[0].id, promptResult);
+        this.syncPromptResult(sessionId, sessionPromptId, promptResult);
       })
-      .catch(error => {
-        this.syncPromptResult(result[0].id, { success: false });
+      .catch(() => {
+        this.syncPromptResult(sessionId, sessionPromptId, { success: false });
+      })
+      .finally(() => {
+        this.sendUpdateForPromptId(sessionId, sessionPromptId);
       });
 
     return result[0];
@@ -126,7 +139,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     }
   }
-  syncPromptResult(sessionPromptId: number, result: PromptResult) {
+  syncPromptResult(sessionId: number, sessionPromptId: number, result: PromptResult) {
     if (result.success) {
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
@@ -154,6 +167,23 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         .where(eq(sessionPromptTable.id, sessionPromptId))
         .run();
     }
+  }
+  sendUpdateForPromptId(sessionId: number, promptId: number) {
+    const promptResult = this.fetchPrompt(sessionId, promptId);
+    this.sendMessage(sessionId, { type: "prompt", payload: promptResult });
+  }
+  fetchPrompt(sessionId: number, promptId: number): QueriedPromptResult {
+    return (
+      this.db
+        .select({
+          prompt: sessionPromptTable,
+          result: sessionPromptResultTable,
+        })
+        .from(sessionPromptTable)
+        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+        .where(and(eq(sessionPromptTable.sessionId, sessionId), eq(sessionPromptTable.id, promptId)))
+        .get() ?? { prompt: undefined, result: undefined }
+    );
   }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {
@@ -198,10 +228,10 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       webSocket: client,
     });
   }
-  sendMessage(object: Object, sessionId: number) {
+  sendMessage(sessionId: number, payload: Object) {
     for (const socket of this.ctx.getWebSockets(webSocketTag(sessionId))) {
       try {
-        socket.send(JSON.stringify(object));
+        socket.send(JSON.stringify(payload));
       } catch {
         // The socket may have disconnected before Cloudflare observed it.
         socket.close(1011, "Unable to send message");
