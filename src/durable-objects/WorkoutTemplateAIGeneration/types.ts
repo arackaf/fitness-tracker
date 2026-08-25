@@ -24,7 +24,7 @@ export type SuccessPromptResult = {
   cost: any;
 };
 
-export type PromptReturnType =
+export type PromptResult =
   | {
       success: false;
     }

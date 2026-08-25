@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { queryOptions } from "@tanstack/react-query";
 import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
-import type { PromptInput, PromptReturnType } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import type { PromptInput, PromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
@@ -37,7 +37,7 @@ export const loadAiSessionServerFn = createServerFn({ method: "POST" })
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
   .inputValidator((input: PromptInput) => input)
-  .handler(async ({ data, context }): Promise<PromptReturnType> => {
+  .handler(async ({ data, context }): Promise<PromptResult> => {
     const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
     return durableObject.prompt(data);
   });

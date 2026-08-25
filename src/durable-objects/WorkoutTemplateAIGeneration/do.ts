@@ -14,7 +14,7 @@ import { z } from "zod";
 import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
 import { systemPrompt, userPrompt } from "./prompts";
-import type { PromptInput, PromptReturnType } from "./types";
+import type { PromptInput, PromptResult } from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -73,7 +73,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     ]);
     return { session, prompts };
   }
-  async prompt(input: PromptInput): Promise<PromptReturnType> {
+  async prompt(input: PromptInput): Promise<PromptResult> {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;
 
     try {
@@ -118,7 +118,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     }
   }
-  syncPromptResult(sessionPromptId: number, result: PromptReturnType) {
+  syncPromptResult(sessionPromptId: number, result: PromptResult) {
     if (result.success) {
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
