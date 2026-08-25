@@ -1,9 +1,16 @@
-import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { exercisesQueryOptions } from "@/server-functions/exercises";
+import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
+
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(exercisesQueryOptions());
+  },
 });
 
 type SessionState =
@@ -16,7 +23,16 @@ type SessionState =
     };
 
 function RouteComponent() {
+  return (
+    <SuspensePageLayout title="AI Session">
+      <RouteContent />
+    </SuspensePageLayout>
+  );
+}
+
+function RouteContent() {
   const { id } = Route.useParams();
+  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [sessionState, setSessionState] = useState<SessionState | null>(null);
 
   useEffect(() => {
