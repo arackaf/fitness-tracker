@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
@@ -36,7 +35,6 @@ function RouteComponent() {
 
 function RouteContent() {
   const { id } = Route.useParams();
-  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const [sessionState, setSessionState] = useState<SessionState>({ status: "loading" });
 
   useEffect(() => {
