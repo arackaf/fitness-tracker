@@ -7,7 +7,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
-import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import type { SessionPayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -15,19 +15,6 @@ export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
 });
-
-type SessionState =
-  | { status: "not-found" }
-  | { status: "loading" }
-  | { status: "error" }
-  | {
-      status: "loaded";
-      session: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["session"];
-      prompts: {
-        prompt: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["prompts"];
-        result: PromptResponsePayload;
-      }[];
-    };
 
 function RouteComponent() {
   return (
@@ -39,30 +26,25 @@ function RouteComponent() {
 
 function RouteContent() {
   const { id } = Route.useParams();
-  const [sessionState, setSessionState] = useState<SessionState>({ status: "loading" });
+  const [sessionState, setSessionState] = useState<
+    { status: "error" } | { status: "loaded"; session: SessionPayload } | null
+  >(null);
 
   useEffect(() => {
     loadAiSessionServerFn({ data: { sessionId: Number(id) } })
       .then(result => {
-        if (result == null || result.session == null) {
-          setSessionState({ status: "not-found" });
-        } else {
-          setSessionState({
-            status: "loaded",
-            session: result.session,
-            prompts: result.prompts.map(result => {
-              return null as any;
-              //return this.#transformQueriedPromptResult(result.);
-            }),
-          });
-        }
+        setSessionState({
+          status: "loaded",
+          session: result,
+        });
       })
-      .catch(() => {
+      .catch(err => {
+        debugger;
         setSessionState({ status: "error" });
       });
   }, [id]);
 
-  if (sessionState.status === "loading") {
+  if (sessionState == null) {
     return (
       <div className="relative min-h-40">
         <Loading placement="local" fadeIn />
@@ -70,18 +52,7 @@ function RouteContent() {
     );
   }
 
-  if (sessionState.status === "not-found") {
-    return (
-      <div className="flex flex-col items-start gap-3">
-        <p className="text-sm text-destructive">Session not found.</p>
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
-        </Button>
-      </div>
-    );
-  }
-
-  if (sessionState.status === "error") {
+  if (sessionState.status === "error" || sessionState.session.status === "error") {
     return (
       <div className="flex flex-col items-start gap-3">
         <p className="text-sm text-destructive">
@@ -94,7 +65,18 @@ function RouteContent() {
     );
   }
 
-  const { session, prompts } = sessionState;
+  if (sessionState.session.status === "not-found") {
+    return (
+      <div className="flex flex-col items-start gap-3">
+        <p className="text-sm text-destructive">Session not found.</p>
+        <Button asChild variant="secondary">
+          <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  const { session, prompts } = sessionState.session;
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
@@ -117,14 +99,26 @@ function RouteContent() {
         <p className="text-sm text-muted-foreground">No prompts in this session yet.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {prompts.map((promptResult, index) => (
-            <>
+          {prompts.map((promptPayload, index) => (
+            <div key={`prompt-${index}`}>
+              {promptPayload.promptInput.workoutTemplates.length > 0 && (
+                <div>
+                  <h4 className="mb-1 text-sm font-medium text-gray-400">Referenced Templates</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {promptPayload.promptInput.workoutTemplates.map((wt, i) => (
+                      <span key={i} className="rounded bg-gray-700 px-2 py-1 text-sm text-gray-200">
+                        {wt}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div>
                 <h4 className="mb-1 text-sm font-medium text-gray-400">Prompt</h4>
-                <p className="text-gray-200">{prompt.prompt}</p>
+                <p className="text-gray-200">{promptPayload.promptInput.prompt}</p>
               </div>
-              <DisplayPromptResult key={`prompt-${index}`} promptResult={promptResult} />
-            </>
+              <DisplayPromptResult key={`prompt-${index}`} promptResult={promptPayload.result} />
+            </div>
           ))}
         </div>
       )}
