@@ -31,11 +31,10 @@ export const loadAiSessionServerFn = createServerFn({ method: "POST" })
   .inputValidator((payload: { sessionId: number }) => payload)
   .handler(async ({ data, context }) => {
     const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
-    const result = await durableObject.loadSession(data.sessionId);
-    if (!result?.success) {
-      return { success: false };
-    }
-    return { success: true, session: result.session, prompts: result.prompts };
+    const resultRaw = await durableObject.loadSession(data.sessionId);
+
+    const { [Symbol.dispose]: _, ...result } = resultRaw;
+    return result;
   });
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
