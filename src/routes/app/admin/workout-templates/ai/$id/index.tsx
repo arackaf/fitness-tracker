@@ -80,31 +80,26 @@ function RouteContent() {
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold">
-            {session.name ? (
-              session.name
-            ) : (
-              <>
-                Session #{session.id} &middot; {session.createdAt}
-              </>
-            )}
-          </h2>
-        </div>
-        <p className="text-xs text-muted-foreground"></p>
-      </div>
+      <h2 className="text-lg font-semibold">
+        {session.name ? (
+          session.name
+        ) : (
+          <>
+            Session #{session.id} &middot; {session.createdAt}
+          </>
+        )}
+      </h2>
 
       {prompts.length === 0 ? (
         <p className="text-sm text-muted-foreground">No prompts in this session yet.</p>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
           {prompts.map((promptPayload, index) => (
-            <div key={`prompt-${index}`}>
+            <div key={`prompt-${index}`} className="flex flex-col gap-4">
               {promptPayload.promptInput.workoutTemplates.length > 0 && (
-                <div>
-                  <h4 className="mb-1 text-sm font-medium text-gray-400">Referenced Templates</h4>
-                  <div className="flex flex-wrap gap-2">
+                <div className="flex flex-col gap-1">
+                  <h4 className="text-sm font-medium text-gray-400">Referenced Templates</h4>
+                  <div className="flex flex-wrap gap-x-2 gap-y-1">
                     {promptPayload.promptInput.workoutTemplates.map((wt, i) => (
                       <span key={i} className="rounded bg-gray-700 px-2 py-1 text-sm text-gray-200">
                         {wt}
@@ -113,11 +108,11 @@ function RouteContent() {
                   </div>
                 </div>
               )}
-              <div>
-                <h4 className="mb-1 text-sm font-medium text-gray-400">Prompt</h4>
+              <div className="flex flex-col gap-1">
+                <h4 className="text-sm font-medium text-gray-400">Prompt</h4>
                 <p className="text-gray-200">{promptPayload.promptInput.prompt}</p>
               </div>
-              <DisplayPromptResult key={`prompt-${index}`} promptResult={promptPayload.result} />
+              <DisplayPromptResult promptResult={promptPayload.result} />
             </div>
           ))}
         </div>

@@ -25,15 +25,15 @@ export const DisplayPromptResult: FC<{ promptResult: PromptResponsePayload }> = 
   const { commentary, workouts } = promptResult;
 
   return (
-    <div>
-      <div>
-        <h4 className="mb-1 text-sm font-medium text-gray-400">Commentary</h4>
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h4 className="text-sm font-medium text-gray-400">Commentary</h4>
         <p className="text-gray-200">{commentary}</p>
       </div>
 
-      <div>
-        <h4 className="mb-1 text-sm font-medium text-gray-400">Generated Workouts</h4>
-        <div className="space-y-2">
+      <div className="flex flex-col gap-2">
+        <h4 className="text-sm font-medium text-gray-400">Generated Workouts</h4>
+        <div className="flex flex-col gap-y-2">
           {workouts.map((_, i) => (
             <div key={i} className="rounded-md border border-gray-600 bg-gray-800 p-3 text-gray-300">
               Workout Template {i + 1}
