@@ -40,7 +40,7 @@ export type PromptResponsePayload =
   | null;
 
 export type PromptPayload = {
-  prompt: {
+  promptInput: {
     prompt: string;
     workoutTemplates: string[];
   };
@@ -48,9 +48,10 @@ export type PromptPayload = {
 };
 
 export type SessionPayload =
-  | { success: false }
+  | { status: "not-found" }
+  | { status: "error" }
   | {
-      success: true;
+      status: "loaded";
       session: typeof session.$inferSelect;
       prompts: PromptPayload[];
     };

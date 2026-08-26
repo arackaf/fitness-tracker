@@ -16,7 +16,6 @@ import { systemPrompt, userPrompt } from "./prompts";
 import {
   type PromptInput,
   type PromptPayload,
-  type PromptResponsePayload,
   type PromptResult,
   type QueriedPromptResult,
   type SessionPayload,
@@ -85,22 +84,29 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     return result[0];
   }
-  loadSession(sessionId: number): SessionPayload | null {
-    const session = this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
+  loadSession(sessionId: number): SessionPayload {
+    try {
+      const session = this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
 
-    const promptsRaw = this.db
-      .select({
-        prompt: sessionPromptTable,
-        result: sessionPromptResultTable,
-      })
-      .from(sessionPromptTable)
-      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-      .where(eq(sessionPromptTable.sessionId, sessionId))
-      .all();
+      if (!session) {
+        return { status: "not-found" };
+      }
 
-    const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(payload));
+      const promptsRaw = this.db
+        .select({
+          prompt: sessionPromptTable,
+          result: sessionPromptResultTable,
+        })
+        .from(sessionPromptTable)
+        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+        .where(eq(sessionPromptTable.sessionId, sessionId))
+        .all();
 
-    return session ? { success: true, session: session, prompts } : null;
+      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(payload));
+      return { status: "loaded", session: session, prompts };
+    } catch (error) {
+      return { status: "error" };
+    }
   }
   async prompt(input: PromptInput): Promise<PromptResult> {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;
@@ -196,13 +202,13 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     return this.#transformQueriedPromptResult(raw);
   }
   #transformQueriedPromptResult(payload: QueriedPromptResult): PromptPayload {
-    const promptInput: PromptPayload["prompt"] = {
+    const promptInput: PromptPayload["promptInput"] = {
       prompt: payload.prompt?.prompt ?? "",
       workoutTemplates: JSON.parse(payload.prompt?.workoutTemplates ?? "[]").map((t: any) => t.name),
     };
     if (payload?.prompt?.pending) {
       return {
-        prompt: promptInput,
+        promptInput: promptInput,
         result: { success: null, pending: true },
       };
     }
@@ -210,7 +216,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     try {
       const promptResponsePayload = promptOutputSchema.parse(JSON.parse(payload.result!.result));
       return {
-        prompt: promptInput,
+        promptInput: promptInput,
         result: {
           success: true,
           pending: false,
@@ -220,7 +226,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     } catch (err) {
       return {
-        prompt: promptInput,
+        promptInput: promptInput,
         result: { success: false, pending: false },
       };
     }
