@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { DisplayPromptResult } from "@/components/CreateWorkoutTemplatesWithAi/PromptResult";
 import { Loading } from "@/components/loading-state/Loading";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
@@ -76,7 +75,9 @@ function RouteContent() {
   if (sessionState.status === "error") {
     return (
       <div className="flex flex-col items-start gap-3">
-        <p className="text-sm text-destructive">Something went wrong loading the session. Please refresh and try again.</p>
+        <p className="text-sm text-destructive">
+          Something went wrong loading the session. Please refresh and try again.
+        </p>
         <Button asChild variant="secondary">
           <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
         </Button>
@@ -90,10 +91,17 @@ function RouteContent() {
     <div className="flex flex-col gap-6 max-w-2xl">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold">{session.name}</h2>
-          {session.savedId != null && <Badge variant="secondary">Saved</Badge>}
+          <h2 className="text-lg font-semibold">
+            {session.name ? (
+              session.name
+            ) : (
+              <>
+                Session #{session.id} &middot; {session.createdAt}
+              </>
+            )}
+          </h2>
         </div>
-        <p className="text-xs text-muted-foreground">Session #{session.id} &middot; {session.createdAt}</p>
+        <p className="text-xs text-muted-foreground"></p>
       </div>
 
       {prompts.length === 0 ? (
