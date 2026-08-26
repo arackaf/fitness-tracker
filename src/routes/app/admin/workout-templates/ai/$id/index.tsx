@@ -39,7 +39,6 @@ function RouteContent() {
         });
       })
       .catch(err => {
-        debugger;
         setSessionState({ status: "error" });
       });
   }, [id]);

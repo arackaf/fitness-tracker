@@ -1,5 +1,4 @@
-import type { CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
-import type { PromptResponsePayload, SuccessPromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 import type { FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
