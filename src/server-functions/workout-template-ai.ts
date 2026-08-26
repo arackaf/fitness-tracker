@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { queryOptions } from "@tanstack/react-query";
 import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
 import type { PromptInput, PromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import { doStrip } from "./do-interop-helpers";
 
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
@@ -32,9 +33,7 @@ export const loadAiSessionServerFn = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
     const resultRaw = await durableObject.loadSession(data.sessionId);
-
-    const { [Symbol.dispose]: _, ...result } = resultRaw;
-    return result;
+    return doStrip(resultRaw);
   });
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
