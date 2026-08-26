@@ -44,3 +44,8 @@ export const workoutTemplateValidator = z.object({
   description: z.string().describe("The description of the workout template"),
   segments: z.array(templateSegmentWithExercisesValidator).describe("The segments of the workout template"),
 }) satisfies z.ZodType<WorkoutTemplateState>;
+
+export const promptOutputSchema = z.object({
+  commentary: z.string().describe("The output from the llm, explaining what it did and why"),
+  workouts: z.array(workoutTemplateValidator),
+});

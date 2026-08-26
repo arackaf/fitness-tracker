@@ -10,10 +10,17 @@ import {
 } from "./schema";
 import { and, asc, eq, gt, SQL } from "drizzle-orm";
 import { z } from "zod";
-import { workoutTemplateValidator } from "@/interop-types/workout-template-state";
+import { promptOutputSchema, workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
 import { systemPrompt, userPrompt } from "./prompts";
-import type { PromptInput, PromptResult, QueriedPromptResult, QueriedSessionResult } from "./types";
+import {
+  type PromptInput,
+  type PromptPayload,
+  type PromptResponsePayload,
+  type PromptResult,
+  type QueriedPromptResult,
+  type SessionPayload,
+} from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -78,10 +85,10 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     return result[0];
   }
-  loadSession(sessionId: number): QueriedSessionResult | null {
+  loadSession(sessionId: number): SessionPayload | null {
     const session = this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
 
-    const prompts: QueriedPromptResult[] = this.db
+    const promptsRaw = this.db
       .select({
         prompt: sessionPromptTable,
         result: sessionPromptResultTable,
@@ -91,7 +98,9 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       .where(eq(sessionPromptTable.sessionId, sessionId))
       .all();
 
-    return session ? { session: session, prompts } : null;
+    const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(payload));
+
+    return session ? { success: true, session: session, prompts } : null;
   }
   async prompt(input: PromptInput): Promise<PromptResult> {
     const { workoutTemplates, prompt, exercises, model = "anthropic/claude-sonnet-4.6" } = input;
@@ -107,10 +116,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
           },
         },
         output: Output.object({
-          schema: z.object({
-            commentary: z.string().describe("The output from the llm, explaining what it did and why"),
-            workouts: z.array(workoutTemplateValidator),
-          }),
+          schema: promptOutputSchema,
         }),
       });
 
@@ -139,7 +145,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     }
   }
   syncPromptResult(sessionId: number, sessionPromptId: number, result: PromptResult) {
-    if (result.success) {
+    if (result?.success) {
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
           .set({
@@ -172,18 +178,52 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     const promptResult = this.fetchPrompt(sessionId, promptId);
     this.sendMessage(sessionId, { type: "prompt", payload: promptResult });
   }
-  fetchPrompt(sessionId: number, promptId: number): QueriedPromptResult {
-    return (
-      this.db
-        .select({
-          prompt: sessionPromptTable,
-          result: sessionPromptResultTable,
-        })
-        .from(sessionPromptTable)
-        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-        .where(and(eq(sessionPromptTable.sessionId, sessionId), eq(sessionPromptTable.id, promptId)))
-        .get() ?? { prompt: undefined, result: undefined }
-    );
+  fetchPrompt(sessionId: number, promptId: number): PromptPayload | null {
+    const raw = this.db
+      .select({
+        prompt: sessionPromptTable,
+        result: sessionPromptResultTable,
+      })
+      .from(sessionPromptTable)
+      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+      .where(and(eq(sessionPromptTable.sessionId, sessionId), eq(sessionPromptTable.id, promptId)))
+      .get() ?? { prompt: undefined, result: undefined };
+
+    if (!raw.prompt) {
+      return null;
+    }
+
+    return this.#transformQueriedPromptResult(raw);
+  }
+  #transformQueriedPromptResult(payload: QueriedPromptResult): PromptPayload {
+    const promptInput: PromptPayload["prompt"] = {
+      prompt: payload.prompt?.prompt ?? "",
+      workoutTemplates: JSON.parse(payload.prompt?.workoutTemplates ?? "[]").map((t: any) => t.name),
+    };
+    if (payload?.prompt?.pending) {
+      return {
+        prompt: promptInput,
+        result: { success: null, pending: true },
+      };
+    }
+
+    try {
+      const promptResponsePayload = promptOutputSchema.parse(JSON.parse(payload.result!.result));
+      return {
+        prompt: promptInput,
+        result: {
+          success: true,
+          pending: false,
+          commentary: promptResponsePayload.commentary,
+          workouts: promptResponsePayload.workouts,
+        },
+      };
+    } catch (err) {
+      return {
+        prompt: promptInput,
+        result: { success: false, pending: false },
+      };
+    }
   }
   fetch(request: Request): Response {
     if (request.headers.get("Upgrade") !== "websocket") {

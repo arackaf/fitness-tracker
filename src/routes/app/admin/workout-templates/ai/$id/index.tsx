@@ -7,6 +7,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
+import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -22,7 +23,10 @@ type SessionState =
   | {
       status: "loaded";
       session: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["session"];
-      prompts: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["prompts"];
+      prompts: {
+        prompt: NonNullable<Awaited<ReturnType<typeof loadAiSessionServerFn>>>["prompts"];
+        result: PromptResponsePayload;
+      }[];
     };
 
 function RouteComponent() {
@@ -43,7 +47,14 @@ function RouteContent() {
         if (result == null || result.session == null) {
           setSessionState({ status: "not-found" });
         } else {
-          setSessionState({ status: "loaded", ...result });
+          setSessionState({
+            status: "loaded",
+            session: result.session,
+            prompts: result.prompts.map(result => {
+              return null as any;
+              //return this.#transformQueriedPromptResult(result.);
+            }),
+          });
         }
       })
       .catch(() => {
@@ -107,7 +118,13 @@ function RouteContent() {
       ) : (
         <div className="flex flex-col gap-4">
           {prompts.map((promptResult, index) => (
-            <DisplayPromptResult key={promptResult.prompt?.id ?? index} promptResult={promptResult} />
+            <>
+              <div>
+                <h4 className="mb-1 text-sm font-medium text-gray-400">Prompt</h4>
+                <p className="text-gray-200">{prompt.prompt}</p>
+              </div>
+              <DisplayPromptResult key={`prompt-${index}`} promptResult={promptResult} />
+            </>
           ))}
         </div>
       )}

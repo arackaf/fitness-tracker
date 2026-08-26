@@ -32,7 +32,10 @@ export const loadAiSessionServerFn = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
     const result = await durableObject.loadSession(data.sessionId);
-    return result ? { session: result.session, prompts: result.prompts } : null;
+    if (!result?.success) {
+      return { success: false };
+    }
+    return { success: true, session: result.session, prompts: result.prompts };
   });
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
