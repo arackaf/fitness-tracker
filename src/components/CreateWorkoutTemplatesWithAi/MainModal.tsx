@@ -116,7 +116,7 @@ export function CreateWorkoutTemplateWithAi() {
     });
     setIsGenerating(false);
 
-    if (!result.success) {
+    if (!result || !result.success) {
       setIsError(true);
       return;
     }

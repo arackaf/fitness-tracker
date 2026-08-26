@@ -104,7 +104,11 @@ function RouteComponent() {
           workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
         },
       }).then(result => {
-        setPromptResults(currentResults => [...currentResults, { model, ...result }]);
+        if (!result || !result.success) {
+          setPromptResults(currentResults => [...currentResults, { model, success: false }]);
+        } else {
+          setPromptResults(currentResults => [...currentResults, { model, ...result }]);
+        }
       });
     }
   };
