@@ -40,6 +40,7 @@ export type PromptResponsePayload =
   | null;
 
 export type PromptPayload = {
+  promptId: number;
   promptInput: {
     prompt: string;
     workoutTemplates: string[];

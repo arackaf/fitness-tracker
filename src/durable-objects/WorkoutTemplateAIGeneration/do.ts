@@ -208,6 +208,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     };
     if (payload?.prompt?.pending) {
       return {
+        promptId: payload.prompt.id,
         promptInput: promptInput,
         result: { success: null, pending: true },
       };
@@ -216,6 +217,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     try {
       const promptResponsePayload = promptOutputSchema.parse(JSON.parse(payload.result!.result));
       return {
+        promptId: payload.prompt.id,
         promptInput: promptInput,
         result: {
           success: true,
@@ -226,6 +228,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     } catch (err) {
       return {
+        promptId: payload.prompt.id,
         promptInput: promptInput,
         result: { success: false, pending: false },
       };
@@ -240,8 +243,8 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     const url = new URL(request.url);
     const sessionIdParam = url.pathname.split("/").at(-2) || "";
-    const currentPromptQueryString = url.searchParams.get("currentPromptId");
-    const currentPromptId = parseInt(currentPromptQueryString ?? "0", 10);
+    const lastPromptQueryString = url.searchParams.get("lastPromptId");
+    const lastPromptId = parseInt(lastPromptQueryString ?? "0", 10);
 
     const sessionId = parseInt(sessionIdParam, 10);
     if (typeof sessionId !== "number" || isNaN(sessionId)) {
@@ -251,8 +254,8 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     }
 
     const filters: SQL<unknown>[] = [eq(sessionPromptTable.sessionId, sessionId)];
-    if (currentPromptId) {
-      filters.push(gt(sessionPromptTable.id, currentPromptId));
+    if (lastPromptId) {
+      filters.push(gt(sessionPromptTable.id, lastPromptId));
     }
 
     const prompts: QueriedPromptResult[] = this.db
@@ -272,7 +275,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.ctx.acceptWebSocket(server, [webSocketTag(sessionId)]);
 
-    server.send(JSON.stringify({ prompts }));
+    server.send(JSON.stringify({ prompts: prompts.map(p => this.#transformQueriedPromptResult(p)) }));
 
     return new Response(null, {
       status: 101,
