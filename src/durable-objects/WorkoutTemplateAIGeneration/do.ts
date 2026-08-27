@@ -73,10 +73,10 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.prompt(promptInfo)
       .then(promptResult => {
-        this.syncPromptResult(sessionId, sessionPromptId, promptResult);
+        this.syncPromptResult(sessionPromptId, promptResult);
       })
       .catch(() => {
-        this.syncPromptResult(sessionId, sessionPromptId, { success: false });
+        this.syncPromptResult(sessionPromptId, { success: false });
       })
       .finally(() => {
         this.sendUpdateForPromptId(sessionId, sessionPromptId);
@@ -142,7 +142,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       };
     }
   }
-  syncPromptResult(sessionId: number, sessionPromptId: number, result: PromptResult) {
+  syncPromptResult(sessionPromptId: number, result: PromptResult) {
     if (result?.success) {
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
@@ -170,7 +170,6 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         .where(eq(sessionPromptTable.id, sessionPromptId))
         .run();
     }
-    this.sendUpdateForPromptId(sessionId, sessionPromptId);
   }
   sendUpdateForPromptId(sessionId: number, promptId: number) {
     const promptResult = this.fetchPrompt(sessionId, promptId);
@@ -253,7 +252,9 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.ctx.acceptWebSocket(server, [webSocketTag(sessionId)]);
 
-    server.send(JSON.stringify({ prompts: prompts.map(p => this.#transformQueriedPromptResult(p)) }));
+    if (prompts.length) {
+      server.send(JSON.stringify({ prompts: prompts.map(p => this.#transformQueriedPromptResult(p)) }));
+    }
 
     return new Response(null, {
       status: 101,

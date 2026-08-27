@@ -48,7 +48,6 @@ function RouteComponentContent() {
   const exerciseLookup = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise])), [exercises]);
 
   const { data: sessions } = useQuery(getAiSessionsQueryOptions());
-  console.log({ sessions });
 
   const trimmedPromptLength = prompt.trim().length;
   const remainingPromptChars = MIN_PROMPT_LENGTH - trimmedPromptLength;

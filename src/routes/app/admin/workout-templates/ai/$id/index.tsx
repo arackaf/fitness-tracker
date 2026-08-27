@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
 import type { SessionPayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -42,6 +43,32 @@ function RouteContent() {
         setSessionState({ status: "error" });
       });
   }, [id]);
+
+  useEffect(() => {
+    let socketToDiscard: WebSocket | null = null;
+    let valid = true;
+    if (sessionState?.status === "loaded" && sessionState.session.status === "loaded") {
+      const lastPromptMaybe = sessionState.session.prompts.at(-1);
+      openWorkoutTemplateWebSocket(id, lastPromptMaybe?.promptId).then(socket => {
+        if (!valid) {
+          socket.close();
+          return;
+        }
+        socketToDiscard = socket;
+
+        socket.addEventListener("message", evt => {
+          const data = JSON.parse(evt.data);
+          console.log("Web Socket Message", data);
+        });
+      });
+    }
+    return () => {
+      valid = false;
+      if (socketToDiscard) {
+        socketToDiscard?.close();
+      }
+    };
+  }, [sessionState]);
 
   if (sessionState == null) {
     return (
