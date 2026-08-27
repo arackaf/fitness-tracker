@@ -9,6 +9,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
 import type { SessionPayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
+import { PromptPayloadSchema } from "@/interop-types/workout-template-state";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -57,8 +58,42 @@ function RouteContent() {
         socketToDiscard = socket;
 
         socket.addEventListener("message", evt => {
-          const data = JSON.parse(evt.data);
-          console.log("Web Socket Message", data);
+          try {
+            const data = JSON.parse(evt.data);
+            console.log("Web Socket Message", data);
+
+            if (data?.type === "prompt") {
+              const promptPayload = PromptPayloadSchema.parse(data.payload);
+
+              setSessionState(prev => {
+                if (prev?.status !== "loaded" || prev.session.status !== "loaded") {
+                  return prev;
+                }
+                const newPrompts = [...prev.session.prompts];
+                let existingPromptUpdated = false;
+                for (let i = 0; i < newPrompts.length; i++) {
+                  const prompt = newPrompts[i];
+                  if (prompt.promptId === promptPayload.promptId) {
+                    newPrompts[i] = promptPayload;
+                    existingPromptUpdated = true;
+                    break;
+                  }
+                }
+
+                if (!existingPromptUpdated) {
+                  newPrompts.push(promptPayload);
+                }
+
+                return {
+                  ...prev,
+                  session: {
+                    ...prev.session,
+                    prompts: newPrompts,
+                  },
+                };
+              });
+            }
+          } catch (err) {}
         });
       });
     }
