@@ -92,15 +92,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         return { status: "not-found" };
       }
 
-      const promptsRaw = this.db
-        .select({
-          prompt: sessionPromptTable,
-          result: sessionPromptResultTable,
-        })
-        .from(sessionPromptTable)
-        .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-        .where(eq(sessionPromptTable.sessionId, sessionId))
-        .all();
+      const promptsRaw = this.#queryPrompts(eq(sessionPromptTable.sessionId, sessionId)).all();
 
       const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(payload));
       return { status: "loaded", session: session, prompts };
@@ -185,15 +177,10 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     this.sendMessage(sessionId, { type: "prompt", payload: promptResult });
   }
   fetchPrompt(sessionId: number, promptId: number): PromptPayload | null {
-    const raw = this.db
-      .select({
-        prompt: sessionPromptTable,
-        result: sessionPromptResultTable,
-      })
-      .from(sessionPromptTable)
-      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-      .where(and(eq(sessionPromptTable.sessionId, sessionId), eq(sessionPromptTable.id, promptId)))
-      .get() ?? { prompt: undefined, result: undefined };
+    const raw = this.#queryPrompts(
+      eq(sessionPromptTable.sessionId, sessionId),
+      eq(sessionPromptTable.id, promptId),
+    ).get() ?? { prompt: undefined, result: undefined };
 
     if (!raw.prompt) {
       return null;
@@ -258,16 +245,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       filters.push(gt(sessionPromptTable.id, lastPromptId));
     }
 
-    const prompts: QueriedPromptResult[] = this.db
-      .select({
-        prompt: sessionPromptTable,
-        result: sessionPromptResultTable,
-      })
-      .from(sessionPromptTable)
-      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
-      .where(and(...filters))
-      .orderBy(asc(sessionPromptTable.id))
-      .all();
+    const prompts: QueriedPromptResult[] = this.#queryPrompts(...filters).all();
 
     const pair = new WebSocketPair();
     const client = pair[0];
@@ -291,5 +269,16 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         socket.close(1011, "Unable to send message");
       }
     }
+  }
+  #queryPrompts(...filters: SQL<unknown>[]) {
+    return this.db
+      .select({
+        prompt: sessionPromptTable,
+        result: sessionPromptResultTable,
+      })
+      .from(sessionPromptTable)
+      .leftJoin(sessionPromptResultTable, eq(sessionPromptTable.id, sessionPromptResultTable.sessionPromptId))
+      .where(and(...filters))
+      .orderBy(asc(sessionPromptTable.id));
   }
 }
