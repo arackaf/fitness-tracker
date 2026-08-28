@@ -1,9 +1,21 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createMiddleware, createServerFn } from "@tanstack/react-start";
 
 import { queryOptions } from "@tanstack/react-query";
 import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
 import type { PromptInput, PromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 import { doStrip } from "./do-interop-helpers";
+import { globalContextMiddleware } from "@/start";
+
+export const withDurableObject = createMiddleware({ type: "function" })
+  //.middleware([globalContextMiddleware])
+  .server(async ({ context, next }) => {
+    context.userId;
+    return next({
+      context: {
+        xxx: "",
+      },
+    });
+  });
 
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
