@@ -45,14 +45,15 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     const rows = await this.db.select().from(sessionTable).all();
     return rows;
   }
-  async createSession(promptInfo: PromptInput) {
-    const result = await this.db
+  createSession(promptInfo: PromptInput): { id: number } {
+    const result = this.db
       .insert(sessionTable)
       .values({
         name: "",
         createdAt: new Date().toISOString(),
       })
-      .returning({ id: sessionTable.id });
+      .returning({ id: sessionTable.id })
+      .all();
 
     const sessionId = result[0].id;
     const sessionPromptRow = this.db
