@@ -29,7 +29,7 @@ export type EditExerciseInput = {
 export type CreateExerciseServerInput = Omit<CreateExerciseInput, "userId">;
 
 export const createExerciseServerFn = createServerFn({ method: "POST" })
-  .inputValidator((input: CreateExerciseServerInput) => input)
+  .validator((input: CreateExerciseServerInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     const result = await createExercise(context.db, {
@@ -49,7 +49,7 @@ export const createExerciseServerFn = createServerFn({ method: "POST" })
   });
 
 export const editExercise = createServerFn({ method: "POST" })
-  .inputValidator((input: EditExerciseInput) => input)
+  .validator((input: EditExerciseInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateExercise(context.db, { ...data, userId });

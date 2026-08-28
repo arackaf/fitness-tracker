@@ -12,7 +12,7 @@ type RevalidationPayload = {
 };
 
 const prelimRefetchMiddleware = createMiddleware({ type: "function" })
-  .inputValidator((config?: RefetchMiddlewareConfig) => config)
+  .validator((config?: RefetchMiddlewareConfig) => config)
   .client(async ({ next, data }) => {
     const { refetch = [] } = data ?? {};
 
