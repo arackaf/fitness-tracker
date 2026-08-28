@@ -28,21 +28,21 @@ export const getAiSessionsServerFn = createServerFn({ method: "POST" })
   .handler(async ({ context }): Promise<any> => doStrip(context.wtDo.getSessions()));
 
 export const createAiSessionsServerFn = createServerFn({ method: "POST" })
-  .inputValidator((payload: { promptInfo: PromptInput }) => payload)
+  .validator((payload: { promptInfo: PromptInput }) => payload)
   .middleware([withWtDo])
   .handler(async ({ data, context }): Promise<{ id: number }> => {
     return context.wtDo.createSession(data.promptInfo);
   });
 
 export const loadAiSessionServerFn = createServerFn({ method: "POST" })
-  .inputValidator((payload: { sessionId: number }) => payload)
+  .validator((payload: { sessionId: number }) => payload)
   .middleware([withWtDo])
   .handler(({ data, context }): Promise<SessionPayload> => {
     return context.wtDo.loadSession(data.sessionId);
   });
 
 export const generateWorkoutTemplateWithAi = createServerFn({ method: "POST" })
-  .inputValidator((input: PromptInput) => input)
+  .validator((input: PromptInput) => input)
   .middleware([withWtDo])
   .handler(async ({ data, context }): Promise<PromptResult> => {
     return context.wtDo.prompt(data);
