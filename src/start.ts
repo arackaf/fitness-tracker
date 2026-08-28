@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
 
-export const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
+const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   try {
     const pool = new Pool({
       connectionString: env.HYPERDRIVE.connectionString,

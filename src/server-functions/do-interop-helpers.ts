@@ -1,5 +1,5 @@
-export type StripDisposable<T> = T extends unknown ? Omit<T, typeof Symbol.dispose> : never;
+export type StripDisposable<T> = T extends Promise<infer U> ? StripDisposable<U> : Omit<T, typeof Symbol.dispose>;
 
-export function doStrip<T>(value: T): StripDisposable<T> {
-  return value as StripDisposable<T>;
+export async function doStrip<T>(value: T): Promise<StripDisposable<T>> {
+  return (await value) as StripDisposable<T>;
 }
