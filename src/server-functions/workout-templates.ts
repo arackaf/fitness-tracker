@@ -27,7 +27,7 @@ export const workoutTemplatesQueryOptions = (pageInput = 1) => {
 };
 
 export const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
-  .inputValidator((input: WorkoutTemplatesInput) => input)
+  .validator((input: WorkoutTemplatesInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     return getWorkoutTemplates(context.db, { page: data.page, userId });
@@ -66,7 +66,7 @@ export const workoutTemplateByIdQueryOptions = (id: number) =>
   });
 
 export const getWorkoutTemplateById = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: number }) => input)
+  .validator((input: { id: number }) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     const payload = await getWorkoutTemplates(context.db, { id: data.id, userId });
@@ -75,21 +75,21 @@ export const getWorkoutTemplateById = createServerFn({ method: "GET" })
   });
 
 export const saveWorkoutTemplate = createServerFn({ method: "POST" })
-  .inputValidator((input: WorkoutTemplateState) => input)
+  .validator((input: WorkoutTemplateState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await insertWorkoutTemplate(context.db, data, userId);
   });
 
 export const updateWorkoutTemplate = createServerFn({ method: "POST" })
-  .inputValidator((input: WorkoutTemplateState) => input)
+  .validator((input: WorkoutTemplateState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateWorkoutTemplateData(context.db, data, userId);
   });
 
 export const deleteWorkoutTemplate = createServerFn({ method: "POST" })
-  .inputValidator((input: { id: number }) => input)
+  .validator((input: { id: number }) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await deleteWorkoutTemplateData(context.db, data.id, userId);

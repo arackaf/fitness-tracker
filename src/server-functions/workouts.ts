@@ -27,7 +27,7 @@ export const workoutHistoryQueryOptions = (input?: WorkoutHistoryInput) => {
 };
 
 const getWorkoutHistory = createServerFn({ method: "GET" })
-  .inputValidator((input: WorkoutHistoryInput) => input)
+  .validator((input: WorkoutHistoryInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     const payload = await getWorkouts(context.db, {
@@ -49,7 +49,7 @@ export const workoutByIdQueryOptions = (id: number) =>
   });
 
 const getWorkoutById = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: number }) => input)
+  .validator((input: { id: number }) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     const { workouts } = await getWorkouts(context.db, { id: data.id, userId });
@@ -58,14 +58,14 @@ const getWorkoutById = createServerFn({ method: "GET" })
   });
 
 export const saveWorkout = createServerFn({ method: "POST" })
-  .inputValidator((input: WorkoutState) => input)
+  .validator((input: WorkoutState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await insertWorkout(context.db, data, userId);
   });
 
 export const updateWorkout = createServerFn({ method: "POST" })
-  .inputValidator((input: WorkoutState) => input)
+  .validator((input: WorkoutState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateWorkoutData(context.db, data, userId);

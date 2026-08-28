@@ -44,7 +44,7 @@ export const bodyCompositionMetricByIdQueryOptions = (id: number) =>
 export const getBodyCompositionMetricsServerFn = createServerFn({
   method: "GET",
 })
-  .inputValidator((input: BodyCompositionMetricsInput) => input)
+  .validator((input: BodyCompositionMetricsInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     return getBodyCompositionMetrics(context.db, { id: data.id, userId });
@@ -67,7 +67,7 @@ export const bodyCompositionMeasurementsQueryOptions = (
 export const getBodyCompositionMeasurementsServerFn = createServerFn({
   method: "GET",
 })
-  .inputValidator((input: BodyCompositionMeasurementsInput) => input)
+  .validator((input: BodyCompositionMeasurementsInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     return getBodyCompositionMeasurements(context.db, {
@@ -88,7 +88,7 @@ export const bodyCompositionMeasurementByIdQueryOptions = (id: number) =>
 export const getBodyCompositionMeasurementById = createServerFn({
   method: "GET",
 })
-  .inputValidator((input: { id: number }) => input)
+  .validator((input: { id: number }) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     const measurements = await getBodyCompositionMeasurements(context.db, { id: data.id, userId });
@@ -96,14 +96,14 @@ export const getBodyCompositionMeasurementById = createServerFn({
   });
 
 export const saveBodyCompositionMetric = createServerFn({ method: "POST" })
-  .inputValidator((input: BodyCompositionMetricState) => input)
+  .validator((input: BodyCompositionMetricState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await insertBodyCompositionMetric(context.db, data, userId);
   });
 
 export const updateBodyCompositionMetric = createServerFn({ method: "POST" })
-  .inputValidator((input: BodyCompositionMetricState) => input)
+  .validator((input: BodyCompositionMetricState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateBodyCompositionMetricData(context.db, data, userId);
@@ -112,7 +112,7 @@ export const updateBodyCompositionMetric = createServerFn({ method: "POST" })
 export const saveBodyCompositionMeasurement = createServerFn({
   method: "POST",
 })
-  .inputValidator((input: BodyCompositionMeasurementState) => input)
+  .validator((input: BodyCompositionMeasurementState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await insertBodyCompositionMeasurement(context.db, data, userId);
@@ -121,7 +121,7 @@ export const saveBodyCompositionMeasurement = createServerFn({
 export const updateBodyCompositionMeasurement = createServerFn({
   method: "POST",
 })
-  .inputValidator((input: BodyCompositionMeasurementState) => input)
+  .validator((input: BodyCompositionMeasurementState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateBodyCompositionMeasurementData(context.db, data, userId);
