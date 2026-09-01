@@ -41,8 +41,8 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.db = drizzle(ctx.storage);
   }
-  async getSessions() {
-    const rows = await this.db.select().from(sessionTable).all();
+  getSessions() {
+    const rows = this.db.select().from(sessionTable).all();
     return rows;
   }
   createSession(promptInfo: PromptInput): { id: number } {
