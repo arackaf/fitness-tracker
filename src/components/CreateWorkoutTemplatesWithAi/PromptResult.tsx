@@ -2,11 +2,12 @@ import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIG
 import { useState, type FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
-import { WorkoutTemplateDetailForm } from "../edit-workout-template/WorkoutTemplateDetailForm";
 import type { Exercise, MuscleGroup } from "@/data/types";
 import { Button } from "../ui/button";
 import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { WorkoutTemplate } from "../edit-workout-template/WorkoutTemplate";
+import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 
 export type DisplayPromptResultProps = {
   promptResult: PromptResponsePayload;
@@ -42,14 +43,17 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
 
       <div className="flex flex-col gap-2">
         <h4 className="text-sm font-medium text-gray-400">Generated Workouts</h4>
-        <div className="flex flex-col gap-y-2">
+        <div className="flex flex-col gap-2">
           {workouts.map((template, i) => (
-            <DisplayGeneratedWorkoutTemplate
-              key={`${template.id}-${template.name}-${i}`}
-              workoutTemplate={template}
-              exercises={exercises}
-              muscleGroups={muscleGroups}
-            />
+            <div className="flex flex-col gap-4">
+              <DisplayGeneratedWorkoutTemplate
+                key={`${template.id}-${template.name}-${i}`}
+                workoutTemplate={template}
+                exercises={exercises}
+                muscleGroups={muscleGroups}
+              />
+              {i !== workouts.length - 1 && <hr className="border-t-4 border-white my-4" />}
+            </div>
           ))}
         </div>
       </div>
@@ -65,17 +69,33 @@ type DisplayGeneratedWorkoutTemplateProps = {
 
 const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
   const { workoutTemplate, exercises, muscleGroups } = props;
-  const [enabled, setEnabled] = useState(false);
+
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
-    setEnabled(false);
+    setIsSaving(true);
     await saveWorkoutTemplate({ data: workoutTemplate });
   };
 
+  const form = useWorkoutTemplateForm(async state => {
+    setIsSaving(true);
+
+    try {
+      await saveWorkoutTemplate({
+        data: {
+          ...state,
+          id: workoutTemplate.id,
+        },
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, workoutTemplate);
+
   return (
-    <div className="flex flex-col gap-2">
-      <WorkoutTemplateDetailForm exercises={exercises} workoutTemplate={workoutTemplate} muscleGroups={muscleGroups} />
-      <Button disabled={!enabled} variant="secondary" onClick={handleSave}>
+    <div className="flex flex-col gap-8">
+      <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
+      <Button disabled={isSaving} variant="default" onClick={handleSave}>
         Save it!
       </Button>
     </div>

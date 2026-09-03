@@ -47,8 +47,6 @@ function RouteComponentContent() {
   const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
   const exerciseLookup = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise])), [exercises]);
 
-  const { data: sessions } = useQuery(getAiSessionsQueryOptions());
-
   const trimmedPromptLength = prompt.trim().length;
   const remainingPromptChars = MIN_PROMPT_LENGTH - trimmedPromptLength;
   const isPromptValid = remainingPromptChars <= 0;
