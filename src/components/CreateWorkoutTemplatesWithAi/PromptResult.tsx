@@ -1,9 +1,12 @@
 import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
-import type { FC } from "react";
+import { useState, type FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
 import { WorkoutTemplateDetailForm } from "../edit-workout-template/WorkoutTemplateDetailForm";
 import type { Exercise, MuscleGroup } from "@/data/types";
+import { Button } from "../ui/button";
+import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 export type DisplayPromptResultProps = {
   promptResult: PromptResponsePayload;
@@ -41,10 +44,40 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
         <h4 className="text-sm font-medium text-gray-400">Generated Workouts</h4>
         <div className="flex flex-col gap-y-2">
           {workouts.map((template, i) => (
-            <WorkoutTemplateDetailForm exercises={exercises} workoutTemplate={template} muscleGroups={muscleGroups} />
+            <DisplayGeneratedWorkoutTemplate
+              key={`${template.id}-${template.name}-${i}`}
+              workoutTemplate={template}
+              exercises={exercises}
+              muscleGroups={muscleGroups}
+            />
           ))}
         </div>
       </div>
+    </div>
+  );
+};
+
+type DisplayGeneratedWorkoutTemplateProps = {
+  workoutTemplate: WorkoutTemplateState;
+  exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
+};
+
+const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
+  const { workoutTemplate, exercises, muscleGroups } = props;
+  const [enabled, setEnabled] = useState(false);
+
+  const handleSave = async () => {
+    setEnabled(false);
+    await saveWorkoutTemplate({ data: workoutTemplate });
+  };
+
+  return (
+    <div className="flex flex-col gap-2">
+      <WorkoutTemplateDetailForm exercises={exercises} workoutTemplate={workoutTemplate} muscleGroups={muscleGroups} />
+      <Button disabled={!enabled} variant="secondary" onClick={handleSave}>
+        Save it!
+      </Button>
     </div>
   );
 };
