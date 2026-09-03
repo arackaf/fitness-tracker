@@ -1,4 +1,4 @@
-import type { ExerciseRow } from "@/data/types";
+import type { Exercise } from "@/data/types";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 type Prettify<T> = {
@@ -36,7 +36,7 @@ export type CompressedTemplateSegmentExerciseMeasurement = Prettify<
 >;
 
 export const compressWorkoutTemplateForLLM = (
-  exerciseLookup: Map<number, ExerciseRow>,
+  exerciseLookup: Map<number, Exercise>,
   workoutTemplate: WorkoutTemplateState,
 ): CompressedWorkoutTemplate => {
   const result: CompressedWorkoutTemplate = {

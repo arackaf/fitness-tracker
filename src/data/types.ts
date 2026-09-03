@@ -18,4 +18,4 @@ export type BodyCompositionLengthUnit = (typeof bodyCompositionLengthUnit.enumVa
 export type BodyCompositionWeightUnit = (typeof bodyCompositionWeightUnit.enumValues)[number];
 export type BodyCompositionMeasurementType = (typeof bodyCompositionMeasurementType.enumValues)[number];
 
-export type ExerciseRow = typeof exercises.$inferSelect;
+export type Exercise = typeof exercises.$inferSelect;

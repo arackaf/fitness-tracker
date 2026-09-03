@@ -3,7 +3,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Undo2 } from "lucide-react";
 
-import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
 import type { WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
@@ -11,7 +10,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({

@@ -2,14 +2,13 @@ import type { FC } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Card } from "@/components/Card";
-import type { Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createDefaultSegment } from "@/data/workouts/workout-state";
 import type { WorkoutForm } from "@/lib/workout-form";
 
 import { WorkoutSegmentExercises } from "./WorkoutSegmentExercises";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 
 type WorkoutSegmentsProps = {
   form: WorkoutForm;

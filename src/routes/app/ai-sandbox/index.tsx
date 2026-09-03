@@ -4,7 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ChevronsUpDown, X } from "lucide-react";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import type { ExerciseRow } from "@/data/types";
+import type { Exercise } from "@/data/types";
 import { ModelResults } from "@/components/CreateWorkoutTemplatesWithAi/ModelResults";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ function RouteComponent() {
   const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useQuery(exercisesQueryOptions());
 
-  const exerciseLookup: Map<number, ExerciseRow> = useMemo(
+  const exerciseLookup: Map<number, Exercise> = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise])),
     [exercises],
   );

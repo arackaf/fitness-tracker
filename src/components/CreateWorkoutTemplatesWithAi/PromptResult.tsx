@@ -2,9 +2,16 @@ import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIG
 import type { FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
+import { WorkoutTemplateDetailForm } from "../edit-workout-template/WorkoutTemplateDetailForm";
+import type { Exercise, MuscleGroup } from "@/data/types";
 
-export const DisplayPromptResult: FC<{ promptResult: PromptResponsePayload }> = props => {
-  const { promptResult } = props;
+export type DisplayPromptResultProps = {
+  promptResult: PromptResponsePayload;
+  exercises: Exercise[];
+  muscleGroups: MuscleGroup[];
+};
+export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
+  const { promptResult, exercises, muscleGroups } = props;
 
   if (!promptResult || promptResult.pending)
     return (
@@ -33,10 +40,8 @@ export const DisplayPromptResult: FC<{ promptResult: PromptResponsePayload }> = 
       <div className="flex flex-col gap-2">
         <h4 className="text-sm font-medium text-gray-400">Generated Workouts</h4>
         <div className="flex flex-col gap-y-2">
-          {workouts.map((_, i) => (
-            <div key={i} className="rounded-md border border-gray-600 bg-gray-800 p-3 text-gray-300">
-              Workout Template {i + 1}
-            </div>
+          {workouts.map((template, i) => (
+            <WorkoutTemplateDetailForm exercises={exercises} workoutTemplate={template} muscleGroups={muscleGroups} />
           ))}
         </div>
       </div>

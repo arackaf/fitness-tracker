@@ -10,11 +10,14 @@ import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
 import type { SessionPayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
 import { PromptPayloadSchema } from "@/interop-types/workout-template-state";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+    context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },
 });
 
@@ -31,6 +34,9 @@ function RouteContent() {
   const [sessionState, setSessionState] = useState<
     { status: "error" } | { status: "loaded"; session: SessionPayload } | null
   >(null);
+
+  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
+  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
   useEffect(() => {
     loadAiSessionServerFn({ data: { sessionId: Number(id) } })
@@ -173,7 +179,11 @@ function RouteContent() {
                 <h4 className="text-sm font-medium text-gray-400">Prompt</h4>
                 <p className="text-gray-200">{promptPayload.promptInput.prompt}</p>
               </div>
-              <DisplayPromptResult promptResult={promptPayload.result} />
+              <DisplayPromptResult
+                exercises={exercises}
+                muscleGroups={muscleGroups}
+                promptResult={promptPayload.result}
+              />
             </div>
           ))}
         </div>

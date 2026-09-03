@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
-import type { ExerciseRow } from "@/data/types";
+import type { Exercise } from "@/data/types";
 import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-ai";
 
 import { ModelResults } from "./ModelResults";
@@ -57,7 +57,7 @@ export function CreateWorkoutTemplateWithAi() {
     ...exercisesQueryOptions(),
     enabled: isOpen,
   });
-  const exerciseLookup: Map<number, ExerciseRow> = useMemo(
+  const exerciseLookup: Map<number, Exercise> = useMemo(
     () => new Map(exercises.map(exercise => [exercise.id, exercise])),
     [exercises],
   );

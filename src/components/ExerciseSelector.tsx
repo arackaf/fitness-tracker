@@ -6,11 +6,10 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-import { exercises as exerciseTable, muscleGroup } from "@/drizzle/schema";
+import { muscleGroup } from "@/drizzle/schema";
+import type { Exercise } from "@/data/types";
 
-type MuscleGroup = typeof muscleGroup.$inferSelect;
-
-export type Exercise = typeof exerciseTable.$inferSelect;
+export type MuscleGroup = typeof muscleGroup.$inferSelect;
 
 type ExerciseSelectorProps = {
   value: number | null;
