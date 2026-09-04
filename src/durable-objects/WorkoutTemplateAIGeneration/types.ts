@@ -3,6 +3,11 @@ import type { CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateFor
 import type { GatewayModelId } from "ai";
 import { session, sessionPrompt, sessionPromptResult } from "./schema";
 
+export type AIGeneratedWorkoutTemplate = WorkoutTemplateState & {
+  uuid: string;
+  savedId?: number | null;
+};
+
 export type ExerciseSummary = {
   id: number;
   name: string;
@@ -19,7 +24,7 @@ export type PromptInput = {
 export type SuccessPromptResult = {
   success: true;
   commentary: string;
-  workouts: WorkoutTemplateState[];
+  workouts: AIGeneratedWorkoutTemplate[];
   usage: { inputTokens: number; outputTokens: number; totalTokens: number };
   cost: any;
 };

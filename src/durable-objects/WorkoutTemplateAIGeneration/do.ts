@@ -128,7 +128,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       return {
         success: true,
         commentary: output.commentary ?? "",
-        workouts: parsedWorkouts,
+        workouts: parsedWorkouts.map(workout => ({ ...workout, uuid: crypto.randomUUID() })),
         usage: {
           inputTokens: usage.inputTokens ?? 0,
           outputTokens: usage.outputTokens ?? 0,
@@ -145,10 +145,6 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
   }
   syncPromptResult(sessionPromptId: number, result: PromptResult) {
     if (result?.success) {
-      for (const workout of result.workouts) {
-        (workout as any).uuid = crypto.randomUUID();
-      }
-
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
           .set({
