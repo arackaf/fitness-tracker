@@ -1,5 +1,8 @@
-import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
-import { useState, type FC } from "react";
+import type {
+  AIGeneratedWorkoutTemplate,
+  PromptResponsePayload,
+} from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import { useMemo, useState, type FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
 import type { Exercise, MuscleGroup } from "@/data/types";
@@ -7,6 +10,7 @@ import { Button } from "../ui/button";
 import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { WorkoutTemplate } from "../edit-workout-template/WorkoutTemplate";
+import { DisplayWorkoutTemplate } from "../display-workout-template/DisplayWorkoutTemplate";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 
 export type DisplayPromptResultProps = {
@@ -62,12 +66,28 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
 };
 
 type DisplayGeneratedWorkoutTemplateProps = {
-  workoutTemplate: WorkoutTemplateState;
+  workoutTemplate: AIGeneratedWorkoutTemplate;
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
 };
 
 const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
+  return props.workoutTemplate.savedId ? (
+    <DisplayGeneratedSavedWorkoutTemplate {...props} />
+  ) : (
+    <DisplayGeneratedUnsavedWorkoutTemplate {...props} />
+  );
+};
+
+const DisplayGeneratedSavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
+  const { workoutTemplate, exercises } = props;
+
+  const exerciseNameById = useMemo(() => new Map(exercises.map(e => [e.id, e.name])), [exercises]);
+
+  return <DisplayWorkoutTemplate exerciseNameById={exerciseNameById} workoutTemplate={workoutTemplate} />;
+};
+
+const DisplayGeneratedUnsavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
   const { workoutTemplate, exercises, muscleGroups } = props;
 
   const [isSaving, setIsSaving] = useState(false);
