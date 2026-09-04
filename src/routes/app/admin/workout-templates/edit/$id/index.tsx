@@ -8,7 +8,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import {
   deleteWorkoutTemplate,
-  updateWorkoutTemplate,
+  saveWorkoutTemplate,
   WORKOUT_TEMPLATES_KEY_ROOT,
   workoutTemplateByIdQueryOptions,
 } from "@/server-functions/workout-templates";
@@ -79,7 +79,7 @@ function RouteContent() {
     setIsSaving(true);
 
     try {
-      await updateWorkoutTemplate({
+      await saveWorkoutTemplate({
         data: {
           ...state,
           id: workoutTemplate.id,

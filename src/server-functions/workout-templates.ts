@@ -78,14 +78,11 @@ export const saveWorkoutTemplate = createServerFn({ method: "POST" })
   .validator((input: WorkoutTemplateState) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
-    await insertWorkoutTemplate(context.db, data, userId);
-  });
-
-export const updateWorkoutTemplate = createServerFn({ method: "POST" })
-  .validator((input: WorkoutTemplateState) => input)
-  .handler(async ({ data, context }) => {
-    const userId = await requireUserId(context);
-    await updateWorkoutTemplateData(context.db, data, userId);
+    if (data.id) {
+      await updateWorkoutTemplateData(context.db, data, userId);
+    } else {
+      await insertWorkoutTemplate(context.db, data, userId);
+    }
   });
 
 export const deleteWorkoutTemplate = createServerFn({ method: "POST" })
