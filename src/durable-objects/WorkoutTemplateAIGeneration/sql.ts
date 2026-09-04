@@ -36,4 +36,21 @@ CREATE INDEX IF NOT EXISTS idx_session_prompt_session_id
 
 CREATE INDEX IF NOT EXISTS idx_session_prompt_result_session_prompt_id
   ON session_prompt_result(session_prompt_id);
+
+CREATE TABLE IF NOT EXISTS saved_workout_template_map (
+  id INTEGER PRIMARY KEY,
+  session_id INTEGER NOT NULL,
+  uuid TEXT NOT NULL UNIQUE,
+  application_id INTEGER NULL,
+
+  FOREIGN KEY (session_id)
+      REFERENCES session(id)
+      ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_session_id
+  ON saved_workout_template_map(session_id);
+
+CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_uuid
+  ON saved_workout_template_map(uuid);
 `;

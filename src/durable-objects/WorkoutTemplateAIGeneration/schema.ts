@@ -34,3 +34,19 @@ export const sessionPromptResult = sqliteTable(
   },
   table => [index("idx_session_prompt_result_session_prompt_id").on(table.sessionPromptId)],
 );
+
+export const savedWorkoutTemplateMap = sqliteTable(
+  "saved_workout_template_map",
+  {
+    id: integer().primaryKey(),
+    sessionId: integer("session_id")
+      .notNull()
+      .references(() => session.id, { onDelete: "cascade" }),
+    uuid: text().notNull().unique(),
+    applicationId: integer("application_id"),
+  },
+  table => [
+    index("idx_saved_workout_template_map_session_id").on(table.sessionId),
+    index("idx_saved_workout_template_map_uuid").on(table.uuid),
+  ],
+);

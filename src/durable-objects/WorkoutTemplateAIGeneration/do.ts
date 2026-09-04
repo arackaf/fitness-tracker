@@ -145,6 +145,10 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
   }
   syncPromptResult(sessionPromptId: number, result: PromptResult) {
     if (result?.success) {
+      for (const workout of result.workouts) {
+        (workout as any).uuid = crypto.randomUUID();
+      }
+
       this.db.transaction(tx => {
         tx.update(sessionPromptTable)
           .set({
