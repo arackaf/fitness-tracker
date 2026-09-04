@@ -18,7 +18,6 @@ export const sessionPrompt = sqliteTable(
     workoutTemplates: text("workout_templates").notNull(),
     pending: integer({ mode: "boolean" }).notNull().default(true),
     error: integer({ mode: "boolean" }).notNull().default(false),
-    savedId: integer("saved_id"),
   },
   table => [index("idx_session_prompt_session_id").on(table.sessionId)],
 );

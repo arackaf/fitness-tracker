@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS session (
   session_id INTEGER NOT NULL,
   created_at TEXT NOT NULL,
   prompt TEXT NOT NULL,
-  saved_id INTEGER NULL,
   workout_templates TEXT NOT NULL,
   pending BOOLEAN NOT NULL DEFAULT true,
   error BOOLEAN NOT NULL DEFAULT false,
