@@ -42,6 +42,7 @@ export const templateSegmentWithExercisesValidator = z.object({
 
 export const workoutTemplateValidator = z.object({
   name: z.string().describe("The name of the workout template"),
+  uuid: z.string().describe("Unique identifier for the workout template"),
   description: z.string().describe("The description of the workout template"),
   segments: z.array(templateSegmentWithExercisesValidator).describe("The segments of the workout template"),
 }) satisfies z.ZodType<WorkoutTemplateState>;

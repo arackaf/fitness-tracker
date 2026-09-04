@@ -7,6 +7,7 @@ import {
   session as sessionTable,
   sessionPrompt as sessionPromptTable,
   sessionPromptResult as sessionPromptResultTable,
+  savedWorkoutTemplateMap as savedWorkoutTemplateMapTable,
 } from "./schema";
 import { and, asc, eq, gt, SQL } from "drizzle-orm";
 import { z } from "zod";
@@ -95,7 +96,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
       const promptsRaw = this.#queryPrompts(eq(sessionPromptTable.sessionId, sessionId)).all();
 
-      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(payload));
+      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(sessionId, payload));
       return { status: "loaded", session: session, prompts };
     } catch (error) {
       return { status: "error" };
@@ -186,9 +187,9 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       return null;
     }
 
-    return this.#transformQueriedPromptResult(raw);
+    return this.#transformQueriedPromptResult(sessionId, raw);
   }
-  #transformQueriedPromptResult(payload: QueriedPromptResult): PromptPayload {
+  #transformQueriedPromptResult(sessionId: number, payload: QueriedPromptResult): PromptPayload {
     const promptInput: PromptPayload["promptInput"] = {
       prompt: payload.prompt?.prompt ?? "",
       workoutTemplates: JSON.parse(payload.prompt?.workoutTemplates ?? "[]").map((t: any) => t.name),
@@ -203,6 +204,20 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     try {
       const promptResponsePayload = promptOutputSchema.parse(JSON.parse(payload.result!.result));
+
+      const savedRows = this.db
+        .select()
+        .from(savedWorkoutTemplateMapTable)
+        .where(eq(savedWorkoutTemplateMapTable.sessionId, sessionId))
+        .all();
+
+      const savedMap = new Map(savedRows.map(row => [row.uuid, row.applicationId]));
+
+      const workouts = promptResponsePayload.workouts.map(workout => ({
+        ...workout,
+        savedId: savedMap.get(workout.uuid) ?? null,
+      }));
+
       return {
         promptId: payload.prompt.id,
         promptInput: promptInput,
@@ -210,7 +225,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
           success: true,
           pending: false,
           commentary: promptResponsePayload.commentary,
-          workouts: promptResponsePayload.workouts,
+          workouts,
         },
       };
     } catch (err) {
@@ -254,7 +269,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
     this.ctx.acceptWebSocket(server, [webSocketTag(sessionId)]);
 
     if (prompts.length) {
-      server.send(JSON.stringify({ prompts: prompts.map(p => this.#transformQueriedPromptResult(p)) }));
+      server.send(JSON.stringify({ prompts: prompts.map(p => this.#transformQueriedPromptResult(sessionId, p)) }));
     }
 
     return new Response(null, {
