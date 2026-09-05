@@ -173,6 +173,16 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         .run();
     }
   }
+  saveWorkoutTemplate(sessionId: number, uuid: string, newId: number) {
+    this.db
+      .insert(savedWorkoutTemplateMapTable)
+      .values({
+        sessionId,
+        uuid,
+        savedWorkoutTemplateId: newId,
+      })
+      .run();
+  }
   sendUpdateForPromptId(sessionId: number, promptId: number) {
     const promptResult = this.fetchPrompt(sessionId, promptId);
     this.sendMessage(sessionId, { type: "prompt", payload: promptResult });
