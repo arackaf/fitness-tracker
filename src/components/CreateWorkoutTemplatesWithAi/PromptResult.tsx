@@ -99,18 +99,7 @@ const DisplayGeneratedUnsavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplate
   };
 
   const form = useWorkoutTemplateForm(async state => {
-    setIsSaving(true);
-
-    try {
-      await saveWorkoutTemplate({
-        data: {
-          ...state,
-          id: workoutTemplate.id,
-        },
-      });
-    } finally {
-      setIsSaving(false);
-    }
+    handleSave();
   }, workoutTemplate);
 
   return (
