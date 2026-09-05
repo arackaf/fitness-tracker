@@ -7,20 +7,20 @@ import { useState, type FC } from "react";
 import { Loading } from "@/components/loading-state/Loading";
 import type { Exercise, MuscleGroup } from "@/data/types";
 import { Button } from "../ui/button";
-import { saveWorkoutTemplate } from "@/server-functions/workout-templates";
-import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { saveAiWorkoutTemplate } from "@/server-functions/workout-template-ai";
 import { WorkoutTemplate } from "../edit-workout-template/WorkoutTemplate";
 import { DisplayWorkoutTemplate } from "../display-workout-template/DisplayWorkoutTemplate";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 import { useExerciseMap } from "@/lib/exercise-map";
 
 export type DisplayPromptResultProps = {
+  sessionId: number;
   promptResult: PromptResponsePayload;
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
 };
 export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
-  const { promptResult, exercises, muscleGroups } = props;
+  const { sessionId, promptResult, exercises, muscleGroups } = props;
 
   if (!promptResult || promptResult.pending)
     return (
@@ -53,6 +53,7 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
             <div className="flex flex-col gap-4">
               <DisplayGeneratedWorkoutTemplate
                 key={`${template.id}-${template.name}-${i}`}
+                sessionId={sessionId}
                 workoutTemplate={template}
                 exercises={exercises}
                 muscleGroups={muscleGroups}
@@ -67,16 +68,19 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
 };
 
 type DisplayGeneratedWorkoutTemplateProps = {
+  sessionId: number;
   workoutTemplate: AIGeneratedWorkoutTemplate;
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
 };
 
 const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
-  return props.workoutTemplate.savedId ? (
+  const [justSaved, setJustSaved] = useState(false);
+
+  return props.workoutTemplate.savedId || justSaved ? (
     <DisplayGeneratedSavedWorkoutTemplate {...props} />
   ) : (
-    <DisplayGeneratedUnsavedWorkoutTemplate {...props} />
+    <DisplayGeneratedUnsavedWorkoutTemplate {...props} onSaved={setJustSaved} />
   );
 };
 
@@ -88,14 +92,17 @@ const DisplayGeneratedSavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplatePr
   return <DisplayWorkoutTemplate exerciseNameById={exerciseNameById} workoutTemplate={workoutTemplate} />;
 };
 
-const DisplayGeneratedUnsavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
-  const { workoutTemplate, exercises, muscleGroups } = props;
+const DisplayGeneratedUnsavedWorkoutTemplate: FC<
+  DisplayGeneratedWorkoutTemplateProps & { onSaved: (saved: boolean) => void }
+> = props => {
+  const { sessionId, workoutTemplate, exercises, muscleGroups, onSaved } = props;
 
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
-    await saveWorkoutTemplate({ data: workoutTemplate });
+    await saveAiWorkoutTemplate({ data: { sessionId, workoutTemplate } });
+    onSaved(true);
   };
 
   const form = useWorkoutTemplateForm(async state => {

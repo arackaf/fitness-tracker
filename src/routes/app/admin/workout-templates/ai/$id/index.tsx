@@ -180,6 +180,7 @@ function RouteContent() {
                 <p className="text-gray-200">{promptPayload.promptInput.prompt}</p>
               </div>
               <DisplayPromptResult
+                sessionId={Number(id)}
                 exercises={exercises}
                 muscleGroups={muscleGroups}
                 promptResult={promptPayload.result}
