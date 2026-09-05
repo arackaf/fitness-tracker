@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS saved_workout_template_map (
   id INTEGER PRIMARY KEY,
   session_id INTEGER NOT NULL,
   uuid TEXT NOT NULL UNIQUE,
-  application_id INTEGER NULL,
+  saved_workout_template_id INTEGER NULL,
 
   FOREIGN KEY (session_id)
       REFERENCES session(id)

@@ -42,7 +42,7 @@ export const savedWorkoutTemplateMap = sqliteTable(
       .notNull()
       .references(() => session.id, { onDelete: "cascade" }),
     uuid: text().notNull().unique(),
-    applicationId: integer("application_id"),
+    savedWorkoutTemplateId: integer("saved_workout_template"),
   },
   table => [
     index("idx_saved_workout_template_map_session_id").on(table.sessionId),

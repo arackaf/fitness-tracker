@@ -211,7 +211,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         .where(eq(savedWorkoutTemplateMapTable.sessionId, sessionId))
         .all();
 
-      const savedMap = new Map(savedRows.map(row => [row.uuid, row.applicationId]));
+      const savedMap = new Map(savedRows.map(row => [row.uuid, row.savedWorkoutTemplateId]));
 
       const workouts = promptResponsePayload.workouts.map(workout => ({
         ...workout,
