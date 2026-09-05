@@ -1,4 +1,5 @@
-import { useDeferredValue, useMemo, type FC } from "react";
+import { useDeferredValue, type FC } from "react";
+import { useExerciseMap } from "@/lib/exercise-map";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -47,7 +48,7 @@ const RouteContent: FC = () => {
   const workouts = workoutsPayload.workouts;
   const hasNextPage = workoutsPayload.hasNextPage;
 
-  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
+  const exerciseNameById = useExerciseMap(exercises);
 
   const pending = page !== deferredPage;
 

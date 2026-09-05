@@ -2,7 +2,7 @@ import type {
   AIGeneratedWorkoutTemplate,
   PromptResponsePayload,
 } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
-import { useMemo, useState, type FC } from "react";
+import { useState, type FC } from "react";
 
 import { Loading } from "@/components/loading-state/Loading";
 import type { Exercise, MuscleGroup } from "@/data/types";
@@ -12,6 +12,7 @@ import type { WorkoutTemplateState } from "@/data/workout-templates/workout-stat
 import { WorkoutTemplate } from "../edit-workout-template/WorkoutTemplate";
 import { DisplayWorkoutTemplate } from "../display-workout-template/DisplayWorkoutTemplate";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
+import { useExerciseMap } from "@/lib/exercise-map";
 
 export type DisplayPromptResultProps = {
   promptResult: PromptResponsePayload;
@@ -82,7 +83,7 @@ const DisplayGeneratedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> 
 const DisplayGeneratedSavedWorkoutTemplate: FC<DisplayGeneratedWorkoutTemplateProps> = props => {
   const { workoutTemplate, exercises } = props;
 
-  const exerciseNameById = useMemo(() => new Map(exercises.map(e => [e.id, e.name])), [exercises]);
+  const exerciseNameById = useExerciseMap(exercises);
 
   return <DisplayWorkoutTemplate exerciseNameById={exerciseNameById} workoutTemplate={workoutTemplate} />;
 };

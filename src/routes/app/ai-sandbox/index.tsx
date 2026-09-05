@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useExerciseMap } from "@/lib/exercise-map";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronsUpDown, X } from "lucide-react";
@@ -53,7 +54,7 @@ function RouteComponent() {
     () => new Map(exercises.map(exercise => [exercise.id, exercise])),
     [exercises],
   );
-  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
+  const exerciseNameById = useExerciseMap(exercises);
 
   const selectedTemplateIds = useMemo(
     () => new Set(selectedTemplates.map(template => template.id)),

@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
+import { useExerciseMap } from "@/lib/exercise-map";
 
 import { CreateWorkoutTemplateWithAi } from "@/components/CreateWorkoutTemplatesWithAi/MainModal";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
@@ -79,7 +80,7 @@ function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const workoutTemplates = workoutTemplatesPayload.workoutTemplates;
   const hasNextPage = workoutTemplatesPayload.hasNextPage;
-  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
+  const exerciseNameById = useExerciseMap(exercises);
 
   return (
     <>
