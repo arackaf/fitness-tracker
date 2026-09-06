@@ -30,7 +30,10 @@ export const RepetitionExerciseSet: FC<RepetitionExerciseSetProps> = ({
             return field.state.value?.map((_, measurementIndex) => {
               const setNumber = measurementIndex + 1;
               return (
-                <div className="flex gap-1 items-center">
+                <div
+                  className="flex gap-1 items-center"
+                  key={`segment-${segmentIndex}-exercise-${exerciseIndex}-reps-${setNumber}`}
+                >
                   <span className="h-7 inline-flex items-center">{setNumber}:</span>
 
                   <div className="flex flex-wrap gap-2">
