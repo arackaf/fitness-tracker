@@ -50,7 +50,7 @@ export const DisplayPromptResult: FC<DisplayPromptResultProps> = props => {
         <h4 className="text-sm font-medium text-gray-400">Generated Workouts</h4>
         <div className="flex flex-col gap-2">
           {workouts.map((template, i) => (
-            <div className="flex flex-col gap-4">
+            <div key={template.uuid} className="flex flex-col gap-4">
               <DisplayGeneratedWorkoutTemplate
                 key={`${template.id}-${template.name}-${i}`}
                 sessionId={sessionId}

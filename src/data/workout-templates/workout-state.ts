@@ -76,10 +76,11 @@ const defaultSegment: WorkoutTemplateSegment = {
 };
 
 let newSegmentId = -1;
+export const nextUnsavedSegmentId = () => newSegmentId--;
 export const createDefaultSegment = (): TemplateSegmentWithExercises => {
   return {
     ...defaultSegment,
-    id: newSegmentId--,
+    id: nextUnsavedSegmentId(),
     exercises: [createDefaultExercise()],
   };
 };
