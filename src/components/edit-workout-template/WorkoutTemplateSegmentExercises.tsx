@@ -44,7 +44,7 @@ export const WorkoutTemplateSegmentExercises: FC<WorkoutTemplateSegmentExercises
                   })
                 }
               />
-              <hr key="hr" className="sm:hidden" />
+              <hr className="sm:hidden" />
             </Fragment>
           ))}
 

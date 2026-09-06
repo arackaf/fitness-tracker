@@ -1,5 +1,6 @@
 import {
   createDefaultWorkoutTemplate,
+  nextUnsavedExerciseId,
   nextUnsavedSegmentId,
   type WorkoutTemplateState,
 } from "@/data/workout-templates/workout-state";
@@ -13,6 +14,11 @@ export const useWorkoutTemplateForm = (
     if (!segment.id) {
       segment.id = nextUnsavedSegmentId();
     }
+    segment.exercises.forEach(exercise => {
+      if (!exercise.id) {
+        exercise.id = nextUnsavedExerciseId();
+      }
+    });
   });
 
   return useForm({

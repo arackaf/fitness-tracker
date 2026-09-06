@@ -52,12 +52,14 @@ const defaultExercise: WorkoutTemplateSegmentExercise = {
 };
 
 let newExerciseId = -1;
+
+export const nextUnsavedExerciseId = () => newExerciseId--;
 export const createDefaultExercise = (sets?: number) => {
   const measurementCount = sets ?? DEFAULT_SET_COUNT;
 
   return {
     ...defaultExercise,
-    id: newExerciseId--,
+    id: nextUnsavedExerciseId(),
     executionType: "repetition" as const,
     measurements: Array.from({ length: measurementCount }, (_, index) => ({
       workoutTemplateSegmentExerciseId: 0,
