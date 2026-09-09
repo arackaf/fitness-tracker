@@ -69,6 +69,15 @@ export type QueriedPromptResult = {
   result: typeof sessionPromptResult.$inferSelect | null | undefined;
 };
 
+export type SessionSummary = {
+  id: number;
+  name: string;
+  createdAt: string;
+  promptCount: number;
+  totalWorkoutsGenerated: number;
+  savedCount: number;
+};
+
 export type QueriedSessionResult = {
   session: QueriedSession;
   prompts: QueriedPromptResult[];

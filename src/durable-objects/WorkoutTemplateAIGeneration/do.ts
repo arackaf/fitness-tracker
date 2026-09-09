@@ -9,7 +9,7 @@ import {
   sessionPromptResult as sessionPromptResultTable,
   savedWorkoutTemplateMap as savedWorkoutTemplateMapTable,
 } from "./schema";
-import { and, asc, eq, gt, SQL } from "drizzle-orm";
+import { and, asc, eq, gt, sql, SQL } from "drizzle-orm";
 import { z } from "zod";
 import { promptOutputSchema, workoutTemplateValidator } from "@/interop-types/workout-template-state";
 import { generateText, Output } from "ai";
@@ -20,6 +20,7 @@ import {
   type PromptResult,
   type QueriedPromptResult,
   type SessionPayload,
+  type SessionSummary,
 } from "./types";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
@@ -42,9 +43,29 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.db = drizzle(ctx.storage);
   }
-  getSessions() {
-    const rows = this.db.select().from(sessionTable).all();
-    return rows;
+  getSessions(): SessionSummary[] {
+    return this.db
+      .select({
+        id: sessionTable.id,
+        name: sessionTable.name,
+        createdAt: sessionTable.createdAt,
+        promptCount: sql<number>`(
+          select count(*) from session_prompt where session_id = ${sessionTable.id}
+        )`,
+        totalWorkoutsGenerated: sql<number>`coalesce((
+          select sum(json_array_length(spr.result, '$.workouts'))
+          from session_prompt sp
+          join session_prompt_result spr on sp.id = spr.session_prompt_id
+          where sp.session_id = ${sessionTable.id}
+        ), 0)`,
+        savedCount: sql<number>`(
+          select count(*) from saved_workout_template_map
+          where session_id = ${sessionTable.id}
+          and saved_workout_template_id > 0
+        )`,
+      })
+      .from(sessionTable)
+      .all();
   }
   createSession(promptInfo: PromptInput): { id: number } {
     const result = this.db
