@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ function RouteComponentContent() {
     [selectedTemplates],
   );
 
-  const { data: aiSessions = [] } = useQuery(getAiSessionsQueryOptions());
+  const { data: aiSessions, isLoading: isLoadingSessions } = useQuery(getAiSessionsQueryOptions());
   const { data: workoutTemplates } = useSuspenseQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useSuspenseQuery(exercisesQueryOptions());
   const exerciseNameById = useExerciseMap(exercises);
@@ -116,7 +116,7 @@ function RouteComponentContent() {
         )}
       </div>
 
-      <PromptHistory sessions={aiSessions} />
+      {isLoadingSessions || !aiSessions?.length ? null : <PromptHistory sessions={aiSessions} />}
     </div>
   );
 }
