@@ -30,7 +30,6 @@ import { Route as AppWorkoutsEditInvalidIndexRouteImport } from './routes/app/wo
 import { Route as AppWorkoutsEditNotFoundIndexRouteImport } from './routes/app/workouts/edit/not-found/index'
 import { Route as AppAdminWorkoutTemplatesAiIdIndexRouteImport } from './routes/app/admin/workout-templates/ai/$id/index'
 import { Route as AppAdminWorkoutTemplatesAiIdSubscribeRouteImport } from './routes/app/admin/workout-templates/ai/$id/subscribe'
-import { Route as AppAdminWorkoutTemplatesAiCreateIndexRouteImport } from './routes/app/admin/workout-templates/ai/create/index'
 import { Route as AppAdminWorkoutTemplatesEditIdIndexRouteImport } from './routes/app/admin/workout-templates/edit/$id/index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -145,12 +144,6 @@ const AppAdminWorkoutTemplatesAiIdSubscribeRoute =
     path: '/workout-templates/ai/$id/subscribe',
     getParentRoute: () => AppAdminRouteRoute,
   } as any)
-const AppAdminWorkoutTemplatesAiCreateIndexRoute =
-  AppAdminWorkoutTemplatesAiCreateIndexRouteImport.update({
-    id: '/workout-templates/ai/create/',
-    path: '/workout-templates/ai/create/',
-    getParentRoute: () => AppAdminRouteRoute,
-  } as any)
 const AppAdminWorkoutTemplatesEditIdIndexRoute =
   AppAdminWorkoutTemplatesEditIdIndexRouteImport.update({
     id: '/workout-templates/edit/$id/',
@@ -180,7 +173,6 @@ export interface FileRoutesByFullPath {
   '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/ai/$id/subscribe': typeof AppAdminWorkoutTemplatesAiIdSubscribeRoute
   '/app/admin/workout-templates/ai/$id/': typeof AppAdminWorkoutTemplatesAiIdIndexRoute
-  '/app/admin/workout-templates/ai/create/': typeof AppAdminWorkoutTemplatesAiCreateIndexRoute
   '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -203,7 +195,6 @@ export interface FileRoutesByTo {
   '/app/workouts/edit/not-found': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/ai/$id/subscribe': typeof AppAdminWorkoutTemplatesAiIdSubscribeRoute
   '/app/admin/workout-templates/ai/$id': typeof AppAdminWorkoutTemplatesAiIdIndexRoute
-  '/app/admin/workout-templates/ai/create': typeof AppAdminWorkoutTemplatesAiCreateIndexRoute
   '/app/admin/workout-templates/edit/$id': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRoutesById {
@@ -229,7 +220,6 @@ export interface FileRoutesById {
   '/app/workouts/edit/not-found/': typeof AppWorkoutsEditNotFoundIndexRoute
   '/app/admin/workout-templates/ai/$id/subscribe': typeof AppAdminWorkoutTemplatesAiIdSubscribeRoute
   '/app/admin/workout-templates/ai/$id/': typeof AppAdminWorkoutTemplatesAiIdIndexRoute
-  '/app/admin/workout-templates/ai/create/': typeof AppAdminWorkoutTemplatesAiCreateIndexRoute
   '/app/admin/workout-templates/edit/$id/': typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -256,7 +246,6 @@ export interface FileRouteTypes {
     | '/app/workouts/edit/not-found/'
     | '/app/admin/workout-templates/ai/$id/subscribe'
     | '/app/admin/workout-templates/ai/$id/'
-    | '/app/admin/workout-templates/ai/create/'
     | '/app/admin/workout-templates/edit/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -279,7 +268,6 @@ export interface FileRouteTypes {
     | '/app/workouts/edit/not-found'
     | '/app/admin/workout-templates/ai/$id/subscribe'
     | '/app/admin/workout-templates/ai/$id'
-    | '/app/admin/workout-templates/ai/create'
     | '/app/admin/workout-templates/edit/$id'
   id:
     | '__root__'
@@ -304,7 +292,6 @@ export interface FileRouteTypes {
     | '/app/workouts/edit/not-found/'
     | '/app/admin/workout-templates/ai/$id/subscribe'
     | '/app/admin/workout-templates/ai/$id/'
-    | '/app/admin/workout-templates/ai/create/'
     | '/app/admin/workout-templates/edit/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -463,13 +450,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminWorkoutTemplatesAiIdSubscribeRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/app/admin/workout-templates/ai/create/': {
-      id: '/app/admin/workout-templates/ai/create/'
-      path: '/workout-templates/ai/create'
-      fullPath: '/app/admin/workout-templates/ai/create/'
-      preLoaderRoute: typeof AppAdminWorkoutTemplatesAiCreateIndexRouteImport
-      parentRoute: typeof AppAdminRouteRoute
-    }
     '/app/admin/workout-templates/edit/$id/': {
       id: '/app/admin/workout-templates/edit/$id/'
       path: '/workout-templates/edit/$id'
@@ -489,7 +469,6 @@ interface AppAdminRouteRouteChildren {
   AppAdminWorkoutTemplatesCreateIndexRoute: typeof AppAdminWorkoutTemplatesCreateIndexRoute
   AppAdminWorkoutTemplatesAiIdSubscribeRoute: typeof AppAdminWorkoutTemplatesAiIdSubscribeRoute
   AppAdminWorkoutTemplatesAiIdIndexRoute: typeof AppAdminWorkoutTemplatesAiIdIndexRoute
-  AppAdminWorkoutTemplatesAiCreateIndexRoute: typeof AppAdminWorkoutTemplatesAiCreateIndexRoute
   AppAdminWorkoutTemplatesEditIdIndexRoute: typeof AppAdminWorkoutTemplatesEditIdIndexRoute
 }
 
@@ -505,8 +484,6 @@ const AppAdminRouteRouteChildren: AppAdminRouteRouteChildren = {
     AppAdminWorkoutTemplatesAiIdSubscribeRoute,
   AppAdminWorkoutTemplatesAiIdIndexRoute:
     AppAdminWorkoutTemplatesAiIdIndexRoute,
-  AppAdminWorkoutTemplatesAiCreateIndexRoute:
-    AppAdminWorkoutTemplatesAiCreateIndexRoute,
   AppAdminWorkoutTemplatesEditIdIndexRoute:
     AppAdminWorkoutTemplatesEditIdIndexRoute,
 }
