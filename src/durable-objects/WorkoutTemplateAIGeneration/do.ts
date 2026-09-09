@@ -68,31 +68,35 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       .all();
   }
   createSession(promptInfo: PromptInput): { id: number } {
-    const result = this.db
-      .insert(sessionTable)
-      .values({
-        name: "",
-        createdAt: new Date().toISOString(),
-      })
-      .returning({ id: sessionTable.id })
-      .all();
+    const { sessionId, sessionPromptId } = this.db.transaction(tx => {
+      const now = new Date().toISOString();
 
-    const sessionId = result[0].id;
-    const sessionPromptRow = this.db
-      .insert(sessionPromptTable)
-      .values({
-        sessionId,
-        createdAt: new Date().toISOString(),
-        prompt: promptInfo.prompt,
-        workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
-      })
-      .returning({ id: sessionPromptTable.id })
-      .get();
+      const sessionRow = tx
+        .insert(sessionTable)
+        .values({
+          name: "",
+          createdAt: now,
+        })
+        .returning({ id: sessionTable.id })
+        .get();
 
-    const sessionPromptId = sessionPromptRow?.id;
-    if (!sessionPromptId) {
-      throw new Error("Failed to create session prompt");
-    }
+      const promptRow = tx
+        .insert(sessionPromptTable)
+        .values({
+          sessionId: sessionRow.id,
+          createdAt: now,
+          prompt: promptInfo.prompt,
+          workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
+        })
+        .returning({ id: sessionPromptTable.id })
+        .get();
+
+      if (!promptRow?.id) {
+        throw new Error("Failed to create session prompt");
+      }
+
+      return { sessionId: sessionRow.id, sessionPromptId: promptRow.id };
+    });
 
     this.prompt(promptInfo)
       .then(promptResult => {
@@ -105,7 +109,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         this.sendUpdateForPromptId(sessionId, sessionPromptId);
       });
 
-    return result[0];
+    return { id: sessionId };
   }
   loadSession(sessionId: number): SessionPayload {
     try {
