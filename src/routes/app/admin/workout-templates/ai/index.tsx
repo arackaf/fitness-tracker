@@ -5,7 +5,6 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { SelectWorkoutTemplates } from "@/components/SelectWorkoutTemplates";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
@@ -13,6 +12,7 @@ import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWor
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { createAiSessionsServerFn, getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
+import { PromptInput } from "@/components/CreateWorkoutTemplatesWithAi/PromptInput";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
@@ -21,8 +21,6 @@ export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
     context.queryClient.ensureQueryData(exercisesQueryOptions());
   },
 });
-
-const MIN_PROMPT_LENGTH = 20;
 
 function RouteComponent() {
   return (
@@ -35,8 +33,8 @@ function RouteComponent() {
 function RouteComponentContent() {
   const navigate = useNavigate();
   const [selectedTemplates, setSelectedTemplates] = useState<WorkoutTemplateState[]>([]);
-  const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [prompt, setPrompt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const selectedTemplateIds = useMemo(
     () => new Set(selectedTemplates.map(template => template.id!)),
@@ -48,10 +46,6 @@ function RouteComponentContent() {
   const exerciseNameById = useExerciseMap(exercises);
   const exerciseLookup = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise])), [exercises]);
 
-  const trimmedPromptLength = prompt.trim().length;
-  const remainingPromptChars = MIN_PROMPT_LENGTH - trimmedPromptLength;
-  const isPromptValid = remainingPromptChars <= 0;
-
   const handleSelectTemplate = (template: WorkoutTemplateState) => {
     setSelectedTemplates(currentTemplates => [...currentTemplates, template]);
   };
@@ -60,11 +54,10 @@ function RouteComponentContent() {
     setSelectedTemplates(currentTemplates => currentTemplates.filter(template => template.id !== templateId));
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (prompt: string) => {
     setIsGenerating(true);
     setError(null);
     try {
-      throw new Error("Not implemented");
       const result = await createAiSessionsServerFn({
         data: {
           promptInfo: {
@@ -110,31 +103,7 @@ function RouteComponentContent() {
           />
         </div>
 
-        <div className="flex flex-col gap-2 text-sm">
-          <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium">Prompt</span>
-            <Textarea
-              value={prompt}
-              disabled={isGenerating}
-              onChange={event => setPrompt(event.target.value)}
-              placeholder="What are you looking for?"
-              className="min-h-40"
-            />
-          </label>
-          <div className="flex flex-col gap-2 self-start">
-            <span className="text-xs text-muted-foreground">
-              {!isPromptValid ? `${remainingPromptChars} more character${remainingPromptChars === 1 ? "" : "s"}` : " "}
-            </span>
-            <Button
-              className="cursor-pointer w-44"
-              disabled={!isPromptValid || isGenerating}
-              type="button"
-              onClick={handleGenerate}
-            >
-              {isGenerating ? "Generating..." : "Generate"}
-            </Button>
-          </div>
-        </div>
+        <PromptInput prompt={prompt} setPrompt={setPrompt} onGenerate={handleGenerate} isGenerating={isGenerating} />
         {error && (
           <div className="flex flex-col gap-2">
             <p className="text-sm text-destructive">{error}</p>
