@@ -7,6 +7,7 @@ import type {
   PromptInput,
   PromptResult,
   SessionPayload,
+  SessionSummary,
 } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 import { startInstance } from "@/start";
@@ -32,7 +33,7 @@ export const getAiSessionsQueryOptions = () =>
 
 export const getAiSessionsServerFn = createServerFn({ method: "POST" })
   .middleware([withWtDo])
-  .handler(async ({ context }): Promise<any> => context.wtDo.getSessions());
+  .handler(async ({ context }): Promise<SessionSummary[]> => context.wtDo.getSessions());
 
 export const createAiSessionsServerFn = createServerFn({ method: "POST" })
   .validator((payload: { promptInfo: PromptInput }) => payload)

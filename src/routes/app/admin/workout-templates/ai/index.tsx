@@ -13,6 +13,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { createAiSessionsServerFn, getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
 import { PromptInput } from "@/components/CreateWorkoutTemplatesWithAi/PromptInput";
+import { PromptHistory } from "@/components/CreateWorkoutTemplatesWithAi/PromptHistory";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
@@ -41,6 +42,7 @@ function RouteComponentContent() {
     [selectedTemplates],
   );
 
+  const { data: aiSessions = [] } = useQuery(getAiSessionsQueryOptions());
   const { data: workoutTemplates } = useSuspenseQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useSuspenseQuery(exercisesQueryOptions());
   const exerciseNameById = useExerciseMap(exercises);
@@ -113,6 +115,8 @@ function RouteComponentContent() {
           </div>
         )}
       </div>
+
+      <PromptHistory sessions={aiSessions} />
     </div>
   );
 }
