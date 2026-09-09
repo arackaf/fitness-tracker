@@ -8,7 +8,7 @@ import type {
   PromptResult,
   SessionPayload,
 } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
-import { doStrip } from "./do-interop-helpers";
+
 import { startInstance } from "@/start";
 import { insertWorkoutTemplate } from "@/data/workout-templates/insert-workout-template";
 import { requireUserId } from "@/lib/server-auth";
@@ -32,7 +32,7 @@ export const getAiSessionsQueryOptions = () =>
 
 export const getAiSessionsServerFn = createServerFn({ method: "POST" })
   .middleware([withWtDo])
-  .handler(async ({ context }): Promise<any> => doStrip(context.wtDo.getSessions()));
+  .handler(async ({ context }): Promise<any> => context.wtDo.getSessions());
 
 export const createAiSessionsServerFn = createServerFn({ method: "POST" })
   .validator((payload: { promptInfo: PromptInput }) => payload)
