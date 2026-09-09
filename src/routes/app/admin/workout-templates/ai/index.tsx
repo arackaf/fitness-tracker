@@ -64,6 +64,7 @@ function RouteComponentContent() {
     setIsGenerating(true);
     setError(null);
     try {
+      throw new Error("Not implemented");
       const result = await createAiSessionsServerFn({
         data: {
           promptInfo: {
@@ -76,10 +77,10 @@ function RouteComponentContent() {
       if (result?.id) {
         navigate({ to: "/app/admin/workout-templates/ai/$id", params: { id: String(result.id) } });
       } else {
-        setError("Failed to create AI session. Please try again.");
+        setError("Failed to create AI session");
       }
     } catch {
-      setError("Something went wrong creating the session. Please try again.");
+      setError("Something went wrong creating the session");
     }
   };
 
@@ -114,6 +115,7 @@ function RouteComponentContent() {
             <span className="font-medium">Prompt</span>
             <Textarea
               value={prompt}
+              disabled={isGenerating}
               onChange={event => setPrompt(event.target.value)}
               placeholder="What are you looking for?"
               className="min-h-40"
@@ -121,9 +123,7 @@ function RouteComponentContent() {
           </label>
           <div className="flex flex-col gap-2 self-start">
             <span className="text-xs text-muted-foreground">
-              {!isPromptValid
-                ? `${remainingPromptChars} more character${remainingPromptChars === 1 ? "" : "s"} minimum prompt`
-                : " "}
+              {!isPromptValid ? `${remainingPromptChars} more character${remainingPromptChars === 1 ? "" : "s"}` : " "}
             </span>
             <Button
               className="cursor-pointer w-44"
@@ -133,16 +133,16 @@ function RouteComponentContent() {
             >
               {isGenerating ? "Generating..." : "Generate"}
             </Button>
-            {error && (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm text-destructive">{error}</p>
-                <Button onClick={reset} variant="secondary">
-                  Start over
-                </Button>
-              </div>
-            )}
           </div>
         </div>
+        {error && (
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-destructive">{error}</p>
+            <Button onClick={reset} variant="secondary">
+              Start over
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
