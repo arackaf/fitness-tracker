@@ -50,17 +50,17 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         name: sessionTable.name,
         createdAt: sessionTable.createdAt,
         promptCount: sql<number>`(
-          select count(*) from session_prompt where session_id = ${sessionTable.id}
+          select count(*) from session_prompt where session_id = "session"."id"
         )`,
         totalWorkoutsGenerated: sql<number>`coalesce((
           select sum(json_array_length(spr.result, '$.workouts'))
           from session_prompt sp
           join session_prompt_result spr on sp.id = spr.session_prompt_id
-          where sp.session_id = ${sessionTable.id}
+          where sp.session_id = "session"."id"
         ), 0)`,
         savedCount: sql<number>`(
           select count(*) from saved_workout_template_map
-          where session_id = ${sessionTable.id}
+          where session_id = "session"."id"
           and saved_workout_template_id > 0
         )`,
       })
@@ -121,7 +121,9 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
       const promptsRaw = this.#queryPrompts(eq(sessionPromptTable.sessionId, sessionId)).all();
 
-      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(sessionId, payload));
+      const prompts: PromptPayload[] = promptsRaw.map(payload =>
+        this.#transformQueriedPromptResult(sessionId, payload),
+      );
       return { status: "loaded", session: session, prompts };
     } catch (error) {
       return { status: "error" };
