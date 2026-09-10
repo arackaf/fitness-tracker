@@ -22,6 +22,7 @@ import {
   type SessionPayload,
   type SessionSummary,
 } from "./types";
+import { createSession } from "./data";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -68,35 +69,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       .all();
   }
   createSession(promptInfo: PromptInput): { id: number } {
-    const { sessionId, sessionPromptId } = this.db.transaction(tx => {
-      const now = new Date().toISOString();
-
-      const sessionRow = tx
-        .insert(sessionTable)
-        .values({
-          name: "",
-          createdAt: now,
-        })
-        .returning({ id: sessionTable.id })
-        .get();
-
-      const promptRow = tx
-        .insert(sessionPromptTable)
-        .values({
-          sessionId: sessionRow.id,
-          createdAt: now,
-          prompt: promptInfo.prompt,
-          workoutTemplates: JSON.stringify(promptInfo.workoutTemplates),
-        })
-        .returning({ id: sessionPromptTable.id })
-        .get();
-
-      if (!promptRow?.id) {
-        throw new Error("Failed to create session prompt");
-      }
-
-      return { sessionId: sessionRow.id, sessionPromptId: promptRow.id };
-    });
+    const { sessionId, sessionPromptId } = createSession(this.db, promptInfo);
 
     this.prompt(promptInfo)
       .then(promptResult => {
