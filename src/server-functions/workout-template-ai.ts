@@ -22,6 +22,13 @@ export const withWtDo = startInstance.createMiddleware({ type: "function" }).ser
   });
 });
 
+export const loadAiSessionServerFn = createServerFn({ method: "POST" })
+  .inputValidator((payload: { sessionId: number }) => payload)
+  .middleware([withWtDo])
+  .handler(async ({ data, context }) => {
+    return context.wtDo.loadSession(data.sessionId);
+  });
+
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
     queryKey: ["ai-sessions"],
@@ -41,7 +48,7 @@ export const createAiSessionsServerFn = createServerFn({ method: "POST" })
     return context.wtDo.createSession(data.promptInfo);
   });
 
-export const loadAiSessionServerFn = createServerFn({ method: "POST" })
+export const loadAiSessionServerFnXXX = createServerFn({ method: "POST" })
   .validator((payload: { sessionId: number }) => payload)
   .middleware([withWtDo])
   .handler(({ data, context }): Promise<SessionPayload> => {

@@ -89,14 +89,13 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
   loadSession(sessionId: number): SessionPayload {
     try {
       const session = this.db.select().from(sessionTable).where(eq(sessionTable.id, sessionId)).get();
-
       if (!session) {
         return { status: "not-found" };
       }
-
       const promptsRaw = this.#queryPrompts(eq(sessionPromptTable.sessionId, sessionId)).all();
-
-      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(sessionId, payload));
+      const prompts: PromptPayload[] = promptsRaw.map(payload =>
+        this.#transformQueriedPromptResult(sessionId, payload),
+      );
       return { status: "loaded", session: session, prompts };
     } catch (error) {
       return { status: "error" };
