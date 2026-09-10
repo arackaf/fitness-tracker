@@ -83,7 +83,7 @@ function RouteContent() {
   const hasNextPage = workoutTemplatesPayload.hasNextPage;
   const exerciseNameById = useExerciseMap(exercises);
 
-  const { data: aiSessions } = useQuery(getAiSessionsQueryOptions());
+  const { data: aiSessions } = useSuspenseQuery(getAiSessionsQueryOptions());
 
   return (
     <>
