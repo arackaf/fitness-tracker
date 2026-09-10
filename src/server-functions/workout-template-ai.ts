@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 
 import { queryOptions } from "@tanstack/react-query";
-import { getWorkoutTemplateAIGenerationDurableObject } from "@/durable-objects/WorkoutTemplateAIGeneration/do";
+import {
+  getWorkoutTemplateAIGenerationDurableObject,
+  type SessionSummary,
+} from "@/durable-objects/WorkoutTemplateAIGeneration/do";
 import type {
   AIGeneratedWorkoutTemplate,
   PromptInput,
@@ -39,7 +42,12 @@ export const getAiSessionsQueryOptions = () =>
 
 export const getAiSessionsServerFn = createServerFn({ method: "POST" })
   .middleware([withWtDo])
-  .handler(async ({ context }): Promise<any> => doStrip(context.wtDo.getSessions()));
+  .handler(async ({ context }) => {
+    const xx = await context.wtDo.getSessions();
+    const yy = doStrip(xx);
+
+    return xx;
+  });
 
 export const createAiSessionsServerFn = createServerFn({ method: "POST" })
   .validator((payload: { promptInfo: PromptInput }) => payload)
