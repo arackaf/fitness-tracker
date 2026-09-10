@@ -31,6 +31,12 @@ export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthC
 
 const webSocketTag = (sessionId: number) => `session:${sessionId}`;
 
+export type SessionSummary = {
+  id: number;
+  createdAt: string;
+  name: string;
+};
+
 export class WorkoutTemplateAIGenerationDO extends DurableObject {
   db: DrizzleSqliteDODatabase;
   constructor(ctx: DurableObjectState, env: Env) {
@@ -42,7 +48,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
     this.db = drizzle(ctx.storage);
   }
-  getSessions() {
+  async getSessions() {
     const rows = this.db.select().from(sessionTable).all();
     return rows;
   }
@@ -96,7 +102,9 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
 
       const promptsRaw = this.#queryPrompts(eq(sessionPromptTable.sessionId, sessionId)).all();
 
-      const prompts: PromptPayload[] = promptsRaw.map(payload => this.#transformQueriedPromptResult(sessionId, payload));
+      const prompts: PromptPayload[] = promptsRaw.map(payload =>
+        this.#transformQueriedPromptResult(sessionId, payload),
+      );
       return { status: "loaded", session: session, prompts };
     } catch (error) {
       return { status: "error" };

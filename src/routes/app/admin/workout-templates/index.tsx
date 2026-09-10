@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useTransition } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
@@ -12,6 +12,7 @@ import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templat
 import { generateText } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createServerFn } from "@tanstack/react-start";
+import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
 
 const claudeSonnet45Model = anthropic("claude-sonnet-4-5");
 
@@ -81,6 +82,8 @@ function RouteContent() {
   const workoutTemplates = workoutTemplatesPayload.workoutTemplates;
   const hasNextPage = workoutTemplatesPayload.hasNextPage;
   const exerciseNameById = useExerciseMap(exercises);
+
+  const { data: aiSessions } = useQuery(getAiSessionsQueryOptions());
 
   return (
     <>
