@@ -16,12 +16,29 @@ import { requireUserId } from "@/lib/server-auth";
 
 export const withWtDo = startInstance.createMiddleware({ type: "function" }).server(async ({ context, next }) => {
   const durableObject = await getWorkoutTemplateAIGenerationDurableObject(context);
+  durableObject; //createSession //getSessions
   return next({
     context: {
       wtDo: durableObject,
     },
   });
 });
+
+type DOMethod = "createSession" | "getSessions";
+type DOProxy = Awaited<ReturnType<typeof getWorkoutTemplateAIGenerationDurableObject>>;
+
+type DOPayload<T extends DOMethod> = {
+  args: Parameters<DOProxy[T]>;
+  result: Awaited<ReturnType<DOProxy[T]>>;
+};
+
+const genericDOServerFn = createServerFn({ method: "POST" })
+  .validator(<T extends DOMethod>(payload: { method: T; args: DOPayload<T>["args"] }) => payload)
+  .handler(async (args): Promise<any> /*Promise<SessionSummary[]>*/ => {
+    //args.data;
+    return 0;
+    // return context.wtDo.getSessions();
+  });
 
 export const getAiSessionsQueryOptions = () =>
   queryOptions({
@@ -33,7 +50,9 @@ export const getAiSessionsQueryOptions = () =>
 
 export const getAiSessionsServerFn = createServerFn({ method: "POST" })
   .middleware([withWtDo])
-  .handler(async ({ context }): Promise<SessionSummary[]> => context.wtDo.getSessions());
+  .handler(async ({ context }): Promise<SessionSummary[]> => {
+    return context.wtDo.getSessions();
+  });
 
 export const createAiSessionsServerFn = createServerFn({ method: "POST" })
   .validator((payload: { promptInfo: PromptInput }) => payload)
