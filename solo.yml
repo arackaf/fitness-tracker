@@ -1,15 +1,15 @@
 name: fitness-tracker
 icon: null
 processes:
-  pg:
-    command: npm run pg
+  type check:
+    command: npm run tsc
     working_dir: null
-    auto_start: false
+    auto_start: true
     auto_restart: false
     restart_when_changed: []
     env: {}
-  build:
-    command: npm run build
+  dev server:
+    command: npm run dev
     working_dir: null
     auto_start: false
     auto_restart: false
@@ -22,17 +22,24 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  dev server:
-    command: npm run dev
+  pg:
+    command: npm run pg
     working_dir: null
     auto_start: false
     auto_restart: false
     restart_when_changed: []
     env: {}
-  type check:
-    command: npm run tsc
+  test-watch:
+    command: npx vitest
     working_dir: null
     auto_start: true
+    auto_restart: false
+    restart_when_changed: []
+    env: {}
+  build:
+    command: npm run build
+    working_dir: null
+    auto_start: false
     auto_restart: false
     restart_when_changed: []
     env: {}
