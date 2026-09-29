@@ -60,6 +60,29 @@ describe("Reps no weight", function () {
   });
 });
 
+describe("Reps to failure", function () {
+  test.only("Push-ups 4 sets", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([
+          [
+            bench,
+            [
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+            ],
+          ],
+        ]),
+      ),
+    ).toBe("To failure");
+  });
+  test("Push-ups 1 set", () => {
+    expect(getDisplayReps(constructSegment([[pushup, [{ reps: 20 }]]]))).toBe("20");
+  });
+});
+
 describe("Reps with weight", function () {
   test("Bench 4 sets", () => {
     expect(
