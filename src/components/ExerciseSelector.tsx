@@ -60,7 +60,7 @@ export function ExerciseSelector({
         id: exercise.id,
         name: optionName,
         muscleGroupListLabel: groupName,
-        searchableText: `${optionName} ${groupName} ${groupName} ${exercise.id}`,
+        searchableText: `${optionName} ${groupName}`,
       });
       groups.set(groupName, existingEntries);
     }
@@ -105,7 +105,18 @@ export function ExerciseSelector({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="min-w-64 p-0" align="start">
-          <Command>
+          <Command
+            filter={(value, search) => {
+              const v = value.toLowerCase();
+              return search
+                .toLowerCase()
+                .split(/\s+/)
+                .filter(Boolean)
+                .every(t => v.includes(t))
+                ? 1
+                : 0;
+            }}
+          >
             <CommandInput placeholder="Search exercise or muscle group..." />
             <CommandList>
               <CommandEmpty>No exercises found.</CommandEmpty>
