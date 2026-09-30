@@ -1,11 +1,11 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useMemo, useState, type FC } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Undo2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState, WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
@@ -13,6 +13,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import type { MuscleGroup } from "@/data/types";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import { formatDateForPg } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({
   loader: ({ context, params }) => {
@@ -70,11 +71,16 @@ function RouteContent() {
     }
   }, [navigate, workout]);
 
+  const workoutAdjusted: ExistingWorkoutState = useMemo(
+    () => ({ ...workout, workoutDate: new Date(workout.workoutDate) }),
+    [workout],
+  );
+
   if (workout == null || workout.id == null) {
     return null;
   }
 
-  return <WorkoutDetailForm workout={workout} exercises={exercises} muscleGroups={muscleGroups} />;
+  return <WorkoutDetailForm workout={workoutAdjusted} exercises={exercises} muscleGroups={muscleGroups} />;
 }
 
 type WorkoutDetailFormProps = {
@@ -93,6 +99,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
       await updateWorkout({
         data: {
           ...state,
+          workoutDate: formatDateForPg(state.workoutDate!),
           id: workout.id,
         },
       });

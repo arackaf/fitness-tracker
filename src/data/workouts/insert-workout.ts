@@ -1,6 +1,11 @@
 import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
+import { format } from "date-fns";
 
-import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
+import type {
+  WorkoutSegmentExerciseMeasurementState,
+  WorkoutState,
+  WorkoutState_Wire,
+} from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";
 import {
@@ -88,7 +93,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const insertWorkout = async (db: DB, input: WorkoutState, userId: string) => {
+export const insertWorkout = async (db: DB, input: WorkoutState_Wire, userId: string) => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
   const exerciseIds = Array.from(
     new Set(input.segments.flatMap(segment => segment.exercises.map(exercise => exercise.exerciseId))),
@@ -131,7 +136,7 @@ export const insertWorkout = async (db: DB, input: WorkoutState, userId: string)
         workoutTemplateId: input.workoutTemplateId,
         name: input.name,
         description: input.description,
-        workoutDate: input.workoutDate!,
+        workoutDate: input.workoutDate,
       })
       .returning({ id: workoutTable.id });
 

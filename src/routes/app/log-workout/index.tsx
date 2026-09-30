@@ -22,6 +22,7 @@ import {
   type WorkoutState,
 } from "@/data/workouts/workout-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { formatDateForPg } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: ({ context }) => {
@@ -135,7 +136,7 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
   const form = useWorkoutForm(async state => {
     setIsSaving(true);
 
-    await saveWorkout({ data: state });
+    await saveWorkout({ data: { ...state, workoutDate: formatDateForPg(state.workoutDate!) } });
 
     queryClient.invalidateQueries({
       queryKey: workoutHistoryQueryOptions({ page: 1 }).queryKey,

@@ -40,10 +40,19 @@ export type WorkoutState = Omit<Workout, "userId" | "workoutDate"> & {
   segments: SegmentWithExercises[];
 };
 
-export type ExistingWorkoutState = Omit<Workout, "userId"> & {
+export type WorkoutState_Wire = Omit<WorkoutState, "workoutDate"> & {
+  workoutDate: string;
+};
+
+export type ExistingWorkoutState = Omit<Workout, "userId" | "workoutDate"> & {
   id: number;
+  workoutDate: Date | null; //TODO:
   workoutTemplateId?: number;
   segments: SegmentWithExercises[];
+};
+
+export type ExistingWorkoutState_Wire = Omit<ExistingWorkoutState, "workoutDate"> & {
+  workoutDate: string;
 };
 
 export type Exercise = SegmentWithExercises["exercises"][number];
