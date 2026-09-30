@@ -131,7 +131,7 @@ describe("Reps to failure", function () {
         ]),
       ),
     ).toBe(
-      "(To failure, 135xTo failure), (To failure, 135xTo failure), (To failure, 135xTo failure), (To failure, 135xTo failure)",
+      "(To failure, 135 To failure), (To failure, 135 To failure), (To failure, 135 To failure), (To failure, 135 To failure)",
     );
   });
   test("Push-ups and pull-ups to failure", () => {
@@ -166,7 +166,7 @@ describe("Reps to failure", function () {
           ],
         ]),
       ),
-    ).toBe("(20, 135x12), (20, 135x12), (20, 135x12), (To failure, 135xTo failure)");
+    ).toBe("(20, 135x12), (20, 135x12), (20, 135x12), (To failure, 135 To failure)");
   });
 });
 
