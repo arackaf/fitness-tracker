@@ -21,12 +21,10 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({ segmen
         {segment.exercises.map((exercise, exerciseIndex) => (
           <span key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}>
             {exerciseNameById.get(exercise.exerciseId) ?? `Exercise #${exercise.exerciseId}`}
-            {hasRepsToFailure(exercise.measurements) ? <span className="ml-1 text-xs">(to failure)</span> : null}
             {exerciseIndex < segment.exercises.length - 1 ? ", " : null}
           </span>
         ))}
       </p>
-
       <WorkoutTemplateSegmentExerciseReps segment={segment} />
     </InnerCard>
   );

@@ -1,9 +1,9 @@
 import type { FC } from "react";
 
-import type { Exercise, Measurement, SegmentWithExercises } from "@/data/workouts/workout-state";
+import type { Exercise, Measurement, TemplateSegmentWithExercises } from "@/data/workout-templates/workout-state";
 
 type DisplayRepsProps = {
-  segment: SegmentWithExercises;
+  segment: TemplateSegmentWithExercises;
 };
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
@@ -15,23 +15,23 @@ const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => 
     return `${measurement.duration}${exercise.durationUnit}`;
   }
 
-  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.templateRepsToFailure ? "To failure" : measurement.reps}`;
+  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.repsToFailure ? "To failure" : measurement.reps}`;
 };
 
-export const getDisplayReps = (segment: SegmentWithExercises) => {
+export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
+  if (
+    segment.exercises.every(exercise =>
+      exercise.measurements.every(measurement => measurement.repsToFailure && !measurement.weightUsed),
+    )
+  ) {
+    return "To failure";
+  }
+
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
     exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
 
   const maxSetCount = Math.max(...measurementDisplayByExercise.map(values => values.length), 0);
-
-  if (
-    segment.exercises.every(exercise =>
-      exercise.measurements.every(measurement => measurement.templateRepsToFailure && !measurement.weightUsed),
-    )
-  ) {
-    return "To failure";
-  }
 
   if (segment.exercises.length === 1) {
     return Array.from({ length: maxSetCount }, (_, index) => {
