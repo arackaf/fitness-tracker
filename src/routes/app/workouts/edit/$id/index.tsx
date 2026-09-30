@@ -101,6 +101,10 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
     }
   }, workout);
 
+  const setWorkoutDate: (workoutDate: Date | null) => void = date => {
+    form.setFieldValue("workoutDate", date);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -111,7 +115,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
+      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="mt-8">
         <Button type="submit" disabled={isSaving} className="font-semibold">
           {isSaving ? "Saving..." : "Update workout"}
