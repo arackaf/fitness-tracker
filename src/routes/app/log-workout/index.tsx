@@ -13,7 +13,6 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout, workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   createDefaultWorkout,
   defaultworkoutDate,

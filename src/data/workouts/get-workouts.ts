@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
-import type { ExistingWorkoutState, ExistingWorkoutState_Wire } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState_Wire } from "@/data/workouts/workout-state";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";

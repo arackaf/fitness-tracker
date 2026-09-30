@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getWorkouts } from "@/data/workouts/get-workouts";
 import { insertWorkout } from "@/data/workouts/insert-workout";
 import { updateWorkout as updateWorkoutData } from "@/data/workouts/update-workout";
-import type { WorkoutState, WorkoutState_Wire } from "@/data/workouts/workout-state";
+import type { WorkoutState_Wire } from "@/data/workouts/workout-state";
 import { requireUserId } from "@/lib/server-auth";
 
 type WorkoutHistoryInput = {
