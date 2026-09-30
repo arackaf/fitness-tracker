@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useRef, useState, type FC } from "react";
+import { Fragment, useEffect, useState, type FC } from "react";
+import { cn } from "cn";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -157,14 +158,14 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
     <form onSubmit={handleSubmit} noValidate>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="flex mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+        <Button type="submit" disabled={isSaving} className={cn("font-semibold", isSaving ? "" : "cursor-pointer")}>
           {isSaving ? "Saving..." : "Create workout"}
         </Button>
         <Button
           type="button"
           variant="secondary"
           disabled={isSaving}
-          className="font-semibold ml-auto"
+          className={cn("font-semibold ml-auto", isSaving ? "" : "cursor-pointer")}
           onClick={onReset}
         >
           Reset workout

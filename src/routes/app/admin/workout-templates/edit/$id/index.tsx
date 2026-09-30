@@ -1,4 +1,5 @@
 import { useEffect, useState, type FC } from "react";
+import { cn } from "cn";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
@@ -26,7 +27,6 @@ import {
   updateWorkoutTemplate,
   WORKOUT_TEMPLATES_KEY_ROOT,
   workoutTemplateByIdQueryOptions,
-  workoutTemplatesQueryOptions,
 } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import type { MuscleGroup } from "@/data/types";
@@ -150,7 +150,11 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
     <form onSubmit={handleSubmit}>
       <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8 flex items-center gap-4">
-        <Button type="submit" disabled={isSaving || isDeleting} className="font-semibold">
+        <Button
+          type="submit"
+          disabled={isSaving || isDeleting}
+          className={cn("font-semibold", isSaving || isDeleting ? "" : "cursor-pointer")}
+        >
           {isSaving ? "Saving..." : "Update workout template"}
         </Button>
         {workoutTemplate.id != null ? (

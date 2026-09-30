@@ -76,7 +76,9 @@ const CreateExerciseDialog = ({ muscleGroups }: CreateExerciseDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Create Exercise</Button>
+        <Button variant="secondary" className="cursor-pointer">
+          Create Exercise
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

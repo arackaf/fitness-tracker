@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState, type FC } from "react";
+import { cn } from "cn";
+import { Undo2 } from "lucide-react";
+
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Undo2 } from "lucide-react";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
@@ -124,7 +126,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
     <form onSubmit={handleSubmit} noValidate>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+        <Button type="submit" disabled={isSaving} className={cn("font-semibold", isSaving ? "" : "cursor-pointer")}>
           {isSaving ? "Saving..." : "Update workout"}
         </Button>
       </div>
