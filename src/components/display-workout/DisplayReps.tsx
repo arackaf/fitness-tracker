@@ -15,7 +15,7 @@ const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => 
     return `${measurement.duration}${exercise.durationUnit}`;
   }
 
-  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.reps}`;
+  return `${measurement.weightUsed ? measurement.weightUsed + "x" : ""}${measurement.templateRepsToFailure ? "To failure" : measurement.reps}`;
 };
 
 export const getDisplayReps = (segment: SegmentWithExercises) => {
@@ -25,10 +25,15 @@ export const getDisplayReps = (segment: SegmentWithExercises) => {
 
   const maxSetCount = Math.max(...measurementDisplayByExercise.map(values => values.length), 0);
 
+  if (
+    segment.exercises.every(exercise =>
+      exercise.measurements.every(measurement => measurement.templateRepsToFailure && !measurement.weightUsed),
+    )
+  ) {
+    return "To failure";
+  }
+
   if (segment.exercises.length === 1) {
-    if (segment.exercises[0].measurements.every(measurement => measurement.templateRepsToFailure)) {
-      return "To failure";
-    }
     return Array.from({ length: maxSetCount }, (_, index) => {
       return measurementDisplayByExercise[0]?.[index] ?? "_";
     }).join(", ");

@@ -17,6 +17,12 @@ const pushup: RawExercise = {
   exerciseOrder: 0,
 };
 
+const pullUp: RawExercise = {
+  exerciseId: 0,
+  executionType: "repetition",
+  exerciseOrder: 0,
+};
+
 const bench: RawExercise = {
   exerciseId: 0,
   executionType: "repetition",
@@ -61,7 +67,7 @@ describe("Reps no weight", function () {
 });
 
 describe("Reps to failure", function () {
-  test.only("Push-ups 4 sets", () => {
+  test("Push-ups 4 sets", () => {
     expect(
       getDisplayReps(
         constructSegment([
@@ -78,8 +84,93 @@ describe("Reps to failure", function () {
       ),
     ).toBe("To failure");
   });
-  test("Push-ups 1 set", () => {
-    expect(getDisplayReps(constructSegment([[pushup, [{ reps: 20 }]]]))).toBe("20");
+  test("Push-ups 4 sets, some to failure", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([[pushup, [{ reps: 20 }, { reps: 20 }, { reps: 20 }, { templateRepsToFailure: true }]]]),
+      ),
+    ).toBe("20, 20, 20, To failure");
+  });
+  test("Push-ups 4 sets, some to failure 2", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([
+          [pushup, [{ templateRepsToFailure: true }, { reps: 20 }, { reps: 20 }, { templateRepsToFailure: true }]],
+        ]),
+      ),
+    ).toBe("To failure, 20, 20, To failure");
+  });
+  test("Push-ups and Bench 4 sets to failure", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([
+          [
+            pushup,
+            [
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+            ],
+          ],
+          [
+            bench,
+            [
+              { weightUsed: 135, templateRepsToFailure: true },
+              { weightUsed: 135, templateRepsToFailure: true },
+              { weightUsed: 135, templateRepsToFailure: true },
+              { weightUsed: 135, templateRepsToFailure: true },
+            ],
+          ],
+        ]),
+      ),
+    ).toBe(
+      "(To failure, 135xTo failure), (To failure, 135xTo failure), (To failure, 135xTo failure), (To failure, 135xTo failure)",
+    );
+  });
+  test("Push-ups and pull-ups to failure", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([
+          [
+            pushup,
+            [
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+            ],
+          ],
+          [
+            pullUp,
+            [
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+              { templateRepsToFailure: true },
+            ],
+          ],
+        ]),
+      ),
+    ).toBe("To failure");
+  });
+  test("Push-ups and Bench 4 sets, some to failure", () => {
+    expect(
+      getDisplayReps(
+        constructSegment([
+          [pushup, [{ reps: 20 }, { reps: 20 }, { reps: 20 }, { templateRepsToFailure: true }]],
+          [
+            bench,
+            [
+              { weightUsed: 135, reps: 12 },
+              { weightUsed: 135, reps: 12 },
+              { weightUsed: 135, reps: 12 },
+              { weightUsed: 135, templateRepsToFailure: true },
+            ],
+          ],
+        ]),
+      ),
+    ).toBe("(20, 135x12), (20, 135x12), (20, 135x12), (To failure, 135xTo failure)");
   });
 });
 
