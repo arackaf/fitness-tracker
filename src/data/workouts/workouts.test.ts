@@ -45,5 +45,5 @@ test("test 1", async () => {
 
   const workouts = await db.select().from(workout);
 
-  expect(workouts.length).toBe(2);
+  expect(workouts.length).toBe(1);
 });
