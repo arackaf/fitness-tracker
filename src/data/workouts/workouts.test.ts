@@ -12,21 +12,24 @@ import { getDb } from "../db";
 let postgres: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
 let db: DB;
 
-beforeAll(async () => {
-  postgres = await new PostgreSqlContainer("postgres:18-alpine")
-    .withDatabase("test")
-    .withUsername("test")
-    .withPassword("test")
-    .start();
+beforeAll(
+  async () => {
+    postgres = await new PostgreSqlContainer("postgres:18-alpine")
+      .withDatabase("test")
+      .withUsername("test")
+      .withPassword("test")
+      .start();
 
-  await pushSchema(postgres.getConnectionUri());
+    await pushSchema(postgres.getConnectionUri());
 
-  const pool = new Pool({
-    connectionString: postgres.getConnectionUri(),
-  });
+    const pool = new Pool({
+      connectionString: postgres.getConnectionUri(),
+    });
 
-  db = getDb(pool);
-});
+    db = getDb(pool);
+  },
+  60 * 1000 * 5,
+);
 
 afterAll(async () => {
   try {
