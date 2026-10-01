@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useRef, useState, type FC } from "react";
+import { Fragment, useEffect, useState, type FC } from "react";
+import { cn } from "cn";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -13,7 +14,6 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { saveWorkout, workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   createDefaultWorkout,
   defaultworkoutDate,
@@ -22,6 +22,7 @@ import {
   type WorkoutState,
 } from "@/data/workouts/workout-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { formatDateForPg } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/log-workout/")({
   loader: ({ context }) => {
@@ -135,7 +136,7 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
   const form = useWorkoutForm(async state => {
     setIsSaving(true);
 
-    await saveWorkout({ data: state });
+    await saveWorkout({ data: { ...state, workoutDate: formatDateForPg(state.workoutDate!) } });
 
     queryClient.invalidateQueries({
       queryKey: workoutHistoryQueryOptions({ page: 1 }).queryKey,
@@ -157,14 +158,14 @@ const WorkoutFormContent: FC<WorkoutFormContentProps> = props => {
     <form onSubmit={handleSubmit} noValidate>
       <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="flex mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+        <Button type="submit" disabled={isSaving} className={cn("font-semibold", isSaving ? "" : "cursor-pointer")}>
           {isSaving ? "Saving..." : "Create workout"}
         </Button>
         <Button
           type="button"
           variant="secondary"
           disabled={isSaving}
-          className="font-semibold ml-auto"
+          className={cn("font-semibold ml-auto", isSaving ? "" : "cursor-pointer")}
           onClick={onReset}
         >
           Reset workout

@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { getWorkouts } from "@/data/workouts/get-workouts";
 import { insertWorkout } from "@/data/workouts/insert-workout";
 import { updateWorkout as updateWorkoutData } from "@/data/workouts/update-workout";
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { WorkoutState_Wire } from "@/data/workouts/workout-state";
 import { requireUserId } from "@/lib/server-auth";
 
 type WorkoutHistoryInput = {
@@ -58,14 +58,14 @@ const getWorkoutById = createServerFn({ method: "GET" })
   });
 
 export const saveWorkout = createServerFn({ method: "POST" })
-  .validator((input: WorkoutState) => input)
+  .validator((input: WorkoutState_Wire) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await insertWorkout(context.db, data, userId);
   });
 
 export const updateWorkout = createServerFn({ method: "POST" })
-  .validator((input: WorkoutState) => input)
+  .validator((input: WorkoutState_Wire) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     await updateWorkoutData(context.db, data, userId);

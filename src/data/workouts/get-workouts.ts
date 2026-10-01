@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, sql, type SQLWrapper } from "drizzle-orm";
 
-import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState_Wire } from "@/data/workouts/workout-state";
 
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";
@@ -22,7 +22,7 @@ type GetWorkoutsOptions = {
 };
 
 type WorkoutsPayload = {
-  workouts: ExistingWorkoutState[];
+  workouts: ExistingWorkoutState_Wire[];
   page: number;
   hasNextPage: boolean;
 };
@@ -99,9 +99,9 @@ export const getWorkouts = async (db: DB, options: GetWorkoutsOptions): Promise<
       asc(workoutSegmentExerciseMeasurementTable.setOrder),
     );
 
-  const workouts = new Map<number, ExistingWorkoutState>();
-  const segmentsByWorkout = new Map<number, ExistingWorkoutState["segments"]>();
-  const exercisesBySegment = new Map<number, ExistingWorkoutState["segments"][number]["exercises"]>();
+  const workouts = new Map<number, ExistingWorkoutState_Wire>();
+  const segmentsByWorkout = new Map<number, ExistingWorkoutState_Wire["segments"]>();
+  const exercisesBySegment = new Map<number, ExistingWorkoutState_Wire["segments"][number]["exercises"]>();
 
   for (const row of rows) {
     let workout = workouts.get(row.workoutId);

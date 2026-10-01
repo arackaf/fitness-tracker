@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { cn } from "cn";
+import { toast } from "sonner";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -11,7 +13,6 @@ import {
   bodyCompositionMetricsQueryOptions,
   saveBodyCompositionMeasurement,
 } from "@/server-functions/body-composition";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/app/log-measurement/")({
   loader: ({ context }) => {
@@ -61,7 +62,7 @@ function RouteContent() {
     <form onSubmit={handleSubmit} noValidate>
       <Measurement form={form} metrics={metrics} />
       <div className="mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+        <Button type="submit" disabled={isSaving} className={cn("font-semibold", isSaving ? "" : "cursor-pointer")}>
           {isSaving ? "Saving..." : "Create measurement"}
         </Button>
       </div>

@@ -1,10 +1,12 @@
-import { useEffect, useState, type FC } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useEffect, useMemo, useState, type FC } from "react";
+import { cn } from "cn";
 import { Undo2 } from "lucide-react";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+
 import { Workout } from "@/components/edit-workout/Workout";
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState, WorkoutState } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
@@ -12,6 +14,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import type { Exercise, MuscleGroup } from "@/data/types";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import { formatDateForPg } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/workouts/edit/$id/")({
   loader: ({ context, params }) => {
@@ -69,11 +72,16 @@ function RouteContent() {
     }
   }, [navigate, workout]);
 
+  const workoutAdjusted: ExistingWorkoutState = useMemo(
+    () => ({ ...workout, workoutDate: new Date(workout.workoutDate) }),
+    [workout],
+  );
+
   if (workout == null || workout.id == null) {
     return null;
   }
 
-  return <WorkoutDetailForm workout={workout} exercises={exercises} muscleGroups={muscleGroups} />;
+  return <WorkoutDetailForm workout={workoutAdjusted} exercises={exercises} muscleGroups={muscleGroups} />;
 }
 
 type WorkoutDetailFormProps = {
@@ -92,6 +100,7 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
       await updateWorkout({
         data: {
           ...state,
+          workoutDate: formatDateForPg(state.workoutDate!),
           id: workout.id,
         },
       });
@@ -99,6 +108,10 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
       setIsSaving(false);
     }
   }, workout);
+
+  const setWorkoutDate: (workoutDate: Date | null) => void = date => {
+    form.setFieldValue("workoutDate", date);
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -110,9 +123,9 @@ const WorkoutDetailForm: FC<WorkoutDetailFormProps> = ({ workout, exercises, mus
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} />
+      <Workout form={form} exercises={exercises} muscleGroups={muscleGroups} setWorkoutDate={setWorkoutDate} />
       <div className="mt-8">
-        <Button type="submit" disabled={isSaving} className="font-semibold">
+        <Button type="submit" disabled={isSaving} className={cn("font-semibold", isSaving ? "" : "cursor-pointer")}>
           {isSaving ? "Saving..." : "Update workout"}
         </Button>
       </div>

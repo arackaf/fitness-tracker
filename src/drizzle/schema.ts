@@ -166,7 +166,7 @@ export const workout = pgTable(
     userId: text().notNull(),
     name: varchar({ length: 50 }).notNull(),
     description: text().default("").notNull(),
-    workoutDate: timestamp("workout_date").notNull(),
+    workoutDate: text("workout_date").notNull(),
     workoutTemplateId: integer("workout_template_id"),
   },
   table => [index("idx_workout_workout_date").using("btree", table.workoutDate.asc().nullsLast())],

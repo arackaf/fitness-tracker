@@ -10,6 +10,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Loading } from "@/components/loading-state/Loading";
+import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 
 export const Route = createFileRoute("/app/workouts/")({
   loader: ({ context }) => {
@@ -46,6 +47,10 @@ const RouteContent: FC = () => {
   );
 
   const workouts = workoutsPayload.workouts;
+  const workoutsAdjusted: ExistingWorkoutState[] = useMemo(
+    () => workouts.map(workout => ({ ...workout, workoutDate: new Date(workout.workoutDate) })),
+    [workouts],
+  );
   const hasNextPage = workoutsPayload.hasNextPage;
 
   const exerciseNameById = useExerciseMap(exercises);
@@ -60,7 +65,7 @@ const RouteContent: FC = () => {
         <p className="text-muted-foreground">No workouts yet. Start by logging your first one.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {workouts.map((workout, workoutIndex) => (
+          {workoutsAdjusted.map((workout, workoutIndex) => (
             <DisplayWorkout
               key={`${workout.workoutDate}-${workout.name}-${workoutIndex}`}
               workout={workout}

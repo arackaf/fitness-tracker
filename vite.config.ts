@@ -1,5 +1,5 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
@@ -9,12 +9,17 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 
 const config = defineConfig({
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
-    tsconfigPaths({ projects: ["./tsconfig.json"] }),
+    !process.env.VITEST && cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
   ],
+  resolve: {
+    tsconfigPaths: true,
+  },
+  test: {
+    environment: "node",
+  },
 });
 
 export default config;

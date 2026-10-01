@@ -1,6 +1,10 @@
 import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
-import type { WorkoutSegmentExerciseMeasurementState, WorkoutState } from "@/data/workouts/workout-state";
+import type {
+  WorkoutSegmentExerciseMeasurementState,
+  WorkoutState,
+  WorkoutState_Wire,
+} from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";
 import {
@@ -110,7 +114,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const updateWorkout = async (db: DB, input: WorkoutState, userId: string) => {
+export const updateWorkout = async (db: DB, input: WorkoutState_Wire, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout ID is required for update.");
   }
@@ -157,7 +161,7 @@ export const updateWorkout = async (db: DB, input: WorkoutState, userId: string)
         name: input.name,
         workoutTemplateId: input.workoutTemplateId,
         description: input.description,
-        workoutDate: input.workoutDate!,
+        workoutDate: input.workoutDate,
       })
       .where(and(eq(workoutTable.id, workoutId), eq(workoutTable.userId, userId)))
       .returning({ id: workoutTable.id });

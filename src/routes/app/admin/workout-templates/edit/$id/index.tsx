@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { cn } from "cn";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
@@ -133,7 +134,11 @@ function RouteContent() {
     <form onSubmit={handleSubmit}>
       <WorkoutTemplate form={form} exercises={exercises} muscleGroups={muscleGroups} />
       <div className="mt-8 flex items-center gap-4">
-        <Button type="submit" disabled={isSaving || isDeleting} className="font-semibold">
+        <Button
+          type="submit"
+          disabled={isSaving || isDeleting}
+          className={cn("font-semibold", isSaving || isDeleting ? "" : "cursor-pointer")}
+        >
           {isSaving ? "Saving..." : "Update workout template"}
         </Button>
         {workoutTemplate.id != null ? (
