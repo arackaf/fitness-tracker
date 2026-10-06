@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { TemplateSegmentWithExercises, Exercise, Measurement } from "@/data/workout-templates/workout-state";
+import type { TemplateSegmentWithExercises } from "@/data/workout-templates/workout-state";
 import { getDisplayReps } from "./DisplayReps";
 
 type WorkoutTemplateSegmentRepsProps = {

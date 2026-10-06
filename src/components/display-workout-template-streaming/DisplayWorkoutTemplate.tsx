@@ -1,36 +1,22 @@
 import type { FC } from "react";
-import { Link } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { Card } from "@/components/Card";
-import { Button } from "@/components/ui/button";
 
 import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
 
 type DisplayWorkoutTemplateProps = {
   exerciseNameById: Map<number, string>;
   workoutTemplate: WorkoutTemplateState;
-  footer?: React.ReactNode;
 };
 
-export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
-  workoutTemplate,
-  exerciseNameById,
-  footer,
-}) => {
+export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workoutTemplate, exerciseNameById }) => {
   return (
     <Card as="article">
       <header className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h3 className="text-lg font-semibold">{workoutTemplate.name}</h3>
         </div>
-        {workoutTemplate.id != null ? (
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/app/admin/workout-templates/edit/$id" params={{ id: String(workoutTemplate.id) }}>
-              Edit
-            </Link>
-          </Button>
-        ) : null}
       </header>
 
       {workoutTemplate.description ? <p className="mb-3 text-sm">{workoutTemplate.description}</p> : null}
@@ -44,7 +30,6 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
           />
         ))}
       </div>
-      {footer ? footer : null}
     </Card>
   );
 };
