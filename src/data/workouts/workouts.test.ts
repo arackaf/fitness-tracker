@@ -4,7 +4,13 @@ import { beforeAll, afterAll, beforeEach, test, expect } from "vitest";
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
 
 import { pushSchema } from "@/lib/test-utils/drizzle-utils";
-import { exercises, workout } from "@/drizzle/schema";
+import {
+  exercises,
+  workout,
+  workoutSegment,
+  workoutSegmentExercise,
+  workoutSegmentExerciseMeasurement,
+} from "@/drizzle/schema";
 
 import type { DB } from "../db";
 import { getDb } from "../db";
@@ -67,6 +73,9 @@ beforeAll(
 
 beforeEach(async () => {
   await db.delete(workout);
+  await db.delete(workoutSegment);
+  await db.delete(workoutSegmentExercise);
+  await db.delete(workoutSegmentExerciseMeasurement);
 });
 
 afterAll(async () => {
@@ -76,7 +85,7 @@ afterAll(async () => {
   } catch {}
 });
 
-test("test 1", async () => {
+test("test demo", async () => {
   await db.insert(workout).values({
     userId: "123",
     name: "Workout A",
@@ -89,18 +98,42 @@ test("test 1", async () => {
   expect(workouts.length).toBe(1);
 });
 
-test("test 2", async () => {
-  const workout = createWorkout("Workout A", new Date().toString(), [
-    {
-      exercises: [{ exerciseId: benchPress.id!, measurements: [{}] }],
-    },
-  ]);
+test("Insert simple workout with one exercise", async () => {
+  const workoutInput: TestWorkoutState = {
+    name: "Workout A",
+    workoutDate: "10/06/2026",
+    segments: [
+      {
+        exercises: [
+          {
+            exerciseId: benchPress.id!,
+            measurements: [
+              {
+                weightUsed: 225,
+                reps: 8,
+              },
+              {
+                weightUsed: 225,
+                reps: 7,
+              },
+              {
+                weightUsed: 225,
+                reps: 6,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  const workout = createWorkout(workoutInput);
 
   await insertWorkout(db, workout, userId);
 
-  const workouts = await getWorkouts(db, { userId });
+  const result = await getWorkouts(db, { userId });
 
-  expect(workouts.workouts.length).toBe(2);
+  expect(result.workouts[0]).toMatchObject(workoutInput);
 });
 
 type TestMeasurement = Omit<WorkoutSegmentExerciseMeasurementState, "setOrder">;
@@ -113,22 +146,30 @@ type TestSegment = Omit<SegmentWithExercises, "segmentOrder" | "sets" | "exercis
   exercises: TestExercise[];
 };
 
-function createWorkout(name: string, date: string, segments: TestSegment[]): WorkoutState {
+type TestWorkoutState = Omit<WorkoutState, "segments"> & {
+  segments: TestSegment[];
+};
+
+function createWorkout(workoutInput: TestWorkoutState): WorkoutState {
   return {
-    name,
-    workoutDate: date,
-    segments: segments.map((segment, segmentIdx) => ({
-      ...segment,
-      segmentOrder: segmentIdx,
-      sets: segment.exercises[0].measurements.length,
-      exercises: segment.exercises.map((exercise, exerciseIdx) => ({
-        ...exercise,
-        exerciseOrder: exerciseIdx,
-        measurements: exercise.measurements.map((measurement, measurementIdx) => ({
-          ...measurement,
-          setOrder: measurementIdx,
-        })),
+    name: workoutInput.name,
+    workoutDate: workoutInput.workoutDate,
+    segments: toSegmentsWithExercises(workoutInput.segments),
+  };
+}
+
+function toSegmentsWithExercises(segments: TestSegment[]): SegmentWithExercises[] {
+  return segments.map((segment, segmentIdx) => ({
+    ...segment,
+    segmentOrder: segmentIdx,
+    sets: segment.exercises[0].measurements.length,
+    exercises: segment.exercises.map((exercise, exerciseIdx) => ({
+      ...exercise,
+      exerciseOrder: exerciseIdx,
+      measurements: exercise.measurements.map((measurement, measurementIdx) => ({
+        ...measurement,
+        setOrder: measurementIdx,
       })),
     })),
-  };
+  }));
 }
