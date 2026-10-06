@@ -1,12 +1,13 @@
 import type { FC } from "react";
 
 import type { Exercise, Measurement, TemplateSegmentWithExercises } from "@/data/workout-templates/workout-state";
+import type { DeepPartial } from "@tanstack/ai";
 
 type DisplayRepsProps = {
-  segment: TemplateSegmentWithExercises;
+  segment: DeepPartial<TemplateSegmentWithExercises>;
 };
 
-const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
+const getDisplayMeasurement = (exercise: DeepPartial<Exercise>, measurement: DeepPartial<Measurement>) => {
   if (!exercise.executionType) {
     return "";
   }
@@ -30,7 +31,7 @@ const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => 
   return `${measurement.weightUsed ? measurement.weightUsed + (!measurement.repsToFailure ? "x" : " ") : ""}${measurement.repsToFailure ? "To failure" : measurement.reps}`;
 };
 
-export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
+export const getDisplayReps = (segment: DeepPartial<TemplateSegmentWithExercises>) => {
   if (!segment.exercises || !segment.exercises.every(exercise => exercise.measurements)) {
     return "";
   }
@@ -44,10 +45,10 @@ export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
   }
 
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
-    exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
+    exercise.measurements?.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
 
-  const maxSetCount = Math.max(...measurementDisplayByExercise.map(values => values.length), 0);
+  const maxSetCount = Math.max(...measurementDisplayByExercise.map(values => values?.length ?? 0), 0);
 
   if (segment.exercises.length === 1) {
     return Array.from({ length: maxSetCount }, (_, index) => {
@@ -56,7 +57,7 @@ export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
   }
 
   return Array.from({ length: maxSetCount }, (_, setIndex) => {
-    const measurementsForSet = measurementDisplayByExercise.map(values => values[setIndex] ?? null);
+    const measurementsForSet = measurementDisplayByExercise.map(values => values?.[setIndex] ?? null);
     const hasAnyMeasurementValue = measurementsForSet.some(value => value !== null);
 
     if (!hasAnyMeasurementValue) {
