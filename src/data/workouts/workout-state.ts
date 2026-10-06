@@ -33,14 +33,14 @@ export type SegmentWithExercises = Omit<WorkoutSegment, "workoutId"> & {
   exercises: WorkoutSegmentExerciseState[];
 };
 
-export type WorkoutState = Omit<Workout, "userId" | "workoutDate"> & {
+export type WorkoutState_Local = Omit<Workout, "userId" | "workoutDate"> & {
   id?: number;
   workoutDate: Date | null;
   workoutTemplateId?: number;
   segments: SegmentWithExercises[];
 };
 
-export type WorkoutState_Wire = Omit<WorkoutState, "workoutDate"> & {
+export type WorkoutState = Omit<WorkoutState_Local, "workoutDate"> & {
   workoutDate: string;
 };
 
@@ -107,7 +107,7 @@ export const defaultworkoutDate = () => {
   return new Date();
 };
 
-export const createDefaultWorkout = (workoutDate: Date | null = null): WorkoutState => {
+export const createDefaultWorkout = (workoutDate: Date | null = null): WorkoutState_Local => {
   return {
     name: "",
     workoutDate: workoutDate ?? null,

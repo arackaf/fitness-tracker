@@ -7,7 +7,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 import type { Exercise } from "@/components/ExerciseSelector";
 import { Workout } from "@/components/edit-workout/Workout";
-import type { ExistingWorkoutState, WorkoutState } from "@/data/workouts/workout-state";
+import type { ExistingWorkoutState, WorkoutState_Local } from "@/data/workouts/workout-state";
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
@@ -86,7 +86,7 @@ function RouteContent() {
 }
 
 type WorkoutDetailFormProps = {
-  workout: WorkoutState;
+  workout: WorkoutState_Local;
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
 };
