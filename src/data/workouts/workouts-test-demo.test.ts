@@ -8,12 +8,6 @@ import { workout } from "@/drizzle/schema";
 
 import type { DB } from "../db";
 import { getDb } from "../db";
-import type {
-  SegmentWithExercises,
-  WorkoutSegmentExerciseMeasurementState,
-  WorkoutSegmentExerciseState,
-  WorkoutState,
-} from "./workout-state";
 
 let postgres: Awaited<ReturnType<PostgreSqlContainer["start"]>>;
 let db: DB;
@@ -56,20 +50,3 @@ test("test 1", async () => {
 
   expect(workouts.length).toBe(1);
 });
-
-type TestMeasurement = Omit<WorkoutSegmentExerciseMeasurementState, "setOrder">;
-
-type TestExercise = Omit<WorkoutSegmentExerciseState, "exerciseOrder" | "measurements"> & {
-  measurements: TestMeasurement[];
-};
-
-type TestSegment = Omit<SegmentWithExercises, "segmentOrder" | "sets" | "exercises"> & {
-  exercises: TestExercise[];
-};
-
-function createWorkout(name: string, date: string, segments: TestSegment[]): WorkoutState {
-  return {
-    name,
-    workoutDate: date,
-  };
-}
