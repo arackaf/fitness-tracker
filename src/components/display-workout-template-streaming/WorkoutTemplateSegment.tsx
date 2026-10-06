@@ -15,9 +15,9 @@ export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({ segmen
     <InnerCard as="section">
       <p className="text-sm font-medium">{segment.sets} sets</p>
       <p className="mt-2 text-sm text-muted-foreground">
-        {segment.exercises.map((exercise, exerciseIndex) => (
-          <span key={`${exercise.exerciseId}-${exercise.exerciseOrder}-${exerciseIndex}`}>
-            {exerciseNameById.get(exercise.exerciseId) ?? `Exercise #${exercise.exerciseId}`}
+        {segment.exercises?.map((exercise, exerciseIndex) => (
+          <span key={`${exercise.exerciseOrder}-${exerciseIndex}`}>
+            {exercise.exerciseId ? (exerciseNameById.get(exercise.exerciseId) ?? "") : null}
             {exerciseIndex < segment.exercises.length - 1 ? ", " : null}
           </span>
         ))}

@@ -22,7 +22,7 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workou
       {workoutTemplate.description ? <p className="mb-3 text-sm">{workoutTemplate.description}</p> : null}
 
       <div className="flex flex-col gap-3">
-        {workoutTemplate.segments.map((segment, segmentIndex) => (
+        {workoutTemplate.segments?.map((segment, segmentIndex) => (
           <WorkoutTemplateSegment
             key={`${segment.segmentOrder}-${segmentIndex}`}
             segment={segment}

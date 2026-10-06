@@ -7,21 +7,37 @@ type DisplayRepsProps = {
 };
 
 const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => {
+  if (!exercise.executionType) {
+    return "";
+  }
   if (exercise.executionType === "distance") {
+    if (!measurement.distance || !exercise.distanceUnit) {
+      return "";
+    }
     return `${measurement.distance} ${exercise.distanceUnit}`;
   }
 
   if (exercise.executionType === "time") {
+    if (!measurement.duration || !exercise.durationUnit) {
+      return "";
+    }
     return `${measurement.duration}${exercise.durationUnit}`;
   }
 
+  if (!measurement.reps && !measurement.repsToFailure) {
+    return "";
+  }
   return `${measurement.weightUsed ? measurement.weightUsed + (!measurement.repsToFailure ? "x" : " ") : ""}${measurement.repsToFailure ? "To failure" : measurement.reps}`;
 };
 
 export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
+  if (!segment.exercises || !segment.exercises.every(exercise => exercise.measurements)) {
+    return "";
+  }
   if (
-    segment.exercises.every(exercise =>
-      exercise.measurements.every(measurement => measurement.repsToFailure && !measurement.weightUsed),
+    segment.exercises?.length &&
+    segment.exercises?.every(exercise =>
+      exercise.measurements?.every(measurement => measurement.repsToFailure && !measurement.weightUsed),
     )
   ) {
     return "To failure";
