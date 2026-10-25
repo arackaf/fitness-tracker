@@ -4,7 +4,7 @@ import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { createAuthClient } from "@/lib/auth-client";
 import { getLoginStateQueryOptions } from "@/server-functions/login-state";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/")({

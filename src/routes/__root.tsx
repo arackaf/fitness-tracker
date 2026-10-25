@@ -7,10 +7,6 @@ import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
 
-import { createAuthClient } from "@/lib/auth-client"; // import the auth client
-
-import { setupNewUser } from "@/data/new-user-setup";
-import { createServerFn } from "@tanstack/react-start";
 import { getLoginStateQueryOptions } from "@/server-functions/login-state";
 
 interface MyRouterContext {
