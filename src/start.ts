@@ -1,5 +1,5 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from "@tanstack/react-start";
-import { getRequestHeaders } from "@tanstack/react-start/server";
+import { deleteCookie, getCookie, getRequestHeaders, setCookie } from "@tanstack/react-start/server";
 import { env } from "cloudflare:workers";
 import { Pool } from "pg";
 import type { ContextUser } from "./types";
@@ -7,6 +7,10 @@ import { account } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
+import { setupNewUser } from "./data/new-user-setup";
+
+const USER_SETUP_COOKIE_NAME = "usr-setup";
+const USER_ID_SETUP_COOKIE_VALUE = "usr-id";
 
 const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
   try {
@@ -37,6 +41,18 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
         name: session.user.name,
         image: session.user.image,
       };
+
+      const userIdSetupValue = getCookie(USER_ID_SETUP_COOKIE_VALUE);
+      const userSetupValue = getCookie(USER_SETUP_COOKIE_NAME);
+
+      if (!userSetupValue || userIdSetupValue != userId) {
+        await setupNewUser(db, currentUser);
+        setCookie(USER_SETUP_COOKIE_NAME, "1");
+        setCookie(USER_ID_SETUP_COOKIE_VALUE, userId);
+      }
+    } else {
+      deleteCookie(USER_SETUP_COOKIE_NAME);
+      deleteCookie(USER_ID_SETUP_COOKIE_VALUE);
     }
 
     return next({
