@@ -6,26 +6,21 @@ import { Toaster } from "@/components/ui/sonner";
 import appCss from "../styles.css?url";
 
 import type { QueryClient } from "@tanstack/react-query";
+
+import { createAuthClient } from "@/lib/auth-client"; // import the auth client
+
 import { setupNewUser } from "@/data/new-user-setup";
 import { createServerFn } from "@tanstack/react-start";
+import { getLoginStateQueryOptions } from "@/server-functions/login-state";
 
 interface MyRouterContext {
   queryClient: QueryClient;
 }
 
-const setupNewUserServerFn = createServerFn({ method: "POST" }).handler(async ({ context }) => {
-  if (context.user) {
-    await setupNewUser(context.db, context.user);
-  }
-  return {
-    loggedIn: context.loggedIn,
-  };
-});
-
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  beforeLoad: async () => {
-    const result = await setupNewUserServerFn();
-    return result;
+  loader: ({ context }) => {
+    const { queryClient } = context;
+    queryClient.query(getLoginStateQueryOptions());
   },
   head: () => ({
     meta: [
