@@ -11,9 +11,6 @@ type WorkoutTemplateSegmentProps = {
 };
 
 export const WorkoutTemplateSegment: FC<WorkoutTemplateSegmentProps> = ({ segment, exerciseNameById }) => {
-  const hasRepsToFailure = (measurements: TemplateSegmentWithExercises["exercises"][number]["measurements"]) =>
-    measurements.some(measurement => measurement.repsToFailure);
-
   return (
     <InnerCard as="section">
       <p className="text-sm font-medium">{segment.sets} sets</p>

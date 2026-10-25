@@ -19,7 +19,7 @@ import {
   defaultworkoutDate,
   type WorkoutSegmentExerciseMeasurementState,
   type WorkoutSegmentExerciseState,
-  type WorkoutState,
+  type WorkoutState_Local,
 } from "@/data/workouts/workout-state";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { formatDateForPg } from "@/lib/utils";
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/app/log-workout/")({
   component: RouteComponent,
 });
 
-const templateToWorkout = (template: WorkoutTemplateState, workoutDate: Date | null): WorkoutState => {
+const templateToWorkout = (template: WorkoutTemplateState, workoutDate: Date | null): WorkoutState_Local => {
   return {
     ...template,
     workoutTemplateId: template.id,
@@ -76,7 +76,7 @@ const templateToWorkout = (template: WorkoutTemplateState, workoutDate: Date | n
 };
 
 function RouteComponent() {
-  const [workoutState, setWorkoutState] = useState<WorkoutState>(createDefaultWorkout());
+  const [workoutState, setWorkoutState] = useState<WorkoutState_Local>(createDefaultWorkout());
   const [currentWorkoutDate, setCurrentWorkoutDate] = useState<Date | null>(null);
   return (
     <SuspensePageLayout
@@ -97,7 +97,7 @@ function RouteComponent() {
 }
 
 type RenderWorkoutFormProps = {
-  workoutState: WorkoutState;
+  workoutState: WorkoutState_Local;
   setWorkoutDate: (workoutDate: Date | null) => void;
   onReset: () => void;
 };
@@ -117,7 +117,7 @@ const RenderWorkoutForm: FC<RenderWorkoutFormProps> = props => {
 };
 
 type WorkoutFormContentProps = {
-  workoutState: WorkoutState;
+  workoutState: WorkoutState_Local;
   setWorkoutDate: (workoutDate: Date | null) => void;
   onReset: () => void;
 };

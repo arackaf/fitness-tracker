@@ -7,10 +7,14 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { createAuthClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { getLoginStateQueryOptions } from "@/server-functions/login-state";
 
 export const Route = createFileRoute("/app")({
-  beforeLoad: ({ context }) => {
-    if (!context.loggedIn) {
+  loader: async ({ context }) => {
+    const { queryClient } = context;
+    const { loggedIn } = await queryClient.query(getLoginStateQueryOptions());
+
+    if (!loggedIn) {
       throw redirect({
         to: "/",
       });

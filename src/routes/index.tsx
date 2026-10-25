@@ -3,21 +3,28 @@ import { AIIcon } from "@/components/icons/AI";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";
 import { createAuthClient } from "@/lib/auth-client";
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { getLoginStateQueryOptions } from "@/server-functions/login-state";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Dumbbell } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => {
-    const { loggedIn } = context;
+  loader: async ({ context }) => {
+    const { queryClient } = context;
+    const { loggedIn } = await queryClient.query(getLoginStateQueryOptions());
+
     if (loggedIn) {
       throw redirect({ to: "/app/workouts", search: { page: 1 } });
     }
+
+    return {
+      loggedIn,
+    };
   },
   component: App,
 });
 
 function App() {
-  const { loggedIn } = Route.useRouteContext();
+  const { loggedIn } = Route.useLoaderData();
   return (
     <main className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950 text-foreground">
       <div className="mx-auto flex w-full max-w-5xl flex-col px-6 py-12 md:px-10 md:py-16">

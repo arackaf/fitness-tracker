@@ -1,14 +1,14 @@
 import type { FC } from "react";
 import { Link } from "@tanstack/react-router";
 
-import type { WorkoutState } from "@/data/workouts/workout-state";
+import type { WorkoutState_Local } from "@/data/workouts/workout-state";
 
 import { Card } from "@/components/Card";
 import { WorkoutSegment } from "@/components/display-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 
 type DisplayWorkoutProps = {
-  workout: WorkoutState;
+  workout: WorkoutState_Local;
   exerciseNameById: Map<number, string>;
 };
 

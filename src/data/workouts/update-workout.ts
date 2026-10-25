@@ -2,8 +2,8 @@ import { and, eq, exists, inArray, not, sql } from "drizzle-orm";
 
 import type {
   WorkoutSegmentExerciseMeasurementState,
+  WorkoutState_Local,
   WorkoutState,
-  WorkoutState_Wire,
 } from "@/data/workouts/workout-state";
 import { DELAY_MS } from "@/APPLICATION-SETTINGS";
 import type { DB } from "@/data/db";
@@ -16,7 +16,7 @@ import {
   workoutTemplate as workoutTemplateTable,
 } from "@/drizzle/schema";
 
-type WorkoutExerciseInput = WorkoutState["segments"][number]["exercises"][number];
+type WorkoutExerciseInput = WorkoutState_Local["segments"][number]["exercises"][number];
 
 const isPersistedId = (id: number | null | undefined): id is number => id != null && Number.isInteger(id) && id > 0;
 
@@ -114,7 +114,7 @@ const createExerciseUnitValues = (exercise: WorkoutExerciseInput) => {
   };
 };
 
-export const updateWorkout = async (db: DB, input: WorkoutState_Wire, userId: string) => {
+export const updateWorkout = async (db: DB, input: WorkoutState, userId: string) => {
   if (input.id == null) {
     throw new Error("Workout ID is required for update.");
   }
