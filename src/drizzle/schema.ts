@@ -12,8 +12,12 @@ import {
   primaryKey,
   unique,
   check,
+  jsonb,
+  bigint,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
+import type { ModelMessage, TokenUsage } from "@tanstack/ai";
+import type { RunStatus } from "@tanstack/ai-persistence";
 
 export const executionType = pgEnum("execution_type", ["repetition", "distance", "time"]);
 export const durationUnit = pgEnum("duration_unit", ["seconds", "minutes", "hours"]);
@@ -319,4 +323,41 @@ export const workoutTemplateSegmentExerciseMeasurement = pgTable(
     distance: varchar({ length: 50 }),
   },
   table => [check("workout_template_segment_exercise_measurement_set_order_check", sql`(set_order > 0)`)],
+);
+
+export const chatThread = pgTable(
+  "chat_thread",
+  {
+    threadId: text().primaryKey(),
+    userId: text().notNull(),
+    messages: jsonb().$type<Array<ModelMessage>>().notNull(),
+    updatedAt: bigint({ mode: "number" }).notNull(),
+  },
+  table => [index("idx_chat_thread_user").on(table.userId)],
+);
+
+export const chatRun = pgTable(
+  "chat_run",
+  {
+    runId: text().primaryKey(),
+    threadId: text().notNull(),
+    status: text().$type<RunStatus>().notNull(),
+    startedAt: bigint({ mode: "number" }).notNull(),
+    finishedAt: bigint({ mode: "number" }),
+    error: text(),
+    errorCode: text(),
+    usage: jsonb().$type<TokenUsage>(),
+    sandboxKey: text(),
+    detachedSince: bigint({ mode: "number" }),
+    cancelRequested: boolean(),
+    driverEpoch: integer(),
+    parentRunId: text(),
+    subagentRunId: text(),
+    name: text(),
+  },
+  table => [
+    index("idx_chat_run_status_detached").on(table.status, table.detachedSince),
+    index("idx_chat_run_thread_started").on(table.threadId, table.startedAt),
+    index("idx_chat_run_parent_started").on(table.parentRunId, table.startedAt),
+  ],
 );
