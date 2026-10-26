@@ -1,22 +1,5 @@
 export const initialWorkoutTemplateDDL = `
 
-CREATE TABLE IF NOT EXISTS saved_workout_template_map (
-  id INTEGER PRIMARY KEY,
-  thread_id INTEGER NOT NULL,
-  uuid TEXT NOT NULL UNIQUE,
-  saved_workout_template_id INTEGER NULL,
-
-  FOREIGN KEY (chat_thread_id)
-      REFERENCES chat_thread(thread_id)
-      ON DELETE CASCADE
-);
-
-CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_session_id
-  ON saved_workout_template_map(session_id);
-
-CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_uuid
-  ON saved_workout_template_map(uuid);
-
 CREATE TABLE IF NOT EXISTS chat_thread (
   thread_id TEXT PRIMARY KEY,
   messages_json TEXT NOT NULL,
@@ -73,4 +56,22 @@ CREATE TABLE IF NOT EXISTS chat_metadata (
   value_json TEXT NOT NULL,
   PRIMARY KEY (namespace, key)
 );
+
+CREATE TABLE IF NOT EXISTS saved_workout_template_map (
+  id INTEGER PRIMARY KEY,
+  thread_id INTEGER NOT NULL,
+  uuid TEXT NOT NULL UNIQUE,
+  saved_workout_template_id INTEGER NULL,
+
+  FOREIGN KEY (thread_id)
+      REFERENCES chat_thread(thread_id)
+      ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_session_id
+  ON saved_workout_template_map(thread_id);
+
+CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_uuid
+  ON saved_workout_template_map(uuid);
+
 `;
