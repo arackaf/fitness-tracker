@@ -14,6 +14,7 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
+import { Route as ApiAiCreateWorkoutTemplatesRouteImport } from './routes/api/ai/create-workout-templates'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
@@ -57,6 +58,12 @@ const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const ApiAiCreateWorkoutTemplatesRoute =
+  ApiAiCreateWorkoutTemplatesRouteImport.update({
+    id: '/api/ai/create-workout-templates',
+    path: '/api/ai/create-workout-templates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -157,6 +164,7 @@ export interface FileRoutesByFullPath {
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/app/': typeof AppIndexRoute
+  '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -179,6 +187,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
   '/app': typeof AppIndexRoute
+  '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin': typeof AppAdminIndexRoute
@@ -204,6 +213,7 @@ export interface FileRoutesById {
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
   '/app/': typeof AppIndexRoute
+  '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/app/admin'
     | '/api/$'
     | '/app/'
+    | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
@@ -252,6 +263,7 @@ export interface FileRouteTypes {
     | '/'
     | '/api/$'
     | '/app'
+    | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin'
@@ -276,6 +288,7 @@ export interface FileRouteTypes {
     | '/app/admin'
     | '/api/$'
     | '/app/'
+    | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
@@ -299,6 +312,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRouteRoute: typeof AppRouteRouteWithChildren
   ApiSplatRoute: typeof ApiSplatRoute
+  ApiAiCreateWorkoutTemplatesRoute: typeof ApiAiCreateWorkoutTemplatesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -337,6 +351,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin'
       preLoaderRoute: typeof AppAdminRouteRouteImport
       parentRoute: typeof AppRouteRoute
+    }
+    '/api/ai/create-workout-templates': {
+      id: '/api/ai/create-workout-templates'
+      path: '/api/ai/create-workout-templates'
+      fullPath: '/api/ai/create-workout-templates'
+      preLoaderRoute: typeof ApiAiCreateWorkoutTemplatesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/admin/': {
       id: '/app/admin/'
@@ -526,6 +547,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRouteRoute: AppRouteRouteWithChildren,
   ApiSplatRoute: ApiSplatRoute,
+  ApiAiCreateWorkoutTemplatesRoute: ApiAiCreateWorkoutTemplatesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

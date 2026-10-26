@@ -26,8 +26,8 @@
     "@ai-sdk/anthropic": "^4.0.28",
     "@electric-sql/pglite": "^0.3.15",
     "@tailwindcss/vite": "^4.1.18",
-    "@tanstack/ai": "^0.65.0",
-    "ai": "^7.0.48",
+    "@tanstack/ai": "^1.0.0",
+    "@tanstack/ai-vercel-gateway": "^1.0.0",
     "@tanstack/react-devtools": "^0.10.13",
     "@tanstack/react-form": "^1.28.3",
     "@tanstack/react-query": "^5.104.5",
@@ -37,6 +37,7 @@
     "@tanstack/react-router-ssr-query": "^1.167.3",
     "@tanstack/react-start": "^1.169.4",
     "@tanstack/router-plugin": "^1.168.48",
+    "ai": "^7.0.48",
     "better-auth": "^1.5.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -82,5 +83,10 @@
     "vite": "^8.2.2",
     "vitest": "^5.0.2",
     "wrangler": "^4.94.0"
+  },
+  "intent": {
+    "skills": [
+      "*"
+    ]
   }
 }
