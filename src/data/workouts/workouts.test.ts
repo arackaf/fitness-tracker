@@ -43,11 +43,7 @@ const pushUp: CreateExerciseServerInput & { id?: number } = {
 
 beforeAll(
   async () => {
-    postgres = await new PostgreSqlContainer("postgres:18-alpine")
-      .withDatabase("test")
-      .withUsername("test")
-      .withPassword("test")
-      .start();
+    postgres = await new PostgreSqlContainer("postgres:18-alpine").start();
 
     await pushSchema(postgres.getConnectionUri());
 
