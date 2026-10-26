@@ -2,12 +2,12 @@ export const initialWorkoutTemplateDDL = `
 
 CREATE TABLE IF NOT EXISTS saved_workout_template_map (
   id INTEGER PRIMARY KEY,
-  session_id INTEGER NOT NULL,
+  thread_id INTEGER NOT NULL,
   uuid TEXT NOT NULL UNIQUE,
   saved_workout_template_id INTEGER NULL,
 
-  FOREIGN KEY (session_id)
-      REFERENCES session(id)
+  FOREIGN KEY (chat_thread_id)
+      REFERENCES chat_thread(thread_id)
       ON DELETE CASCADE
 );
 
