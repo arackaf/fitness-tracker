@@ -85,19 +85,6 @@ afterAll(async () => {
   } catch {}
 });
 
-test("test demo", async () => {
-  await db.insert(workout).values({
-    userId: "123",
-    name: "Workout A",
-    workoutDate: new Date().toString(),
-    description: "AAA",
-  });
-
-  const workouts = await db.select().from(workout);
-
-  expect(workouts.length).toBe(1);
-});
-
 test("Insert simple workout with one exercise", async () => {
   const workoutInput: TestWorkoutState = {
     name: "Workout A",
