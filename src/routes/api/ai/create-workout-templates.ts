@@ -11,19 +11,19 @@ const notFound = () => Response.json({ error: true, code: "NOT_FOUND", message: 
 export const Route = createFileRoute("/api/ai/create-workout-templates")({
   server: {
     handlers: {
-      GET: async ({ request, context }) => {
-        const userId = requireUserId(context);
-        return reconstructChat(chatPersistence(context.db, userId), request, {
-          authorize: async threadId => ((await canAccessThread(context.db, userId, threadId)) ? true : notFound()),
-        });
-      },
+      // GET: async ({ request, context }) => {
+      //   const userId = requireUserId(context);
+      //   return reconstructChat(chatPersistence(context.db, userId), request, {
+      //     authorize: async threadId => ((await canAccessThread(context.db, userId, threadId)) ? true : notFound()),
+      //   });
+      // },
       POST: async ({ request, context }) => {
         const userId = requireUserId(context);
         const params = await chatParamsFromRequest(request);
 
-        if (!(await canAccessThread(context.db, userId, params.threadId))) {
-          return notFound();
-        }
+        // if (!(await canAccessThread(context.db, userId, params.threadId))) {
+        //   return notFound();
+        // }
 
         const stream = chat({
           adapter: vercelGatewayText("anthropic/claude-opus-5"),
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/api/ai/create-workout-templates")({
           threadId: params.threadId,
           runId: params.runId,
           ...(params.resume ? { resume: params.resume } : {}),
-          middleware: [withPersistence(chatPersistence(context.db, userId))],
+          //middleware: [withPersistence(chatPersistence(context.db, userId))],
           outputSchema: promptOutputSchema,
           stream: true,
           systemPrompts: [
