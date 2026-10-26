@@ -1,9 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CreateExercise } from "@/components/CreateExercise";
-import { ExerciseFilters } from "@/components/ExerciseFilters";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import type { MuscleGroup } from "@/data/types";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import { fullExercisesQueryOptions } from "@/server-functions/full-exercises";
 
 export const Route = createFileRoute("/app/admin/exercises")({
   loader: ({ context }) => {
@@ -31,39 +31,9 @@ function RouteComponent() {
 }
 
 function RouteContent() {
-  const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
-  const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
-  const [selectedMuscleGroups, setSelectedMuscleGroups] = useState<number[]>([]);
+  const { data: exercises } = useSuspenseQuery(fullExercisesQueryOptions());
 
-  const filteredExercises = useMemo(() => {
-    if (!selectedMuscleGroups.length) {
-      return exercises;
-    }
-
-    return exercises.filter(exercise => exercise.muscleGroups?.some(group => selectedMuscleGroups.includes(group)));
-  }, [exercises, selectedMuscleGroups]);
-
-  const toggleMuscleGroup = (muscleGroup: MuscleGroup, checked: boolean) => {
-    setSelectedMuscleGroups(current =>
-      checked
-        ? current.includes(muscleGroup.id)
-          ? current
-          : [...current, muscleGroup.id]
-        : current.filter(group => group !== muscleGroup.id),
-    );
-  };
-
-  return (
-    <>
-      <ExerciseFilters
-        muscleGroups={muscleGroups}
-        selectedMuscleGroups={selectedMuscleGroups}
-        onToggleMuscleGroup={toggleMuscleGroup}
-      />
-
-      <ExerciseListDisplay exercises={filteredExercises} muscleGroups={muscleGroups} />
-    </>
-  );
+  return <ExerciseListDisplay exercises={exercises} />;
 }
 
 type CreateExerciseDialogProps = {

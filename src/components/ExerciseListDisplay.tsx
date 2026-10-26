@@ -1,30 +1,17 @@
-import type { MuscleGroup } from "@/data/types";
-import { useMemo, type FC } from "react";
+import { type FC } from "react";
 import { Card } from "@/components/Card";
-
-type ExerciseListDisplayItem = {
-  id: number;
-  name: string | null;
-  description: string | null;
-  isCompound: boolean | null;
-  muscleGroups: number[] | null;
-};
+import type { Exercise } from "@/data/exercises/get-full-exercises";
 
 type ExerciseListDisplayProps = {
-  exercises: ExerciseListDisplayItem[];
-  muscleGroups: MuscleGroup[];
+  exercises: Exercise[];
 };
 
 export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
-  const { exercises, muscleGroups } = props;
-
-  const muscleGroupLookup = useMemo(() => {
-    return new Map(muscleGroups.map(group => [group.id, group]));
-  }, [muscleGroups]);
+  const { exercises } = props;
 
   return (
     <ul className="space-y-3">
-      {exercises.map(exercise => (
+      {exercises.map(({ exercise, muscleGroupNames }) => (
         <Card as="li" key={exercise.id} hoverStyle="border" className="rounded-xl shadow-sm transition">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -39,12 +26,7 @@ export const ExerciseListDisplay: FC<ExerciseListDisplayProps> = props => {
           </div>
 
           {exercise.muscleGroups?.length ? (
-            <p className="mt-3 text-xs uppercase tracking-wide text-sky-200/80">
-              {exercise.muscleGroups
-                .map(group => muscleGroupLookup.get(group)?.name)
-                .filter(Boolean)
-                .join(" • ")}
-            </p>
+            <p className="mt-3 text-xs uppercase tracking-wide text-sky-200/80">{muscleGroupNames.join(" • ")}</p>
           ) : null}
         </Card>
       ))}
