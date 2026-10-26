@@ -17,7 +17,7 @@ import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { generateWorkoutTemplateWithAi } from "@/server-functions/workout-template-ai";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import type { GatewayModelId } from "ai";
-import type { PromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+// import type { PromptResult } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 export const Route = createFileRoute("/app/ai-sandbox/")({
   component: RouteComponent,
@@ -45,7 +45,7 @@ function RouteComponent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const [promptResults, setPromptResults] = useState<({ model: GatewayModelId } & PromptResult)[]>([]);
+  const [promptResults, setPromptResults] = useState<({ model: GatewayModelId } & any)[]>([]);
 
   const { data: workoutTemplates = [], isFetching: isFetchingTemplates } = useQuery(allWorkoutTemplatesQueryOptions());
   const { data: exercises = [] } = useQuery(exercisesQueryOptions());
@@ -104,7 +104,7 @@ function RouteComponent() {
           })),
           workoutTemplates: selectedTemplates.map(template => compressWorkoutTemplateForLLM(exerciseLookup, template)),
         },
-      }).then(result => {
+      }).then((result: any) => {
         if (!result || !result.success) {
           setPromptResults(currentResults => [...currentResults, { model, success: false }]);
         } else {

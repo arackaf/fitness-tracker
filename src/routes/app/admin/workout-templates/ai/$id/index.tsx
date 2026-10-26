@@ -7,7 +7,6 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
-import type { SessionPayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
 import { PromptPayloadSchema } from "@/interop-types/workout-template-state";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -31,9 +30,8 @@ function RouteComponent() {
 
 function RouteContent() {
   const { id } = Route.useParams();
-  const [sessionState, setSessionState] = useState<
-    { status: "error" } | { status: "loaded"; session: SessionPayload } | null
-  >(null);
+  // const [sessionState, setSessionState] = useState<{ status: "error" } | { status: "loaded"; session: any[] } | null>(
+  const [sessionState, setSessionState] = useState<any>(null);
 
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
@@ -71,7 +69,7 @@ function RouteContent() {
             if (data?.type === "prompt") {
               const promptPayload = PromptPayloadSchema.parse(data.payload);
 
-              setSessionState(prev => {
+              setSessionState((prev: any) => {
                 if (prev?.status !== "loaded" || prev.session.status !== "loaded") {
                   return prev;
                 }
@@ -161,13 +159,13 @@ function RouteContent() {
         <p className="text-sm text-muted-foreground">No prompts in this session yet.</p>
       ) : (
         <div className="flex flex-col gap-6">
-          {prompts.map((promptPayload, index) => (
+          {prompts.map((promptPayload: any, index: number) => (
             <div key={`prompt-${index}`} className="flex flex-col gap-4">
               {promptPayload.promptInput.workoutTemplates.length > 0 && (
                 <div className="flex flex-col gap-1">
                   <h4 className="text-sm font-medium text-gray-400">Referenced Templates</h4>
                   <div className="flex flex-wrap gap-x-2 gap-y-1">
-                    {promptPayload.promptInput.workoutTemplates.map((wt, i) => (
+                    {promptPayload.promptInput.workoutTemplates.map((wt: any, i: number) => (
                       <span key={i} className="rounded bg-gray-700 px-2 py-1 text-sm text-gray-200">
                         {wt}
                       </span>
