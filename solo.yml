@@ -8,13 +8,6 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  dev server:
-    command: npm run dev
-    working_dir: null
-    auto_start: false
-    auto_restart: false
-    restart_when_changed: []
-    env: {}
   test:
     command: npm run test
     working_dir: null
@@ -22,8 +15,8 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  pg:
-    command: npm run pg
+  build:
+    command: npm run build
     working_dir: null
     auto_start: false
     auto_restart: false
@@ -36,8 +29,22 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  build:
-    command: npm run build
+  dev server:
+    command: npm run dev
+    working_dir: null
+    auto_start: false
+    auto_restart: false
+    restart_when_changed: []
+    env: {}
+  WT DO Drizzle Pull:
+    command: npx drizzle-kit pull --config=drizzle.config.ts
+    working_dir: src/durable-objects/WorkoutTemplateAIGeneration
+    auto_start: true
+    auto_restart: false
+    restart_when_changed: []
+    env: {}
+  pg:
+    command: npm run pg
     working_dir: null
     auto_start: false
     auto_restart: false
