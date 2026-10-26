@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS chat_metadata (
 
 CREATE TABLE IF NOT EXISTS saved_workout_template_map (
   id INTEGER PRIMARY KEY,
-  thread_id INTEGER NOT NULL,
+  thread_id TEXT NOT NULL,
   uuid TEXT NOT NULL UNIQUE,
   saved_workout_template_id INTEGER NULL,
 
@@ -73,5 +73,11 @@ CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_session_id
 
 CREATE INDEX IF NOT EXISTS idx_saved_workout_template_map_uuid
   ON saved_workout_template_map(uuid);
+
+CREATE TABLE IF NOT EXISTS chat_thread_prompt_info (
+  thread_id TEXT PRIMARY KEY,
+  prompt TEXT NOT NULL,
+  template_names TEXT
+);
 
 `;
