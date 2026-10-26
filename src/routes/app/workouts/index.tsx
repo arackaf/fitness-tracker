@@ -1,4 +1,4 @@
-import { useDeferredValue, type FC } from "react";
+import { useDeferredValue, useMemo, type FC } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
