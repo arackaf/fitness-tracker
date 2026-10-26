@@ -1,13 +1,12 @@
 import { useMemo, useState, type FC } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
 
+import { v7 as uuidv7 } from "uuid";
 import type { MessagePart } from "@tanstack/ai";
 import { fetchServerSentEvents, useChat, type UIMessage } from "@tanstack/ai-react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { DisplayWorkoutTemplate as DisplayWorkoutTemplateStreaming } from "@/components/display-workout-template-streaming/DisplayWorkoutTemplate";
-import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 import { Button } from "@/components/ui/button";
 import { SelectWorkoutTemplates } from "@/components/SelectWorkoutTemplates";
@@ -16,7 +15,7 @@ import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-temp
 import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
-import { createAiSessionsServerFn, getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
+import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
 import { PromptInput } from "@/components/CreateWorkoutTemplatesWithAi/PromptInput";
 import { PromptHistory } from "@/components/CreateWorkoutTemplatesWithAi/PromptHistory";
 import { promptOutputSchema } from "@/interop-types/workout-template-state";
@@ -63,10 +62,12 @@ function RouteComponentContent() {
     setSelectedTemplates(currentTemplates => currentTemplates.filter(template => template.id !== templateId));
   };
 
+  const [threadId] = useState(() => uuidv7());
+
   const { messages, sendMessage, isLoading } = useChat({
     connection: fetchServerSentEvents("/api/ai/create-workout-templates"),
     outputSchema: promptOutputSchema,
-    threadId: "1",
+    threadId,
   });
 
   const handleGenerate = async (prompt: string) => {
@@ -78,26 +79,6 @@ function RouteComponentContent() {
     });
     setIsGenerating(true);
     setError(null);
-
-    return;
-    try {
-      const result = await createAiSessionsServerFn({
-        data: {
-          promptInfo: {
-            prompt,
-            exercises: exercises.map(e => ({ id: e.id, name: e.name, description: e.description })),
-            workoutTemplates: selectedTemplates.map(t => compressWorkoutTemplateForLLM(exerciseLookup, t)),
-          },
-        },
-      });
-      if (result?.id) {
-        navigate({ to: "/app/admin/workout-templates/ai/$id", params: { id: String(result.id) } });
-      } else {
-        setError("Failed to create AI session");
-      }
-    } catch {
-      setError("Something went wrong creating the session");
-    }
   };
 
   const reset = () => {
@@ -138,75 +119,6 @@ function RouteComponentContent() {
       </div>
 
       {isLoadingSessions || !aiSessions?.length ? null : <PromptHistory sessions={aiSessions} />}
-
-      <br />
-
-      <div className="flex flex-col gap-4">
-        {messages.map(message =>
-          message.role === "user" ? (
-            <div key={message.id} className="w-1/2 self-end rounded-2xl bg-blue-100 px-4 py-2">
-              {message.parts.map((part, index) => (part.type === "text" ? <p key={index}>{part.content}</p> : null))}
-            </div>
-          ) : (
-            <DisplayMessage key={message.id} message={message} exerciseNameById={exerciseNameById} />
-          ),
-        )}
-        {isLoading && <Loader2 className="size-6 animate-spin text-muted-foreground" />}
-      </div>
     </div>
   );
 }
-
-type DisplayMessageProps = {
-  message: UIMessage<any, { commentary: string; workouts: WorkoutTemplateState[] }, undefined>;
-  exerciseNameById: Map<number, string>;
-};
-const DisplayMessage: FC<DisplayMessageProps> = props => {
-  const { message, exerciseNameById } = props;
-
-  return (
-    <div key={message.id} className="w-full">
-      {message.parts.map((part, index) => (
-        <div key={index}>
-          <DisplayMessagePart part={part} exerciseNameById={exerciseNameById} />
-        </div>
-      ))}
-    </div>
-  );
-};
-
-type DisplayMessagePartProps = {
-  part: MessagePart<{ commentary: string; workouts: WorkoutTemplateState[] }>;
-  exerciseNameById: Map<number, string>;
-};
-const DisplayMessagePart: FC<DisplayMessagePartProps> = props => {
-  const { part, exerciseNameById } = props;
-  if (part.type === "structured-output") {
-    if (part.status === "complete") {
-      return (
-        <div className="flex flex-col gap-2">
-          <span>{part.data.commentary}</span>
-          {part.data.workouts.map(workoutTemplate => (
-            <DisplayWorkoutTemplate workoutTemplate={workoutTemplate} exerciseNameById={exerciseNameById} />
-          ))}
-        </div>
-      );
-    }
-    return (
-      <div className="flex flex-col gap-2">
-        {part.partial?.commentary && <span>{part.partial?.commentary}</span>}
-        {part.partial?.workouts?.map((workoutTemplate, idx) => (
-          <DisplayWorkoutTemplateStreaming
-            key={idx}
-            workoutTemplate={workoutTemplate}
-            exerciseNameById={exerciseNameById}
-          />
-        ))}
-      </div>
-    );
-  }
-  if (part.type === "text") {
-    return <span>{part.content}</span>;
-  }
-  return null;
-};

@@ -1,16 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
+
+import type { MessagePart } from "@tanstack/ai";
+import { fetchServerSentEvents, useChat, type UIMessage } from "@tanstack/ai-react";
 
 import { DisplayPromptResult } from "@/components/CreateWorkoutTemplatesWithAi/PromptResult";
 import { Loading } from "@/components/loading-state/Loading";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { loadAiSessionServerFn } from "@/server-functions/workout-template-ai";
-import { openWorkoutTemplateWebSocket } from "@/lib/web-sockets";
 import { PromptPayloadSchema } from "@/interop-types/workout-template-state";
+import { DisplayWorkoutTemplate as DisplayWorkoutTemplateStreaming } from "@/components/display-workout-template-streaming/DisplayWorkoutTemplate";
+import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -36,79 +40,6 @@ function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
-  useEffect(() => {
-    loadAiSessionServerFn({ data: { sessionId: Number(id) } })
-      .then(result => {
-        setSessionState({
-          status: "loaded",
-          session: result,
-        });
-      })
-      .catch(err => {
-        setSessionState({ status: "error" });
-      });
-  }, [id]);
-
-  useEffect(() => {
-    let socketToDiscard: WebSocket | null = null;
-    let valid = true;
-    if (sessionState?.status === "loaded" && sessionState.session.status === "loaded") {
-      const lastPromptMaybe = sessionState.session.prompts.at(-1);
-      openWorkoutTemplateWebSocket(id, lastPromptMaybe?.promptId).then(socket => {
-        if (!valid) {
-          socket.close();
-          return;
-        }
-        socketToDiscard = socket;
-
-        socket.addEventListener("message", evt => {
-          try {
-            const data = JSON.parse(evt.data);
-            console.log("Web Socket Message", data);
-
-            if (data?.type === "prompt") {
-              const promptPayload = PromptPayloadSchema.parse(data.payload);
-
-              setSessionState((prev: any) => {
-                if (prev?.status !== "loaded" || prev.session.status !== "loaded") {
-                  return prev;
-                }
-                const newPrompts = [...prev.session.prompts];
-                let existingPromptUpdated = false;
-                for (let i = 0; i < newPrompts.length; i++) {
-                  const prompt = newPrompts[i];
-                  if (prompt.promptId === promptPayload.promptId) {
-                    newPrompts[i] = promptPayload;
-                    existingPromptUpdated = true;
-                    break;
-                  }
-                }
-
-                if (!existingPromptUpdated) {
-                  newPrompts.push(promptPayload);
-                }
-
-                return {
-                  ...prev,
-                  session: {
-                    ...prev.session,
-                    prompts: newPrompts,
-                  },
-                };
-              });
-            }
-          } catch (err) {}
-        });
-      });
-    }
-    return () => {
-      valid = false;
-      if (socketToDiscard) {
-        socketToDiscard?.close();
-      }
-    };
-  }, [sessionState]);
-
   if (sessionState == null) {
     return (
       <div className="relative min-h-40">
@@ -117,76 +48,100 @@ function RouteContent() {
     );
   }
 
-  if (sessionState.status === "error" || sessionState.session.status === "error") {
-    return (
-      <div className="flex flex-col items-start gap-3">
-        <p className="text-sm text-destructive">
-          Something went wrong loading the session. Please refresh and try again.
-        </p>
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
-        </Button>
-      </div>
-    );
-  }
+  // if (sessionState.status === "error" || sessionState.session.status === "error") {
+  //   return (
+  //     <div className="flex flex-col items-start gap-3">
+  //       <p className="text-sm text-destructive">
+  //         Something went wrong loading the session. Please refresh and try again.
+  //       </p>
+  //       <Button asChild variant="secondary">
+  //         <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
+  //       </Button>
+  //     </div>
+  //   );
+  // }
 
-  if (sessionState.session.status === "not-found") {
-    return (
-      <div className="flex flex-col items-start gap-3">
-        <p className="text-sm text-destructive">Session not found.</p>
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
-        </Button>
-      </div>
-    );
-  }
+  // if (sessionState.session.status === "not-found") {
+  //   return (
+  //     <div className="flex flex-col items-start gap-3">
+  //       <p className="text-sm text-destructive">Session not found.</p>
+  //       <Button asChild variant="secondary">
+  //         <Link to="/app/admin/workout-templates/ai">Back to AI Sessions</Link>
+  //       </Button>
+  //     </div>
+  //   );
+  // }
 
   const { session, prompts } = sessionState.session;
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
-      <h2 className="text-lg font-semibold">
-        {session.name ? (
-          session.name
-        ) : (
-          <>
-            Session #{session.id} &middot; {session.createdAt}
-          </>
-        )}
-      </h2>
-
-      {prompts.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No prompts in this session yet.</p>
-      ) : (
-        <div className="flex flex-col gap-6">
-          {prompts.map((promptPayload: any, index: number) => (
-            <div key={`prompt-${index}`} className="flex flex-col gap-4">
-              {promptPayload.promptInput.workoutTemplates.length > 0 && (
-                <div className="flex flex-col gap-1">
-                  <h4 className="text-sm font-medium text-gray-400">Referenced Templates</h4>
-                  <div className="flex flex-wrap gap-x-2 gap-y-1">
-                    {promptPayload.promptInput.workoutTemplates.map((wt: any, i: number) => (
-                      <span key={i} className="rounded bg-gray-700 px-2 py-1 text-sm text-gray-200">
-                        {wt}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div className="flex flex-col gap-1">
-                <h4 className="text-sm font-medium text-gray-400">Prompt</h4>
-                <p className="text-gray-200">{promptPayload.promptInput.prompt}</p>
-              </div>
-              <DisplayPromptResult
-                sessionId={Number(id)}
-                exercises={exercises}
-                muscleGroups={muscleGroups}
-                promptResult={promptPayload.result}
-              />
+      <div className="flex flex-col gap-4">
+        {messages.map(message =>
+          message.role === "user" ? (
+            <div key={message.id} className="w-1/2 self-end rounded-2xl bg-blue-100 px-4 py-2">
+              {message.parts.map((part, index) => (part.type === "text" ? <p key={index}>{part.content}</p> : null))}
             </div>
-          ))}
-        </div>
-      )}
+          ) : (
+            <DisplayMessage key={message.id} message={message} exerciseNameById={exerciseNameById} />
+          ),
+        )}
+        {isLoading && <Loader2 className="size-6 animate-spin text-muted-foreground" />}
+      </div>
     </div>
   );
 }
+
+type DisplayMessageProps = {
+  message: UIMessage<any, { commentary: string; workouts: WorkoutTemplateState[] }, undefined>;
+  exerciseNameById: Map<number, string>;
+};
+const DisplayMessage: FC<DisplayMessageProps> = props => {
+  const { message, exerciseNameById } = props;
+
+  return (
+    <div key={message.id} className="w-full">
+      {message.parts.map((part, index) => (
+        <div key={index}>
+          <DisplayMessagePart part={part} exerciseNameById={exerciseNameById} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+type DisplayMessagePartProps = {
+  part: MessagePart<{ commentary: string; workouts: WorkoutTemplateState[] }>;
+  exerciseNameById: Map<number, string>;
+};
+const DisplayMessagePart: FC<DisplayMessagePartProps> = props => {
+  const { part, exerciseNameById } = props;
+  if (part.type === "structured-output") {
+    if (part.status === "complete") {
+      return (
+        <div className="flex flex-col gap-2">
+          <span>{part.data.commentary}</span>
+          {part.data.workouts.map(workoutTemplate => (
+            <DisplayWorkoutTemplate workoutTemplate={workoutTemplate} exerciseNameById={exerciseNameById} />
+          ))}
+        </div>
+      );
+    }
+    return (
+      <div className="flex flex-col gap-2">
+        {part.partial?.commentary && <span>{part.partial?.commentary}</span>}
+        {part.partial?.workouts?.map((workoutTemplate, idx) => (
+          <DisplayWorkoutTemplateStreaming
+            key={idx}
+            workoutTemplate={workoutTemplate}
+            exerciseNameById={exerciseNameById}
+          />
+        ))}
+      </div>
+    );
+  }
+  if (part.type === "text") {
+    return <span>{part.content}</span>;
+  }
+  return null;
+};
