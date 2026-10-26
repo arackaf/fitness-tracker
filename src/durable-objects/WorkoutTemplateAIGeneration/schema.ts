@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, index, primaryKey } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, primaryKey, unique } from "drizzle-orm/sqlite-core";
 import type { ModelMessage, TokenUsage } from "@tanstack/ai";
 import type { InterruptRecord, RunStatus } from "@tanstack/ai-persistence";
 
@@ -6,15 +6,16 @@ export const savedWorkoutTemplateMap = sqliteTable(
   "saved_workout_template_map",
   {
     id: integer().primaryKey(),
-    sessionId: integer("session_id")
+    threadId: text("thread_id")
       .notNull()
-      .references(() => chatThread.threadId),
-    uuid: text().notNull().unique(),
+      .references(() => chatThread.threadId, { onDelete: "cascade" }),
+    uuid: text().notNull(),
     savedWorkoutTemplateId: integer("saved_workout_template_id"),
   },
   table => [
-    index("idx_saved_workout_template_map_session_id").on(table.sessionId),
     index("idx_saved_workout_template_map_uuid").on(table.uuid),
+    index("idx_saved_workout_template_map_session_id").on(table.threadId),
+    unique("saved_workout_template_map_uuid_unique").on(table.uuid),
   ],
 );
 
@@ -77,3 +78,9 @@ export const chatMetadata = sqliteTable(
   },
   table => [primaryKey({ columns: [table.namespace, table.key] })],
 );
+
+export const chatThreadPromptInfo = sqliteTable("chat_thread_prompt_info", {
+  threadId: text("thread_id").primaryKey(),
+  prompt: text().notNull(),
+  templateNames: text("template_names"),
+});
