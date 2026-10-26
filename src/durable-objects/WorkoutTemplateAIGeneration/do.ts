@@ -17,6 +17,8 @@ import { type QueriedPromptResult, type SessionSummary } from "./types";
 import { createSession } from "./data";
 import { chat, memoryStream, resumeServerSentEventsResponse, toServerSentEventsResponse } from "@tanstack/ai";
 import { vercelGatewayText } from "@tanstack/ai-vercel-gateway";
+import { withPersistence } from "@tanstack/ai-persistence";
+import { chatPersistence } from "./store";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
   const userId = await requireUserId(context);
@@ -81,7 +83,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         threadId: params.threadId,
         runId: params.runId,
         ...(params.resume ? { resume: params.resume } : {}),
-        //middleware: [withPersistence(chatPersistence(context.db, userId))],
+        middleware: [withPersistence(chatPersistence(this.db))],
         outputSchema: promptOutputSchema,
         stream: true,
         systemPrompts: [systemPrompt(workoutTemplates, exercises)],
