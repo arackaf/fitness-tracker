@@ -14,7 +14,15 @@ ${
 - terminology
 - difficulty
 - workout length
-- programming style`
+- programming style
+
+Here are the workouts the user selected:
+
+<reference_workouts>
+${JSON.stringify(referenceWorkoutTemplates)}
+</reference_workouts>
+
+`
     : ""
 }
 
@@ -32,23 +40,3 @@ Here are the exercises from which you can choose:
 ${JSON.stringify(exercises)}
 </exercises>
         `.trim();
-
-export const userPrompt = (prompt: string, referenceWorkoutTemplates: CompressedWorkoutTemplate[]) =>
-  `
-      ${
-        referenceWorkoutTemplates.length > 0
-          ? `
-Here are the workouts the user selected:
-
-<reference_workouts>
-${JSON.stringify(referenceWorkoutTemplates)}
-</reference_workouts>`.trim()
-          : ""
-      }
-
-        Here are the user's instructions on what kind of workouts they want, from this starting point:
-
-        <user_request>
-        ${prompt}
-        </user_request>
-`.trim();

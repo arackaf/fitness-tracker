@@ -14,13 +14,6 @@ export type ExerciseSummary = {
   description: string | null;
 };
 
-export type PromptInput = {
-  prompt: string;
-  exercises: ExerciseSummary[];
-  workoutTemplates: CompressedWorkoutTemplate[];
-  model?: GatewayModelId;
-};
-
 export type SuccessPromptResult = {
   success: true;
   commentary: string;
@@ -29,13 +22,6 @@ export type SuccessPromptResult = {
   cost: any;
 };
 
-export type PromptResult =
-  | {
-      success: false;
-    }
-  | SuccessPromptResult
-  | null;
-
 export type SuccessfulPromptResponse = Pick<SuccessPromptResult, "commentary" | "workouts">;
 
 export type PromptResponsePayload =
@@ -43,24 +29,6 @@ export type PromptResponsePayload =
   | { success: false; pending: false }
   | { success: null; pending: true }
   | null;
-
-export type PromptPayload = {
-  promptId: number;
-  promptInput: {
-    prompt: string;
-    workoutTemplates: string[];
-  };
-  result: PromptResponsePayload;
-};
-
-export type SessionPayload =
-  | { status: "not-found" }
-  | { status: "error" }
-  | {
-      status: "loaded";
-      session: typeof session.$inferSelect;
-      prompts: PromptPayload[];
-    };
 
 export type QueriedSession = typeof session.$inferSelect;
 

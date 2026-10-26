@@ -63,16 +63,19 @@ function RouteComponentContent() {
     setSelectedTemplates(currentTemplates => currentTemplates.filter(template => template.id !== templateId));
   };
 
-  const payload = useChat({
+  const { messages, sendMessage, isLoading } = useChat({
     connection: fetchServerSentEvents("/api/ai/create-workout-templates"),
     outputSchema: promptOutputSchema,
     threadId: "1",
   });
 
-  const { messages, sendMessage, isLoading } = payload;
-
   const handleGenerate = async (prompt: string) => {
-    sendMessage(prompt);
+    sendMessage(prompt, {
+      body: {
+        exercises: exercises.map(e => ({ id: e.id, name: e.name, description: e.description })),
+        workoutTemplates: selectedTemplates.map(t => compressWorkoutTemplateForLLM(exerciseLookup, t)),
+      },
+    });
     setIsGenerating(true);
     setError(null);
 
