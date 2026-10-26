@@ -2,47 +2,13 @@ import { sqliteTable, text, integer, index, primaryKey } from "drizzle-orm/sqlit
 import type { ModelMessage, TokenUsage } from "@tanstack/ai";
 import type { InterruptRecord, RunStatus } from "@tanstack/ai-persistence";
 
-export const session = sqliteTable("session", {
-  id: integer().primaryKey(),
-  createdAt: text("created_at").notNull(),
-  name: text().notNull(),
-});
-
-export const sessionPrompt = sqliteTable(
-  "session_prompt",
-  {
-    id: integer().primaryKey(),
-    sessionId: integer("session_id")
-      .notNull()
-      .references(() => session.id, { onDelete: "cascade" }),
-    createdAt: text("created_at").notNull(),
-    prompt: text().notNull(),
-    workoutTemplates: text("workout_templates").notNull(),
-    pending: integer({ mode: "boolean" }).notNull().default(true),
-    error: integer({ mode: "boolean" }).notNull().default(false),
-  },
-  table => [index("idx_session_prompt_session_id").on(table.sessionId)],
-);
-
-export const sessionPromptResult = sqliteTable(
-  "session_prompt_result",
-  {
-    id: integer().primaryKey(),
-    sessionPromptId: integer("session_prompt_id")
-      .notNull()
-      .references(() => sessionPrompt.id, { onDelete: "cascade" }),
-    result: text().notNull(),
-  },
-  table => [index("idx_session_prompt_result_session_prompt_id").on(table.sessionPromptId)],
-);
-
 export const savedWorkoutTemplateMap = sqliteTable(
   "saved_workout_template_map",
   {
     id: integer().primaryKey(),
     sessionId: integer("session_id")
       .notNull()
-      .references(() => session.id, { onDelete: "cascade" }),
+      .references(() => chatThread.threadId),
     uuid: text().notNull().unique(),
     savedWorkoutTemplateId: integer("saved_workout_template_id"),
   },
