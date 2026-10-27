@@ -9,7 +9,6 @@ import { Loading } from "@/components/loading-state/Loading";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
-import { PromptPayloadSchema } from "@/interop-types/workout-template-state";
 import { DisplayWorkoutTemplate as DisplayWorkoutTemplateStreaming } from "@/components/display-workout-template-streaming/DisplayWorkoutTemplate";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { useSuspenseQuery } from "@tanstack/react-query";

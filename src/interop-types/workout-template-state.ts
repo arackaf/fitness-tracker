@@ -6,7 +6,7 @@ import type {
   WorkoutTemplateSegmentExerciseState,
   WorkoutTemplateSegmentExerciseMeasurementState,
 } from "@/data/workout-templates/workout-state";
-import type { PromptPayload, PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
+import type { PromptResponsePayload } from "@/durable-objects/WorkoutTemplateAIGeneration/types";
 
 const executionTypeValidator = z.enum(["repetition", "distance", "time"]);
 const exerciseWeightUnitValidator = z.enum(["lbs", "kg"]);
@@ -69,12 +69,3 @@ const promptResponsePayloadSchema = z.union([
   }),
   z.null(),
 ]) satisfies z.ZodType<PromptResponsePayload>;
-
-export const PromptPayloadSchema = z.object({
-  promptId: z.number(),
-  promptInput: z.object({
-    prompt: z.string(),
-    workoutTemplates: z.array(z.string()),
-  }),
-  result: promptResponsePayloadSchema,
-}) satisfies z.ZodType<PromptPayload>;

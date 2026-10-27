@@ -1,7 +1,4 @@
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import type { CompressedWorkoutTemplate } from "@/lib/compressWorkoutTemplateForLLM";
-import type { GatewayModelId } from "ai";
-import { session, sessionPrompt, sessionPromptResult } from "./schema";
 
 export type AIGeneratedWorkoutTemplate = WorkoutTemplateState & {
   uuid: string;
@@ -30,13 +27,6 @@ export type PromptResponsePayload =
   | { success: null; pending: true }
   | null;
 
-export type QueriedSession = typeof session.$inferSelect;
-
-export type QueriedPromptResult = {
-  prompt: typeof sessionPrompt.$inferSelect;
-  result: typeof sessionPromptResult.$inferSelect | null | undefined;
-};
-
 export type SessionSummary = {
   id: number;
   name: string;
@@ -44,9 +34,4 @@ export type SessionSummary = {
   promptCount: number;
   totalWorkoutsGenerated: number;
   savedCount: number;
-};
-
-export type QueriedSessionResult = {
-  session: QueriedSession;
-  prompts: QueriedPromptResult[];
 };

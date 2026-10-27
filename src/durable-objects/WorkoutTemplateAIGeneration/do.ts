@@ -3,16 +3,13 @@ import { drizzle, type DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlit
 import { DurableObject, env } from "cloudflare:workers";
 import { initialWorkoutTemplateDDL } from "./sql";
 import { requireUserId, type AuthContext } from "@/lib/server-auth";
-import { savedWorkoutTemplateMap as savedWorkoutTemplateMapTable } from "./schema";
-import { and, asc, eq, gt, sql, SQL } from "drizzle-orm";
-import { z } from "zod";
-import { promptOutputSchema, workoutTemplateValidator } from "@/interop-types/workout-template-state";
+
+import { promptOutputSchema } from "@/interop-types/workout-template-state";
 import { systemPrompt } from "./prompts";
-import { type QueriedPromptResult, type SessionSummary } from "./types";
-import { createSession } from "./data";
+import { type SessionSummary } from "./types";
 import { chat, memoryStream, resumeServerSentEventsResponse, toServerSentEventsResponse } from "@tanstack/ai";
 import { vercelGatewayText } from "@tanstack/ai-vercel-gateway";
-import { withPersistence } from "@tanstack/ai-persistence";
+import { reconstructChat, withPersistence } from "@tanstack/ai-persistence";
 import { chatPersistence } from "./store";
 
 export const getWorkoutTemplateAIGenerationDurableObject = async (context: AuthContext) => {
@@ -63,8 +60,14 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
   }
   async fetch(request: Request): Promise<Response> {
     if (request.method === "GET") {
-      return resumeServerSentEventsResponse({
-        adapter: memoryStream(request),
+      const durability = memoryStream(request);
+      if (durability.resumeFrom() !== null) {
+        return resumeServerSentEventsResponse({ adapter: durability });
+      }
+
+      return reconstructChat(chatPersistence(this.db), request, {
+        // WITHOUT this, anyone who guesses a thread id gets the whole transcript.
+        authorize: async (threadId, req) => true,
       });
     }
 

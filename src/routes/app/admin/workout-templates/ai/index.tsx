@@ -42,7 +42,6 @@ function RouteComponentContent() {
   const [selectedTemplates, setSelectedTemplates] = useState<WorkoutTemplateState[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const selectedTemplateIds = useMemo(
     () => new Set(selectedTemplates.map(template => template.id!)),
     [selectedTemplates],
@@ -64,9 +63,10 @@ function RouteComponentContent() {
 
   const [threadId] = useState(() => uuidv7());
 
-  const { messages, sendMessage, isLoading } = useChat({
+  const { sendMessage, isLoading } = useChat({
     connection: fetchServerSentEvents("/api/ai/create-workout-templates"),
     outputSchema: promptOutputSchema,
+    persistence: true,
     threadId,
   });
 
@@ -78,13 +78,12 @@ function RouteComponentContent() {
       },
     });
     setIsGenerating(true);
-    setError(null);
+    navigate({ to: "/app/admin/workout-templates/ai/$id", params: { id: threadId } });
   };
 
   const reset = () => {
     setPrompt("");
     setSelectedTemplates([]);
-    setError(null);
     setIsGenerating(false);
   };
 
@@ -108,14 +107,6 @@ function RouteComponentContent() {
         </div>
 
         <PromptInput prompt={prompt} setPrompt={setPrompt} onGenerate={handleGenerate} isGenerating={isGenerating} />
-        {error && (
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-destructive">{error}</p>
-            <Button onClick={reset} variant="secondary">
-              Start over
-            </Button>
-          </div>
-        )}
       </div>
 
       {isLoadingSessions || !aiSessions?.length ? null : <PromptHistory sessions={aiSessions} />}
