@@ -8,7 +8,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { promptOutputSchema } from "@/interop-types/workout-template-state";
 import { useExerciseMap } from "@/lib/exercise-map";
-import { RenderResponses } from "@/components/ai-workout-template/handle-responses";
+import { RenderResponses } from "@/components/CreateWorkoutTemplatesWithAi/handle-responses";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,

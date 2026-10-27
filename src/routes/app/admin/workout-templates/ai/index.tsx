@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
 
 import { v7 as uuidv7 } from "uuid";
-import { fetchServerSentEvents, useChat, type UIMessage } from "@tanstack/ai-react";
+import { fetchServerSentEvents, useChat } from "@tanstack/ai-react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
@@ -17,7 +17,7 @@ import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-a
 import { PromptInput } from "@/components/CreateWorkoutTemplatesWithAi/PromptInput";
 import { PromptHistory } from "@/components/CreateWorkoutTemplatesWithAi/PromptHistory";
 import { promptOutputSchema } from "@/interop-types/workout-template-state";
-import { RenderResponses } from "@/components/ai-workout-template/handle-responses";
+import { RenderResponses } from "@/components/CreateWorkoutTemplatesWithAi/handle-responses";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
