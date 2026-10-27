@@ -1,11 +1,23 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "cn";
 
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
-import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
+
+import { exercisesQueryOptions } from "@/server-functions/exercises";
+import {
+  deleteWorkoutTemplate,
+  saveWorkoutTemplate,
+  WORKOUT_TEMPLATES_KEY_ROOT,
+  workoutTemplateByIdQueryOptions,
+} from "@/server-functions/workout-templates";
+import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
+
+import { Header } from "@/components/Header";
+import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,18 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
-import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
-import { exercisesQueryOptions } from "@/server-functions/exercises";
-import {
-  deleteWorkoutTemplate,
-  updateWorkoutTemplate,
-  WORKOUT_TEMPLATES_KEY_ROOT,
-  workoutTemplateByIdQueryOptions,
-} from "@/server-functions/workout-templates";
-import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
-import type { Exercise, MuscleGroup } from "@/data/types";
-import { Header } from "@/components/Header";
+import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
 
 export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({
   loader: ({ context, params }) => {
@@ -65,47 +66,21 @@ function RouteContent() {
   const workoutTemplateId = Number(id);
 
   const { data: workoutTemplate } = useSuspenseQuery(workoutTemplateByIdQueryOptions(workoutTemplateId));
-
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
-  useEffect(() => {
-    if (workoutTemplate == null || workoutTemplate.id == null) {
-      throw notFound();
-    }
-  }, [workoutTemplate]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  if (workoutTemplate == null || workoutTemplate.id == null) {
-    return null;
-  }
-
-  return (
-    <WorkoutTemplateDetailForm workoutTemplate={workoutTemplate} exercises={exercises} muscleGroups={muscleGroups} />
-  );
-}
-
-type WorkoutTemplateDetailFormProps = {
-  workoutTemplate: WorkoutTemplateState;
-  exercises: Exercise[];
-  muscleGroups: MuscleGroup[];
-};
-
-const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
-  workoutTemplate,
-  exercises,
-  muscleGroups,
-}) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [isSaving, setIsSaving] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const form = useWorkoutTemplateForm(async state => {
     setIsSaving(true);
 
     try {
-      await updateWorkoutTemplate({
+      await saveWorkoutTemplate({
         data: {
           ...state,
           id: workoutTemplate.id,
@@ -144,6 +119,16 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
       setIsDeleteDialogOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (workoutTemplate == null || workoutTemplate.id == null) {
+      throw notFound();
+    }
+  }, [workoutTemplate]);
+
+  if (workoutTemplate == null || workoutTemplate.id == null) {
+    return null;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -187,4 +172,4 @@ const WorkoutTemplateDetailForm: FC<WorkoutTemplateDetailFormProps> = ({
       </div>
     </form>
   );
-};
+}
