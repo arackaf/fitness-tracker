@@ -8,6 +8,7 @@ import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import { AIIcon } from "@/components/icons/AI";
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
   loader: ({ context }) => {
@@ -25,6 +26,12 @@ function RouteComponent() {
         <div className="flex gap-2">
           <Button asChild variant="secondary">
             <Link to="/app/admin/workout-templates/create">Create</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <span>
+              <Link to="/app/admin/workout-templates/create">Create with AI</Link>
+              <AIIcon />
+            </span>
           </Button>
         </div>
       }
