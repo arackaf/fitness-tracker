@@ -1,11 +1,10 @@
-import { type FC } from "react";
+import { Fragment, type FC } from "react";
 import { Plus } from "lucide-react";
 
-import { type Exercise } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { createDefaultExercise } from "@/data/workout-templates/workout-state";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 import { WorkoutTemplateSegmentExercise } from "./WorkoutTemplateSegmentExercise";
 
 type WorkoutTemplateSegmentExercisesProps = {
@@ -30,9 +29,9 @@ export const WorkoutTemplateSegmentExercises: FC<WorkoutTemplateSegmentExercises
       children={segmentExercisesField => (
         <>
           {(segmentExercisesField.state.value ?? []).map((segmentExercise, exerciseIndex) => (
-            <>
+            <Fragment key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}>
               <WorkoutTemplateSegmentExercise
-                key={`segment-${segmentIndex}-exercise-${segmentExercise.id}`}
+                key="segment"
                 form={form}
                 exercises={exercises}
                 muscleGroups={muscleGroups}
@@ -46,7 +45,7 @@ export const WorkoutTemplateSegmentExercises: FC<WorkoutTemplateSegmentExercises
                 }
               />
               <hr className="sm:hidden" />
-            </>
+            </Fragment>
           ))}
 
           <div className="flex items-center">

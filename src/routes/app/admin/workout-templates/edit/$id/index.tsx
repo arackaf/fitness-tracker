@@ -4,7 +4,6 @@ import { cn } from "cn";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 
-import type { Exercise } from "@/components/ExerciseSelector";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
 import {
@@ -29,7 +28,7 @@ import {
   workoutTemplateByIdQueryOptions,
 } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 import { Header } from "@/components/Header";
 
 export const Route = createFileRoute("/app/admin/workout-templates/edit/$id/")({

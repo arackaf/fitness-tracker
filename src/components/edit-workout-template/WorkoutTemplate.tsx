@@ -1,11 +1,11 @@
 import type { FC } from "react";
 
 import { Card } from "@/components/Card";
-import type { Exercise } from "@/components/ExerciseSelector";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 
 import { WorkoutTemplateSegments } from "./WorkoutTemplateSegments";
 
