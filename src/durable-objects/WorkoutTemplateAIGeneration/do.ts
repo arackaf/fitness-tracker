@@ -65,10 +65,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
         return resumeServerSentEventsResponse({ adapter: durability });
       }
 
-      return reconstructChat(chatPersistence(this.db), request, {
-        // WITHOUT this, anyone who guesses a thread id gets the whole transcript.
-        authorize: async (threadId, req) => true,
-      });
+      return reconstructChat(chatPersistence(this.db), request);
     }
 
     if (request.method === "POST") {

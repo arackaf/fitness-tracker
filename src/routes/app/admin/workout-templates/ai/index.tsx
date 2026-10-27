@@ -63,7 +63,7 @@ function RouteComponentContent() {
 
   const [threadId] = useState(() => uuidv7());
 
-  const { sendMessage, isLoading } = useChat({
+  const { sendMessage } = useChat({
     connection: fetchServerSentEvents("/api/ai/create-workout-templates"),
     outputSchema: promptOutputSchema,
     persistence: true,
