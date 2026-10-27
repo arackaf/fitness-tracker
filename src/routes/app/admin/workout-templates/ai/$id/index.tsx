@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 
 import type { MessagePart } from "@tanstack/ai";
 import { fetchServerSentEvents, useChat, type UIMessage } from "@tanstack/ai-react";
 
-import { DisplayPromptResult } from "@/components/CreateWorkoutTemplatesWithAi/PromptResult";
 import { Loading } from "@/components/loading-state/Loading";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
-import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { DisplayWorkoutTemplate as DisplayWorkoutTemplateStreaming } from "@/components/display-workout-template-streaming/DisplayWorkoutTemplate";
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
+import { promptOutputSchema } from "@/interop-types/workout-template-state";
+import { Loader2 } from "lucide-react";
+import { useExerciseMap } from "@/lib/exercise-map";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,
@@ -33,19 +34,18 @@ function RouteComponent() {
 
 function RouteContent() {
   const { id } = Route.useParams();
-  // const [sessionState, setSessionState] = useState<{ status: "error" } | { status: "loaded"; session: any[] } | null>(
-  const [sessionState, setSessionState] = useState<any>(null);
 
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const { data: muscleGroups } = useSuspenseQuery(muscleGroupsQueryOptions());
 
-  if (sessionState == null) {
-    return (
-      <div className="relative min-h-40">
-        <Loading placement="local" fadeIn />
-      </div>
-    );
-  }
+  const exerciseNameById = useExerciseMap(exercises);
+
+  const { messages, sendMessage, isLoading } = useChat({
+    connection: fetchServerSentEvents("/api/ai/create-workout-templates"),
+    outputSchema: promptOutputSchema,
+    persistence: true,
+    threadId: id,
+  });
 
   // if (sessionState.status === "error" || sessionState.session.status === "error") {
   //   return (
@@ -70,8 +70,6 @@ function RouteContent() {
   //     </div>
   //   );
   // }
-
-  const { session, prompts } = sessionState.session;
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
@@ -120,8 +118,8 @@ const DisplayMessagePart: FC<DisplayMessagePartProps> = props => {
       return (
         <div className="flex flex-col gap-2">
           <span>{part.data.commentary}</span>
-          {part.data.workouts.map(workoutTemplate => (
-            <DisplayWorkoutTemplate workoutTemplate={workoutTemplate} exerciseNameById={exerciseNameById} />
+          {part.data.workouts.map((workoutTemplate, idx) => (
+            <DisplayWorkoutTemplate key={idx} workoutTemplate={workoutTemplate} exerciseNameById={exerciseNameById} />
           ))}
         </div>
       );
