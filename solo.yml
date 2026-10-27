@@ -1,10 +1,17 @@
 name: fitness-tracker
 icon: null
 processes:
-  type check:
-    command: npm run tsc
+  test:
+    command: npm run test
     working_dir: null
-    auto_start: true
+    auto_start: false
+    auto_restart: false
+    restart_when_changed: []
+    env: {}
+  build:
+    command: npm run build
+    working_dir: null
+    auto_start: false
     auto_restart: false
     restart_when_changed: []
     env: {}
@@ -15,17 +22,10 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  test:
-    command: npm run test
+  type check:
+    command: npm run tsc
     working_dir: null
-    auto_start: false
-    auto_restart: false
-    restart_when_changed: []
-    env: {}
-  pg:
-    command: npm run pg
-    working_dir: null
-    auto_start: false
+    auto_start: true
     auto_restart: false
     restart_when_changed: []
     env: {}
@@ -36,8 +36,15 @@ processes:
     auto_restart: false
     restart_when_changed: []
     env: {}
-  build:
-    command: npm run build
+  wt do drizzle pull:
+    command: npx drizzle-kit pull --config=drizzle.config.ts
+    working_dir: src/durable-objects/WorkoutTemplateAIGeneration
+    auto_start: true
+    auto_restart: false
+    restart_when_changed: []
+    env: {}
+  pg:
+    command: npm run pg
     working_dir: null
     auto_start: false
     auto_restart: false
