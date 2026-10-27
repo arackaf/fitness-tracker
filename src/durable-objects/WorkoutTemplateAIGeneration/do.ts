@@ -74,7 +74,7 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
       } = params;
 
       const stream = chat({
-        adapter: vercelGatewayText("anthropic/claude-opus-5"),
+        adapter: vercelGatewayText("anthropic/claude-sonnet-4.5"),
         messages: params.messages,
         threadId: params.threadId,
         runId: params.runId,
