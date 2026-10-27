@@ -18,7 +18,6 @@ import { Route as ApiAiCreateWorkoutTemplatesRouteImport } from './routes/api/ai
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
-import { Route as AppAiSandboxIndexRouteImport } from './routes/app/ai-sandbox/index'
 import { Route as AppLogMeasurementIndexRouteImport } from './routes/app/log-measurement/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
 import { Route as AppMeasurementsIndexRouteImport } from './routes/app/measurements/index'
@@ -78,11 +77,6 @@ const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
   id: '/exercises',
   path: '/exercises',
   getParentRoute: () => AppAdminRouteRoute,
-} as any)
-const AppAiSandboxIndexRoute = AppAiSandboxIndexRouteImport.update({
-  id: '/ai-sandbox/',
-  path: '/ai-sandbox/',
-  getParentRoute: () => AppRouteRoute,
 } as any)
 const AppLogMeasurementIndexRoute = AppLogMeasurementIndexRouteImport.update({
   id: '/log-measurement/',
@@ -168,7 +162,6 @@ export interface FileRoutesByFullPath {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
-  '/app/ai-sandbox/': typeof AppAiSandboxIndexRoute
   '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/measurements/': typeof AppMeasurementsIndexRoute
@@ -191,7 +184,6 @@ export interface FileRoutesByTo {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin': typeof AppAdminIndexRoute
-  '/app/ai-sandbox': typeof AppAiSandboxIndexRoute
   '/app/log-measurement': typeof AppLogMeasurementIndexRoute
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
   '/app/measurements': typeof AppMeasurementsIndexRoute
@@ -217,7 +209,6 @@ export interface FileRoutesById {
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
   '/app/admin/': typeof AppAdminIndexRoute
-  '/app/ai-sandbox/': typeof AppAiSandboxIndexRoute
   '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
   '/app/measurements/': typeof AppMeasurementsIndexRoute
@@ -244,7 +235,6 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
-    | '/app/ai-sandbox/'
     | '/app/log-measurement/'
     | '/app/log-workout/'
     | '/app/measurements/'
@@ -267,7 +257,6 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin'
-    | '/app/ai-sandbox'
     | '/app/log-measurement'
     | '/app/log-workout'
     | '/app/measurements'
@@ -292,7 +281,6 @@ export interface FileRouteTypes {
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
     | '/app/admin/'
-    | '/app/ai-sandbox/'
     | '/app/log-measurement/'
     | '/app/log-workout/'
     | '/app/measurements/'
@@ -379,13 +367,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin/exercises'
       preLoaderRoute: typeof AppAdminExercisesRouteImport
       parentRoute: typeof AppAdminRouteRoute
-    }
-    '/app/ai-sandbox/': {
-      id: '/app/ai-sandbox/'
-      path: '/ai-sandbox'
-      fullPath: '/app/ai-sandbox/'
-      preLoaderRoute: typeof AppAiSandboxIndexRouteImport
-      parentRoute: typeof AppRouteRoute
     }
     '/app/log-measurement/': {
       id: '/app/log-measurement/'
@@ -516,7 +497,6 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppAiSandboxIndexRoute: typeof AppAiSandboxIndexRoute
   AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
@@ -529,7 +509,6 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppAiSandboxIndexRoute: AppAiSandboxIndexRoute,
   AppLogMeasurementIndexRoute: AppLogMeasurementIndexRoute,
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppMeasurementsIndexRoute: AppMeasurementsIndexRoute,
