@@ -17,20 +17,28 @@ export type WorkoutTemplateSegmentExerciseMeasurementState = Prettify<
   }
 >;
 
-export type WorkoutTemplateState = Omit<WorkoutTemplate, "userId"> & {
-  id?: number;
-  segments: TemplateSegmentWithExercises[];
-};
+export type WorkoutTemplateState = Prettify<
+  Omit<WorkoutTemplate, "userId"> & {
+    id?: number;
+    segments: TemplateSegmentWithExercises[];
+  }
+>;
 
-export type TemplateSegmentWithExercises = WorkoutTemplateSegment & {
-  id?: number;
-  exercises: WorkoutTemplateSegmentExerciseState[];
-};
+export type TemplateSegmentWithExercises = Prettify<
+  Omit<WorkoutTemplateSegment, "workoutTemplateId"> & {
+    id?: number;
+    workoutTemplateId?: number;
+    exercises: WorkoutTemplateSegmentExerciseState[];
+  }
+>;
 
-export type WorkoutTemplateSegmentExerciseState = WorkoutTemplateSegmentExercise & {
-  id?: number;
-  measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
-};
+export type WorkoutTemplateSegmentExerciseState = Prettify<
+  Omit<WorkoutTemplateSegmentExercise, "workoutTemplateSegmentId"> & {
+    id?: number;
+    workoutTemplateSegmentId?: number;
+    measurements: WorkoutTemplateSegmentExerciseMeasurementState[];
+  }
+>;
 
 export type Exercise = TemplateSegmentWithExercises["exercises"][number];
 export type Measurement = TemplateSegmentWithExercises["exercises"][number]["measurements"][number];
@@ -44,12 +52,14 @@ const defaultExercise: WorkoutTemplateSegmentExercise = {
 };
 
 let newExerciseId = -1;
+
+export const nextUnsavedExerciseId = () => newExerciseId--;
 export const createDefaultExercise = (sets?: number) => {
   const measurementCount = sets ?? DEFAULT_SET_COUNT;
 
   return {
     ...defaultExercise,
-    id: newExerciseId--,
+    id: nextUnsavedExerciseId(),
     executionType: "repetition" as const,
     measurements: Array.from({ length: measurementCount }, (_, index) => ({
       workoutTemplateSegmentExerciseId: 0,
@@ -68,10 +78,11 @@ const defaultSegment: WorkoutTemplateSegment = {
 };
 
 let newSegmentId = -1;
+export const nextUnsavedSegmentId = () => newSegmentId--;
 export const createDefaultSegment = (): TemplateSegmentWithExercises => {
   return {
     ...defaultSegment,
-    id: newSegmentId--,
+    id: nextUnsavedSegmentId(),
     exercises: [createDefaultExercise()],
   };
 };
