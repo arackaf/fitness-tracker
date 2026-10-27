@@ -26,7 +26,6 @@ export class WorkoutTemplateAIGenerationDO extends DurableObject {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
 
-    console.log("CREATING DO DATABASE");
     ctx.blockConcurrencyWhile(async () => {
       ctx.storage.sql.exec(initialWorkoutTemplateDDL);
     });
