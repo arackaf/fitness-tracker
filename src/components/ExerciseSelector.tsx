@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { muscleGroup } from "@/drizzle/schema";
 import type { Exercise } from "@/data/types";
 
-type MuscleGroup = typeof muscleGroup.$inferSelect;
+export type MuscleGroup = typeof muscleGroup.$inferSelect;
 
 type ExerciseSelectorProps = {
   value: number | null;

@@ -4,14 +4,18 @@ import {
   workoutTemplateSegmentExercise,
   workoutTemplateSegmentExerciseMeasurement,
 } from "@/drizzle/schema";
+import type { Prettify } from "@/lib/type-utils";
 
 export type WorkoutTemplate = typeof workoutTemplate.$inferInsert;
 export type WorkoutTemplateSegment = typeof workoutTemplateSegment.$inferInsert;
 export type WorkoutTemplateSegmentExercise = typeof workoutTemplateSegmentExercise.$inferInsert;
 export type WorkoutTemplateSegmentExerciseMeasurement = typeof workoutTemplateSegmentExerciseMeasurement.$inferInsert;
-export type WorkoutTemplateSegmentExerciseMeasurementState = WorkoutTemplateSegmentExerciseMeasurement & {
-  id?: number;
-};
+export type WorkoutTemplateSegmentExerciseMeasurementState = Prettify<
+  Omit<WorkoutTemplateSegmentExerciseMeasurement, "workoutTemplateSegmentExerciseId"> & {
+    id?: number;
+    workoutTemplateSegmentExerciseId?: number;
+  }
+>;
 
 export type WorkoutTemplateState = Omit<WorkoutTemplate, "userId"> & {
   id?: number;
