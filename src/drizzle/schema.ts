@@ -12,12 +12,8 @@ import {
   primaryKey,
   unique,
   check,
-  jsonb,
-  bigint,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import type { ModelMessage, TokenUsage } from "@tanstack/ai";
-import type { RunStatus } from "@tanstack/ai-persistence";
 
 export const executionType = pgEnum("execution_type", ["repetition", "distance", "time"]);
 export const durationUnit = pgEnum("duration_unit", ["seconds", "minutes", "hours"]);
