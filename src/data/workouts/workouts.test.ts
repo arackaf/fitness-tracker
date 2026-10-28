@@ -43,11 +43,7 @@ const pushUp: CreateExerciseServerInput & { id?: number } = {
 
 beforeAll(
   async () => {
-    postgres = await new PostgreSqlContainer("postgres:18-alpine")
-      .withDatabase("test")
-      .withUsername("test")
-      .withPassword("test")
-      .start();
+    postgres = await new PostgreSqlContainer("postgres:18-alpine").start();
 
     await pushSchema(postgres.getConnectionUri());
 
@@ -83,19 +79,6 @@ afterAll(async () => {
     await db.$client.end();
     await postgres.stop();
   } catch {}
-});
-
-test("test demo", async () => {
-  await db.insert(workout).values({
-    userId: "123",
-    name: "Workout A",
-    workoutDate: new Date().toString(),
-    description: "AAA",
-  });
-
-  const workouts = await db.select().from(workout);
-
-  expect(workouts.length).toBe(1);
 });
 
 test("Insert simple workout with one exercise", async () => {
