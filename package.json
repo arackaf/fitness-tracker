@@ -29,6 +29,7 @@
     "@tanstack/ai": "^1.0.0",
     "@tanstack/ai-persistence": "^1.0.0",
     "@tanstack/ai-react": "^1.0.0",
+    "@tanstack/ai-sandbox-vercel": "^1.0.0",
     "@tanstack/ai-vercel-gateway": "^1.0.0",
     "@tanstack/react-devtools": "^0.10.13",
     "@tanstack/react-form": "^1.28.3",
