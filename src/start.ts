@@ -3,7 +3,7 @@ import { deleteCookie, getCookie, getRequestHeaders, setCookie } from "@tanstack
 import { env } from "cloudflare:workers";
 import { Pool } from "pg";
 import type { ContextUser } from "./types";
-import { account } from "@/drizzle/schema";
+import { account, exercises } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
@@ -20,6 +20,21 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
 
     const db = getDb(pool);
     const auth = createAuth(pool);
+
+    let tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    let tempEnd = performance.now();
+    console.log(`temp 1 perf ${tempEnd - tempStart}ms`);
+
+    tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    tempEnd = performance.now();
+    console.log(`temp 2 perf ${tempEnd - tempStart}ms`);
+
+    tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    tempEnd = performance.now();
+    console.log(`temp 3 perf ${tempEnd - tempStart}ms`);
 
     const start = performance.now();
 
