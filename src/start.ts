@@ -22,9 +22,11 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
     const auth = createAuth(pool);
 
     const start = performance.now();
+
     const session = await auth.api.getSession({
       headers: getRequestHeaders(),
     });
+
     const end = performance.now();
     console.log(`getSession took ${end - start}ms`);
 
@@ -33,8 +35,13 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
     let userId: string | null = null;
 
     if (loggedIn) {
+      const start = performance.now();
+
       const [loggedInAccount] = await db.select().from(account).where(eq(account.userId, session.user.id));
       userId = loggedInAccount.accountId;
+
+      const end = performance.now();
+      console.log(`get logged in user info ${end - start}ms`);
 
       currentUser = {
         id: userId,
