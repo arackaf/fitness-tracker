@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 export const getLoginStateServerFn = createServerFn({ method: "POST" }).handler(async ({ context }) => {
   return {
+    isAdmin: context.userId === "106394015208813116232",
     loggedIn: context.loggedIn,
   };
 });

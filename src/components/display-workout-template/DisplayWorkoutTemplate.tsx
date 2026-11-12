@@ -10,9 +10,14 @@ import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
 type DisplayWorkoutTemplateProps = {
   exerciseNameById: Map<number, string>;
   workoutTemplate: WorkoutTemplateState;
+  footer?: React.ReactNode;
 };
 
-export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workoutTemplate, exerciseNameById }) => {
+export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({
+  workoutTemplate,
+  exerciseNameById,
+  footer,
+}) => {
   return (
     <Card as="article">
       <header className="mb-3 flex items-start justify-between gap-3">
@@ -39,6 +44,7 @@ export const DisplayWorkoutTemplate: FC<DisplayWorkoutTemplateProps> = ({ workou
           />
         ))}
       </div>
+      {footer ? footer : null}
     </Card>
   );
 };

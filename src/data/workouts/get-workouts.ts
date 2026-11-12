@@ -29,6 +29,9 @@ type WorkoutsPayload = {
 
 export const getWorkouts = async (db: DB, options: GetWorkoutsOptions): Promise<WorkoutsPayload> => {
   await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+
+  const start = performance.now();
+
   const page = Math.max(1, Math.floor(options.page ?? 1));
   const offset = (page - 1) * WORKOUT_HISTORY_LIMIT;
 
@@ -191,6 +194,9 @@ export const getWorkouts = async (db: DB, options: GetWorkoutsOptions): Promise<
   const workoutList = Array.from(workouts.values());
   const hasNextPage = workoutList.length > WORKOUT_HISTORY_LIMIT;
   const currentPageWorkouts = hasNextPage ? workoutList.slice(0, WORKOUT_HISTORY_LIMIT) : workoutList;
+
+  const end = performance.now();
+  console.log(`getWorkouts took ${end - start}ms`);
 
   return {
     workouts: currentPageWorkouts,

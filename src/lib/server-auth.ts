@@ -1,4 +1,4 @@
-type AuthContext = {
+export type AuthContext = {
   userId: string | null;
 };
 

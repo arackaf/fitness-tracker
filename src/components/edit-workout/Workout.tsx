@@ -1,7 +1,6 @@
 import { useEffect, type FC } from "react";
 
 import { Card } from "@/components/Card";
-import type { Exercise } from "@/components/ExerciseSelector";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 
 import { Input } from "@/components/ui/input";
@@ -9,13 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import type { WorkoutForm } from "@/lib/workout-form";
 
 import { WorkoutSegments } from "./WorkoutSegments";
-import type { MuscleGroup } from "@/data/types";
+import type { Exercise, MuscleGroup } from "@/data/types";
 
 type WorkoutProps = {
   exercises: Exercise[];
   muscleGroups: MuscleGroup[];
   form: WorkoutForm;
-  setWorkoutDate: (workoutDate: Date | null) => void;
+  setWorkoutDate?: (workoutDate: Date | null) => void;
 };
 
 export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWorkoutDate }) => {
@@ -72,7 +71,7 @@ export const Workout: FC<WorkoutProps> = ({ form, exercises, muscleGroups, setWo
                   value={field.state.value}
                   onChange={nextValue => {
                     field.handleChange(nextValue);
-                    setWorkoutDate(nextValue);
+                    setWorkoutDate?.(nextValue);
                   }}
                 />
               </label>

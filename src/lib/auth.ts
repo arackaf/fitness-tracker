@@ -25,6 +25,14 @@ export function createAuth(pool: Pool) {
       },
     },
     baseURL,
+    session: {
+      expiresIn: 60 * 60 * 24 * 365, // 365 days
+      updateAge: 60 * 60 * 24, // Update session every 1 day
+      cookieCache: {
+        enabled: true,
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      },
+    },
   });
 }
 

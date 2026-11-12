@@ -3,7 +3,7 @@ import { deleteCookie, getCookie, getRequestHeaders, setCookie } from "@tanstack
 import { env } from "cloudflare:workers";
 import { Pool } from "pg";
 import type { ContextUser } from "./types";
-import { account } from "@/drizzle/schema";
+import { account, exercises } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getDb } from "./data/db";
 import { createAuth } from "./lib/auth";
@@ -21,10 +21,27 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
     const db = getDb(pool);
     const auth = createAuth(pool);
 
+    let tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    let tempEnd = performance.now();
+    console.log(`temp 1 perf ${tempEnd - tempStart}ms`);
+
+    tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    tempEnd = performance.now();
+    console.log(`temp 2 perf ${tempEnd - tempStart}ms`);
+
+    tempStart = performance.now();
+    await db.select().from(exercises).limit(1);
+    tempEnd = performance.now();
+    console.log(`temp 3 perf ${tempEnd - tempStart}ms`);
+
     const start = performance.now();
+
     const session = await auth.api.getSession({
       headers: getRequestHeaders(),
     });
+
     const end = performance.now();
     console.log(`getSession took ${end - start}ms`);
 
@@ -33,8 +50,13 @@ const globalContextMiddleware = createMiddleware().server(async ({ next }) => {
     let userId: string | null = null;
 
     if (loggedIn) {
+      const start = performance.now();
+
       const [loggedInAccount] = await db.select().from(account).where(eq(account.userId, session.user.id));
       userId = loggedInAccount.accountId;
+
+      const end = performance.now();
+      console.log(`get logged in user info ${end - start}ms`);
 
       currentUser = {
         id: userId,

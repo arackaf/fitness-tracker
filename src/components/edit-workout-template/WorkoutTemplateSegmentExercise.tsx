@@ -3,13 +3,13 @@ import { Trash2 } from "lucide-react";
 
 import { InnerCard } from "@/components/InnerCard";
 import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
-import { ExerciseSelector, type Exercise } from "@/components/ExerciseSelector";
+import { ExerciseSelector } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DistanceExerciseSet } from "@/components/edit-workout-template/DistanceExerciseSet";
 import { DurationExerciseSet } from "@/components/edit-workout-template/DurationExerciseSet";
 import type { WorkoutTemplateForm } from "@/lib/workout-template-form";
-import type { DurationUnit, MuscleGroup } from "@/data/types";
+import type { DurationUnit, Exercise, MuscleGroup } from "@/data/types";
 import { RepetitionExerciseSet } from "./RepetitionExerciseSet";
 import { defaultDistanceUnit, defaultDurationUnit, defaultExerciseWeightUnit } from "@/data/constants";
 

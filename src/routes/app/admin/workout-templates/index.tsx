@@ -1,29 +1,51 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
+import { useExerciseMap } from "@/lib/exercise-map";
 
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
+import { AIIcon } from "@/components/icons/AI";
+import { getLoginStateQueryOptions } from "@/server-functions/login-state";
 
 export const Route = createFileRoute("/app/admin/workout-templates/")({
-  loader: ({ context }) => {
+  loader: async ({ context }) => {
     context.queryClient.ensureQueryData(workoutTemplatesQueryOptions(1));
     context.queryClient.ensureQueryData(exercisesQueryOptions());
+
+    const login = await context.queryClient.query(getLoginStateQueryOptions());
+    const isAdmin = login.isAdmin;
+
+    return {
+      isAdmin,
+    };
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { isAdmin } = Route.useLoaderData();
+
   return (
     <SuspensePageLayout
       title="Workout Templates"
       headerChildren={
-        <Button asChild variant="secondary">
-          <Link to="/app/admin/workout-templates/create">Create</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="secondary">
+            <Link to="/app/admin/workout-templates/create">Create</Link>
+          </Button>
+          {isAdmin ? (
+            <Button asChild variant="secondary">
+              <span>
+                <Link to="/app/admin/workout-templates/ai">Create with AI</Link>
+                <AIIcon />
+              </span>
+            </Button>
+          ) : null}
+        </div>
       }
     >
       <RouteContent />
@@ -38,7 +60,7 @@ function RouteContent() {
   const { data: exercises } = useSuspenseQuery(exercisesQueryOptions());
   const workoutTemplates = workoutTemplatesPayload.workoutTemplates;
   const hasNextPage = workoutTemplatesPayload.hasNextPage;
-  const exerciseNameById = useMemo(() => new Map(exercises.map(exercise => [exercise.id, exercise.name])), [exercises]);
+  const exerciseNameById = useExerciseMap(exercises);
 
   return (
     <>
