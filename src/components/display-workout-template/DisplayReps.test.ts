@@ -91,7 +91,10 @@ describe("Reps to failure", function () {
     expect(
       getDisplayReps(
         constructSegment([
-          [bench, [{ repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }]],
+          [
+            pushup,
+            [{ repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }],
+          ],
         ]),
       ),
     ).toBe("To failure");
