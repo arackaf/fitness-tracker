@@ -26,3 +26,23 @@ describe("Intro", () => {
     expect(add(NaN, 2)).toBeNaN();
   });
 });
+
+function getObjectFromDatabase() {
+  return {
+    id: 1,
+    name: "Adam",
+    ssn: "999-22,8877",
+    address: {
+      street: "57 Elizabeth St",
+      city: "Amsterdam",
+      state: "NY",
+      zip: "12010",
+    },
+  };
+}
+
+describe("Object matching", () => {
+  it("can match an object", () => {
+    expect(getObjectFromDatabase()).toMatchObject({ id: 1, name: "Adam" });
+  });
+});
