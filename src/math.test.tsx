@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { add, divide } from "./math";
+import { add, divide, multiply } from "./math";
 
 describe("Intro", () => {
   it("Is a demo of vitest", () => {
@@ -27,22 +27,16 @@ describe("Intro", () => {
   });
 });
 
-function getObjectFromDatabase() {
-  return {
-    id: 1,
-    name: "Adam",
-    ssn: "999-22,8877",
-    address: {
-      street: "57 Elizabeth St",
-      city: "Amsterdam",
-      state: "NY",
-      zip: "12010",
-    },
-  };
-}
+describe("Multiply", () => {
+  it("can multiply two numbers", () => {
+    expect(multiply(2, 3)).toBe(6);
+  });
 
-describe("Object matching", () => {
-  it("can match an object", () => {
-    expect(getObjectFromDatabase()).toMatchObject({ id: 1, name: "Adam" });
+  it("zero times anything is zero test 1", () => {
+    expect(multiply(0, 3)).toBe(0);
+  });
+
+  it("zero times anything is zero test 1", () => {
+    expect(multiply(23, 0)).toBe(0);
   });
 });
