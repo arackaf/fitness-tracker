@@ -86,19 +86,6 @@ describe("Reps no weight", function () {
 });
 
 describe("Reps to failure", function () {
-  // TODO:
-  test("Push-ups 4 sets", () => {
-    expect(
-      getDisplayReps(
-        constructSegment([
-          [
-            pushup,
-            [{ repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }],
-          ],
-        ]),
-      ),
-    ).toBe("To failure");
-  });
   test("Push-ups 4 sets, some to failure", () => {
     expect(
       getDisplayReps(
@@ -137,23 +124,6 @@ describe("Reps to failure", function () {
     ).toBe(
       "(To failure, 135 To failure), (To failure, 135 To failure), (To failure, 135 To failure), (To failure, 135 To failure)",
     );
-  });
-  // TODO:
-  test("Push-ups and pull-ups to failure", () => {
-    expect(
-      getDisplayReps(
-        constructSegment([
-          [
-            pushup,
-            [{ repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }],
-          ],
-          [
-            pullUp,
-            [{ repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }, { repsToFailure: true }],
-          ],
-        ]),
-      ),
-    ).toBe("To failure");
   });
   test("Push-ups and Bench 4 sets, some to failure", () => {
     expect(

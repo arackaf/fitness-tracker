@@ -19,14 +19,6 @@ const getDisplayMeasurement = (exercise: Exercise, measurement: Measurement) => 
 };
 
 export const getDisplayReps = (segment: TemplateSegmentWithExercises) => {
-  if (
-    segment.exercises.every(exercise =>
-      exercise.measurements.every(measurement => measurement.repsToFailure && !measurement.weightUsed),
-    )
-  ) {
-    return "To failure";
-  }
-
   const measurementDisplayByExercise = segment.exercises.map(exercise =>
     exercise.measurements.map(measurement => getDisplayMeasurement(exercise, measurement)),
   );
