@@ -1,4 +1,3 @@
-import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getMuscleGroups } from "@/data/muscle-groups/get-muscle-groups";
@@ -11,10 +10,4 @@ export const getMuscleGroupsServerFn = createServerFn({
   return getMuscleGroups(context.db, userId);
 });
 
-export const muscleGroupsQueryOptions = () =>
-  queryOptions({
-    queryKey: ["muscle-groups"],
-    queryFn: () => getMuscleGroupsServerFn(),
-    staleTime: 1000 * 60 * 60 * 24, // 24 hours
-    gcTime: 1000 * 60 * 60 * 24, // 24 hours
-  });
+export { muscleGroupsQueryOptions } from "./muscle-groups-query-options";

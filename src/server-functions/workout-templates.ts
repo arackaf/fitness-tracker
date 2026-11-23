@@ -1,4 +1,3 @@
-import { keepPreviousData, queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { deleteWorkoutTemplate as deleteWorkoutTemplateData } from "@/data/workout-templates/delete-workout-template";
@@ -12,33 +11,11 @@ type WorkoutTemplatesInput = {
   page?: number;
 };
 
-export const WORKOUT_TEMPLATES_KEY_ROOT = "workout-templates";
-
-export const workoutTemplatesQueryOptions = (pageInput = 1) => {
-  const page = pageInput ?? 1;
-
-  return queryOptions({
-    queryKey: [WORKOUT_TEMPLATES_KEY_ROOT, { page }],
-    queryFn: () => getWorkoutTemplatesServerFn({ data: { page } }),
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-    placeholderData: keepPreviousData,
-  });
-};
-
 export const getWorkoutTemplatesServerFn = createServerFn({ method: "GET" })
   .validator((input: WorkoutTemplatesInput) => input)
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     return getWorkoutTemplates(context.db, { page: data.page, userId });
-  });
-
-export const allWorkoutTemplatesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["workout-templates", "all"],
-    queryFn: () => getAllWorkoutTemplatesServerFn(),
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
   });
 
 export const getAllWorkoutTemplatesServerFn = createServerFn({ method: "GET" }).handler(async ({ context }) => {
@@ -56,14 +33,6 @@ export const getAllWorkoutTemplatesServerFn = createServerFn({ method: "GET" }).
 
   return allWorkoutTemplates;
 });
-
-export const workoutTemplateByIdQueryOptions = (id: number) =>
-  queryOptions({
-    queryKey: ["workout-template", id],
-    queryFn: () => getWorkoutTemplateById({ data: { id } }),
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-  });
 
 export const getWorkoutTemplateById = createServerFn({ method: "GET" })
   .validator((input: { id: number }) => input)
@@ -91,3 +60,5 @@ export const deleteWorkoutTemplate = createServerFn({ method: "POST" })
     const userId = await requireUserId(context);
     await deleteWorkoutTemplateData(context.db, data.id, userId);
   });
+
+export { WORKOUT_TEMPLATES_KEY_ROOT, workoutTemplatesQueryOptions, allWorkoutTemplatesQueryOptions, workoutTemplateByIdQueryOptions } from "./workout-templates-query-options";
