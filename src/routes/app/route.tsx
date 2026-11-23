@@ -8,6 +8,7 @@ import { createAuthClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { getLoginStateQueryOptions } from "@/server-functions/login-state";
+import { activeNavLinkProps, inactiveNavLinkProps, navLinkClassName } from "@/lib/nav-link-styles";
 
 export const Route = createFileRoute("/app")({
   loader: async ({ context }) => {
@@ -26,17 +27,6 @@ export const Route = createFileRoute("/app")({
 function RouteComponent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
-
-  const navLinkClassName =
-    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
-
-  const activeNavLinkProps = {
-    className: "cursor-default bg-primary text-primary-foreground",
-  };
-
-  const inactiveNavLinkProps = {
-    className: "hover:bg-accent hover:text-accent-foreground",
-  };
 
   const location = useLocation();
   const adminIsActive = location.pathname.includes("/app/admin");
