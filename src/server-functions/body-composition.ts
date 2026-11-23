@@ -1,4 +1,3 @@
-import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { getBodyCompositionMeasurements } from "@/data/body-composition/get-body-composition-measurements";
@@ -17,29 +16,10 @@ type BodyCompositionMetricsInput = {
   id?: number;
 };
 
-type BodyCompositionMeasurementsInput = {
+export type BodyCompositionMeasurementsInput = {
   id?: number;
   bodyCompositionMetricId?: number;
 };
-
-export const bodyCompositionMetricsQueryOptions = () =>
-  queryOptions({
-    queryKey: ["body-composition-metrics"],
-    queryFn: () => getBodyCompositionMetricsServerFn({ data: {} }),
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-  });
-
-export const bodyCompositionMetricByIdQueryOptions = (id: number) =>
-  queryOptions({
-    queryKey: ["body-composition-metric", id],
-    queryFn: async () => {
-      const metrics = await getBodyCompositionMetricsServerFn({ data: { id } });
-      return metrics[0] ?? null;
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-  });
 
 export const getBodyCompositionMetricsServerFn = createServerFn({
   method: "GET",
@@ -48,20 +28,6 @@ export const getBodyCompositionMetricsServerFn = createServerFn({
   .handler(async ({ data, context }) => {
     const userId = await requireUserId(context);
     return getBodyCompositionMetrics(context.db, { id: data.id, userId });
-  });
-
-export const bodyCompositionMeasurementsQueryOptions = (
-  input: Pick<BodyCompositionMeasurementsInput, "bodyCompositionMetricId"> = {},
-) =>
-  queryOptions({
-    queryKey: ["body-composition-measurements", input.bodyCompositionMetricId ?? null],
-    queryFn: () => {
-      return getBodyCompositionMeasurementsServerFn({
-        data: { bodyCompositionMetricId: input.bodyCompositionMetricId },
-      });
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
   });
 
 export const getBodyCompositionMeasurementsServerFn = createServerFn({
@@ -75,14 +41,6 @@ export const getBodyCompositionMeasurementsServerFn = createServerFn({
       bodyCompositionMetricId: data.bodyCompositionMetricId,
       userId,
     });
-  });
-
-export const bodyCompositionMeasurementByIdQueryOptions = (id: number) =>
-  queryOptions({
-    queryKey: ["body-composition-measurement", id],
-    queryFn: () => getBodyCompositionMeasurementById({ data: { id } }),
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
   });
 
 export const getBodyCompositionMeasurementById = createServerFn({
@@ -126,3 +84,5 @@ export const updateBodyCompositionMeasurement = createServerFn({
     const userId = await requireUserId(context);
     await updateBodyCompositionMeasurementData(context.db, data, userId);
   });
+
+export { bodyCompositionMetricsQueryOptions, bodyCompositionMetricByIdQueryOptions, bodyCompositionMeasurementsQueryOptions, bodyCompositionMeasurementByIdQueryOptions } from "./body-composition-query-options";
