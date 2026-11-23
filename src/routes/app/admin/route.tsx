@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/Header";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { NavLink } from "@/components/layout/NavLink";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/admin")({
   component: RouteComponent,
@@ -12,45 +13,14 @@ export const Route = createFileRoute("/app/admin")({
 });
 
 function RouteComponent() {
-  const navLinkClassName =
-    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
-
-  const activeNavLinkProps = {
-    className: "cursor-default bg-primary text-primary-foreground",
-  };
-
-  const inactiveNavLinkProps = {
-    className: "hover:bg-accent hover:text-accent-foreground",
-  };
-
   return (
     <div className="space-y-6">
       <nav className="flex w-full flex-wrap items-center gap-2">
-        <Link
-          to="/app/admin/exercises"
-          className={navLinkClassName}
-          activeProps={activeNavLinkProps}
-          inactiveProps={inactiveNavLinkProps}
-        >
-          Exercises
-        </Link>
-        <Link
-          to="/app/admin/workout-templates"
-          className={navLinkClassName}
-          activeOptions={{ exact: false }}
-          activeProps={activeNavLinkProps}
-          inactiveProps={inactiveNavLinkProps}
-        >
+        <NavLink to="/app/admin/exercises">Exercises</NavLink>
+        <NavLink to="/app/admin/workout-templates" activeOptions={{ exact: false }}>
           Workout templates
-        </Link>
-        <Link
-          to="/app/admin/body-composition"
-          className={navLinkClassName}
-          activeProps={activeNavLinkProps}
-          inactiveProps={inactiveNavLinkProps}
-        >
-          Body composition
-        </Link>
+        </NavLink>
+        <NavLink to="/app/admin/body-composition">Body composition</NavLink>
       </nav>
       <Outlet />
     </div>
