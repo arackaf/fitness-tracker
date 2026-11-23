@@ -14,10 +14,10 @@ import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWor
 import { SuspensePageLayout } from "@/components/SuspensePageLayout";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
-import { PromptInput } from "@/components/CreateWorkoutTemplatesWithAi/PromptInput";
-import { PromptHistory } from "@/components/CreateWorkoutTemplatesWithAi/PromptHistory";
+import { PromptInput } from "@/components/create-workout-templates-with-ai/PromptInput";
+import { PromptHistory } from "@/components/create-workout-templates-with-ai/PromptHistory";
 import { promptOutputSchema } from "@/interop-types/workout-template-state";
-import { RenderResponses } from "@/components/CreateWorkoutTemplatesWithAi/handle-responses";
+import { RenderResponses } from "@/components/create-workout-templates-with-ai/handle-responses";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/")({
   component: RouteComponent,
