@@ -3,7 +3,7 @@ import { Fragment, useEffect, useRef, useState, type FC } from "react";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { WorkoutTemplate } from "@/components/edit-workout-template/WorkoutTemplate";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";

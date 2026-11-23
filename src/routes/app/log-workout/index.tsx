@@ -6,7 +6,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Workout } from "@/components/edit-workout/Workout";
 import { ImportWorkoutTemplate } from "@/components/ImportWorkoutTemplate";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 
 import { toast } from "sonner";
 import { useWorkoutForm } from "@/lib/workout-form";

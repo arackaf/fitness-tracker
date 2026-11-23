@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { CreateExercise } from "@/components/CreateExercise";
 import { ExerciseFilters } from "@/components/ExerciseFilters";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";

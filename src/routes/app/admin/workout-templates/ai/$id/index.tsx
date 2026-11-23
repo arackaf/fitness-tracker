@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchServerSentEvents, useChat } from "@tanstack/ai-react";
 
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 
 import { useSuspenseQuery } from "@tanstack/react-query";

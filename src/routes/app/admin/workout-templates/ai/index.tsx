@@ -11,7 +11,7 @@ import { SelectWorkoutTemplates } from "@/components/SelectWorkoutTemplates";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { allWorkoutTemplatesQueryOptions } from "@/server-functions/workout-templates";
 import { DisplaySelectedWorkoutTemplates } from "@/components/DisplaySelectedWorkoutTemplates";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { compressWorkoutTemplateForLLM } from "@/lib/compressWorkoutTemplateForLLM";
 import { getAiSessionsQueryOptions } from "@/server-functions/workout-template-ai";
 import { PromptInput } from "@/components/create-workout-templates-with-ai/PromptInput";
