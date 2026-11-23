@@ -1,4 +1,3 @@
-import { queryOptions } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 
 import { createExercise, type CreateExerciseInput } from "@/data/exercises/create-exercise";
@@ -10,16 +9,6 @@ export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(as
   const userId = await requireUserId(context);
   return getExercises(context.db, userId);
 });
-
-export const exercisesQueryOptions = () =>
-  queryOptions({
-    queryKey: ["exercises"],
-    queryFn: () => {
-      return getExercisesServerFn();
-    },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 5,
-  });
 
 export type EditExerciseInput = {
   id: number;
@@ -54,3 +43,5 @@ export const editExercise = createServerFn({ method: "POST" })
     const userId = await requireUserId(context);
     await updateExercise(context.db, { ...data, userId });
   });
+
+export { exercisesQueryOptions } from "./exercises-query-options";
