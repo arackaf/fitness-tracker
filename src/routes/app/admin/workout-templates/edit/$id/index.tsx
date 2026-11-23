@@ -15,7 +15,7 @@ import {
 } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
-import { Header } from "@/components/Header";
+import { Header } from "@/components/layout/Header";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 
 import {

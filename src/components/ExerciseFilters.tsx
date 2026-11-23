@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { MuscleGroup } from "@/data/types";
 

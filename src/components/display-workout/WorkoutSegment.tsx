@@ -3,7 +3,7 @@ import type { FC } from "react";
 import type { SegmentWithExercises } from "@/data/workouts/workout-state";
 
 import { DisplayReps } from "@/components/display-workout/DisplayReps";
-import { InnerCard } from "@/components/InnerCard";
+import { InnerCard } from "@/components/layout/InnerCard";
 
 type WorkoutSegmentProps = {
   exerciseNameById: Map<number, string>;

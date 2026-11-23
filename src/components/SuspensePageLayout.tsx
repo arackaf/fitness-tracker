@@ -1,5 +1,5 @@
 import { Suspense, type FC, type PropsWithChildren } from "react";
-import { Header, type HeaderProps } from "./Header";
+import { Header, type HeaderProps } from "./layout/Header";
 import { Loading } from "./loading-state/Loading";
 
 type SuspensePageLayoutProps = HeaderProps & {
