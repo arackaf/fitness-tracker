@@ -1,6 +1,6 @@
 import type { MuscleGroup } from "@/data/types";
 import { useMemo, type FC } from "react";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 
 type ExerciseListDisplayItem = {
   id: number;

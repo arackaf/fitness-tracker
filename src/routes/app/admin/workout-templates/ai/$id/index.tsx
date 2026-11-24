@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchServerSentEvents, useChat } from "@tanstack/ai-react";
 
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 import { promptOutputSchema } from "@/interop-types/workout-template-state";
 import { useExerciseMap } from "@/lib/exercise-map";
-import { RenderResponses } from "@/components/CreateWorkoutTemplatesWithAi/handle-responses";
+import { RenderResponses } from "@/components/create-workout-templates-with-ai/handle-responses";
 
 export const Route = createFileRoute("/app/admin/workout-templates/ai/$id/")({
   component: RouteComponent,

@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createDefaultSegment } from "@/data/workout-templates/workout-state";

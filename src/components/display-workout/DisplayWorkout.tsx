@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 
 import type { WorkoutState_Local } from "@/data/workouts/workout-state";
 
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { WorkoutSegment } from "@/components/display-workout/WorkoutSegment";
 import { Button } from "@/components/ui/button";
 

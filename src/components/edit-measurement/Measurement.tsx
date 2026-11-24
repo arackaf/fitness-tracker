@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

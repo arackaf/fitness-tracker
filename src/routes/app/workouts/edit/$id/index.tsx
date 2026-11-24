@@ -10,7 +10,7 @@ import type { ExistingWorkoutState, WorkoutState_Local } from "@/data/workouts/w
 import { useWorkoutForm } from "@/lib/workout-form";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutByIdQueryOptions, updateWorkout } from "@/server-functions/workouts";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import type { Exercise, MuscleGroup } from "@/data/types";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
