@@ -1,7 +1,14 @@
 import { useState, type FC } from "react";
 
 import type { MuscleGroup } from "@/data/types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 
 type MuscleGroupSelectorProps = {
   muscleGroups: MuscleGroup[];
@@ -9,33 +16,42 @@ type MuscleGroupSelectorProps = {
 };
 
 export const MuscleGroupSelector: FC<MuscleGroupSelectorProps> = ({ muscleGroups, onSelected }) => {
-  const [value, setValue] = useState<string | undefined>(undefined);
+  const [inputValue, setInputValue] = useState("");
+  const disabled = muscleGroups.length === 0;
 
   return (
-    <Select
-      value={value}
-      onValueChange={nextValue => {
-        const selectedMuscleGroup = muscleGroups.find(muscleGroup => muscleGroup.id.toString() === nextValue);
-
+    <Combobox<MuscleGroup>
+      items={muscleGroups}
+      value={null}
+      onValueChange={selectedMuscleGroup => {
         if (!selectedMuscleGroup) {
           return;
         }
 
         onSelected(selectedMuscleGroup);
-        setValue(undefined);
+        setInputValue("");
       }}
-      disabled={muscleGroups.length === 0}
+      inputValue={inputValue}
+      onInputValueChange={setInputValue}
+      itemToStringLabel={muscleGroup => muscleGroup.name}
+      isItemEqualToValue={(a, b) => a.id === b.id}
+      disabled={disabled}
     >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder={muscleGroups.length === 0 ? "All muscle groups selected" : "Select muscle group"} />
-      </SelectTrigger>
-      <SelectContent>
-        {muscleGroups.map(muscleGroup => (
-          <SelectItem key={muscleGroup.id} value={muscleGroup.id.toString()}>
-            {muscleGroup.name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      <ComboboxInput
+        className="w-full"
+        placeholder={disabled ? "All muscle groups selected" : "Search muscle groups"}
+        disabled={disabled}
+      />
+      <ComboboxContent>
+        <ComboboxEmpty>No muscle groups found.</ComboboxEmpty>
+        <ComboboxList>
+          {(muscleGroup: MuscleGroup) => (
+            <ComboboxItem key={muscleGroup.id} value={muscleGroup}>
+              {muscleGroup.name}
+            </ComboboxItem>
+          )}
+        </ComboboxList>
+      </ComboboxContent>
+    </Combobox>
   );
 };
