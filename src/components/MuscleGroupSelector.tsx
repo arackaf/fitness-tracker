@@ -17,20 +17,26 @@ type MuscleGroupSelectorProps = {
 
 export const MuscleGroupSelector: FC<MuscleGroupSelectorProps> = ({ muscleGroups, onSelected }) => {
   const [inputValue, setInputValue] = useState("");
+  const [open, setOpen] = useState(false);
   const disabled = muscleGroups.length === 0;
 
   return (
     <Combobox<MuscleGroup>
       items={muscleGroups}
       value={null}
-      onValueChange={selectedMuscleGroup => {
-        if (!selectedMuscleGroup) {
-          return;
-        }
+      onValueChange={(selectedMuscleGroup, eventDetails) => {
+        // Cancel the selection so Base UI never stores the value or fills the input with its label.
+        eventDetails.cancel();
 
-        onSelected(selectedMuscleGroup);
         setInputValue("");
+        setOpen(false);
+
+        if (selectedMuscleGroup) {
+          onSelected(selectedMuscleGroup);
+        }
       }}
+      open={open}
+      onOpenChange={setOpen}
       inputValue={inputValue}
       onInputValueChange={setInputValue}
       itemToStringLabel={muscleGroup => muscleGroup.name}
