@@ -1,6 +1,14 @@
 import { type FC } from "react";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import type { Exercise } from "@/data/exercises/get-full-exercises";
+
+type ExerciseListDisplayItem = {
+  id: number;
+  name: string | null;
+  description: string | null;
+  isCompound: boolean | null;
+  muscleGroups: number[] | null;
+};
 
 type ExerciseListDisplayProps = {
   exercises: Exercise[];

@@ -4,7 +4,7 @@ import { cn } from "cn";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import {
@@ -15,7 +15,7 @@ import {
 } from "@/server-functions/workout-templates";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
-import { Header } from "@/components/Header";
+import { Header } from "@/components/layout/Header";
 import { useWorkoutTemplateForm } from "@/lib/workout-template-form";
 
 import {

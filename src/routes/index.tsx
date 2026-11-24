@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { AIIcon } from "@/components/icons/AI";
 import { GoogleIcon } from "@/components/icons/Google";
 import { Button } from "@/components/ui/button";

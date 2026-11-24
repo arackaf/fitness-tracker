@@ -2,7 +2,7 @@ import type { FC } from "react";
 import { Link } from "@tanstack/react-router";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 import { Button } from "@/components/ui/button";
 
 import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
