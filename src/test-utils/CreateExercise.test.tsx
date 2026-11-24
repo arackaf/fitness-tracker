@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Toaster } from "sonner";
 
 import type { MuscleGroup } from "@/data/types";
@@ -42,7 +42,18 @@ describe("CreateExercise", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
     expect(await screen.findByText("Exercise created")).toBeTruthy();
-    expect(saveExerciseMock).toHaveBeenCalledWith({ name: "Bench Press", muscleGroupId: null });
+  });
+
+  it("calls saveExercise", async () => {
+    saveExerciseMock.mockResolvedValue(true);
+    renderComponent();
+
+    fireEvent.change(screen.getByPlaceholderText("Exercise name"), { target: { value: "Bench Press" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(saveExerciseMock).toHaveBeenCalledWith({ name: "Bench Press", muscleGroupId: null });
+    });
   });
 
   it("shows an error toast when saving fails", async () => {
