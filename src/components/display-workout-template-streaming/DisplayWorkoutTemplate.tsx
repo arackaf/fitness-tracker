@@ -1,7 +1,7 @@
 import type { FC } from "react";
 
 import type { WorkoutTemplateState } from "@/data/workout-templates/workout-state";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 
 import { WorkoutTemplateSegment } from "./WorkoutTemplateSegment";
 import type { DeepPartial } from "@tanstack/ai";

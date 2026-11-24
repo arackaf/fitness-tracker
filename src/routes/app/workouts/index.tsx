@@ -8,7 +8,7 @@ import { DisplayWorkout } from "@/components/display-workout/DisplayWorkout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutHistoryQueryOptions } from "@/server-functions/workouts";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { Loading } from "@/components/loading-state/Loading";
 import type { ExistingWorkoutState } from "@/data/workouts/workout-state";
 

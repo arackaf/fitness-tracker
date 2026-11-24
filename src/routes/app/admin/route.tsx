@@ -1,4 +1,5 @@
-import { Header } from "@/components/Header";
+import { Header } from "@/components/layout/Header";
+import { activeNavLinkProps, inactiveNavLinkProps, navLinkClassName } from "@/lib/nav-link-styles";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/admin")({
@@ -12,17 +13,6 @@ export const Route = createFileRoute("/app/admin")({
 });
 
 function RouteComponent() {
-  const navLinkClassName =
-    "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors";
-
-  const activeNavLinkProps = {
-    className: "cursor-default bg-primary text-primary-foreground",
-  };
-
-  const inactiveNavLinkProps = {
-    className: "hover:bg-accent hover:text-accent-foreground",
-  };
-
   return (
     <div className="space-y-6">
       <nav className="flex w-full flex-wrap items-center gap-2">

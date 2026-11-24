@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useExerciseMap } from "@/lib/exercise-map";
 
 import { DisplayWorkoutTemplate } from "@/components/display-workout-template/DisplayWorkoutTemplate";
-import { SuspensePageLayout } from "@/components/SuspensePageLayout";
+import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { Button } from "@/components/ui/button";
 import { exercisesQueryOptions } from "@/server-functions/exercises";
 import { workoutTemplatesQueryOptions } from "@/server-functions/workout-templates";

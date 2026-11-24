@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { Trash2 } from "lucide-react";
 
-import { InnerCard } from "@/components/InnerCard";
+import { InnerCard } from "@/components/layout/InnerCard";
 import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
 import { ExerciseSelector } from "@/components/ExerciseSelector";
 import { Button } from "@/components/ui/button";
