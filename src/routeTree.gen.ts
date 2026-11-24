@@ -14,6 +14,7 @@ import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppAdminRouteRouteImport } from './routes/app/admin/route'
+import { Route as AppTestLessonRouteImport } from './routes/app/test-lesson'
 import { Route as ApiAiCreateWorkoutTemplatesRouteImport } from './routes/api/ai/create-workout-templates'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
@@ -56,6 +57,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppAdminRouteRoute = AppAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppTestLessonRoute = AppTestLessonRouteImport.update({
+  id: '/test-lesson',
+  path: '/test-lesson',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const ApiAiCreateWorkoutTemplatesRoute =
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
+  '/app/test-lesson': typeof AppTestLessonRoute
   '/app/': typeof AppIndexRoute
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
+  '/app/test-lesson': typeof AppTestLessonRoute
   '/app': typeof AppIndexRoute
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/app/admin': typeof AppAdminRouteRouteWithChildren
   '/api/$': typeof ApiSplatRoute
+  '/app/test-lesson': typeof AppTestLessonRoute
   '/app/': typeof AppIndexRoute
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/app/admin'
     | '/api/$'
+    | '/app/test-lesson'
     | '/app/'
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/api/$'
+    | '/app/test-lesson'
     | '/app'
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/app/admin'
     | '/api/$'
+    | '/app/test-lesson'
     | '/app/'
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
@@ -349,6 +361,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/app/admin'
       preLoaderRoute: typeof AppAdminRouteRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/test-lesson': {
+      id: '/app/test-lesson'
+      path: '/test-lesson'
+      fullPath: '/app/test-lesson'
+      preLoaderRoute: typeof AppTestLessonRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/api/ai/create-workout-templates': {
@@ -529,6 +548,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
+  AppTestLessonRoute: typeof AppTestLessonRoute
   AppIndexRoute: typeof AppIndexRoute
   AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
@@ -541,6 +561,7 @@ interface AppRouteRouteChildren {
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
+  AppTestLessonRoute: AppTestLessonRoute,
   AppIndexRoute: AppIndexRoute,
   AppLogMeasurementIndexRoute: AppLogMeasurementIndexRoute,
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
