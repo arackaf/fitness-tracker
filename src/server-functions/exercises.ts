@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { createExercise, type CreateExerciseInput } from "@/data/exercises/create-exercise";
 import { getExercises } from "@/data/exercises/get-exercises";
+import { searchExercises } from "@/data/exercises/search-exercises";
 import { updateExercise } from "@/data/exercises/update-exercise";
 import { requireUserId } from "@/lib/server-auth";
 
@@ -9,6 +10,13 @@ export const getExercisesServerFn = createServerFn({ method: "GET" }).handler(as
   const userId = await requireUserId(context);
   return getExercises(context.db, userId);
 });
+
+export const searchExercisesServerFn = createServerFn({ method: "GET" })
+  .validator((input: { search: string }) => input)
+  .handler(async ({ data, context }) => {
+    const userId = await requireUserId(context);
+    return searchExercises(context.db, userId, data.search);
+  });
 
 export type EditExerciseInput = {
   id: number;
@@ -44,4 +52,4 @@ export const editExercise = createServerFn({ method: "POST" })
     await updateExercise(context.db, { ...data, userId });
   });
 
-export { exercisesQueryOptions } from "./exercises-query-options";
+export { exercisesQueryOptions, exercisesSearchQueryOptions } from "./exercises-query-options";
