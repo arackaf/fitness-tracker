@@ -1,6 +1,6 @@
 import { Suspense, type FC, type PropsWithChildren } from "react";
 import { Header, type HeaderProps } from "./Header";
-import { Loading } from "./loading-state/Loading";
+import { Loading } from "../loading-state/Loading";
 
 type SuspensePageLayoutProps = HeaderProps & {
   headerChildren?: React.ReactNode;

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Header } from "@/components/Header";
+import { Header } from "@/components/layout/Header";
 
 export const Route = createFileRoute("/app/workouts/edit/invalid/")({
   component: RouteComponent,

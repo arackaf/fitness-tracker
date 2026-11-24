@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layout/Card";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
