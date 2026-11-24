@@ -21,7 +21,7 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups }) => {
     onSubmit: async ({ value }) => {
       const result = await saveExercise({
         name: value.name.trim(),
-        muscleGroupId: Number(value.muscleGroupId),
+        muscleGroupId: value.muscleGroupId ? Number(value.muscleGroupId) : null,
       });
 
       if (result) {
@@ -77,9 +77,6 @@ export const CreateExercise: FC<CreateExerciseProps> = ({ muscleGroups }) => {
                 ))}
               </SelectContent>
             </Select>
-            {!field.state.meta.isValid ? (
-              <span className="text-sm text-red-500">{field.state.meta.errors.join(", ")}</span>
-            ) : null}
           </div>
         )}
       />

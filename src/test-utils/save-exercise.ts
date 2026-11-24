@@ -1,6 +1,6 @@
 export type SaveExerciseInput = {
   name: string;
-  muscleGroupId: number;
+  muscleGroupId: number | null;
 };
 
 export const saveExercise = async (_exercise: SaveExerciseInput): Promise<boolean> => {
