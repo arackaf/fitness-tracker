@@ -33,6 +33,7 @@ const config = defineConfig({
           name: "dom",
           environment: "jsdom",
           include: ["src/**/*.test.tsx"],
+          setupFiles: ["./src/test-utils/setup-dom.ts"],
         },
       },
     ],
