@@ -126,6 +126,7 @@ export const ExerciseSearch: FC<ExerciseSearchProps> = props => {
           <Command shouldFilter={false}>
             <CommandInput
               placeholder="Search exercise..."
+              data-testid="exercise-search-input"
               value={inputValue}
               onValueChange={setInputValue}
               onKeyDown={e => {
