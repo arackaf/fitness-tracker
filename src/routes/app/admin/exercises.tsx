@@ -2,10 +2,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
-import { CreateExercise } from "@/components/CreateExercise";
-import { ExerciseFilters } from "@/components/ExerciseFilters";
+import { CreateExercise } from "@/components/exercises/CreateExercise";
+import { ExerciseFilters } from "@/components/exercises/ExerciseFilters";
 import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
-import { ExerciseListDisplay } from "@/components/ExerciseListDisplay";
+import { ExerciseListDisplay } from "@/components/exercises/ExerciseListDisplay";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import type { MuscleGroup } from "@/data/types";
