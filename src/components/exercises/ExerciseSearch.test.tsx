@@ -44,27 +44,27 @@ describe("ExerciseSearch", () => {
 
     await act(async () => {
       fireEvent.click(screen.getByRole("combobox"));
-      await vi.advanceTimersByTimeAsync(100);
+      vi.advanceTimersByTime(100);
     });
     await act(async () => {
       fireEvent.change(screen.getByTestId("exercise-search-input"), { target: { value: "B" } });
-      await vi.advanceTimersByTimeAsync(100);
+      vi.advanceTimersByTime(100);
     });
 
     await act(async () => {
       fireEvent.change(screen.getByTestId("exercise-search-input"), { target: { value: "Be" } });
-      await vi.advanceTimersByTimeAsync(100);
+      vi.advanceTimersByTime(100);
     });
 
     await act(async () => {
       fireEvent.change(screen.getByTestId("exercise-search-input"), { target: { value: "Ben" } });
-      await vi.advanceTimersByTimeAsync(299);
+      vi.advanceTimersByTime(299);
     });
 
     expect(searchExercisesMock).not.toHaveBeenCalled();
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1);
+      vi.advanceTimersByTime(1);
     });
     expect(searchExercisesMock).toHaveBeenCalled();
   });
