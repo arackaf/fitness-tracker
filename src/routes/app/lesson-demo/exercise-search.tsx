@@ -8,7 +8,7 @@ import { SuspensePageLayout } from "@/components/layout/SuspensePageLayout";
 import { Badge } from "@/components/ui/badge";
 import { muscleGroupsQueryOptions } from "@/server-functions/muscle-groups";
 
-export const Route = createFileRoute("/app/lessons/test")({
+export const Route = createFileRoute("/app/lesson-demo/exercise-search")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(muscleGroupsQueryOptions());
   },

@@ -18,7 +18,7 @@ import { Route as ApiAiCreateWorkoutTemplatesRouteImport } from './routes/api/ai
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppAdminBodyCompositionRouteImport } from './routes/app/admin/body-composition'
 import { Route as AppAdminExercisesRouteImport } from './routes/app/admin/exercises'
-import { Route as AppLessonsTestRouteImport } from './routes/app/lessons/test'
+import { Route as AppLessonDemoExerciseSearchRouteImport } from './routes/app/lesson-demo/exercise-search'
 import { Route as AppLogMeasurementIndexRouteImport } from './routes/app/log-measurement/index'
 import { Route as AppLogWorkoutIndexRouteImport } from './routes/app/log-workout/index'
 import { Route as AppMeasurementsIndexRouteImport } from './routes/app/measurements/index'
@@ -80,11 +80,12 @@ const AppAdminExercisesRoute = AppAdminExercisesRouteImport.update({
   path: '/exercises',
   getParentRoute: () => AppAdminRouteRoute,
 } as any)
-const AppLessonsTestRoute = AppLessonsTestRouteImport.update({
-  id: '/lessons/test',
-  path: '/lessons/test',
-  getParentRoute: () => AppRouteRoute,
-} as any)
+const AppLessonDemoExerciseSearchRoute =
+  AppLessonDemoExerciseSearchRouteImport.update({
+    id: '/lesson-demo/exercise-search',
+    path: '/lesson-demo/exercise-search',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AppLogMeasurementIndexRoute = AppLogMeasurementIndexRouteImport.update({
   id: '/log-measurement/',
   path: '/log-measurement/',
@@ -174,7 +175,7 @@ export interface FileRoutesByFullPath {
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/lessons/test': typeof AppLessonsTestRoute
+  '/app/lesson-demo/exercise-search': typeof AppLessonDemoExerciseSearchRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
@@ -198,7 +199,7 @@ export interface FileRoutesByTo {
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/lessons/test': typeof AppLessonsTestRoute
+  '/app/lesson-demo/exercise-search': typeof AppLessonDemoExerciseSearchRoute
   '/app/admin': typeof AppAdminIndexRoute
   '/app/log-measurement': typeof AppLogMeasurementIndexRoute
   '/app/log-workout': typeof AppLogWorkoutIndexRoute
@@ -224,7 +225,7 @@ export interface FileRoutesById {
   '/api/ai/create-workout-templates': typeof ApiAiCreateWorkoutTemplatesRoute
   '/app/admin/body-composition': typeof AppAdminBodyCompositionRoute
   '/app/admin/exercises': typeof AppAdminExercisesRoute
-  '/app/lessons/test': typeof AppLessonsTestRoute
+  '/app/lesson-demo/exercise-search': typeof AppLessonDemoExerciseSearchRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/log-measurement/': typeof AppLogMeasurementIndexRoute
   '/app/log-workout/': typeof AppLogWorkoutIndexRoute
@@ -252,7 +253,7 @@ export interface FileRouteTypes {
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
-    | '/app/lessons/test'
+    | '/app/lesson-demo/exercise-search'
     | '/app/admin/'
     | '/app/log-measurement/'
     | '/app/log-workout/'
@@ -276,7 +277,7 @@ export interface FileRouteTypes {
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
-    | '/app/lessons/test'
+    | '/app/lesson-demo/exercise-search'
     | '/app/admin'
     | '/app/log-measurement'
     | '/app/log-workout'
@@ -301,7 +302,7 @@ export interface FileRouteTypes {
     | '/api/ai/create-workout-templates'
     | '/app/admin/body-composition'
     | '/app/admin/exercises'
-    | '/app/lessons/test'
+    | '/app/lesson-demo/exercise-search'
     | '/app/admin/'
     | '/app/log-measurement/'
     | '/app/log-workout/'
@@ -391,11 +392,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminExercisesRouteImport
       parentRoute: typeof AppAdminRouteRoute
     }
-    '/app/lessons/test': {
-      id: '/app/lessons/test'
-      path: '/lessons/test'
-      fullPath: '/app/lessons/test'
-      preLoaderRoute: typeof AppLessonsTestRouteImport
+    '/app/lesson-demo/exercise-search': {
+      id: '/app/lesson-demo/exercise-search'
+      path: '/lesson-demo/exercise-search'
+      fullPath: '/app/lesson-demo/exercise-search'
+      preLoaderRoute: typeof AppLessonDemoExerciseSearchRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/log-measurement/': {
@@ -549,7 +550,7 @@ const AppAdminRouteRouteWithChildren = AppAdminRouteRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppAdminRouteRoute: typeof AppAdminRouteRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
-  AppLessonsTestRoute: typeof AppLessonsTestRoute
+  AppLessonDemoExerciseSearchRoute: typeof AppLessonDemoExerciseSearchRoute
   AppLogMeasurementIndexRoute: typeof AppLogMeasurementIndexRoute
   AppLogWorkoutIndexRoute: typeof AppLogWorkoutIndexRoute
   AppMeasurementsIndexRoute: typeof AppMeasurementsIndexRoute
@@ -562,7 +563,7 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAdminRouteRoute: AppAdminRouteRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
-  AppLessonsTestRoute: AppLessonsTestRoute,
+  AppLessonDemoExerciseSearchRoute: AppLessonDemoExerciseSearchRoute,
   AppLogMeasurementIndexRoute: AppLogMeasurementIndexRoute,
   AppLogWorkoutIndexRoute: AppLogWorkoutIndexRoute,
   AppMeasurementsIndexRoute: AppMeasurementsIndexRoute,
