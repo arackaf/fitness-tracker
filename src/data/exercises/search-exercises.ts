@@ -1,4 +1,4 @@
-import { and, asc, eq, like } from "drizzle-orm";
+import { and, asc, eq, ilike } from "drizzle-orm";
 
 import type { DB } from "@/data/db";
 import { exercises as exercisesTable } from "@/drizzle/schema";
@@ -9,7 +9,7 @@ export const searchExercises = async (db: DB, userId: string, search: string) =>
     return db
       .select()
       .from(exercisesTable)
-      .where(and(eq(exercisesTable.userId, userId), like(exercisesTable.name, `%${search}%`)))
+      .where(and(eq(exercisesTable.userId, userId), ilike(exercisesTable.name, `%${search}%`)))
       .orderBy(asc(exercisesTable.name));
   });
 };
