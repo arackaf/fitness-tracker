@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 
 import { InnerCard } from "@/components/layout/InnerCard";
 import { ExecutionTypeSelect, type ExecutionType } from "@/components/ExecutionTypeSelect";
-import { ExerciseSelector } from "@/components/ExerciseSelector";
+import { ExerciseSelector } from "@/components/exercises/ExerciseSelector";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DistanceExerciseSet } from "@/components/edit-workout-template/DistanceExerciseSet";
